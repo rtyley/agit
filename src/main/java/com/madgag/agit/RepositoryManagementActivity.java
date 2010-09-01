@@ -74,6 +74,11 @@ public class RepositoryManagementActivity extends android.app.Activity {
 				}
 			}
 		});
+        ((Button) findViewById(R.id.LogButton)).setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				startActivity(new Intent("git.log", Uri.fromFile(gitdir), RepositoryManagementActivity.this,RepoLogActivity.class));
+			}
+		});
     }
     
     
@@ -207,7 +212,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
     }
 
 
-	private File getGitDirFrom(Intent intent) {
+	public static File getGitDirFrom(Intent intent) {
 		File gd=new File(intent.getData().getPath());
     	Log.i(TAG, "gd is "+gd.getAbsolutePath());
     	return gd;
