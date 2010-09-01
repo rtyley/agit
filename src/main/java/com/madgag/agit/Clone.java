@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 
 public class Clone extends Activity {
 
+	private final static String TAG="Clone";
 	
     /** Called when the activity is first created. */
     @Override
@@ -37,10 +39,21 @@ public class Clone extends Activity {
         
     }
     
+    protected void onStart() {
+    	super.onStart();
+    	Intent intent = getIntent();
+    	Log.i("Cloner", "Starting with "+intent);
+    	if (intent!=null && intent.getData()!=null) {
+    		((EditText) findViewById(R.id.CloneUrlEditText)).setText(intent.getData().toString());
+    	}
+    };
+    
     OnClickListener goCloneButtonListener = new OnClickListener() {
         public void onClick(View v) {
             //finish();
         	String sourceUri = ((EditText) findViewById(R.id.CloneUrlEditText)).getText().toString();
+        	Uri u=Uri.parse(sourceUri);
+        	Log.i(TAG, "scheme="+u.getScheme());
     		URIish uri;
 			try {
 				uri = new URIish(sourceUri);
