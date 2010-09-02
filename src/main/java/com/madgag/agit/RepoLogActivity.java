@@ -4,7 +4,6 @@ import static com.google.common.collect.Lists.newArrayList;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.JGitInternalException;
@@ -13,14 +12,9 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepository;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-
 import android.app.ListActivity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 
 public class RepoLogActivity extends ListActivity {
@@ -30,6 +24,8 @@ public class RepoLogActivity extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        setContentView(R.layout.rev_commit_list);
         
         // Query for all people contacts using the Contacts.People convenience class.
         // Put a managed wrapper around the retrieved cursor so we don't have to worry about
