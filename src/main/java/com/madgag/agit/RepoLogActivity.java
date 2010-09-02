@@ -43,13 +43,10 @@ public class RepoLogActivity extends ListActivity {
 			// Bind to our new adapter.
 			setListAdapter(adapter);
 		} catch (NoHeadException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JGitInternalException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }

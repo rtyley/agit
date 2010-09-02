@@ -114,28 +114,29 @@ public class RevCommitListAdapter extends BaseAdapter {
 					end = " days ago";
 				}
 				return (day + end);
-			} else if (hour > 0) {
+			}
+			if (hour > 0) {
 				if (hour == 1) {
 					end = " hour ago";
 				} else {
 					end = " hours ago";
 				}
 				return (hour + end);
-			} else if (min > 0) {
+			} 
+			if (min > 0) {
 				if (min == 1) {
 					end = " minute ago";
 				} else {
 					end = " minutes ago";
 				}
 				return (min + end);
+			} 
+			if (sec == 1) {
+				end = " second ago";
 			} else {
-				if (sec == 1) {
-					end = " second ago";
-				} else {
-					end = " seconds ago";
-				}
-				return (sec + end);
+				end = " seconds ago";
 			}
+			return (sec + end);
 		}
 
 	}
