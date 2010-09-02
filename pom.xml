@@ -50,7 +50,7 @@
 				<configuration>
                     <sdk>
                         <path>${user.home}/android-sdk/</path>
-                        <platform>1.6</platform>
+                        <platform>7</platform>
                     </sdk>
                     <deleteConflictingFiles>true</deleteConflictingFiles>
                 </configuration>
