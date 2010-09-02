@@ -13,6 +13,8 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepository;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import android.app.ListActivity;
@@ -40,9 +42,7 @@ public class RepoLogActivity extends ListActivity {
 			Repository repository=new FileRepository(gitdir);
 			Iterable<RevCommit> commits = new Git(repository).log().call();
 			
-			// Now create a new list adapter bound to the cursor.
-			// SimpleListAdapter is designed for binding to a Cursor.
-			ListAdapter adapter = new ArrayAdapter<RevCommit>(this, android.R.layout.simple_list_item_1, newArrayList(commits));
+			ListAdapter adapter = new RevCommitListAdapter(this, newArrayList(commits));
 
 			// Bind to our new adapter.
 			setListAdapter(adapter);

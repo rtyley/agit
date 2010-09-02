@@ -59,12 +59,12 @@ public class RepositoryManagementActivity extends android.app.Activity {
 				Log.i(TAG, "bound opService="+repositoryOperationContext);
 			}
 		}, BIND_AUTO_CREATE);
-        ((Button) findViewById(R.id.FetchButton)).setOnClickListener(new OnClickListener() {
+        buttonUp(R.id.FetchButton, new OnClickListener() {
 			public void onClick(View v) {
 				startService(new Intent("git.FETCH", Uri.fromFile(gitdir), RepositoryManagementActivity.this,GitOperationsService.class));
 			}
 		});
-        ((Button) findViewById(R.id.DeleteButton)).setOnClickListener(new OnClickListener() {
+        buttonUp(R.id.DeleteButton,new OnClickListener() {
 			public void onClick(View v) {
 				try {
 					FileUtils.deleteDirectory(gitdir.getParentFile());
@@ -74,11 +74,16 @@ public class RepositoryManagementActivity extends android.app.Activity {
 				}
 			}
 		});
-        ((Button) findViewById(R.id.LogButton)).setOnClickListener(new OnClickListener() {
+        buttonUp(R.id.LogButton,new OnClickListener() {
 			public void onClick(View v) {
 				startActivity(new Intent("git.log", Uri.fromFile(gitdir), RepositoryManagementActivity.this,RepoLogActivity.class));
 			}
 		});
+    }
+    
+    private void buttonUp(int id, OnClickListener listener) {
+    	Button button = (Button) findViewById(id);
+		button.setOnClickListener(listener);
     }
     
     
