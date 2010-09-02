@@ -3,11 +3,8 @@ package com.madgag.agit;
 import static com.google.common.collect.Lists.newArrayList;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.JGitInternalException;
-import org.eclipse.jgit.api.NoHeadException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepository;
@@ -15,7 +12,12 @@ import org.eclipse.jgit.storage.file.FileRepository;
 import android.app.ListActivity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class RepoLogActivity extends ListActivity {
     private File gitdir;
@@ -42,13 +44,16 @@ public class RepoLogActivity extends ListActivity {
 
 			// Bind to our new adapter.
 			setListAdapter(adapter);
-		} catch (NoHeadException e) {
-			e.printStackTrace();
-		} catch (JGitInternalException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		((ListView)findViewById(android.R.id.list)).setOnItemClickListener(new OnItemClickListener(){
+			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+				RevCommit commit = (RevCommit) ((RevCommitListAdapter) parent.getAdapter()).getItem(position);
+				Toast.makeText(RepoLogActivity.this, commit.getName(), Toast.LENGTH_SHORT).show();
+			}
+		});
     }
     
 	@Override
