@@ -10,7 +10,9 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepository;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,17 +24,11 @@ import android.widget.AdapterView.OnItemClickListener;
 public class RepoLogActivity extends ListActivity {
     private File gitdir;
 
-    /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.rev_commit_list);
-        
-        // Query for all people contacts using the Contacts.People convenience class.
-        // Put a managed wrapper around the retrieved cursor so we don't have to worry about
-        // requerying or closing it as the activity changes state.
-        Cursor mCursor = managedQuery(GitInfoProvider.CONTENT_URI, null, null, null, null);
 
         gitdir=RepositoryManagementActivity.getGitDirFrom(getIntent());
         
@@ -40,10 +36,7 @@ public class RepoLogActivity extends ListActivity {
 			Repository repository=new FileRepository(gitdir);
 			Iterable<RevCommit> commits = new Git(repository).log().call();
 			
-			ListAdapter adapter = new RevCommitListAdapter(this, newArrayList(commits));
-
-			// Bind to our new adapter.
-			setListAdapter(adapter);
+			setListAdapter(new RevCommitListAdapter(this, newArrayList(commits)));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -52,6 +45,9 @@ public class RepoLogActivity extends ListActivity {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				RevCommit commit = (RevCommit) ((RevCommitListAdapter) parent.getAdapter()).getItem(position);
 				Toast.makeText(RepoLogActivity.this, commit.getName(), Toast.LENGTH_SHORT).show();
+				Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromFile(gitdir),RepoLogActivity.this, RevCommitChangeViewer.class);
+				i.putExtra("commit", commit.name());
+				RepoLogActivity.this.startActivity(i);
 			}
 		});
     }
