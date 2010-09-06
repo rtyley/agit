@@ -47,7 +47,7 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name="RevCommitChangeViewer">
+		<activity android:name="RevCommitViewer">
 			<intent-filter>
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>

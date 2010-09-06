@@ -45,7 +45,7 @@ public class RepoLogActivity extends ListActivity {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				RevCommit commit = (RevCommit) ((RevCommitListAdapter) parent.getAdapter()).getItem(position);
 				Toast.makeText(RepoLogActivity.this, commit.getName(), Toast.LENGTH_SHORT).show();
-				Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromFile(gitdir),RepoLogActivity.this, RevCommitChangeViewer.class);
+				Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromFile(gitdir),RepoLogActivity.this, RevCommitViewer.class);
 				i.putExtra("commit", commit.name());
 				RepoLogActivity.this.startActivity(i);
 			}

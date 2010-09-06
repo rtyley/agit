@@ -22,8 +22,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-public class RevCommitChangeViewer extends Activity {
+public class RevCommitViewer extends Activity {
     private File gitdir;
 
     @Override
@@ -55,6 +57,9 @@ public class RevCommitChangeViewer extends Activity {
 				tw.setFilter(TreeFilter.ANY_DIFF);
 				List<DiffEntry> files = DiffEntry.scan(tw);
 				Log.i("RCCV",files.toString());
+				ListView listView=(ListView) findViewById(R.id.commit_view_diffs_list);
+				listView.setAdapter(new ArrayAdapter<DiffEntry>(this, android.R.layout.simple_list_item_1, files));
+				
 			}
 
 			
