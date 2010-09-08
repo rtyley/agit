@@ -6,8 +6,8 @@
 	android:layout_height="fill_parent">
 	<include android:id="@+id/include_top_bar"
 		layout="@layout/top_bar" />
-	<ListView
-		android:id="@+id/commit_view_diffs_list"
+	<ExpandableListView
+		android:id="@android:id/list"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:cacheColorHint="#FFF"/>
