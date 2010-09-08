@@ -7,6 +7,7 @@
 	<include android:id="@+id/include_top_bar"
 		layout="@layout/top_bar" />
 	<ExpandableListView
+	android:fastScrollEnabled="true"
 		android:id="@android:id/list"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"

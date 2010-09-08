@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:background="#FFF"
-	android:orientation="vertical"
+	android:orientation="horizontal"
 	android:layout_width="fill_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
     android:textAppearance="?android:attr/textAppearanceLarge"
     android:gravity="center_vertical"
 	>
+	<ImageView
+		android:id="@+id/commit_file_diff_type"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="20dip"
+		android:layout_marginBottom="5dip"
+		android:src="@drawable/commit" />
 	<TextView
 		android:id="@+id/commit_file_textview"
 		android:layout_width="wrap_content"

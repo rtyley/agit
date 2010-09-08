@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class RevCommitViewer extends ExpandableListActivity {
@@ -110,13 +111,11 @@ public class RevCommitViewer extends ExpandableListActivity {
 		}
 
 		public int getGroupCount() {
-			// TODO Auto-generated method stub
 			return files.size();
 		}
 
-		public long getGroupId(int arg0) {
-			// TODO Auto-generated method stub
-			return 0;
+		public long getGroupId(int index) {
+			return files.get(index).hashCode(); //Pretty lame
 		}
 
 	    public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
@@ -128,7 +127,18 @@ public class RevCommitViewer extends ExpandableListActivity {
 	            v = convertView;
 	        }
 	        DiffEntry diffEntry = files.get(groupPosition);
-			((TextView) v.findViewById(R.id.commit_file_textview)).setText(diffEntry.getNewPath());
+			int changeTypeIcon=R.drawable.diff_changetype_modify;
+			String filename=diffEntry.getNewPath();
+			switch (diffEntry.getChangeType()) {
+				case ADD: changeTypeIcon=R.drawable.diff_changetype_add; break;
+				case DELETE: changeTypeIcon=R.drawable.diff_changetype_delete; filename=diffEntry.getOldPath(); break;
+				case MODIFY: changeTypeIcon=R.drawable.diff_changetype_modify; break;
+				case RENAME: changeTypeIcon=R.drawable.diff_changetype_rename; break;
+				case COPY: changeTypeIcon=R.drawable.diff_changetype_add; break;
+			}
+			((ImageView) v.findViewById(R.id.commit_file_diff_type)).setImageResource(changeTypeIcon);
+			((TextView) v.findViewById(R.id.commit_file_textview)).setText(filename);
+			
 	        return v;
 	    }
 	    
