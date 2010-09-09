@@ -1,9 +1,14 @@
 package com.madgag.agit;
 
+import java.io.ByteArrayOutputStream;
+import java.io.CharArrayWriter;
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -31,6 +36,7 @@ public class RevCommitViewer extends ExpandableListActivity {
 	private File gitdir;
 	private MyExpandableListAdapter mAdapter;
 	private List<DiffEntry> files;
+	private Repository repository;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,7 +48,7 @@ public class RevCommitViewer extends ExpandableListActivity {
 		gitdir=RepositoryManagementActivity.getGitDirFrom(intent);
         
         try {
-			Repository repository=new FileRepository(gitdir);
+			repository = new FileRepository(gitdir);
 			String revisionId = intent.getStringExtra("commit");
 			Log.i("RCCV",revisionId);
 			RevWalk revWalk = new RevWalk(repository);
@@ -95,15 +101,25 @@ public class RevCommitViewer extends ExpandableListActivity {
 			return 0;
 		}
 
-		public View getChildView(int arg0, int arg1, boolean arg2, View arg3,
-				ViewGroup arg4) {
+		public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
+                View convertView, ViewGroup parent) {
+			View v = mInflater.inflate(R.layout.diff_view, parent, false);
+			ByteArrayOutputStream bas=new ByteArrayOutputStream();
+			try {
+				DiffFormatter diffFormatter = new DiffFormatter(bas);
+				diffFormatter.setRepository(repository);
+				diffFormatter.format(files.get(groupPosition));
+				String rubbish=new String(bas.toByteArray(),"utf-8");
+				((TextView) v.findViewById(R.id.diff_hunk_textview)).setText(rubbish);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			// TODO Auto-generated method stub
-			return null;
+			return v;
 		}
 
-		public int getChildrenCount(int arg0) {
-			// TODO Auto-generated method stub
-			return 0;
+		public int getChildrenCount(int groupPosition) {
+			return 1;
 		}
 
 		public Object getGroup(int index) {
@@ -118,8 +134,7 @@ public class RevCommitViewer extends ExpandableListActivity {
 			return files.get(index).hashCode(); //Pretty lame
 		}
 
-	    public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
-	            ViewGroup parent) {
+	    public View getGroupView(int groupPosition, boolean isExpanded, View convertView,  ViewGroup parent) {
 	        View v;
 	        if (convertView == null) {
 	            v = newGroupView(isExpanded, parent);
