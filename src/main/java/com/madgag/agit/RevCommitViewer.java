@@ -215,6 +215,7 @@ public class RevCommitViewer extends ExpandableListActivity {
 				break;
 			case DELETE:
 				changeTypeIcon = R.drawable.diff_changetype_delete;
+				filename = diffEntry.getOldPath();
 				break;
 			case MODIFY:
 				changeTypeIcon = R.drawable.diff_changetype_modify;
@@ -236,26 +237,7 @@ public class RevCommitViewer extends ExpandableListActivity {
 		}
 
 		private String nameChange(DiffEntry diffEntry) {
-			String filename;
-			diff_match_patch differ = new diff_match_patch();
-			LinkedList<Diff> diffs = differ.diff_main(diffEntry.getOldPath(), diffEntry.getNewPath());
-			differ.diff_cleanupSemantic(diffs);
-			StringBuilder sb = new StringBuilder();
-			for (Diff diff : diffs) {
-				switch (diff.operation) {
-					case EQUAL:
-						sb.append(diff.text);
-						break;
-					case DELETE:
-						sb.append("{").append(diff.text).append(">}");
-						break;
-					case INSERT:
-						sb.append("{>").append(diff.text).append("}");
-						break;
-				}
-			}
-			filename = sb.toString();
-			return filename;
+			return new FilePathDiffer().diff(diffEntry.getOldPath(), diffEntry.getNewPath());
 		}
 
 		private View newGroupView(boolean isExpanded, ViewGroup parent) {
