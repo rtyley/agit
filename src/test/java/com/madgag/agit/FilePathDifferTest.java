@@ -1,8 +1,5 @@
 package com.madgag.agit;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-
 import org.junit.Test;
 
 public class FilePathDifferTest {

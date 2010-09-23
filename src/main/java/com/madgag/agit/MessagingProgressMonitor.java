@@ -2,6 +2,8 @@ package com.madgag.agit;
 
 import org.eclipse.jgit.lib.ProgressMonitor;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -17,7 +19,6 @@ public class MessagingProgressMonitor implements ProgressMonitor, CancellationSi
 			this.msg = msg;
 			this.totalWork = totalWork;
 			this.totalCompleted = totalCompleted;
-			
 		}
 	}
 
@@ -33,21 +34,32 @@ public class MessagingProgressMonitor implements ProgressMonitor, CancellationSi
 
 	private int totalWork;
 	
-	//private final Handler handler;
 	private final Context context;
+	private final int notificationId;
+	private final Notification notification;
+	private final NotificationManager notificationManager;
+	
 	private boolean cancelled=false;
 
 	public String myNiceStatusString;
 	
 	public Progress currentProgress;
 
+
+
+
 	public Progress getCurrentProgress() {
 		return currentProgress;
 	}
 	
-	public MessagingProgressMonitor(Context context) {
+	public MessagingProgressMonitor(Context context,
+			int notificationId,
+			Notification notification,
+			NotificationManager notificationManager) {
 		this.context = context;
-//		this.handler = handler;
+		this.notificationId = notificationId;
+		this.notification = notification;
+		this.notificationManager = notificationManager;
 	}
 	
 	public void setCancelled() {
@@ -100,6 +112,11 @@ public class MessagingProgressMonitor implements ProgressMonitor, CancellationSi
 
 	private void display(int cmp) {
 		currentProgress=new Progress(msg, totalWork, cmp);
+		// Sending notification every time seems to be TOO MUCH
+//		notification.contentView.setTextViewText(R.id.status_text, currentProgress.msg);
+//		notification.contentView.setProgressBar(R.id.status_progress, currentProgress.totalWork, currentProgress.totalCompleted, false);
+//		notificationManager.notify(notificationId, notification);
+		
 		context.sendBroadcast(new Intent(GIT_OPERATION_PROGRESS_UPDATE));
 		Log.d(TAG, "broadcasted completed "+cmp);
 	}

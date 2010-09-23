@@ -1,11 +1,10 @@
 package com.madgag.agit;
 
 import static com.madgag.agit.MessagingProgressMonitor.GIT_OPERATION_PROGRESS_UPDATE;
+import static com.madgag.agit.RepoDeleter.REPO_DELETE_COMPLETED;
 
 import java.io.File;
-import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
 import org.connectbot.service.PromptHelper;
 
 import android.app.AlertDialog;
@@ -66,12 +65,8 @@ public class RepositoryManagementActivity extends android.app.Activity {
 		});
         buttonUp(R.id.DeleteButton,new OnClickListener() {
 			public void onClick(View v) {
-				try {
-					FileUtils.deleteDirectory(gitdir.getParentFile());
-					startActivity(new Intent(RepositoryManagementActivity.this, RepositoryListActivity.class));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				Runnable r=new RepoDeleter(gitdir, RepositoryManagementActivity.this);
+				new Thread(r).start();
 			}
 		});
         buttonUp(R.id.LogButton,new OnClickListener() {
@@ -89,12 +84,26 @@ public class RepositoryManagementActivity extends android.app.Activity {
     
 	BroadcastReceiver operationProgressBroadcastReceiver = new BroadcastReceiver() {
 		public void onReceive(Context context, Intent intent) {
-			Log.d(TAG, "Got broadcast : "+intent.getAction());
-			if (intent.getAction().equals(GIT_OPERATION_PROGRESS_UPDATE)){
+			String action = intent.getAction();
+			Log.d(TAG, "Got broadcast : "+action);
+			if (action.equals(GIT_OPERATION_PROGRESS_UPDATE)){
 				updateOperationProgressDisplay();
-			} else if (intent.getAction()=="git.user.interation.request") {
+			} else if (action.equals("git.user.interation.request")) {
 				Log.d(TAG, "I should probably do something helpful");
+			} else if (action.equals(REPO_DELETE_COMPLETED)) {
+				if (intent.getData().equals(Uri.fromFile(gitdir))) {
+					finish();
+				}
 			}
+		}
+	};
+	
+	BroadcastReceiver deletionBroadcastReceiver = new BroadcastReceiver() {
+		public void onReceive(Context context, Intent intent) {
+			Log.d(TAG, "deletionBroadcastReceiver "+gitdir+"got broadcast : "+intent.getData());
+			//if (intent.getData().equals(Uri.fromFile(gitdir))) {
+				finish();
+			//}
 		}
 	};
 	
@@ -174,6 +183,11 @@ public class RepositoryManagementActivity extends android.app.Activity {
         gitdir=getGitDirFrom(getIntent());
 		((TextView) findViewById(R.id.RepositoryFileLocation)).setText(gitdir.getAbsolutePath());
 		registerReceiver(operationProgressBroadcastReceiver, new IntentFilter("git.operation.progress.update"));
+		IntentFilter repoDeletionIntentFilter = new IntentFilter(REPO_DELETE_COMPLETED);
+		repoDeletionIntentFilter.addDataScheme("file");
+		//repoDeletionIntentFilter.addD("file");
+		
+		registerReceiver(deletionBroadcastReceiver, repoDeletionIntentFilter);
 		registerRecieverForServicePromptRequests();
 		updateUIToReflectServicePromptRequests();
     }

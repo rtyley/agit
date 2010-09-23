@@ -69,8 +69,10 @@
 						<platform>7</platform>
 					</sdk>
 					<deleteConflictingFiles>true</deleteConflictingFiles>
+					<!-- <generateApk>false</generateApk> -->
 				</configuration>
 				<executions>
+				<!--  
 					<execution>
 						<id>startEmulator</id>
 						<phase>initialize</phase>
@@ -78,6 +80,7 @@
 							<goal>emulator-start</goal>
 						</goals>
 					</execution>
+					-->
 					<execution>
 						<id>alignApk</id>
 						<phase>install</phase>

@@ -1,5 +1,11 @@
 package com.madgag.agit;
 
+import static android.app.Notification.FLAG_ONGOING_EVENT;
+import static android.content.Intent.ACTION_VIEW;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static android.view.View.GONE;
+import static java.lang.System.currentTimeMillis;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -29,6 +35,9 @@ import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.SshSessionFactory;
 import org.eclipse.jgit.transport.Transport;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.net.Uri;
@@ -38,6 +47,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
+import android.widget.RemoteViews;
 
 public class GitOperationsService extends Service {
 
@@ -67,14 +78,41 @@ public class GitOperationsService extends Service {
     	Uri data = intent.getData();
 		File gitdir=new File(data.getPath());
     	Log.i(TAG, "gitdir is "+gitdir.getAbsolutePath());
+    	
 		RepositoryOperationContext repositoryOperationContext=getOrCreateRepositoryOperationContextFor(gitdir);
 		
 		String remote=Constants.DEFAULT_REMOTE_NAME;
 		FetchThread fetchThread = new FetchThread(repositoryOperationContext.getRepository(), remote, handler);
 		repositoryOperationContext.setCurrentOperation(fetchThread);
         fetchThread.start();
+
 		return START_STICKY;
-    };
+    }
+
+	private Notification floomTrumpter(int notificationId, File gitdir, String remote) {
+        int icon = R.drawable.diff_changetype_add;
+        CharSequence tickerText = "Hello";
+        long when = currentTimeMillis();
+        Log.i("GOS", "Sent notification");
+		Notification notification = new Notification(icon, tickerText, when);
+		notification.flags = notification.flags | FLAG_ONGOING_EVENT;		
+		notification.setLatestEventInfo(this, "Fetching "+remote, "Like a horse", manageGitRepo(gitdir));
+		notification.contentView=fetchProgressNotificationRemoteView();
+		//startForeground(notificationId, notification);
+		return notification;
+	}
+
+	private PendingIntent manageGitRepo(File gitdir) {
+		Intent intentForNotification = new Intent(ACTION_VIEW, Uri.fromFile(gitdir), this,RepositoryManagementActivity.class);
+        intentForNotification.setFlags(FLAG_ACTIVITY_NEW_TASK);
+		return PendingIntent.getActivity(this, 0, intentForNotification, 0);
+	};
+    
+    private RemoteViews fetchProgressNotificationRemoteView() {
+		RemoteViews remoteView=new RemoteViews(getApplicationContext().getPackageName(), R.layout.fetch_progress);
+		remoteView.setProgressBar(R.id.status_progress, 512, 128, false);
+		return remoteView;
+    }
     
 	public RepositoryOperationContext getOrCreateRepositoryOperationContextFor(Repository db) {
 		return getOrCreateRepositoryOperationContextFor(db.getDirectory());
@@ -112,12 +150,18 @@ public class GitOperationsService extends Service {
 		private final String remote;
 		final MessagingProgressMonitor progressMonitor;
 		public final PromptHelper promptHelper;
+		public Notification notification;
+		private final int notificationId;
+		private NotificationManager notificationManager;
        
         FetchThread(Repository db, String remote, Handler h) {
             this.db = db;
 			this.remote = remote;
 			this.promptHelper=new PromptHelper(db);
-			progressMonitor = new MessagingProgressMonitor(GitOperationsService.this);
+			notificationManager = (NotificationManager) getApplicationContext().getSystemService(NOTIFICATION_SERVICE);
+			notificationId = hashCode();
+			notification = floomTrumpter(notificationId, db.getDirectory(), remote);
+			progressMonitor = new MessagingProgressMonitor(GitOperationsService.this, notificationId, notification, notificationManager);
         }
         
         CancellationSignaller getCancellationSignaller() {
@@ -131,6 +175,10 @@ public class GitOperationsService extends Service {
 				final Ref branch = guessHEAD(r);
 				doCheckout(branch);
 				Log.i(TAG, "Completed checkout, thread done");
+				notification.contentView.setTextViewText(R.id.status_text, "Checkout complete");
+				//notification.contentView.setViewVisibility(R.id.status_progress, GONE);
+				notificationManager.notify(notificationId, notification);
+				stopForeground(false);// Actually, we only want to call this if ALL threads are completed, I think...
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}

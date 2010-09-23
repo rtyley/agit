@@ -37,7 +37,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class RevCommitViewer extends ExpandableListActivity {
-
+	
+	
 	private File gitdir;
 	private MyExpandableListAdapter mAdapter;
 	private List<DiffEntry> files;
@@ -53,6 +54,7 @@ public class RevCommitViewer extends ExpandableListActivity {
 		gitdir = RepositoryManagementActivity.getGitDirFrom(intent);
 
 		try {
+			
 			repository = new FileRepository(gitdir);
 			String revisionId = intent.getStringExtra("commit");
 			Log.i("RCCV", revisionId);

@@ -96,7 +96,7 @@ public class Clone extends Activity {
     		dst.getConfig().save();
     		Uri gitdirUri = Uri.fromFile(gitdir);
 			startService(new Intent("git.FETCH", gitdirUri, Clone.this,GitOperationsService.class));
-			startActivity(new Intent(ACTION_VIEW, gitdirUri, Clone.this,RepositoryManagementActivity.class));
+			//startActivity(new Intent(ACTION_VIEW, gitdirUri, Clone.this,RepositoryManagementActivity.class));
 		}
 		
 //		private FetchResult runFetch() throws NotSupportedException, URISyntaxException, TransportException {
