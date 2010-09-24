@@ -66,8 +66,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
         buttonUp(R.id.DeleteButton,new OnClickListener() {
 			public void onClick(View v) {
 				showDialog(DELETION_DIALOG);
-				Runnable r=new RepoDeleter(gitdir, RepositoryManagementActivity.this);
-				new Thread(r).start();
+				new Thread(new RepoDeleter(gitdir, RepositoryManagementActivity.this)).start();
 			}
 		});
         buttonUp(R.id.LogButton,new OnClickListener() {
