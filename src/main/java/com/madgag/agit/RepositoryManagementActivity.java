@@ -38,7 +38,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 	private ProgressDialog progressDialog;
 	private AlertDialog stringEntryDialog,yesNoDialog;
 	
-	private final int PROGRESS_DIALOG=0,STRING_ENTRY_DIALOG=1,YES_NO_DIALOG=2;
+	private final int PROGRESS_DIALOG=0,STRING_ENTRY_DIALOG=1,YES_NO_DIALOG=2,DELETION_DIALOG=3;
 	public static final String TAG = "RepositoryManagementActivity";
 	private File gitdir;
 	private RepositoryOperationContext repositoryOperationContext;
@@ -65,6 +65,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 		});
         buttonUp(R.id.DeleteButton,new OnClickListener() {
 			public void onClick(View v) {
+				showDialog(DELETION_DIALOG);
 				Runnable r=new RepoDeleter(gitdir, RepositoryManagementActivity.this);
 				new Thread(r).start();
 			}
@@ -100,7 +101,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 	
 	BroadcastReceiver deletionBroadcastReceiver = new BroadcastReceiver() {
 		public void onReceive(Context context, Intent intent) {
-			Log.d(TAG, "deletionBroadcastReceiver "+gitdir+"got broadcast : "+intent.getData());
+			Log.d(TAG, "deletionBroadcastReceiver "+gitdir+" got broadcast : "+intent.getData());
 			//if (intent.getData().equals(Uri.fromFile(gitdir))) {
 				finish();
 			//}
@@ -128,6 +129,12 @@ public class RepositoryManagementActivity extends android.app.Activity {
 			progressDialog.setTitle("Fetch totmarto");
 			progressDialog.setCancelable(true);
 			return progressDialog;
+		case DELETION_DIALOG:
+			ProgressDialog deletionDialog = new ProgressDialog(this);
+			deletionDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			deletionDialog.setMessage("Deleting repo...");
+			deletionDialog.setIndeterminate(true);
+			return deletionDialog;
 		case YES_NO_DIALOG:
 			new AlertDialog.Builder(this)
 				.setMessage("...")
