@@ -1,6 +1,6 @@
 package com.madgag.agit;
 
-import static android.app.Notification.FLAG_ONGOING_EVENT;
+import static android.app.Notification.*;
 import static android.content.Intent.ACTION_VIEW;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static android.view.View.GONE;
@@ -95,7 +95,7 @@ public class GitOperationsService extends Service {
         long when = currentTimeMillis();
         Log.i("GOS", "Sent notification");
 		Notification notification = new Notification(icon, tickerText, when);
-		notification.flags = notification.flags | FLAG_ONGOING_EVENT;		
+		notification.flags = notification.flags | FLAG_ONGOING_EVENT | FLAG_AUTO_CANCEL;		
 		notification.setLatestEventInfo(this, "Fetching "+remote, "Like a horse", manageGitRepo(gitdir));
 		notification.contentView=fetchProgressNotificationRemoteView();
 		//startForeground(notificationId, notification);
