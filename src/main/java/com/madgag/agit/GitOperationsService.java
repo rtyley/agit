@@ -95,10 +95,10 @@ public class GitOperationsService extends Service {
         long when = currentTimeMillis();
         Log.i("GOS", "Sent notification");
 		Notification notification = new Notification(icon, tickerText, when);
-		notification.flags = notification.flags | FLAG_ONGOING_EVENT | FLAG_AUTO_CANCEL;		
+		notification.flags = notification.flags | FLAG_ONGOING_EVENT;
 		notification.setLatestEventInfo(this, "Fetching "+remote, "Like a horse", manageGitRepo(gitdir));
 		notification.contentView=fetchProgressNotificationRemoteView();
-		//startForeground(notificationId, notification);
+		startForeground(notificationId, notification);
 		return notification;
 	}
 
@@ -175,10 +175,13 @@ public class GitOperationsService extends Service {
 				final Ref branch = guessHEAD(r);
 				doCheckout(branch);
 				Log.i(TAG, "Completed checkout, thread done");
-				notification.contentView.setTextViewText(R.id.status_text, "Checkout complete");
-				//notification.contentView.setViewVisibility(R.id.status_progress, GONE);
-				notificationManager.notify(notificationId, notification);
+				notificationManager.cancel(notificationId); // It seems 'On-going' notifications can't be converted to ordinary ones.
 				stopForeground(false);// Actually, we only want to call this if ALL threads are completed, I think...
+				
+				Notification completedNotification=new Notification(R.drawable.diff_changetype_modify, "Fetch complete", currentTimeMillis());
+				completedNotification.setLatestEventInfo(GitOperationsService.this, "Fetched "+remote, "UTTERLY", manageGitRepo(db.getDirectory()));
+				completedNotification.flags |= FLAG_AUTO_CANCEL;
+				notificationManager.notify(notificationId+1, completedNotification);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
