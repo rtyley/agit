@@ -175,8 +175,8 @@ public class GitOperationsService extends Service {
 				final Ref branch = guessHEAD(r);
 				doCheckout(branch);
 				Log.i(TAG, "Completed checkout, thread done");
-				notificationManager.cancel(notificationId); // It seems 'On-going' notifications can't be converted to ordinary ones.
-				stopForeground(false);// Actually, we only want to call this if ALL threads are completed, I think...
+				//notificationManager.cancel(notificationId); // It seems 'On-going' notifications can't be converted to ordinary ones.
+				stopForeground(true);// Actually, we only want to call this if ALL threads are completed, I think...
 				
 				Notification completedNotification=new Notification(R.drawable.diff_changetype_modify, "Fetch complete", currentTimeMillis());
 				completedNotification.setLatestEventInfo(GitOperationsService.this, "Fetched "+remote, "UTTERLY", manageGitRepo(db.getDirectory()));
