@@ -28,6 +28,9 @@
 			<intent-filter>
 				<action android:name="git.FETCH" />
 			</intent-filter>
+			<intent-filter>
+				<action android:name="git.CLONE" />
+			</intent-filter>
 		</service>
 		
 		<provider android:name="GitInfoProvider"

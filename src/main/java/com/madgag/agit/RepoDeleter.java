@@ -1,19 +1,15 @@
 package com.madgag.agit;
 
-import static android.widget.Toast.*;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
 
 import java.io.File;
 import java.io.IOException;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Handler;
+import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
-public class RepoDeleter implements Runnable {
+public class RepoDeleter extends AsyncTask<Void, Void, Void> {
 	
 	public static final String TAG = "RepoDeleter";
 	
@@ -27,18 +23,36 @@ public class RepoDeleter implements Runnable {
 		this.context = context;
     }
 	
-    public void run() {
+	@Override
+	protected void onPreExecute () {
+		// show 'deleting' dialog in RMA
+	}
+	
+	@Override
+	protected Void doInBackground(Void... args) {
     	try {
     		File parent = gitdir.getParentFile();
     		Log.d(TAG, "Deleting : "+parent);
 			deleteDirectory(parent);
 			Log.d(TAG, "Deleted : "+parent);
-			Uri gitdirUri = Uri.fromFile(gitdir);
-			Intent deletionBroadcast = new Intent(REPO_DELETE_COMPLETED, gitdirUri);
-			context.sendBroadcast(deletionBroadcast);
-			Log.d(TAG, "Sent broadcast : "+gitdirUri.getAuthority());
+			// broadcastCompletion();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return null;
     }
+	
+	@Override
+    protected void onPostExecute(Void result) {
+        // finish the RMA, which should wipe the progress bar on it as well.
+    }
+
+//	private void broadcastCompletion() {
+//		Uri gitdirUri = Uri.fromFile(gitdir);
+//		Intent deletionBroadcast = new Intent(REPO_DELETE_COMPLETED, gitdirUri);
+//		context.sendBroadcast(deletionBroadcast);
+//		Log.d(TAG, "Sent broadcast : "+gitdirUri.getAuthority());
+//	}
+	
+
 }

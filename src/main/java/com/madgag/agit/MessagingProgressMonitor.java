@@ -2,25 +2,11 @@ package com.madgag.agit;
 
 import org.eclipse.jgit.lib.ProgressMonitor;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
 public class MessagingProgressMonitor implements ProgressMonitor, CancellationSignaller {
 	
 	public static final String GIT_OPERATION_PROGRESS_UPDATE = "git.operation.progress.update";
-
-	public static class Progress {
-		final String msg;
-		final int totalWork,totalCompleted;
-		public Progress(String msg, int totalWork, int totalCompleted) {
-			this.msg = msg;
-			this.totalWork = totalWork;
-			this.totalCompleted = totalCompleted;
-		}
-	}
 
 	public static final String TAG = "MessagingProgressMonitor";
 	
@@ -34,16 +20,13 @@ public class MessagingProgressMonitor implements ProgressMonitor, CancellationSi
 
 	private int totalWork;
 	
-	private final Context context;
-	private final int notificationId;
-	private final Notification notification;
-	private final NotificationManager notificationManager;
-	
 	private boolean cancelled=false;
 
 	public String myNiceStatusString;
 	
 	public Progress currentProgress;
+
+	private final ProgressListener<Progress> progressListener;
 
 
 
@@ -52,14 +35,8 @@ public class MessagingProgressMonitor implements ProgressMonitor, CancellationSi
 		return currentProgress;
 	}
 	
-	public MessagingProgressMonitor(Context context,
-			int notificationId,
-			Notification notification,
-			NotificationManager notificationManager) {
-		this.context = context;
-		this.notificationId = notificationId;
-		this.notification = notification;
-		this.notificationManager = notificationManager;
+	public MessagingProgressMonitor( ProgressListener<Progress> progressListener) {
+		this.progressListener = progressListener;
 	}
 	
 	public void setCancelled() {
@@ -112,13 +89,14 @@ public class MessagingProgressMonitor implements ProgressMonitor, CancellationSi
 
 	private void display(int cmp) {
 		currentProgress=new Progress(msg, totalWork, cmp);
+		progressListener.publish(currentProgress);
 		// Sending notification every time seems to be TOO MUCH
 //		notification.contentView.setTextViewText(R.id.status_text, currentProgress.msg);
 //		notification.contentView.setProgressBar(R.id.status_progress, currentProgress.totalWork, currentProgress.totalCompleted, false);
 //		notificationManager.notify(notificationId, notification);
 		
-		context.sendBroadcast(new Intent(GIT_OPERATION_PROGRESS_UPDATE));
-		Log.d(TAG, "broadcasted completed "+cmp);
+//		context.sendBroadcast(new Intent(GIT_OPERATION_PROGRESS_UPDATE));
+//		Log.d(TAG, "broadcasted completed "+cmp);
 	}
 
 }

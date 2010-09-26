@@ -1,14 +1,17 @@
 package com.madgag.agit;
 
+import static android.content.Intent.ACTION_VIEW;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.madgag.agit.MessagingProgressMonitor.GIT_OPERATION_PROGRESS_UPDATE;
 import static com.madgag.agit.RepoDeleter.REPO_DELETE_COMPLETED;
 
 import java.io.File;
 
-import org.connectbot.service.PromptHelper;
+import org.eclipse.jgit.lib.Repository;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -28,9 +31,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.madgag.agit.GitOperationsService.FetchThread;
 import com.madgag.agit.GitOperationsService.GitOperationsBinder;
-import com.madgag.agit.MessagingProgressMonitor.Progress;
 
 
 public class RepositoryManagementActivity extends android.app.Activity {
@@ -60,13 +61,13 @@ public class RepositoryManagementActivity extends android.app.Activity {
 		}, BIND_AUTO_CREATE);
         buttonUp(R.id.FetchButton, new OnClickListener() {
 			public void onClick(View v) {
-				startService(new Intent("git.FETCH", Uri.fromFile(gitdir), RepositoryManagementActivity.this,GitOperationsService.class));
+				startService(new Intent("git.FETCH").putExtra("gitdir", gitdir.getAbsolutePath()));
 			}
 		});
         buttonUp(R.id.DeleteButton,new OnClickListener() {
 			public void onClick(View v) {
 				showDialog(DELETION_DIALOG);
-				new Thread(new RepoDeleter(gitdir, RepositoryManagementActivity.this)).start();
+				new RepoDeleter(gitdir, RepositoryManagementActivity.this).execute();
 			}
 		});
         buttonUp(R.id.LogButton,new OnClickListener() {
@@ -87,7 +88,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 			String action = intent.getAction();
 			Log.d(TAG, "Got broadcast : "+action);
 			if (action.equals(GIT_OPERATION_PROGRESS_UPDATE)){
-				updateOperationProgressDisplay();
+				// updateOperationProgressDisplay();
 			} else if (action.equals("git.user.interation.request")) {
 				Log.d(TAG, "I should probably do something helpful");
 			} else if (action.equals(REPO_DELETE_COMPLETED)) {
@@ -107,17 +108,17 @@ public class RepositoryManagementActivity extends android.app.Activity {
 		}
 	};
 	
-	private void updateOperationProgressDisplay() {
-		Log.d(TAG, "Updating Operation Progress display");
-//		String boo = gitOperationsService.currentOperationFor(db);
-//		((TextView) findViewById(R.id.GitOperationStatus)).setText(boo);
-		showDialog(PROGRESS_DIALOG);
-		FetchThread ft=repositoryOperationContext.getCurrentOperation();
-		Progress currentProgress = ft.progressMonitor.getCurrentProgress();
-		progressDialog.setProgress(currentProgress.totalCompleted);
-		progressDialog.setMax(currentProgress.totalWork);
-		progressDialog.setMessage(currentProgress.msg);
-	}
+//	private void updateOperationProgressDisplay() {
+//		Log.d(TAG, "Updating Operation Progress display");
+////		String boo = gitOperationsService.currentOperationFor(db);
+////		((TextView) findViewById(R.id.GitOperationStatus)).setText(boo);
+//		showDialog(PROGRESS_DIALOG);
+//		FetchThread ft=repositoryOperationContext.getCurrentOperation();
+//		Progress currentProgress = ft.progressMonitor.getCurrentProgress();
+//		progressDialog.setProgress(currentProgress.totalCompleted);
+//		progressDialog.setMax(currentProgress.totalWork);
+//		progressDialog.setMessage(currentProgress.msg);
+//	}
 	
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
@@ -146,7 +147,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 			stringDialogBuilder.setView(input);
 			stringDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
-					repositoryOperationContext.getCurrentOperation().promptHelper.setResponse((CharSequence)input.getText());
+					//repositoryOperationContext.getCurrentOperation().promptHelper.setResponse((CharSequence)input.getText());
 				}
 			});
 
@@ -159,7 +160,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 	private android.content.DialogInterface.OnClickListener sendDialogResponseOf(final boolean bool) {
 		return new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				repositoryOperationContext.getCurrentOperation().promptHelper.setResponse(bool);
+				// repositoryOperationContext.getCurrentOperation().promptHelper.setResponse(bool);
 			}
 		};
 	}
@@ -173,12 +174,12 @@ public class RepositoryManagementActivity extends android.app.Activity {
 			progressDialog.setProgress(0);
 			progressDialog.setOnCancelListener(new OnCancelListener() {
 				public void onCancel(DialogInterface dialog) {
-					repositoryOperationContext.getCurrentOperation().getCancellationSignaller().setCancelled();
+					// repositoryOperationContext.getCurrentOperation().getCancellationSignaller().setCancelled();
 				}
 			});
 		case YES_NO_DIALOG:
 			AlertDialog alertDialog=(AlertDialog) dialog;
-			alertDialog.setMessage(repositoryOperationContext.getCurrentOperation().promptHelper.promptHint);
+			// alertDialog.setMessage(repositoryOperationContext.getCurrentOperation().promptHelper.promptHint);
 		default:
 		}
 	}
@@ -213,20 +214,20 @@ public class RepositoryManagementActivity extends android.app.Activity {
 			//guess there's not been a running service yet...
 			return;
 		}
-		FetchThread currentOperation = repositoryOperationContext.getCurrentOperation();
-		if (currentOperation==null) {
-			// wipe dialogs?
-			return;
-		}
-		PromptHelper prompt=currentOperation.promptHelper;
-		if (String.class.equals(prompt.promptRequested)) {
-			showDialog(STRING_ENTRY_DIALOG);
-		} else if(Boolean.class.equals(prompt.promptRequested)) {
-			showDialog(YES_NO_DIALOG);
-		} else {
-//			hideAllPrompts();
-//			view.requestFocus();
-		}
+//		FetchThread currentOperation = repositoryOperationContext.getCurrentOperation();
+//		if (currentOperation==null) {
+//			// wipe dialogs?
+//			return;
+//		}
+//		PromptHelper prompt=currentOperation.promptHelper;
+//		if (String.class.equals(prompt.promptRequested)) {
+//			showDialog(STRING_ENTRY_DIALOG);
+//		} else if(Boolean.class.equals(prompt.promptRequested)) {
+//			showDialog(YES_NO_DIALOG);
+//		} else {
+////			hideAllPrompts();
+////			view.requestFocus();
+//		}
 	}
 
 	@Override
@@ -242,4 +243,13 @@ public class RepositoryManagementActivity extends android.app.Activity {
     	Log.i(TAG, "gd is "+gd.getAbsolutePath());
     	return gd;
 	}
+	
+	public static PendingIntent manageGitRepo(Repository repository,Context context) {
+		return manageGitRepo(repository.getDirectory(), context);
+	}
+	public static PendingIntent manageGitRepo(File gitdir,Context context) {
+		Intent intentForNotification = new Intent(ACTION_VIEW, Uri.fromFile(gitdir), context,RepositoryManagementActivity.class);
+        intentForNotification.setFlags(FLAG_ACTIVITY_NEW_TASK);
+		return PendingIntent.getActivity(context, 0, intentForNotification, 0);
+	};
 }

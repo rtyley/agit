@@ -1,16 +1,12 @@
 package com.madgag.agit;
 
-import static android.content.Intent.ACTION_VIEW;
+import static android.widget.Toast.LENGTH_LONG;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
 import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepository;
-import org.eclipse.jgit.transport.RefSpec;
-import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
 
 import android.app.Activity;
@@ -75,29 +71,21 @@ public class Clone extends Activity {
 			String localName = uri.getHumanishName();
 			File repoDir=new File(reposDir,localName);
 			if (!repoDir.mkdirs()) {
-				Toast.makeText(Clone.this, "Couldn't create "+repoDir, 10).show();
+				Toast.makeText(Clone.this, "Couldn't create "+repoDir, LENGTH_LONG).show();
 				throw new IOException();
 			}
     		File gitdir = new File(repoDir, Constants.DOT_GIT);
-    		FileRepository dst = new FileRepository(gitdir);
-    		dst.create();
-    		dst.getConfig().setBoolean("core", null, "bare", false);
-    		dst.getConfig().save();
-    		Repository db = dst;
+    		Intent intent = new Intent("git.CLONE");
+    		intent
+    			.putExtra("source-uri", uri.toPrivateString())
+    			.putExtra("gitdir", gitdir.getAbsolutePath());
+    		Log.i(TAG, "Doin "+intent+" "+intent.getStringExtra("gitdir"));
+			startService(intent);
     		
-    		String remoteName = Constants.DEFAULT_REMOTE_NAME;
-    		
-    		final RemoteConfig rc = new RemoteConfig(dst.getConfig(), remoteName);
-    		rc.addURI(uri);
-    		rc.addFetchRefSpec(new RefSpec().setForceUpdate(true)
-    				.setSourceDestination(Constants.R_HEADS + "*",
-    						Constants.R_REMOTES + remoteName + "/*"));
-    		rc.update(dst.getConfig());
-    		dst.getConfig().save();
-    		Uri gitdirUri = Uri.fromFile(gitdir);
-			startService(new Intent("git.FETCH", gitdirUri, Clone.this,GitOperationsService.class));
-			//startActivity(new Intent(ACTION_VIEW, gitdirUri, Clone.this,RepositoryManagementActivity.class));
+    		// cloneStuff(uri, gitdir);
 		}
+
+
 		
 //		private FetchResult runFetch() throws NotSupportedException, URISyntaxException, TransportException {
 //			final Transport tn = Transport.open(db, remoteName);
