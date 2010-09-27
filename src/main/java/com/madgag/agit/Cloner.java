@@ -130,7 +130,7 @@ public class Cloner extends AsyncTask<Void, Progress, Void> implements ProgressL
 
 	private void notifyCloneComplete() {
 		// The user is not interested in old fetch Notifications if we've done a new one
-		Notification completedNotification=new Notification(R.drawable.diff_changetype_modify, "Fetch complete", currentTimeMillis());
+		Notification completedNotification=new Notification(R.drawable.diff_changetype_modify, "Clone complete", currentTimeMillis());
 		completedNotification.setLatestEventInfo(context, "Clone "+sourceUri, "Completed", manageGitRepo(gitdir,context));
 		completedNotification.flags |= FLAG_AUTO_CANCEL;
 		notificationManager.notify(operationContext.fetchCompletionId, completedNotification);
