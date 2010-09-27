@@ -70,7 +70,7 @@ public class Fetcher extends AsyncTask<Void, Progress, FetchResult> implements P
     }
 	
 	private Notification ongoingFetchNotification(File gitdir, String remote) {
-		Notification n = new Notification(R.drawable.diff_changetype_add, "Hello", currentTimeMillis());
+		Notification n = new Notification(android.R.drawable.stat_sys_download, "Hello", currentTimeMillis());
 		n.flags = n.flags | FLAG_ONGOING_EVENT;
 		n.setLatestEventInfo(context, "Fetching "+remote, "Like a horse", manageGitRepo(gitdir,context));
 		n.contentView=fetchProgressNotificationRemoteView();
@@ -93,7 +93,7 @@ public class Fetcher extends AsyncTask<Void, Progress, FetchResult> implements P
 
 	private void notifyFetchComplete() {
 		// The user is not interested in old fetch Notifications if we've done a new one
-		Notification completedNotification=new Notification(R.drawable.diff_changetype_modify, "Fetch complete", currentTimeMillis());
+		Notification completedNotification=new Notification(android.R.drawable.stat_sys_download, "Fetch complete", currentTimeMillis());
 		completedNotification.setLatestEventInfo(context, "Fetched "+remote, "UTTERLY", manageGitRepo(db,context));
 		completedNotification.flags |= FLAG_AUTO_CANCEL;
 		notificationManager.notify(operationContext.fetchCompletionId, completedNotification);
