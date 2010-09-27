@@ -11,6 +11,7 @@ import java.util.Map;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
+import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
 
 import android.app.Service;
@@ -66,7 +67,13 @@ public class GitOperationsService extends Service {
 			}
 		} else if (action.equals("git.FETCH")) {
 			Log.i(TAG, "gitdir is "+gitdir.getAbsolutePath());
-			new Fetcher(repositoryOperationContext.getRepository(), remote, this,repositoryOperationContext).execute();
+			Repository repository = repositoryOperationContext.getRepository();
+			try {
+				new Fetcher(repository, new RemoteConfig(repository.getConfig(), remote), this,repositoryOperationContext).execute();
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+				Toast.makeText(this, "Bad config "+e, LENGTH_LONG).show();
+			}
 		} else {
 			Log.e(TAG, "Why not is");
 		}

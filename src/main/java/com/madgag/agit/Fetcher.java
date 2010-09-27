@@ -14,6 +14,7 @@ import org.eclipse.jgit.errors.NotSupportedException;
 import org.eclipse.jgit.errors.TransportException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.FetchResult;
+import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.SshSessionFactory;
 import org.eclipse.jgit.transport.Transport;
 
@@ -30,23 +31,24 @@ public class Fetcher extends AsyncTask<Void, Progress, FetchResult> implements P
 	public static final String TAG = "Fetcher";
 	private final RepositoryOperationContext operationContext;
 	private final Repository db;
-	private final String remote;
 	final MessagingProgressMonitor progressMonitor;
 	public final PromptHelper promptHelper;
 	public Notification notification;
 	private NotificationManager notificationManager;
 	private final Context context;
 	private final Service service;
+	private final RemoteConfig remoteConfig;
+	private long startTime;
    
-	public Fetcher(Repository db, String remote, Service service,RepositoryOperationContext operationContext) {
+	public Fetcher(Repository db, RemoteConfig remoteConfig, Service service,RepositoryOperationContext operationContext) {
         this.db = db;
-		this.remote = remote;
+		this.remoteConfig = remoteConfig;
 		this.service = service;
 		this.context = service;
 		this.operationContext = operationContext;
 		this.promptHelper=new PromptHelper(db);
 		notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-		notification = ongoingFetchNotification(db.getDirectory(), remote);
+		notification = ongoingFetchNotification(db.getDirectory(), remoteConfig);
 		progressMonitor = new MessagingProgressMonitor(this);
     }
     
@@ -56,6 +58,7 @@ public class Fetcher extends AsyncTask<Void, Progress, FetchResult> implements P
     
     @Override
     protected void onPreExecute() {
+    	startTime=currentTimeMillis();
     	service.startForeground(operationContext.fetchOngoingId, notification);
     }
     
@@ -69,11 +72,12 @@ public class Fetcher extends AsyncTask<Void, Progress, FetchResult> implements P
 		}
     }
 	
-	private Notification ongoingFetchNotification(File gitdir, String remote) {
-		Notification n = new Notification(android.R.drawable.stat_sys_download, "Hello", currentTimeMillis());
+	private Notification ongoingFetchNotification(File gitdir, RemoteConfig rc) {
+		Notification n = new Notification(android.R.drawable.stat_sys_download, "Fetchin", currentTimeMillis());
 		n.flags = n.flags | FLAG_ONGOING_EVENT;
-		n.setLatestEventInfo(context, "Fetching "+remote, "Like a horse", manageGitRepo(gitdir,context));
+		n.setLatestEventInfo(context, "Fetching "+rc.getName(), rc.getURIs().get(0).toString(), manageGitRepo(gitdir,context));
 		n.contentView=fetchProgressNotificationRemoteView();
+		n.contentView.setTextViewText(R.id.status_text, "Hello, this message is in a custom expanded view");
 		return n;
 	}
 	
@@ -87,21 +91,22 @@ public class Fetcher extends AsyncTask<Void, Progress, FetchResult> implements P
 	
 	@Override
 	protected void onPostExecute(FetchResult result) {
+		long duration=currentTimeMillis()-startTime;
 		service.stopForeground(true); // Actually, we only want to call this if ALL threads are completed, I think...
 		notifyFetchComplete();
 	}
 
 	private void notifyFetchComplete() {
 		// The user is not interested in old fetch Notifications if we've done a new one
-		Notification completedNotification=new Notification(android.R.drawable.stat_sys_download, "Fetch complete", currentTimeMillis());
-		completedNotification.setLatestEventInfo(context, "Fetched "+remote, "UTTERLY", manageGitRepo(db,context));
+		Notification completedNotification=new Notification(android.R.drawable.stat_sys_download_done, "Fetch complete", currentTimeMillis());
+		completedNotification.setLatestEventInfo(context, "Fetched "+remoteConfig.getName(), remoteConfig.getURIs().get(0).toString(), manageGitRepo(db,context));
 		completedNotification.flags |= FLAG_AUTO_CANCEL;
 		notificationManager.notify(operationContext.fetchCompletionId, completedNotification);
 	}
     
 	private FetchResult runFetch() throws NotSupportedException, URISyntaxException, TransportException {
 		SshSessionFactory.setInstance(new AndroidSshSessionFactory(promptHelper));
-		final Transport tn = Transport.open(db, remote);
+		final Transport tn = Transport.open(db, remoteConfig);
 		final FetchResult r;
 		try {
 			r = tn.fetch(progressMonitor, null);
