@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -45,6 +46,9 @@ public class RepoDeleter extends AsyncTask<Void, Void, Void> {
 	@Override
     protected void onPostExecute(Void result) {
         // finish the RMA, which should wipe the progress bar on it as well.
+		Intent deletionBroadcast = new Intent(REPO_DELETE_COMPLETED).putExtra("gitdir", gitdir.getAbsolutePath());
+		context.sendBroadcast(deletionBroadcast);
+		Log.d(TAG, "Sent broadcast : "+deletionBroadcast);
     }
 
 //	private void broadcastCompletion() {

@@ -101,10 +101,11 @@ public class RepositoryManagementActivity extends android.app.Activity {
 	
 	BroadcastReceiver deletionBroadcastReceiver = new BroadcastReceiver() {
 		public void onReceive(Context context, Intent intent) {
-			Log.d(TAG, "deletionBroadcastReceiver "+gitdir+" got broadcast : "+intent.getData());
+			Log.d(TAG, "deletionBroadcastReceiver "+gitdir+" got broadcast : "+intent);
+			if (!gitdir.exists()) {
 			//if (intent.getData().equals(Uri.fromFile(gitdir))) {
 				finish();
-			//}
+			}
 		}
 	};
 	
@@ -191,7 +192,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 		((TextView) findViewById(R.id.RepositoryFileLocation)).setText(gitdir.getAbsolutePath());
 		registerReceiver(operationProgressBroadcastReceiver, new IntentFilter("git.operation.progress.update"));
 		IntentFilter repoDeletionIntentFilter = new IntentFilter(REPO_DELETE_COMPLETED);
-		repoDeletionIntentFilter.addDataScheme("file");
+		//repoDeletionIntentFilter.addDataScheme("file");
 		//repoDeletionIntentFilter.addD("file");
 		
 		registerReceiver(deletionBroadcastReceiver, repoDeletionIntentFilter);
