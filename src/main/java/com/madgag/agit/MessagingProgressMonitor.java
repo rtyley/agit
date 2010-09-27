@@ -78,7 +78,7 @@ public class MessagingProgressMonitor implements ProgressMonitor, CancellationSi
 			display(cmp);
 			System.err.flush();
 		} else {
-			if ((cmp * 100 / totalWork) != (lastWorked * 100) / totalWork) {
+			if ((cmp * 10 / totalWork) != (lastWorked * 10) / totalWork) {
 				display(cmp);
 				System.err.flush();
 			}
@@ -90,13 +90,6 @@ public class MessagingProgressMonitor implements ProgressMonitor, CancellationSi
 	private void display(int cmp) {
 		currentProgress=new Progress(msg, totalWork, cmp);
 		progressListener.publish(currentProgress);
-		// Sending notification every time seems to be TOO MUCH
-//		notification.contentView.setTextViewText(R.id.status_text, currentProgress.msg);
-//		notification.contentView.setProgressBar(R.id.status_progress, currentProgress.totalWork, currentProgress.totalCompleted, false);
-//		notificationManager.notify(notificationId, notification);
-		
-//		context.sendBroadcast(new Intent(GIT_OPERATION_PROGRESS_UPDATE));
-//		Log.d(TAG, "broadcasted completed "+cmp);
 	}
 
 }

@@ -61,6 +61,8 @@ public class Cloner extends AsyncTask<Void, Progress, Void> implements ProgressL
 
 	private Notification notification;
 
+	private long startTime;
+
 	Cloner(URIish sourceUri, File gitdir, Service service, RepositoryOperationContext operationContext) {
         this.sourceUri = sourceUri;
 		this.gitdir = gitdir;
@@ -77,6 +79,8 @@ public class Cloner extends AsyncTask<Void, Progress, Void> implements ProgressL
 		n.flags = n.flags | FLAG_ONGOING_EVENT;
 		n.setLatestEventInfo(context, "Cloning "+sourceUri, "Like a horse", manageGitRepo(gitdir,context));
 		n.contentView=fetchProgressNotificationRemoteView();
+		n.contentView.setTextViewText(R.id.status_text, "Cloning: "+sourceUri);
+		n.contentView.setProgressBar(R.id.status_progress,1,0,true);
 		return n;
 	}
 	
@@ -89,6 +93,7 @@ public class Cloner extends AsyncTask<Void, Progress, Void> implements ProgressL
 	
     @Override
     protected void onPreExecute() {
+    	startTime=currentTimeMillis();
     	service.startForeground(operationContext.fetchOngoingId, notification);
     }
 	
@@ -113,6 +118,7 @@ public class Cloner extends AsyncTask<Void, Progress, Void> implements ProgressL
 			final FetchResult r = runFetch();
 			Log.i(TAG, "Finished fetch "+r);
 			final Ref branch = guessHEAD(r);
+			publishProgress(new Progress("Performing checkout"));
 			doCheckout(branch);
 			Log.i(TAG, "Completed checkout, thread done");
 			//notificationManager.cancel(notificationId); // It seems 'On-going' notifications can't be converted to ordinary ones.
@@ -124,6 +130,8 @@ public class Cloner extends AsyncTask<Void, Progress, Void> implements ProgressL
 	
 	@Override
 	protected void onPostExecute(Void v) {
+		long duration=currentTimeMillis()-startTime;
+		Log.i(TAG, "Clone "+sourceUri+" completed in "+duration+" ms");
 		service.stopForeground(true); // Actually, we only want to call this if ALL threads are completed, I think...
 		notifyCloneComplete();
 	}
@@ -212,6 +220,9 @@ public class Cloner extends AsyncTask<Void, Progress, Void> implements ProgressL
 	protected void onProgressUpdate(Progress... values) {
 		Progress p=values[values.length-1];
 		Log.i(TAG, "Got prog "+p);
+		notification.contentView.setProgressBar(R.id.status_progress,p.totalWork,p.totalCompleted,p.isIndeterminate());
+		notification.contentView.setTextViewText(R.id.status_text, p.msg);
+		notificationManager.notify(operationContext.fetchOngoingId, notification);
 	}
 
 	public void publish(Progress... values) {
