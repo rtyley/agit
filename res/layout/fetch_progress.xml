@@ -14,6 +14,7 @@
 		<ProgressBar android:id="@+id/status_progress"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:layout_below="@id/status_text"
+			style="?android:attr/progressBarStyleHorizontal"
 			android:progressDrawable="@android:drawable/progress_horizontal"
 			android:indeterminate="false" android:indeterminateOnly="false" />
 
