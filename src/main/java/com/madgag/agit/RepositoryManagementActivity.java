@@ -191,12 +191,11 @@ public class RepositoryManagementActivity extends android.app.Activity {
         gitdir=getGitDirFrom(getIntent());
 		((TextView) findViewById(R.id.RepositoryFileLocation)).setText(gitdir.getAbsolutePath());
 		registerReceiver(operationProgressBroadcastReceiver, new IntentFilter("git.operation.progress.update"));
-		IntentFilter repoDeletionIntentFilter = new IntentFilter(REPO_DELETE_COMPLETED);
-		//repoDeletionIntentFilter.addDataScheme("file");
-		//repoDeletionIntentFilter.addD("file");
 		
-		registerReceiver(deletionBroadcastReceiver, repoDeletionIntentFilter);
+		registerReceiver(deletionBroadcastReceiver, new IntentFilter(REPO_DELETE_COMPLETED));
 		registerRecieverForServicePromptRequests();
+		
+		//repositoryOperationContext.getCurrentOperation().getPromptHelper().;
 		updateUIToReflectServicePromptRequests();
     }
     

@@ -1,9 +1,6 @@
 package com.madgag.agit;
 
-import static android.app.Notification.FLAG_AUTO_CANCEL;
 import static android.app.Notification.FLAG_ONGOING_EVENT;
-import static android.content.Context.NOTIFICATION_SERVICE;
-import static com.madgag.agit.RepositoryManagementActivity.manageGitRepo;
 import static java.lang.System.currentTimeMillis;
 
 import java.io.File;
@@ -37,84 +34,61 @@ import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.URIish;
 
 import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.Service;
-import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-public class Cloner extends AsyncTask<Void, Progress, Void> implements ProgressListener<Progress> {
+public class Cloner extends GitOperation {
 	
 	public static final String TAG = "Cloner";
 	
 	private final URIish sourceUri;
-	private final File gitdir;
-	private final Service service;
-	private final Context context;
+
+	private MessagingProgressMonitor progressMonitor;
+	
 	private Repository db;
 
-	private final RepositoryOperationContext operationContext;
-	private MessagingProgressMonitor progressMonitor;
+	private final File gitdir;
 
-	private NotificationManager notificationManager;
-
-	private Notification notification;
-
-	private long startTime;
-
-	Cloner(URIish sourceUri, File gitdir, Service service, RepositoryOperationContext operationContext) {
+	Cloner(URIish sourceUri, File gitdir, RepositoryOperationContext operationContext) {
+		super(operationContext);
         this.sourceUri = sourceUri;
 		this.gitdir = gitdir;
-		this.service = service;
-		this.context = service;
-		this.operationContext = operationContext;
 		progressMonitor = new MessagingProgressMonitor(this);
-		notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-		notification = ongoingCloneNotification(sourceUri);
     }
 	
-	private Notification ongoingCloneNotification(URIish sourceUri) {
+	@Override
+	Notification createOngoingNotification() {
 		Notification n = new Notification(android.R.drawable.stat_sys_download,"Clonin", currentTimeMillis());
-		n.flags = n.flags | FLAG_ONGOING_EVENT;
-		n.setLatestEventInfo(context, "Cloning "+sourceUri, "Like a horse", manageGitRepo(gitdir,context));
+		n.setLatestEventInfo(repositoryOperationContext.getService(), "Cloning "+sourceUri, "Like a horse", repositoryOperationContext.manageGitRepo);
+		
 		n.contentView=fetchProgressNotificationRemoteView();
 		n.contentView.setTextViewText(R.id.status_text, "Cloning: "+sourceUri);
-		n.contentView.setProgressBar(R.id.status_progress,1,0,true);
 		return n;
 	}
 	
-
     private RemoteViews fetchProgressNotificationRemoteView() {
-		RemoteViews remoteView=new RemoteViews(context.getApplicationContext().getPackageName(), R.layout.fetch_progress);
-		remoteView.setProgressBar(R.id.status_progress, 512, 128, true);
+		RemoteViews remoteView=new RemoteViews(repositoryOperationContext.getService().getApplicationContext().getPackageName(), R.layout.fetch_progress);
+		remoteView.setProgressBar(R.id.status_progress,1,0,true);
 		return remoteView;
-    }
-	
-    @Override
-    protected void onPreExecute() {
-    	startTime=currentTimeMillis();
-    	service.startForeground(operationContext.fetchOngoingId, notification);
     }
 	
 	@Override
 	protected Void doInBackground(Void... arg0) {
 		try {
-    		FileRepository dst = new FileRepository(gitdir);
-    		dst.create();
+    		db = new FileRepository(gitdir);
+    		db.create();
     		//dst.getConfig().setBoolean("core", null, "bare", false);
     		//dst.getConfig().save();
-    		db = dst;
     		
     		String remoteName = Constants.DEFAULT_REMOTE_NAME;
     		
-    		final RemoteConfig rc = new RemoteConfig(dst.getConfig(), remoteName);
+    		final RemoteConfig rc = new RemoteConfig(db.getConfig(), remoteName);
     		rc.addURI(sourceUri);
     		rc.addFetchRefSpec(new RefSpec().setForceUpdate(true)
     				.setSourceDestination(Constants.R_HEADS + "*",
     						Constants.R_REMOTES + remoteName + "/*"));
-    		rc.update(dst.getConfig());
-    		dst.getConfig().save();
+    		rc.update(db.getConfig());
+    		db.getConfig().save();
 			final FetchResult r = runFetch();
 			Log.i(TAG, "Finished fetch "+r);
 			final Ref branch = guessHEAD(r);
@@ -129,19 +103,10 @@ public class Cloner extends AsyncTask<Void, Progress, Void> implements ProgressL
     }
 	
 	@Override
-	protected void onPostExecute(Void v) {
-		long duration=currentTimeMillis()-startTime;
-		Log.i(TAG, "Clone "+sourceUri+" completed in "+duration+" ms");
-		service.stopForeground(true); // Actually, we only want to call this if ALL threads are completed, I think...
-		notifyCloneComplete();
-	}
-
-	private void notifyCloneComplete() {
-		// The user is not interested in old fetch Notifications if we've done a new one
+	Notification createCompletionNotification() {
 		Notification completedNotification=new Notification(android.R.drawable.stat_sys_download_done, "Cloned "+sourceUri.getHumanishName(), currentTimeMillis());
-		completedNotification.setLatestEventInfo(context, "Clone completed", sourceUri.toString(), manageGitRepo(gitdir,context));
-		completedNotification.flags |= FLAG_AUTO_CANCEL;
-		notificationManager.notify(operationContext.fetchCompletionId, completedNotification);
+		completedNotification.setLatestEventInfo(repositoryOperationContext.getService(), "Clone completed", sourceUri.toString(), repositoryOperationContext.manageGitRepo);
+		return completedNotification;
 	}
 	
 	private Ref guessHEAD(final FetchResult result) {
@@ -201,9 +166,9 @@ public class Cloner extends AsyncTask<Void, Progress, Void> implements ProgressL
 	}
 	
 	private FetchResult runFetch() throws NotSupportedException, URISyntaxException, TransportException {
-		PromptHelper promptHelper=null;
+		PromptHelper promptHelper=new PromptHelper("My Fetch Tag");
 		String remoteName = Constants.DEFAULT_REMOTE_NAME;
-		SshSessionFactory.setInstance(new AndroidSshSessionFactory(promptHelper));
+		SshSessionFactory.setInstance(new AndroidSshSessionFactory(repositoryOperationContext, promptHelper));
 		final Transport tn = Transport.open(db, remoteName);
 		final FetchResult r;
 		try {
@@ -216,16 +181,6 @@ public class Cloner extends AsyncTask<Void, Progress, Void> implements ProgressL
 		return r;
 	}
 	
-	@Override
-	protected void onProgressUpdate(Progress... values) {
-		Progress p=values[values.length-1];
-		Log.i(TAG, "Got prog "+p);
-		notification.contentView.setProgressBar(R.id.status_progress,p.totalWork,p.totalCompleted,p.isIndeterminate());
-		notification.contentView.setTextViewText(R.id.status_text, p.msg);
-		notificationManager.notify(operationContext.fetchOngoingId, notification);
-	}
 
-	public void publish(Progress... values) {
-		publishProgress(values);
-	}
+
 }

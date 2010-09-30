@@ -9,14 +9,16 @@ import com.jcraft.jsch.Session;
 public class AndroidSshSessionFactory extends SshConfigSessionFactory {
 
 	private final PromptHelper promptHelper;
+	private final RepositoryOperationContext operationContext;
 	
-	AndroidSshSessionFactory(PromptHelper promptHelper) {
+	AndroidSshSessionFactory(RepositoryOperationContext operationContext, PromptHelper promptHelper) {
+		this.operationContext = operationContext;
 		this.promptHelper = promptHelper;
 	}
 	
 	@Override
 	protected void configure(Host host, Session session) {
-		session.setUserInfo(new AndroidUserInfo(promptHelper));
+		session.setUserInfo(new AndroidUserInfo(operationContext, promptHelper));
 	}
 
 }

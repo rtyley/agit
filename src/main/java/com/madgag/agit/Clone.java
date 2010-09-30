@@ -30,9 +30,7 @@ public class Clone extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        
         ((Button) findViewById(R.id.GoCloneButton)).setOnClickListener(goCloneButtonListener);
-        
     }
     
     protected void onStart() {

@@ -1,5 +1,6 @@
 package com.madgag.agit;
 
+import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.widget.Toast.LENGTH_LONG;
 
 import java.io.File;
@@ -14,6 +15,7 @@ import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
 
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -38,14 +40,20 @@ public class GitOperationsService extends Service {
     // This is the object that receives interactions from clients.  See
     // RemoteService for a more complete example.
     private final IBinder mBinder = new GitOperationsBinder();
+	private NotificationManager notificationManager;
     
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
+    
+    public NotificationManager getNotificationManager() {
+		return notificationManager;
+	}
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     	if (intent==null) {
     		return START_STICKY;
     	}
@@ -61,7 +69,7 @@ public class GitOperationsService extends Service {
 			String sourceUriString = intent.getStringExtra("source-uri");
 			try {
 				URIish sourceUri=new URIish(sourceUriString);
-				new Cloner(sourceUri, gitdir, this, repositoryOperationContext).execute();
+				new Cloner(sourceUri, gitdir, repositoryOperationContext).execute();
 			} catch (URISyntaxException e) {
 				Toast.makeText(this, "Invalid uri "+sourceUriString, LENGTH_LONG);
 			}
@@ -69,7 +77,7 @@ public class GitOperationsService extends Service {
 			Log.i(TAG, "gitdir is "+gitdir.getAbsolutePath());
 			Repository repository = repositoryOperationContext.getRepository();
 			try {
-				new Fetcher(repository, new RemoteConfig(repository.getConfig(), remote), this,repositoryOperationContext).execute();
+				new Fetcher(new RemoteConfig(repository.getConfig(), remote), repositoryOperationContext).execute();
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 				Toast.makeText(this, "Bad config "+e, LENGTH_LONG).show();
@@ -92,7 +100,7 @@ public class GitOperationsService extends Service {
     RepositoryOperationContext getOrCreateRepositoryOperationContextFor(File gitdir) {
     	if (!map.containsKey(gitdir)) {
     		try {
-				map.put(gitdir, new RepositoryOperationContext(new FileRepository(gitdir)));
+				map.put(gitdir, new RepositoryOperationContext(new FileRepository(gitdir),this));
 			} catch (IOException e) {
 				throw new RuntimeException();
 			}
