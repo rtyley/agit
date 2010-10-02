@@ -14,6 +14,7 @@ public class RepositoryOperationContext {
 	private final Repository repository;
 	public final int fetchCompletionId,fetchOngoingId;
 	public final PendingIntent manageGitRepo;
+	private GitOperation currentOperation;
 	
 	//private FetchThread currentOperation;
 	
@@ -50,10 +51,14 @@ public class RepositoryOperationContext {
 		return manageGitRepo;
 	}
 
-
+	// grandiose name
+	public void enqueue(GitOperation gitOperation) {
+		currentOperation=gitOperation;
+		gitOperation.execute();
+	}
 
 	public GitOperation getCurrentOperation() {
-		return null;
+		return currentOperation;
 	}
 	
 //	public void setCurrentOperation(FetchThread currentOperation) {

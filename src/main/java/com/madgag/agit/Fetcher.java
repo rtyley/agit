@@ -1,6 +1,5 @@
 package com.madgag.agit;
 
-import static android.app.Notification.FLAG_ONGOING_EVENT;
 import static java.lang.System.currentTimeMillis;
 
 import java.net.URISyntaxException;
@@ -23,7 +22,6 @@ public class Fetcher extends GitOperation {
 	public static final String TAG = "Fetcher";
 	private final Repository db;
 	final MessagingProgressMonitor progressMonitor;
-	public final PromptHelper promptHelper;
 	private final RemoteConfig remoteConfig;
    
 	public Fetcher(RemoteConfig remoteConfig, RepositoryOperationContext operationContext) {
@@ -52,10 +50,9 @@ public class Fetcher extends GitOperation {
 	@Override
 	Notification createOngoingNotification() {
 		Notification n = new Notification(android.R.drawable.stat_sys_download, "Fetchin", currentTimeMillis());
-		n.flags = n.flags | FLAG_ONGOING_EVENT;
 		n.setLatestEventInfo(repositoryOperationContext.getService(), "Fetching "+remoteConfig.getName(), remoteConfig.getURIs().get(0).toString(), repositoryOperationContext.manageGitRepo);
 		n.contentView=fetchProgressNotificationRemoteView();
-		n.contentView.setTextViewText(R.id.status_text, "Hello, this message is in a custom expanded view");
+		n.contentView.setTextViewText(R.id.status_text, "This text really should be gone...");
 		return n;
 	}
 	

@@ -3,6 +3,9 @@ package com.madgag.agit;
 import static android.app.Notification.FLAG_AUTO_CANCEL;
 import static android.app.Notification.FLAG_ONGOING_EVENT;
 import static java.lang.System.currentTimeMillis;
+
+import org.connectbot.service.PromptHelper;
+
 import android.app.Notification;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -14,6 +17,7 @@ public abstract class GitOperation extends AsyncTask<Void, Progress, Void> imple
 	protected final RepositoryOperationContext repositoryOperationContext;
 	private long startTime;
 	protected Notification ongoingNotification;
+	protected PromptHelper promptHelper=new PromptHelper(TAG);
 	
 	public GitOperation(RepositoryOperationContext repositoryOperationContext) {
 		this.repositoryOperationContext = repositoryOperationContext;
@@ -59,4 +63,5 @@ public abstract class GitOperation extends AsyncTask<Void, Progress, Void> imple
 		ongoingNotification.contentView.setTextViewText(R.id.status_text, p.msg);
 		repositoryOperationContext.notifyOngoing(ongoingNotification);
 	}
+
 }

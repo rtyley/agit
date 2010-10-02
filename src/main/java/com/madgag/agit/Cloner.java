@@ -1,6 +1,5 @@
 package com.madgag.agit;
 
-import static android.app.Notification.FLAG_ONGOING_EVENT;
 import static java.lang.System.currentTimeMillis;
 
 import java.io.File;
@@ -166,9 +165,8 @@ public class Cloner extends GitOperation {
 	}
 	
 	private FetchResult runFetch() throws NotSupportedException, URISyntaxException, TransportException {
-		PromptHelper promptHelper=new PromptHelper("My Fetch Tag");
-		String remoteName = Constants.DEFAULT_REMOTE_NAME;
 		SshSessionFactory.setInstance(new AndroidSshSessionFactory(repositoryOperationContext, promptHelper));
+		String remoteName = Constants.DEFAULT_REMOTE_NAME;
 		final Transport tn = Transport.open(db, remoteName);
 		final FetchResult r;
 		try {

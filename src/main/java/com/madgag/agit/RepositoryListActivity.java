@@ -44,6 +44,12 @@ public class RepositoryListActivity extends ListActivity {
         setListAdapter(adapter);
     }
     
+//    @Override
+//    protected void onResume() {
+//    	super.onResume();
+//    	getListAdapter().
+//    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);

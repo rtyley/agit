@@ -49,7 +49,6 @@ public class AndroidUserInfo implements UserInfo {
 		Log.i(TAG, "promptYesNo : "+msg);
 		
 		Notification n = new Notification(android.R.drawable.stat_sys_warning,"Need to know something", currentTimeMillis());
-		n.flags = n.flags | FLAG_ONGOING_EVENT;
 		n.setLatestEventInfo(repositoryOperationContext.getService(), "SSH thing", msg, repositoryOperationContext.manageGitRepo);
 		repositoryOperationContext.notifyCompletion(n);
 		

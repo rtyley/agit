@@ -7,6 +7,7 @@ import static com.madgag.agit.RepoDeleter.REPO_DELETE_COMPLETED;
 
 import java.io.File;
 
+import org.connectbot.service.PromptHelper;
 import org.eclipse.jgit.lib.Repository;
 
 import android.app.AlertDialog;
@@ -39,7 +40,8 @@ public class RepositoryManagementActivity extends android.app.Activity {
 	private ProgressDialog progressDialog;
 	private AlertDialog stringEntryDialog,yesNoDialog;
 	
-	private final int PROGRESS_DIALOG=0,STRING_ENTRY_DIALOG=1,YES_NO_DIALOG=2,DELETION_DIALOG=3;
+	final int PROGRESS_DIALOG=0,STRING_ENTRY_DIALOG=1, YES_NO_DIALOG=2;
+	private final int DELETION_DIALOG=3;
 	public static final String TAG = "RepositoryManagementActivity";
 	private File gitdir;
 	private RepositoryOperationContext repositoryOperationContext;
@@ -51,12 +53,14 @@ public class RepositoryManagementActivity extends android.app.Activity {
         setContentView(R.layout.repo_management);
         bindService(new Intent(this,GitOperationsService.class), new ServiceConnection() {
 			public void onServiceDisconnected(ComponentName name) {
+				Log.i(TAG, "onServiceDisconnected - losing "+repositoryOperationContext);
 				repositoryOperationContext=null;
 			}
 			
 			public void onServiceConnected(ComponentName name, IBinder binder) {
 				repositoryOperationContext=((GitOperationsBinder) binder).getService().getOrCreateRepositoryOperationContextFor(gitdir);
 				Log.i(TAG, "bound opService="+repositoryOperationContext);
+				updateUIToReflectServicePromptRequests();
 			}
 		}, BIND_AUTO_CREATE);
         buttonUp(R.id.FetchButton, new OnClickListener() {
@@ -137,7 +141,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 			deletionDialog.setIndeterminate(true);
 			return deletionDialog;
 		case YES_NO_DIALOG:
-			new AlertDialog.Builder(this)
+			return new AlertDialog.Builder(this)
 				.setMessage("...")
 				.setPositiveButton("Yes", sendDialogResponseOf(true))
 				.setNegativeButton("No", sendDialogResponseOf(false))
@@ -161,7 +165,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 	private android.content.DialogInterface.OnClickListener sendDialogResponseOf(final boolean bool) {
 		return new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				// repositoryOperationContext.getCurrentOperation().promptHelper.setResponse(bool);
+				repositoryOperationContext.getCurrentOperation().promptHelper.setResponse(bool);
 			}
 		};
 	}
@@ -180,7 +184,9 @@ public class RepositoryManagementActivity extends android.app.Activity {
 			});
 		case YES_NO_DIALOG:
 			AlertDialog alertDialog=(AlertDialog) dialog;
-			// alertDialog.setMessage(repositoryOperationContext.getCurrentOperation().promptHelper.promptHint);
+			String msg = repositoryOperationContext.getCurrentOperation().promptHelper.promptInstructions;
+			Log.i(TAG, "Going to yes/no "+msg);
+			alertDialog.setMessage(msg);
 		default:
 		}
 	}
@@ -188,6 +194,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
     @Override
     protected void onResume() {
     	super.onResume();
+    	Log.i(TAG, "onResume called!");
         gitdir=getGitDirFrom(getIntent());
 		((TextView) findViewById(R.id.RepositoryFileLocation)).setText(gitdir.getAbsolutePath());
 		registerReceiver(operationProgressBroadcastReceiver, new IntentFilter("git.operation.progress.update"));
@@ -210,24 +217,27 @@ public class RepositoryManagementActivity extends android.app.Activity {
 	}
 	
 	private void updateUIToReflectServicePromptRequests() {
+		Log.i(TAG, "repositoryOperationContext="+repositoryOperationContext);
 		if (repositoryOperationContext==null) {
 			//guess there's not been a running service yet...
 			return;
 		}
-//		FetchThread currentOperation = repositoryOperationContext.getCurrentOperation();
-//		if (currentOperation==null) {
-//			// wipe dialogs?
-//			return;
-//		}
-//		PromptHelper prompt=currentOperation.promptHelper;
-//		if (String.class.equals(prompt.promptRequested)) {
-//			showDialog(STRING_ENTRY_DIALOG);
-//		} else if(Boolean.class.equals(prompt.promptRequested)) {
-//			showDialog(YES_NO_DIALOG);
-//		} else {
-////			hideAllPrompts();
-////			view.requestFocus();
-//		}
+		GitOperation currentOperation = repositoryOperationContext.getCurrentOperation();
+		Log.i(TAG, "updateUIToReflectServicePromptRequests currentOperation="+currentOperation);
+		if (currentOperation==null) {
+			// wipe dialogs?
+			return;
+		}
+
+		PromptHelper prompt=currentOperation.promptHelper;
+		if (String.class.equals(prompt.promptRequested)) {
+			showDialog(STRING_ENTRY_DIALOG);
+		} else if(Boolean.class.equals(prompt.promptRequested)) {
+			showDialog(YES_NO_DIALOG);
+		} else {
+//			hideAllPrompts();
+//			view.requestFocus();
+		}
 	}
 
 	@Override
