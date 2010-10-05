@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.connectbot.service.PromptHelper;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.errors.NotSupportedException;
@@ -29,10 +28,12 @@ import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.SshSessionFactory;
+import org.eclipse.jgit.transport.SshTransport;
 import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.URIish;
 
 import android.app.Notification;
+import android.text.TextUtils.SimpleStringSplitter;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -165,9 +166,10 @@ public class Cloner extends GitOperation {
 	}
 	
 	private FetchResult runFetch() throws NotSupportedException, URISyntaxException, TransportException {
-		SshSessionFactory.setInstance(new AndroidSshSessionFactory(repositoryOperationContext, promptHelper));
 		String remoteName = Constants.DEFAULT_REMOTE_NAME;
 		final Transport tn = Transport.open(db, remoteName);
+		configureTransportForAndroidUI(tn);
+		
 		final FetchResult r;
 		try {
 			r = tn.fetch(progressMonitor, null);
@@ -178,7 +180,5 @@ public class Cloner extends GitOperation {
 		Log.i(TAG, "Finished fetch "+r);
 		return r;
 	}
-	
-
 
 }

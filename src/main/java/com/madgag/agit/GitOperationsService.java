@@ -9,9 +9,11 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.jgit.lib.BaseRepositoryBuilder;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
 
@@ -101,8 +103,13 @@ public class GitOperationsService extends Service {
     RepositoryOperationContext getOrCreateRepositoryOperationContextFor(File gitdir) {
     	if (!map.containsKey(gitdir)) {
     		try {
-				map.put(gitdir, new RepositoryOperationContext(new FileRepository(gitdir),this));
+    			Log.i(TAG, "about to hand over "+this);
+				AndroidFS androidFS = new AndroidFS(this);
+				Log.i(TAG, "androidFS="+androidFS);
+				FileRepository fileRepo = new FileRepository(new FileRepositoryBuilder().setGitDir(gitdir).setFS(androidFS).setup());
+				map.put(gitdir, new RepositoryOperationContext(fileRepo,this));
 			} catch (IOException e) {
+				Log.i(TAG, "whoop arg "+e);
 				throw new RuntimeException();
 			}
     	}

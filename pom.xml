@@ -14,7 +14,7 @@
 		<dependency>
 			<groupId>com.madgag</groupId>
 			<artifactId>org.eclipse.jgit</artifactId>
-			<version>0.8.4.1-UNOFFICIAL-BUILD</version>
+			<version>0.8.4.2-UNOFFICIAL-BUILD-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>

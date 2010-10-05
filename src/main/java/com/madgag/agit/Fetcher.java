@@ -71,8 +71,8 @@ public class Fetcher extends GitOperation {
     }
     
 	private FetchResult runFetch() throws NotSupportedException, URISyntaxException, TransportException {
-		SshSessionFactory.setInstance(new AndroidSshSessionFactory(repositoryOperationContext,promptHelper));
 		final Transport tn = Transport.open(db, remoteConfig);
+		configureTransportForAndroidUI(tn);
 		final FetchResult r;
 		try {
 			r = tn.fetch(progressMonitor, null);

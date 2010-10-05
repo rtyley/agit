@@ -5,6 +5,8 @@ import static android.app.Notification.FLAG_ONGOING_EVENT;
 import static java.lang.System.currentTimeMillis;
 
 import org.connectbot.service.PromptHelper;
+import org.eclipse.jgit.transport.SshTransport;
+import org.eclipse.jgit.transport.Transport;
 
 import android.app.Notification;
 import android.os.AsyncTask;
@@ -64,4 +66,9 @@ public abstract class GitOperation extends AsyncTask<Void, Progress, Void> imple
 		repositoryOperationContext.notifyOngoing(ongoingNotification);
 	}
 
+	void configureTransportForAndroidUI(final Transport tn) {
+		if (tn instanceof SshTransport) {
+			((SshTransport) tn).setSshSessionFactory(new AndroidSshSessionFactory(repositoryOperationContext, promptHelper));
+		}
+	}
 }
