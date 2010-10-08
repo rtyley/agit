@@ -89,7 +89,7 @@ public class Cloner extends GitOperation {
     						Constants.R_REMOTES + remoteName + "/*"));
     		rc.update(db.getConfig());
     		db.getConfig().save();
-			final FetchResult r = runFetch();
+			final FetchResult r = runFetch(rc);
 			Log.i(TAG, "Finished fetch "+r);
 			final Ref branch = guessHEAD(r);
 			publishProgress(new Progress("Performing checkout"));
@@ -163,22 +163,6 @@ public class Cloner extends GitOperation {
 			rw.release();
 		}
 		return commit;
-	}
-	
-	private FetchResult runFetch() throws NotSupportedException, URISyntaxException, TransportException {
-		String remoteName = Constants.DEFAULT_REMOTE_NAME;
-		final Transport tn = Transport.open(db, remoteName);
-		configureTransportForAndroidUI(tn);
-		
-		final FetchResult r;
-		try {
-			r = tn.fetch(progressMonitor, null);
-		} finally {
-			tn.close();
-		}
-		// showFetchResult(tn, r);
-		Log.i(TAG, "Finished fetch "+r);
-		return r;
 	}
 
 }

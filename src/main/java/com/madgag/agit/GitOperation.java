@@ -4,7 +4,13 @@ import static android.app.Notification.FLAG_AUTO_CANCEL;
 import static android.app.Notification.FLAG_ONGOING_EVENT;
 import static java.lang.System.currentTimeMillis;
 
+import java.net.URISyntaxException;
+
 import org.connectbot.service.PromptHelper;
+import org.eclipse.jgit.errors.NotSupportedException;
+import org.eclipse.jgit.errors.TransportException;
+import org.eclipse.jgit.transport.FetchResult;
+import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.SshTransport;
 import org.eclipse.jgit.transport.Transport;
 
@@ -20,9 +26,11 @@ public abstract class GitOperation extends AsyncTask<Void, Progress, Void> imple
 	private long startTime;
 	protected Notification ongoingNotification;
 	protected PromptHelper promptHelper=new PromptHelper(TAG);
+	final MessagingProgressMonitor progressMonitor;
 	
 	public GitOperation(RepositoryOperationContext repositoryOperationContext) {
 		this.repositoryOperationContext = repositoryOperationContext;
+		progressMonitor = new MessagingProgressMonitor(this);
 	}
 	
     @Override
@@ -70,5 +78,20 @@ public abstract class GitOperation extends AsyncTask<Void, Progress, Void> imple
 		if (tn instanceof SshTransport) {
 			((SshTransport) tn).setSshSessionFactory(new AndroidSshSessionFactory(repositoryOperationContext, promptHelper));
 		}
+	}
+	
+    
+	FetchResult runFetch(RemoteConfig remoteConfig) throws NotSupportedException, URISyntaxException, TransportException {
+		final Transport tn = Transport.open(repositoryOperationContext.getRepository(), remoteConfig);
+		configureTransportForAndroidUI(tn);
+		final FetchResult r;
+		try {
+			r = tn.fetch(progressMonitor, null);
+		} finally {
+			tn.close();
+		}
+		// showFetchResult(tn, r);
+		Log.i(TAG, "Finished fetch "+r);
+		return r;
 	}
 }

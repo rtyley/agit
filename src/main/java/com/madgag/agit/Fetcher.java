@@ -21,7 +21,7 @@ public class Fetcher extends GitOperation {
 	
 	public static final String TAG = "Fetcher";
 	private final Repository db;
-	final MessagingProgressMonitor progressMonitor;
+	
 	private final RemoteConfig remoteConfig;
    
 	public Fetcher(RemoteConfig remoteConfig, RepositoryOperationContext operationContext) {
@@ -29,7 +29,6 @@ public class Fetcher extends GitOperation {
 		db = operationContext.getRepository();
 		this.remoteConfig = remoteConfig;
 		this.promptHelper=new PromptHelper(db);
-		progressMonitor = new MessagingProgressMonitor(this);
     }
     
     CancellationSignaller getCancellationSignaller() {
@@ -39,7 +38,7 @@ public class Fetcher extends GitOperation {
 	@Override
 	protected Void doInBackground(Void... arg0) {
 		try {
-			runFetch();
+			runFetch(remoteConfig);
 			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -69,18 +68,5 @@ public class Fetcher extends GitOperation {
 		completedNotification.setLatestEventInfo(repositoryOperationContext.getService(), "Fetched "+remoteConfig.getName(), remoteConfig.getURIs().get(0).toString(), repositoryOperationContext.manageGitRepo);
 		return completedNotification;
     }
-    
-	private FetchResult runFetch() throws NotSupportedException, URISyntaxException, TransportException {
-		final Transport tn = Transport.open(db, remoteConfig);
-		configureTransportForAndroidUI(tn);
-		final FetchResult r;
-		try {
-			r = tn.fetch(progressMonitor, null);
-		} finally {
-			tn.close();
-		}
-		// showFetchResult(tn, r);
-		Log.i(TAG, "Finished fetch "+r);
-		return r;
-	}
+
 }

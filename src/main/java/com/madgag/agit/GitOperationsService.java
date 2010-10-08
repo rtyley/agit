@@ -17,14 +17,19 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
 
+import com.madgag.android.ssh.AuthAgent;
+
 import android.app.NotificationManager;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -53,8 +58,32 @@ public class GitOperationsService extends Service {
 		return notificationManager;
 	}
 	
+    AuthAgent authAgent;
+    
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+        bindService(new Intent("com.madgag.android.ssh.BIND_SSH_AGENT_SERVICE"), new ServiceConnection() {
+			public void onServiceDisconnected(ComponentName name) {
+				Log.i(TAG, "onServiceDisconnected - losing "+authAgent);
+				authAgent=null;
+			}
+			
+			@SuppressWarnings("unchecked")
+			public void onServiceConnected(ComponentName name, IBinder binder) {
+				Log.i(TAG, "onServiceConnected... got "+binder);
+				authAgent=AuthAgent.Stub.asInterface(binder);
+				Log.i(TAG, "bound "+authAgent);
+				Map<String, byte[]> sendIdentities;
+				try {
+					sendIdentities = authAgent.sendIdentities();
+					Log.d(TAG, "here are identities "+sendIdentities);
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
+			}
+		}, BIND_AUTO_CREATE);
+        Log.i(TAG, "Asked for my SSH_AGENT_SERVICE ");
+		
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     	if (intent==null) {
     		return START_STICKY;
