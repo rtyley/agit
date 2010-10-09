@@ -1,6 +1,5 @@
 package com.madgag.agit;
 
-import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.widget.Toast.LENGTH_LONG;
 
 import java.io.File;
@@ -9,15 +8,12 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.jgit.lib.BaseRepositoryBuilder;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
-
-import com.madgag.android.ssh.AuthAgent;
 
 import android.app.NotificationManager;
 import android.app.Service;
@@ -32,6 +28,8 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.madgag.android.ssh.AuthAgent;
 
 public class GitOperationsService extends Service {
 
