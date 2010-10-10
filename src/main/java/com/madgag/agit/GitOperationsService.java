@@ -29,7 +29,7 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.madgag.android.ssh.AuthAgent;
+import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 
 public class GitOperationsService extends Service {
 
@@ -56,7 +56,7 @@ public class GitOperationsService extends Service {
 		return notificationManager;
 	}
 	
-    AuthAgent authAgent;
+    AndroidAuthAgent authAgent;
     
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -69,11 +69,11 @@ public class GitOperationsService extends Service {
 			@SuppressWarnings("unchecked")
 			public void onServiceConnected(ComponentName name, IBinder binder) {
 				Log.i(TAG, "onServiceConnected... got "+binder);
-				authAgent=AuthAgent.Stub.asInterface(binder);
+				authAgent=AndroidAuthAgent.Stub.asInterface(binder);
 				Log.i(TAG, "bound "+authAgent);
 				Map<String, byte[]> sendIdentities;
 				try {
-					sendIdentities = authAgent.sendIdentities();
+					sendIdentities = authAgent.getIdentities();
 					Log.d(TAG, "here are identities "+sendIdentities);
 				} catch (RemoteException e) {
 					e.printStackTrace();

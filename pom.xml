@@ -13,6 +13,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.madgag</groupId>
+			<artifactId>ssh-android</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.madgag</groupId>
 			<artifactId>org.eclipse.jgit</artifactId>
 			<version>0.8.4.2-UNOFFICIAL-BUILD-SNAPSHOT</version>
 		</dependency>

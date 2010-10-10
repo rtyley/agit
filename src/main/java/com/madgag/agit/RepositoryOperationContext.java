@@ -4,6 +4,8 @@ import static com.madgag.agit.RepositoryManagementActivity.manageGitRepo;
 
 import org.eclipse.jgit.lib.Repository;
 
+import com.madgag.ssh.android.authagent.AndroidAuthAgent;
+
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -59,6 +61,13 @@ public class RepositoryOperationContext {
 
 	public GitOperation getCurrentOperation() {
 		return currentOperation;
+	}
+
+
+
+	public AndroidAuthAgent getAuthAgent() {
+		// TODO Auto-generated method stub
+		return service.authAgent;
 	}
 	
 //	public void setCurrentOperation(FetchThread currentOperation) {
