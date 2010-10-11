@@ -87,6 +87,7 @@ public abstract class GitOperation extends AsyncTask<Void, Progress, Void> imple
 		final FetchResult r;
 		try {
 			r = tn.fetch(progressMonitor, null);
+			Log.i(TAG, "No error during fetch it seems... ");
 		} finally {
 			tn.close();
 		}

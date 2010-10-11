@@ -41,6 +41,7 @@ public class Fetcher extends GitOperation {
 			runFetch(remoteConfig);
 			return null;
 		} catch (Exception e) {
+			Log.e(TAG, "FETCH BROKE!",e);
 			e.printStackTrace();
 			return null;
 		}
