@@ -1,6 +1,9 @@
 package com.madgag.agit;
 
 import static java.lang.System.currentTimeMillis;
+import static org.eclipse.jgit.lib.Constants.HEAD;
+import static org.eclipse.jgit.lib.Constants.R_HEADS;
+import static org.eclipse.jgit.lib.Constants.R_REMOTES;
 
 import java.io.File;
 import java.io.IOException;
@@ -85,8 +88,7 @@ public class Cloner extends GitOperation {
     		final RemoteConfig rc = new RemoteConfig(db.getConfig(), remoteName);
     		rc.addURI(sourceUri);
     		rc.addFetchRefSpec(new RefSpec().setForceUpdate(true)
-    				.setSourceDestination(Constants.R_HEADS + "*",
-    						Constants.R_REMOTES + remoteName + "/*"));
+    				.setSourceDestination(R_HEADS + "*", R_REMOTES + remoteName + "/*"));
     		rc.update(db.getConfig());
     		db.getConfig().save();
 			final FetchResult r = runFetch(rc);
@@ -133,13 +135,13 @@ public class Cloner extends GitOperation {
 //		if (branch == null)
 //			throw die(CLIText.get().cannotChekoutNoHeadsAdvertisedByRemote);
 		if (!Constants.HEAD.equals(branch.getName())) {
-			RefUpdate u = db.updateRef(Constants.HEAD);
+			RefUpdate u = db.updateRef(HEAD);
 			u.disableRefLog();
 			u.link(branch.getName());
 		}
 
 		final RevCommit commit = parseCommit(branch);
-		final RefUpdate u = db.updateRef(Constants.HEAD);
+		final RefUpdate u = db.updateRef(HEAD);
 		u.setNewObjectId(commit);
 		u.forceUpdate();
 
