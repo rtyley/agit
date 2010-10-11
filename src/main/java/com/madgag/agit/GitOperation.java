@@ -44,14 +44,14 @@ public abstract class GitOperation extends AsyncTask<Void, Progress, Void> imple
 	@Override
 	protected void onPostExecute(Void v) {
 		long duration=currentTimeMillis()-startTime;
-		Log.i(getClass().getSimpleName(), "Completed in "+duration+" ms");
+		Log.i(TAG, "Completed in "+duration+" ms");
 		repositoryOperationContext.getService().stopForeground(true); // Actually, we only want to call this if ALL threads are completed, I think...
-		notifyCloneComplete();
+		notifyOperationComplete();
 	}
 	
 	
 	
-	private void notifyCloneComplete() {
+	private void notifyOperationComplete() {
 		Notification completedNotification=createCompletionNotification();
 		completedNotification.flags |= FLAG_AUTO_CANCEL;
 		repositoryOperationContext.notifyCompletion(completedNotification);
