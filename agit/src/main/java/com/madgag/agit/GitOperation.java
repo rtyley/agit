@@ -18,7 +18,7 @@ import android.app.Notification;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public abstract class GitOperation extends AsyncTask<Void, Progress, Void> implements ProgressListener<Progress> {
+public abstract class GitOperation extends AsyncTask<Void, Progress, Notification> implements ProgressListener<Progress> {
 	
 	public final String TAG = getClass().getSimpleName();
 	
@@ -42,17 +42,21 @@ public abstract class GitOperation extends AsyncTask<Void, Progress, Void> imple
     }
     
 	@Override
-	protected void onPostExecute(Void v) {
+	protected void onPostExecute(Notification completedNotification) {
 		long duration=currentTimeMillis()-startTime;
 		Log.i(getClass().getSimpleName(), "Completed in "+duration+" ms");
 		repositoryOperationContext.getService().stopForeground(true); // Actually, we only want to call this if ALL threads are completed, I think...
-		notifyCloneComplete();
+		notifyCompletionWith(completedNotification);
 	}
 	
+
+    protected Notification createNotificationWith(int drawable, String tickerText, String eventTitle,String eventDetail) {
+    	Notification n=new Notification(drawable, tickerText, currentTimeMillis());
+		n.setLatestEventInfo(repositoryOperationContext.getService(), eventTitle, eventDetail, repositoryOperationContext.manageGitRepo);
+		return n;
+    }
 	
-	
-	private void notifyCloneComplete() {
-		Notification completedNotification=createCompletionNotification();
+	private void notifyCompletionWith(Notification completedNotification) {
 		completedNotification.flags |= FLAG_AUTO_CANCEL;
 		repositoryOperationContext.notifyCompletion(completedNotification);
 	}
@@ -81,7 +85,7 @@ public abstract class GitOperation extends AsyncTask<Void, Progress, Void> imple
 	}
 	
     
-	FetchResult runFetch(RemoteConfig remoteConfig) throws NotSupportedException, URISyntaxException, TransportException {
+	FetchResult runFetch(RemoteConfig remoteConfig) throws NotSupportedException, TransportException {
 		final Transport tn = Transport.open(repositoryOperationContext.getRepository(), remoteConfig);
 		configureTransportForAndroidUI(tn);
 		final FetchResult r;

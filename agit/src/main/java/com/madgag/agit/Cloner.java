@@ -1,5 +1,7 @@
 package com.madgag.agit;
 
+import static android.R.drawable.stat_notify_error;
+import static android.R.drawable.stat_sys_download_done;
 import static java.lang.System.currentTimeMillis;
 
 import java.io.File;
@@ -31,6 +33,8 @@ import org.eclipse.jgit.transport.SshSessionFactory;
 import org.eclipse.jgit.transport.SshTransport;
 import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.URIish;
+
+import com.jcraft.jsch.JSchException;
 
 import android.app.Notification;
 import android.text.TextUtils.SimpleStringSplitter;
@@ -73,16 +77,20 @@ public class Cloner extends GitOperation {
     }
 	
 	@Override
-	protected Void doInBackground(Void... arg0) {
+	protected Notification doInBackground(Void... arg0) {
+		String remoteName = Constants.DEFAULT_REMOTE_NAME;
+		RemoteConfig rc;
+		try {
+			rc = new RemoteConfig(db.getConfig(), remoteName);
+		} catch (URISyntaxException e2) {
+			throw new RuntimeException(e2);
+		}
 		try {
     		db = new FileRepository(gitdir);
     		db.create();
     		//dst.getConfig().setBoolean("core", null, "bare", false);
     		//dst.getConfig().save();
     		
-    		String remoteName = Constants.DEFAULT_REMOTE_NAME;
-    		
-    		final RemoteConfig rc = new RemoteConfig(db.getConfig(), remoteName);
     		rc.addURI(sourceUri);
     		rc.addFetchRefSpec(new RefSpec().setForceUpdate(true)
     				.setSourceDestination(Constants.R_HEADS + "*",
@@ -96,17 +104,34 @@ public class Cloner extends GitOperation {
 			doCheckout(branch);
 			Log.i(TAG, "Completed checkout, thread done");
 			//notificationManager.cancel(notificationId); // It seems 'On-going' notifications can't be converted to ordinary ones.
-		} catch (Exception e1) {
-			e1.printStackTrace();
+			return createCompletionNotification();
+		} catch (TransportException e1) {
+			String message=e1.getMessage();
+			Throwable cause=e1.getCause();
+			if (cause!=null && cause instanceof JSchException) {
+				message=((JSchException) cause).getMessage();
+			}
+			return createNotificationWith(
+	    			stat_notify_error,
+	    			"Clone failed",
+	    			message,
+	    			sourceUri.toString());
+		} catch (IOException e) {
+			return createNotificationWith(
+	    			stat_notify_error,
+	    			"Clone failed",
+	    			e.getMessage(),
+	    			sourceUri.toString());
 		}
-		return null;
     }
 	
 	@Override
 	Notification createCompletionNotification() {
-		Notification completedNotification=new Notification(android.R.drawable.stat_sys_download_done, "Cloned "+sourceUri.getHumanishName(), currentTimeMillis());
-		completedNotification.setLatestEventInfo(repositoryOperationContext.getService(), "Clone completed", sourceUri.toString(), repositoryOperationContext.manageGitRepo);
-		return completedNotification;
+    	return createNotificationWith(
+    			stat_sys_download_done,
+    			"Cloned "+sourceUri.getHumanishName(),
+    			"Clone completed",
+    			sourceUri.toString());
 	}
 	
 	private Ref guessHEAD(final FetchResult result) {

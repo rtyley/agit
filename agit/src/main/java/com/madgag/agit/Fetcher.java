@@ -1,5 +1,8 @@
 package com.madgag.agit;
 
+import static android.R.drawable.stat_notify_error;
+import static android.R.drawable.stat_sys_download;
+import static android.R.drawable.stat_sys_download_done;
 import static java.lang.System.currentTimeMillis;
 
 import java.net.URISyntaxException;
@@ -36,21 +39,28 @@ public class Fetcher extends GitOperation {
     }
     
 	@Override
-	protected Void doInBackground(Void... arg0) {
+	protected Notification doInBackground(Void... arg0) {
 		try {
 			runFetch(remoteConfig);
-			return null;
+			return createCompletionNotification();
 		} catch (Exception e) {
 			Log.e(TAG, "FETCH BROKE!",e);
 			e.printStackTrace();
-			return null;
+			return createNotificationWith(
+	    			stat_notify_error,
+	    			"Fetch failed",
+	    			e.getMessage(),
+	    			remoteConfig.getURIs().get(0).toString());
 		}
     }
 	
 	@Override
 	Notification createOngoingNotification() {
-		Notification n = new Notification(android.R.drawable.stat_sys_download, "Fetchin", currentTimeMillis());
-		n.setLatestEventInfo(repositoryOperationContext.getService(), "Fetching "+remoteConfig.getName(), remoteConfig.getURIs().get(0).toString(), repositoryOperationContext.manageGitRepo);
+		Notification n = createNotificationWith(
+				stat_sys_download,
+				"Fetchin",
+				"Fetching "+remoteConfig.getName(),
+				remoteConfig.getURIs().get(0).toString());
 		n.contentView=fetchProgressNotificationRemoteView();
 		n.contentView.setTextViewText(R.id.status_text, "This text really should be gone...");
 		return n;
@@ -65,9 +75,12 @@ public class Fetcher extends GitOperation {
     
     @Override
     Notification createCompletionNotification() {
-		Notification completedNotification=new Notification(android.R.drawable.stat_sys_download_done, "Fetch complete", currentTimeMillis());
-		completedNotification.setLatestEventInfo(repositoryOperationContext.getService(), "Fetched "+remoteConfig.getName(), remoteConfig.getURIs().get(0).toString(), repositoryOperationContext.manageGitRepo);
-		return completedNotification;
+    	return createNotificationWith(
+    			stat_sys_download_done,
+    			"Fetch complete",
+    			"Fetched "+remoteConfig.getName(),
+    			remoteConfig.getURIs().get(0).toString());
     }
+    
 
 }
