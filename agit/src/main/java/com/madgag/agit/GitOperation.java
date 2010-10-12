@@ -44,7 +44,7 @@ public abstract class GitOperation extends AsyncTask<Void, Progress, Notificatio
 	@Override
 	protected void onPostExecute(Notification completedNotification) {
 		long duration=currentTimeMillis()-startTime;
-		Log.i(getClass().getSimpleName(), "Completed in "+duration+" ms");
+		Log.i(TAG, "Completed in "+duration+" ms");
 		repositoryOperationContext.getService().stopForeground(true); // Actually, we only want to call this if ALL threads are completed, I think...
 		notifyCompletionWith(completedNotification);
 	}
