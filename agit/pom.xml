@@ -31,32 +31,23 @@
 			<version>1.4</version>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-			<version>4.8.1</version>
-		</dependency>
-		<dependency>
 			<groupId>com.google.collections</groupId>
 			<artifactId>google-collections</artifactId>
 			<version>1.0</version>
 		</dependency>
-		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-all</artifactId>
-			<version>1.1</version>
-			<scope>test</scope>
-		</dependency>
+<!--
 		<dependency>
 			<groupId>com.madgag</groupId>
 			<artifactId>util-intervals</artifactId>
 			<version>1.21</version>
 		</dependency>
+-->
 		<dependency>
 			<groupId>com.madgag</groupId>
 			<artifactId>util-diff</artifactId>
-			<version>1.22-SNAPSHOT</version>
+			<version>1.22</version>
 		</dependency>
+
 	</dependencies>
 	<build>
 		<!--  <finalName>${project.artifactId}</finalName> -->
