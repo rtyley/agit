@@ -13,7 +13,7 @@
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<android.version>2.1_r1</android.version>
+		<android.version>2.2.1</android.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -32,13 +32,31 @@
 		    </dependency>
 		</dependencies>
 	    </dependencyManagement>
-	<build>
-		<!--  <finalName>${project.artifactId}</finalName> -->
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3</version>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                    <artifactId>maven-android-plugin</artifactId>
+                    <!-- change to explicit version for standalone project or remove if version inherited from company pom -->
+                    <!--<version>2.4.1</version>-->
+                    <configuration>
+                        <sdk>
+                            <platform>8</platform>
+                        </sdk>
+                        <emulator>
+                            <avd>22</avd>
+                        </emulator>
+                        <deleteConflictingFiles>true</deleteConflictingFiles>
+                        <undeployBeforeDeploy>true</undeployBeforeDeploy>
+                    </configuration>
+                    <extensions>true</extensions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.3</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

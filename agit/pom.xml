@@ -49,40 +49,12 @@
 		</dependency>
 
 	</dependencies>
-	<build>
-		<!--  <finalName>${project.artifactId}</finalName> -->
-		<plugins>
-			<plugin>
-				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
-				<artifactId>maven-android-plugin</artifactId>
-				<extensions>true</extensions>
-				<configuration>
-					<sdk>
-						<path>${user.home}/android-sdk/</path>
-						<platform>7</platform>
-					</sdk>
-					<deleteConflictingFiles>true</deleteConflictingFiles>
-					<!-- <generateApk>false</generateApk> -->
-				</configuration>
-				<executions>
-				<!--  
-					<execution>
-						<id>startEmulator</id>
-						<phase>initialize</phase>
-						<goals>
-							<goal>emulator-start</goal>
-						</goals>
-					</execution>
-					-->
-					<execution>
-						<id>alignApk</id>
-						<phase>install</phase>
-						<goals>
-							<goal>zipalign</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                <artifactId>maven-android-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>
