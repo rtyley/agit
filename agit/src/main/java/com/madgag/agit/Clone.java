@@ -37,7 +37,7 @@ public class Clone extends Activity {
     	super.onStart();
     	Intent intent = getIntent();
     	Log.i("Cloner", "Starting with "+intent);
-    	if (intent!=null) {
+    	if (intent!=null && intent.getExtras()!=null) {
     		String sourceUri= intent.getExtras().getString("source-uri");
     		((EditText) findViewById(R.id.CloneUrlEditText)).setText(sourceUri);
     	}
