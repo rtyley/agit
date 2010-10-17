@@ -37,7 +37,7 @@ public class Clone extends Activity {
     	super.onStart();
     	Intent intent = getIntent();
     	Log.i("Cloner", "Starting with "+intent);
-    	if (intent!=null) {
+    	if (intent!=null && intent.getExtras()!=null) {
     		String sourceUri= intent.getExtras().getString("source-uri");
     		((EditText) findViewById(R.id.CloneUrlEditText)).setText(sourceUri);
     	}
@@ -70,8 +70,9 @@ public class Clone extends Activity {
 			String localName = uri.getHumanishName();
 			File repoDir=new File(reposDir,localName);
 			if (!repoDir.mkdirs()) {
-				Toast.makeText(Clone.this, "Couldn't create "+repoDir, LENGTH_LONG).show();
-				throw new IOException();
+				String message = "Couldn't create "+repoDir;
+				Toast.makeText(Clone.this, message, LENGTH_LONG).show();
+				throw new IOException(message);
 			}
     		File gitdir = new File(repoDir, Constants.DOT_GIT);
     		Intent intent = new Intent("git.CLONE");
@@ -83,20 +84,6 @@ public class Clone extends Activity {
     		
     		// cloneStuff(uri, gitdir);
 		}
-
-
-		
-//		private FetchResult runFetch() throws NotSupportedException, URISyntaxException, TransportException {
-//			final Transport tn = Transport.open(db, remoteName);
-//			final FetchResult r;
-//			try {
-//				r = tn.fetch(new TextProgressMonitor(), null);
-//			} finally {
-//				tn.close();
-//			}
-//			// showFetchResult(tn, r);
-//			return r;
-//		}
     };
     
 }
