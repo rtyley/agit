@@ -1,12 +1,15 @@
 package com.madgag.agit;
 
 import static android.widget.Toast.LENGTH_LONG;
+import static com.google.common.collect.Sets.newHashSet;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
@@ -29,6 +32,7 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.common.collect.Sets;
 import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 
 public class GitOperationsService extends Service {
@@ -121,7 +125,26 @@ public class GitOperationsService extends Service {
 		return START_STICKY;
     }
 
-    
+    public Set<RepositoryOperationContext> getRepositoryOperationContextsFor(URIish remote) {
+    	Set<RepositoryOperationContext> rocs = newHashSet();
+    	for (RepositoryOperationContext roc : map.values()) {
+    		Repository repo = roc.getRepository();
+			if (repo!=null) {
+				List<RemoteConfig> allRemoteConfigs;
+				try {
+					allRemoteConfigs = RemoteConfig.getAllRemoteConfigs(repo.getConfig());
+				} catch (URISyntaxException e) {
+					throw new RuntimeException(e);
+				}
+				for (RemoteConfig rc : allRemoteConfigs) {
+					if (rc.getURIs().contains(remote)) {
+						rocs.add(roc);
+					}
+				}
+			}
+    	}
+    	return rocs;
+    }
 
 	public RepositoryOperationContext getOrCreateRepositoryOperationContextFor(Repository db) {
 		return getOrCreateRepositoryOperationContextFor(db.getDirectory());
