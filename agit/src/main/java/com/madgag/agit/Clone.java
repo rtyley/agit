@@ -47,7 +47,9 @@ public class Clone extends Activity {
 			
 			public void afterTextChanged(Editable gitDirEditText) {
 				File f=new File(gitDirEditText.toString());
-				button.setEnabled(!f.exists());
+				boolean goodGitDir = !f.exists();
+				Log.i(TAG, "goodGitDir="+goodGitDir);
+				button.setEnabled(goodGitDir);
 			}
 		});
     }

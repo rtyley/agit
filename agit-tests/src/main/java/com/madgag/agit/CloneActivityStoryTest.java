@@ -3,6 +3,8 @@ package com.madgag.agit;
 import java.io.File;
 import java.io.IOException;
 
+import android.os.Environment;
+
 import com.github.calculon.CalculonStoryTest;
 
 public class CloneActivityStoryTest extends CalculonStoryTest<Clone> {
@@ -30,11 +32,8 @@ public class CloneActivityStoryTest extends CalculonStoryTest<Clone> {
     }
 
 	private String newFolder() {
-		try {
-			return File.createTempFile("foo", "bar").getAbsolutePath();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+		return path.getAbsolutePath()+"/32324432";
 	}
 
 }
