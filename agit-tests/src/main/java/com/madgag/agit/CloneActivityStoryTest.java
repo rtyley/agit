@@ -1,6 +1,7 @@
 package com.madgag.agit;
 
 import java.io.File;
+import java.io.IOException;
 
 import com.github.calculon.CalculonStoryTest;
 
@@ -21,10 +22,19 @@ public class CloneActivityStoryTest extends CalculonStoryTest<Clone> {
     }
     
     public void testCloneButtonEnabledIfGitDirDoesNotAlreadyExist() {
-        assertThat(R.id.CloneUrlEditText).setText(existingFolder).implies(R.id.GoCloneButton).isEnabled();
+        assertThat(R.id.CloneUrlEditText).setText(newFolder()).implies(R.id.GoCloneButton).isEnabled();
     }
     
     public void testWarningNotShownIfGitDirDoesNotAlreadyExist() {
-        assertThat(R.id.CloneUrlEditText).setText(existingFolder).implies(R.id.GitDirWarning).isInvisible();
+        assertThat(R.id.CloneUrlEditText).setText(newFolder()).implies(R.id.GitDirWarning).isInvisible();
     }
+
+	private String newFolder() {
+		try {
+			return File.createTempFile("foo", "bar").getAbsolutePath();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 }
