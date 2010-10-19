@@ -51,10 +51,10 @@ public class Clone extends Activity {
 				File f=new File(gitDirEditText.toString());
 				boolean goodGitDir = !f.exists();
 				Log.i(TAG, "goodGitDir="+goodGitDir);
-				button.setEnabled(goodGitDir);
+				//button.setEnabled(goodGitDir);
 			}
 		};
-		((TextView) findViewById(R.id.GitDirEditText)).addTextChangedListener(null);
+		((TextView) findViewById(R.id.GitDirEditText)).addTextChangedListener(watcher);
     }
     
     protected void onStart() {
