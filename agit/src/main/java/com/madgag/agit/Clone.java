@@ -14,6 +14,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,14 +27,29 @@ import android.widget.Toast;
 public class Clone extends Activity {
 
 	private final static String TAG="Clone";
+
+	private Button button;
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        ((Button) findViewById(R.id.GoCloneButton)).setOnClickListener(goCloneButtonListener);
-        ((TextView) findViewById(R.id.GitDirEditText)).addTextChangedListener(null);
+        button = (Button) findViewById(R.id.GoCloneButton);
+		button.setOnClickListener(goCloneButtonListener);
+        ((TextView) findViewById(R.id.GitDirEditText)).addTextChangedListener(new TextWatcher() {
+			
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {			
+			}
+			
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+			}
+			
+			public void afterTextChanged(Editable gitDirEditText) {
+				File f=new File(gitDirEditText.toString());
+				button.setEnabled(!f.exists());
+			}
+		});
     }
     
     protected void onStart() {
