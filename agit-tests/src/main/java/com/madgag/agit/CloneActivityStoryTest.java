@@ -16,19 +16,19 @@ public class CloneActivityStoryTest extends CalculonStoryTest<Clone> {
 	}
 	
     public void testCloneButtonDisabledIfGitDirAlreadyExists() {
-        assertThat(R.id.CloneUrlEditText).setText(existingFolder).implies(R.id.GoCloneButton).isDisabled();
+        assertThat(R.id.GitDirEditText).setText(existingFolder).implies(R.id.GoCloneButton).isDisabled();
     }
     
     public void testWarningShownIfGitDirAlreadyExists() {
-        assertThat(R.id.CloneUrlEditText).setText(existingFolder).implies(R.id.GitDirWarning).isVisible();
+        assertThat(R.id.GitDirEditText).setText(existingFolder).implies(R.id.GitDirWarning).isVisible();
     }
     
     public void testCloneButtonEnabledIfGitDirDoesNotAlreadyExist() {
-        assertThat(R.id.CloneUrlEditText).setText(newFolder()).implies(R.id.GoCloneButton).isEnabled();
+        assertThat(R.id.GitDirEditText).setText(newFolder()).implies(R.id.GoCloneButton).isEnabled();
     }
     
     public void testWarningNotShownIfGitDirDoesNotAlreadyExist() {
-        assertThat(R.id.CloneUrlEditText).setText(newFolder()).implies(R.id.GitDirWarning).isInvisible();
+        assertThat(R.id.GitDirEditText).setText(newFolder()).implies(R.id.GitDirWarning).isInvisible();
     }
 
 	private String newFolder() {

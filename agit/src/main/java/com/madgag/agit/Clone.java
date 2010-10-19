@@ -37,12 +37,14 @@ public class Clone extends Activity {
         setContentView(R.layout.main);
         button = (Button) findViewById(R.id.GoCloneButton);
 		button.setOnClickListener(goCloneButtonListener);
-        ((TextView) findViewById(R.id.GitDirEditText)).addTextChangedListener(new TextWatcher() {
+        TextWatcher watcher = new TextWatcher() {
 			
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {			
+			public void onTextChanged(CharSequence text, int arg1, int arg2, int arg3) {	
+				Log.i(TAG, "onTextChanged="+text);
 			}
 			
-			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+			public void beforeTextChanged(CharSequence text, int arg1, int arg2, int arg3) {
+				Log.i(TAG, "beforeTextChanged="+text);
 			}
 			
 			public void afterTextChanged(Editable gitDirEditText) {
@@ -51,7 +53,8 @@ public class Clone extends Activity {
 				Log.i(TAG, "goodGitDir="+goodGitDir);
 				button.setEnabled(goodGitDir);
 			}
-		});
+		};
+		((TextView) findViewById(R.id.GitDirEditText)).addTextChangedListener(null);
     }
     
     protected void onStart() {
