@@ -12,6 +12,8 @@ import com.github.calculon.CalculonStoryTest;
 public class CloneActivityFunctionalTest extends CalculonStoryTest<Clone> {
 	private EditText cloneUrlEditText;
 	private Button button;
+	
+	private String existingFolder = File.listRoots()[0].getAbsolutePath();
 
 	public CloneActivityFunctionalTest() {
 		super("com.agit",Clone.class);
@@ -32,21 +34,20 @@ public class CloneActivityFunctionalTest extends CalculonStoryTest<Clone> {
 		assertEquals("", cloneUrlEditText.getText().toString());
 	}
 
-	@SmallTest
-	public void testWarningShownIfGitDirAlreadyExists() throws Exception {
-		final File existingDir=File.listRoots()[0];
-		getInstrumentation().runOnMainSync(new Runnable() {
-			public void run() {
-				cloneUrlEditText.setText(existingDir.getAbsolutePath());
-			}
-		});
-		getInstrumentation().waitForIdleSync();
-		assertFalse(button.isEnabled());
-	}
 	
-    public void testCloneButtonDisableIfGitDirAlreadyExists() {
-    	File anExistingDir=File.listRoots()[0];
-    	
-        assertThat(R.id.CloneUrlEditText).setText(anExistingDir.getAbsolutePath()).implies(R.id.GoCloneButton).isDisabled();
+    public void testCloneButtonDisabledIfGitDirAlreadyExists() {
+        assertThat(R.id.CloneUrlEditText).setText(existingFolder).implies(R.id.GoCloneButton).isDisabled();
+    }
+    
+    public void testWarningShownIfGitDirAlreadyExists() {
+        assertThat(R.id.CloneUrlEditText).setText(existingFolder).implies(R.id.GitDirWarning).isVisible();
+    }
+    
+    public void testCloneButtonEnabledIfGitDirDoesNotAlreadyExist() {
+        assertThat(R.id.CloneUrlEditText).setText(existingFolder).implies(R.id.GoCloneButton).isEnabled();
+    }
+    
+    public void testWarningNotShownIfGitDirDoesNotAlreadyExist() {
+        assertThat(R.id.CloneUrlEditText).setText(existingFolder).implies(R.id.GitDirWarning).isVisible();
     }
 }
