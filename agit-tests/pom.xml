@@ -29,6 +29,11 @@
 			<type>jar</type>
 		</dependency>
 		<dependency>
+			<groupId>com.madgag</groupId>
+			<artifactId>calculon</artifactId>
+			<version>1.0.1-UNOFFICIAL-BUILD</version>
+		</dependency>
+		<dependency>
 		    <groupId>com.google.android</groupId>
 		    <artifactId>android-test</artifactId>
 		    <scope>provided</scope>

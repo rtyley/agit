@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class Clone extends Activity {
@@ -31,6 +32,7 @@ public class Clone extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ((Button) findViewById(R.id.GoCloneButton)).setOnClickListener(goCloneButtonListener);
+        ((TextView) findViewById(R.id.GitDirEditText)).addTextChangedListener(null);
     }
     
     protected void onStart() {
