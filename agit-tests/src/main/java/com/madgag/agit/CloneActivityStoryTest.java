@@ -22,7 +22,7 @@ public class CloneActivityStoryTest extends CalculonStoryTest<Clone> {
     public void testWarningShownIfGitDirAlreadyExists() {
         assertThat(R.id.GitDirEditText).setText(existingFolder).implies(R.id.GitDirWarning).isVisible();
     }
-    
+   
     public void testCloneButtonEnabledIfGitDirDoesNotAlreadyExist() {
         assertThat(R.id.GitDirEditText).setText(newFolder()).implies(R.id.GoCloneButton).isEnabled();
     }
