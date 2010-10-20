@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,7 +33,9 @@ public class Clone extends Activity {
 	private final static String TAG="Clone";
 
 	private Button button;
+	private CheckBox useDefaultGitDirLocationButton;
 	private TextView warningTextView;
+	private EditText gitDirEditText, cloneUrlEditText;
 	
     /** Called when the activity is first created. */
     @Override
@@ -40,27 +43,47 @@ public class Clone extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         button = (Button) findViewById(R.id.GoCloneButton);
+        gitDirEditText = (EditText) findViewById(R.id.GitDirEditText);
         warningTextView = (TextView) findViewById(R.id.GitDirWarning);
+        cloneUrlEditText = (EditText) findViewById(R.id.CloneUrlEditText);
+        useDefaultGitDirLocationButton = (CheckBox) findViewById(R.id.UseDefaultGitDirLocation);
 		button.setOnClickListener(goCloneButtonListener);
+		useDefaultGitDirLocationButton.setOnClickListener(new OnClickListener() {	
+			public void onClick(View v) { updateUIWithValidation(); }
+		});
         TextWatcher watcher = new TextWatcher() {
+			public void onTextChanged(CharSequence text, int arg1, int arg2, int arg3) {}
 			
-			public void onTextChanged(CharSequence text, int arg1, int arg2, int arg3) {	
-				Log.i(TAG, "onTextChanged="+text);
-			}
+			public void beforeTextChanged(CharSequence text, int arg1, int arg2, int arg3) {}
 			
-			public void beforeTextChanged(CharSequence text, int arg1, int arg2, int arg3) {
-				Log.i(TAG, "beforeTextChanged="+text);
-			}
-			
-			public void afterTextChanged(Editable gitDirEditText) {
-				File f=new File(gitDirEditText.toString());
-				boolean goodGitDir = !f.exists();
-				Log.i(TAG, "goodGitDir="+goodGitDir);
-				button.setEnabled(goodGitDir);
-				warningTextView.setVisibility(goodGitDir?INVISIBLE:VISIBLE);
-			}
+			public void afterTextChanged(Editable gitDirEditText) { updateUIWithValidation(); }
 		};
 		((TextView) findViewById(R.id.GitDirEditText)).addTextChangedListener(watcher);
+    }
+    
+    protected void updateUIWithValidation() {
+    	boolean enableClone=true;
+    	
+    	URIish cloneUri=null;
+    	try {
+    		cloneUri=getCloneUri();
+    	} catch (URISyntaxException e) {
+    		enableClone=false;
+    	}
+    	
+    	gitDirEditText.setEnabled(!useDefaultGitDirLocationButton.isChecked());
+    	if (useDefaultGitDirLocationButton.isChecked() && cloneUri!=null) {
+    		gitDirEditText.setText(defaultRepoDirFor(cloneUri).getAbsolutePath());
+    	}
+    	
+		File f=new File(gitDirEditText.toString());
+		boolean goodGitDir=!f.exists();
+		warningTextView.setVisibility(goodGitDir?INVISIBLE:VISIBLE);
+		if (!goodGitDir) {
+			enableClone=false;
+		}
+		
+		button.setEnabled(enableClone);
     }
     
     protected void onStart() {
@@ -69,20 +92,20 @@ public class Clone extends Activity {
     	Log.i("Cloner", "Starting with "+intent);
     	if (intent!=null && intent.getExtras()!=null) {
     		String sourceUri= intent.getExtras().getString("source-uri");
-    		((EditText) findViewById(R.id.CloneUrlEditText)).setText(sourceUri);
+			cloneUrlEditText.setText(sourceUri);
     	}
     };
     
+    public URIish getCloneUri() throws URISyntaxException {
+    	return new URIish(cloneUrlEditText.getText().toString());
+    }
+    
     OnClickListener goCloneButtonListener = new OnClickListener() {
         public void onClick(View v) {
-            //finish();
-        	String sourceUri = ((EditText) findViewById(R.id.CloneUrlEditText)).getText().toString();
-        	Uri u=Uri.parse(sourceUri);
-        	Log.i(TAG, "scheme="+u.getScheme());
     		URIish uri;
-			try {
-				uri = new URIish(sourceUri);
-			} catch (URISyntaxException e) {
+    		try {
+    			uri=getCloneUri();
+    		} catch (URISyntaxException e) {
 				Toast.makeText(v.getContext(), "bad dog", 10).show();
 				return;
 			}
@@ -96,9 +119,7 @@ public class Clone extends Activity {
         }
 
 		private void wham(URIish uri) throws IOException, URISyntaxException {
-			File reposDir=new File(Environment.getExternalStorageDirectory(),"git-repos");
-			String localName = uri.getHumanishName();
-			File repoDir=new File(reposDir,localName);
+			File repoDir = defaultRepoDirFor(uri);
 			if (!repoDir.mkdirs()) {
 				String message = "Couldn't create "+repoDir;
 				Toast.makeText(Clone.this, message, LENGTH_LONG).show();
@@ -114,6 +135,14 @@ public class Clone extends Activity {
     		
     		// cloneStuff(uri, gitdir);
 		}
+
+
     };
     
+	private File defaultRepoDirFor(URIish uri) {
+		File reposDir=new File(Environment.getExternalStorageDirectory(),"git-repos");
+		String localName = uri.getHumanishName();
+		File repoDir=new File(reposDir,localName);
+		return repoDir;
+	} 
 }

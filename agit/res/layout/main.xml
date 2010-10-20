@@ -15,9 +15,9 @@
         android:text="Use default location" />
 <EditText android:layout_height="wrap_content" android:id="@+id/GitDirEditText" android:layout_width="fill_parent"></EditText>
 <TextView 
-  android:id="@+id/GitDirWarning"
+  android:id="@+id/GitDirWarning" android:visibility="invisible"
   android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:text="Gumph"/>
+  android:layout_height="wrap_content"
+  android:text="Bad checkout location"/>
 <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/GoCloneButton" android:text="Clone!"></Button>
 </LinearLayout>
