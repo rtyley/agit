@@ -1,5 +1,8 @@
 package com.madgag.agit;
 
+import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_LONG;
 
 import java.io.File;
@@ -29,6 +32,7 @@ public class Clone extends Activity {
 	private final static String TAG="Clone";
 
 	private Button button;
+	private TextView warningTextView;
 	
     /** Called when the activity is first created. */
     @Override
@@ -36,6 +40,7 @@ public class Clone extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         button = (Button) findViewById(R.id.GoCloneButton);
+        warningTextView = (TextView) findViewById(R.id.GitDirWarning);
 		button.setOnClickListener(goCloneButtonListener);
         TextWatcher watcher = new TextWatcher() {
 			
@@ -51,7 +56,8 @@ public class Clone extends Activity {
 				File f=new File(gitDirEditText.toString());
 				boolean goodGitDir = !f.exists();
 				Log.i(TAG, "goodGitDir="+goodGitDir);
-				//button.setEnabled(goodGitDir);
+				button.setEnabled(goodGitDir);
+				warningTextView.setVisibility(goodGitDir?INVISIBLE:VISIBLE);
 			}
 		};
 		((TextView) findViewById(R.id.GitDirEditText)).addTextChangedListener(watcher);
