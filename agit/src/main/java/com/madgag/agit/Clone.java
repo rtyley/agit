@@ -24,9 +24,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class Clone extends Activity {
 
@@ -48,8 +50,8 @@ public class Clone extends Activity {
         cloneUrlEditText = (EditText) findViewById(R.id.CloneUrlEditText);
         useDefaultGitDirLocationButton = (CheckBox) findViewById(R.id.UseDefaultGitDirLocation);
 		button.setOnClickListener(goCloneButtonListener);
-		useDefaultGitDirLocationButton.setOnClickListener(new OnClickListener() {	
-			public void onClick(View v) { updateUIWithValidation(); }
+		useDefaultGitDirLocationButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) { updateUIWithValidation(); }
 		});
         TextWatcher watcher = new TextWatcher() {
 			public void onTextChanged(CharSequence text, int arg1, int arg2, int arg3) {}
