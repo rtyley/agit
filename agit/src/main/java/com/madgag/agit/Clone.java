@@ -76,7 +76,7 @@ public class Clone extends Activity {
     		gitDirEditText.setText(defaultRepoDirFor(cloneUri).getAbsolutePath());
     	}
     	
-		File f=new File(gitDirEditText.toString());
+		File f=new File(gitDirEditText.getText().toString());
 		boolean goodGitDir=!f.exists();
 		Log.d("Clone", f.getAbsolutePath()+"is goodGitDir="+goodGitDir);
 		warningTextView.setVisibility(goodGitDir?INVISIBLE:VISIBLE);
