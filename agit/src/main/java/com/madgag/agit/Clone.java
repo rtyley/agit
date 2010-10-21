@@ -78,7 +78,7 @@ public class Clone extends Activity {
     	
 		File f=new File(gitDirEditText.toString());
 		boolean goodGitDir=!f.exists();
-		Log.d("Clone", "goodGitDir="+goodGitDir);
+		Log.d("Clone", f.getAbsolutePath()+"is goodGitDir="+goodGitDir);
 		warningTextView.setVisibility(goodGitDir?INVISIBLE:VISIBLE);
 		if (!goodGitDir) {
 			enableClone=false;
