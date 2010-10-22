@@ -1,0 +1,2 @@
+ln -s target/generated-sources/r gen
+
