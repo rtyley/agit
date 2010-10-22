@@ -95,10 +95,11 @@ public class Clone extends Activity {
     protected void onStart() {
     	super.onStart();
     	Intent intent = getIntent();
-    	Log.i("Cloner", "Starting with "+intent);
+    	Log.i("Cloner", "Starting with da "+intent);
     	if (intent!=null && intent.getExtras()!=null) {
     		String sourceUri= intent.getExtras().getString("source-uri");
 			cloneUrlEditText.setText(sourceUri);
+			Log.i("Cloner", "Set cloneUrlEditText to "+sourceUri);
     	}
     };
     
