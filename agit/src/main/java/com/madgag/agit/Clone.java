@@ -97,12 +97,28 @@ public class Clone extends Activity {
     	super.onStart();
     	Intent intent = getIntent();
     	Log.d("Cloner", "Starting with da "+intent);
-    	if (intent!=null && intent.getExtras()!=null) {
-    		String sourceUri= intent.getExtras().getString("source-uri");
+    	if (intent!=null) {
+    		setSourceUriFrom(intent);
+    		setGitDirFrom(intent);
+    	}
+    }
+
+	private void setSourceUriFrom(Intent intent) {
+		String sourceUri= intent.getStringExtra("source-uri");
+		if (sourceUri!=null) { 
 			cloneUrlEditText.setText(sourceUri);
 			Log.d("Cloner", "Set cloneUrlEditText to "+sourceUri);
-    	}
-    };
+		}
+	}
+
+	private void setGitDirFrom(Intent intent) {
+		String gitdir= intent.getStringExtra("gitdir");
+		useDefaultGitDirLocationButton.setChecked(gitdir==null);
+		if (gitdir!=null) { 
+			gitDirEditText.setText(gitdir);
+			Log.d("Cloner", "Set gitdir to "+gitdir);
+		}
+	};
     
     @Override
     protected void onResume() {
