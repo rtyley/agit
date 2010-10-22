@@ -75,7 +75,10 @@ public class Clone extends Activity {
     	
     	gitDirEditText.setEnabled(!useDefaultGitDirLocationButton.isChecked());
     	if (useDefaultGitDirLocationButton.isChecked() && cloneUri!=null) {
-    		gitDirEditText.setText(defaultRepoDirFor(cloneUri).getAbsolutePath());
+    		String currentGitDirText=gitDirEditText.getText().toString();
+    		String requiredText = defaultRepoDirFor(cloneUri).getAbsolutePath();
+    		if (!currentGitDirText.equals(requiredText))
+    			gitDirEditText.setText(requiredText);
     	}
     	
 		File f=new File(gitDirEditText.getText().toString());
