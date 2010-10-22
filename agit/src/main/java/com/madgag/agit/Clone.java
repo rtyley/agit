@@ -92,16 +92,23 @@ public class Clone extends Activity {
 		button.setEnabled(enableClone);
     }
     
+    @Override
     protected void onStart() {
     	super.onStart();
     	Intent intent = getIntent();
-    	Log.i("Cloner", "Starting with da "+intent);
+    	Log.d("Cloner", "Starting with da "+intent);
     	if (intent!=null && intent.getExtras()!=null) {
     		String sourceUri= intent.getExtras().getString("source-uri");
 			cloneUrlEditText.setText(sourceUri);
-			Log.i("Cloner", "Set cloneUrlEditText to "+sourceUri);
+			Log.d("Cloner", "Set cloneUrlEditText to "+sourceUri);
     	}
     };
+    
+    @Override
+    protected void onResume() {
+    	super.onResume();
+    	Log.d("Cloner", "onResume called");
+    }
     
     public URIish getCloneUri() throws URISyntaxException {
     	return new URIish(cloneUrlEditText.getText().toString());

@@ -20,6 +20,8 @@ public class CloneActivityUnitTest extends CalculonUnitTest<Clone> {
 		bundle.putString("source-uri", cloneSourceUri);
 		
 		startActivity(bundle);
+		getInstrumentation().callActivityOnStart(getActivity());
+		
 		assertThat(R.id.CloneUrlEditText).satisfies(new Predicate<View>() {
 			public boolean check(View target) {
 				return ((EditText) target).getText().toString().equals(cloneSourceUri);
@@ -41,6 +43,8 @@ public class CloneActivityUnitTest extends CalculonUnitTest<Clone> {
 		bundle.putString("gitdir", gitdir);
 		
 		startActivity(bundle);
+		getInstrumentation().callActivityOnStart(getActivity());
+		
 		assertThat(R.id.CloneUrlEditText).satisfies(new Predicate<View>() {
 			public boolean check(View target) {
 				return ((EditText) target).getText().toString().equals(cloneSourceUri);
