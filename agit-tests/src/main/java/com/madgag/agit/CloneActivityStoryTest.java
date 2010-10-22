@@ -15,6 +15,10 @@ public class CloneActivityStoryTest extends CalculonStoryTest<Clone> {
 		super("com.agit",Clone.class);
 	}
 	
+	public void testDefaultsToUseDefaultGitDirLocation() {
+		assertThat(R.id.UseDefaultGitDirLocation).isChecked();
+	}
+	
     public void testCloneButtonDisabledAndWarningShownIfGitDirAlreadyExists() {
     	setUp(R.id.UseDefaultGitDirLocation).setChecked(false).now();
         assertThat(R.id.GitDirEditText).setText(existingFolder).implies(R.id.GoCloneButton).isDisabled();

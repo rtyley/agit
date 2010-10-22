@@ -12,7 +12,7 @@
 <CheckBox android:id="@+id/UseDefaultGitDirLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Use default location" />
+        android:text="Use default location" android:checked="true" />
 <EditText android:layout_height="wrap_content" android:id="@+id/GitDirEditText" android:layout_width="fill_parent"></EditText>
 <TextView 
   android:id="@+id/GitDirWarning" android:visibility="invisible"
