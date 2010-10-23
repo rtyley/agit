@@ -53,9 +53,8 @@ public class GitOperationsService extends Service {
         }
     }
   
-    // This is the object that receives interactions from clients.  See
-    // RemoteService for a more complete example.
     private final IBinder mBinder = new GitOperationsBinder();
+    
 	private NotificationManager notificationManager;
     
     @Override
@@ -67,7 +66,6 @@ public class GitOperationsService extends Service {
 		return notificationManager;
 	}
 	
-    AndroidAuthAgent authAgent;
     
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -108,6 +106,9 @@ public class GitOperationsService extends Service {
 		return START_STICKY;
     }
 
+
+    AndroidAuthAgent authAgent;
+    
 	private void bindSshAgent() {
 		bindService(new Intent("com.madgag.android.ssh.BIND_SSH_AGENT_SERVICE"), new ServiceConnection() {
 			public void onServiceDisconnected(ComponentName name) {
@@ -115,15 +116,12 @@ public class GitOperationsService extends Service {
 				authAgent=null;
 			}
 			
-			@SuppressWarnings("unchecked")
 			public void onServiceConnected(ComponentName name, IBinder binder) {
 				Log.i(TAG, "onServiceConnected... got "+binder);
 				authAgent=AndroidAuthAgent.Stub.asInterface(binder);
 				Log.i(TAG, "bound "+authAgent);
-				Map<String, byte[]> sendIdentities;
 				try {
-					sendIdentities = authAgent.getIdentities();
-					Log.d(TAG, "here are identities "+sendIdentities);
+					Log.d(TAG, "here are identities "+authAgent.getIdentities());
 				} catch (RemoteException e) {
 					e.printStackTrace();
 				}
