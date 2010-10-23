@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
-import org.eclipse.jgit.errors.NotSupportedException;
 import org.eclipse.jgit.errors.TransportException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.GitIndex;
@@ -32,17 +31,13 @@ import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
-import org.eclipse.jgit.transport.SshSessionFactory;
-import org.eclipse.jgit.transport.SshTransport;
-import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.URIish;
 
-import com.jcraft.jsch.JSchException;
-
 import android.app.Notification;
-import android.text.TextUtils.SimpleStringSplitter;
 import android.util.Log;
 import android.widget.RemoteViews;
+
+import com.jcraft.jsch.JSchException;
 
 public class Cloner extends GitOperation {
 	
