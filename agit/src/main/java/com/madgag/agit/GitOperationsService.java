@@ -38,7 +38,6 @@ public class GitOperationsService extends Service {
 
 	public static final String TAG = "GitIntentService";
 	private Map<File,RepositoryOperationContext> map=new HashMap<File,RepositoryOperationContext>();
-	
 
 	public static Intent cloneOperationIntentFor(URIish uri, File gitdir) {
 		Intent intent = new Intent("git.CLONE");
@@ -72,7 +71,45 @@ public class GitOperationsService extends Service {
     
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-        bindService(new Intent("com.madgag.android.ssh.BIND_SSH_AGENT_SERVICE"), new ServiceConnection() {
+        bindSshAgent();
+		
+		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+    	if (intent==null) {
+    		return START_STICKY;
+    	}
+		
+		String action = intent.getAction();
+		Log.i(TAG, "Got action "+action);
+		
+		File gitdir = GitIntents.gitDirFrom(intent);
+		
+		RepositoryOperationContext repositoryOperationContext=getOrCreateRepositoryOperationContextFor(gitdir);
+		if (action.equals("git.CLONE")) {
+			String sourceUriString = intent.getStringExtra("source-uri");
+			try {
+				URIish sourceUri=new URIish(sourceUriString);
+				repositoryOperationContext.enqueue(new Cloner(sourceUri, gitdir, repositoryOperationContext));
+			} catch (URISyntaxException e) {
+				Toast.makeText(this, "Invalid uri "+sourceUriString, LENGTH_LONG);
+			}
+		} else if (action.equals("git.FETCH")) {
+			Repository repository = repositoryOperationContext.getRepository();
+			String remote=Constants.DEFAULT_REMOTE_NAME;
+			try {
+				repositoryOperationContext.enqueue(new Fetcher(new RemoteConfig(repository.getConfig(), remote), repositoryOperationContext));
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+				Toast.makeText(this, "Bad config "+e, LENGTH_LONG).show();
+			}
+		} else {
+			Log.e(TAG, "Why not is");
+		}
+
+		return START_STICKY;
+    }
+
+	private void bindSshAgent() {
+		bindService(new Intent("com.madgag.android.ssh.BIND_SSH_AGENT_SERVICE"), new ServiceConnection() {
 			public void onServiceDisconnected(ComponentName name) {
 				Log.i(TAG, "onServiceDisconnected - losing "+authAgent);
 				authAgent=null;
@@ -93,45 +130,7 @@ public class GitOperationsService extends Service {
 			}
 		}, BIND_AUTO_CREATE);
         Log.i(TAG, "Asked for my SSH_AGENT_SERVICE ");
-		
-		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-    	if (intent==null) {
-    		return START_STICKY;
-    	}
-		
-		String remote=Constants.DEFAULT_REMOTE_NAME;
-		
-		String action = intent.getAction();
-		String gitdirString = intent.getStringExtra("gitdir");
-		Log.i(TAG, "Got action "+action+" "+gitdirString);
-		File gitdir=new File(gitdirString);
-		RepositoryOperationContext repositoryOperationContext=getOrCreateRepositoryOperationContextFor(gitdir);
-		if (action.equals("git.CLONE")) {
-			String sourceUriString = intent.getStringExtra("source-uri");
-			try {
-				URIish sourceUri=new URIish(sourceUriString);
-				repositoryOperationContext.enqueue(new Cloner(sourceUri, gitdir, repositoryOperationContext));
-			} catch (URISyntaxException e) {
-				Toast.makeText(this, "Invalid uri "+sourceUriString, LENGTH_LONG);
-			}
-		} else if (action.equals("git.FETCH")) {
-			Log.i(TAG, "gitdir is "+gitdir.getAbsolutePath());
-			Repository repository = repositoryOperationContext.getRepository();
-			try {
-				repositoryOperationContext.enqueue(new Fetcher(new RemoteConfig(repository.getConfig(), remote), repositoryOperationContext));
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
-				Toast.makeText(this, "Bad config "+e, LENGTH_LONG).show();
-			}
-		} else {
-			Log.e(TAG, "Why not is");
-		}
-		
-		
-		//repositoryOperationContext.setCurrentOperation(fetchThread);
-
-		return START_STICKY;
-    }
+	}
 
     public Set<RepositoryOperationContext> getRepositoryOperationContextsFor(URIish remote) {
     	Set<RepositoryOperationContext> rocs = newHashSet();
