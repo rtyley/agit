@@ -2,6 +2,7 @@ package com.madgag.agit;
 
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
 import static java.lang.System.currentTimeMillis;
+import static java.lang.Thread.sleep;
 import static junit.framework.Assert.assertNotNull;
 
 import java.io.File;
@@ -29,11 +30,24 @@ public class GitOperationsServiceTest extends ServiceTestCase<GitOperationsServi
         
         startService(cloneIntent);
         
-        Notification notification = getService().getOrCreateRepositoryOperationContextFor(gitdir).getCurrentOperation().get();
+        RepositoryOperationContext repositoryOperationContext = getService().getOrCreateRepositoryOperationContextFor(gitdir);
+		GitOperation gitOperation = waitForOperationIn(repositoryOperationContext);
+		Notification notification = gitOperation.get();
         assertNotNull(notification);
 	}
 	
-
+	
+	private static GitOperation waitForOperationIn(RepositoryOperationContext context) {
+		while (context.getCurrentOperation()==null) {
+			try {
+				sleep(100L);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		return context.getCurrentOperation();
+	}
+	
 	private File newFolder() {
 		File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 		return new File(path, ""+currentTimeMillis());
