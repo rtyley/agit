@@ -38,6 +38,7 @@ public abstract class GitOperation extends AsyncTask<Void, Progress, Notificatio
     	startTime = currentTimeMillis();
     	ongoingNotification=createOngoingNotification();
     	ongoingNotification.flags = ongoingNotification.flags | FLAG_ONGOING_EVENT;
+    	Log.i(TAG, "Starting "+getClass().getSimpleName()+" in the foreground...");
     	repositoryOperationContext.getService().startForeground(repositoryOperationContext.fetchOngoingId, ongoingNotification);
     }
     

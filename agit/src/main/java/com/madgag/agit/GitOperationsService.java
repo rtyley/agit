@@ -69,6 +69,8 @@ public class GitOperationsService extends Service {
     
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		Log.i(TAG, "onStartCommand "+intent);
+		
         bindSshAgent();
 		
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);

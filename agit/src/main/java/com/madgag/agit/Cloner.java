@@ -55,6 +55,7 @@ public class Cloner extends GitOperation {
 		super(operationContext);
         this.sourceUri = sourceUri;
 		this.gitdir = gitdir;
+		Log.i(TAG, "Constructed with "+sourceUri+" gitdir="+gitdir);
 		progressMonitor = new MessagingProgressMonitor(this);
     }
 	

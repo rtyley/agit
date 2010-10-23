@@ -30,10 +30,10 @@ import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class Clone extends Activity {
+	private final static String TAG="Clone";
 
 	public static String EXTRA_TARGET_DIR="target-dir",EXTRA_SOURCE_URI="source-uri";
 	
-	private final static String TAG="Clone";
 
 	private Button button;
 	private CheckBox useDefaultGitDirLocationButton;
@@ -97,7 +97,7 @@ public class Clone extends Activity {
     protected void onStart() {
     	super.onStart();
     	Intent intent = getIntent();
-    	Log.d("Cloner", "Starting with da "+intent);
+    	Log.d(TAG, "Starting with da "+intent);
     	if (intent!=null) {
     		setSourceUriFrom(intent);
     		setGitDirFrom(intent);
@@ -108,7 +108,7 @@ public class Clone extends Activity {
 		String sourceUri= intent.getStringExtra(EXTRA_SOURCE_URI);
 		if (sourceUri!=null) { 
 			cloneUrlEditText.setText(sourceUri);
-			Log.d("Cloner", "Set cloneUrlEditText to "+sourceUri);
+			Log.d(TAG, "Set cloneUrlEditText to "+sourceUri);
 		}
 	}
 
@@ -117,14 +117,14 @@ public class Clone extends Activity {
 		useDefaultGitDirLocationButton.setChecked(gitdir==null);
 		if (gitdir!=null) { 
 			gitDirEditText.setText(gitdir);
-			Log.d("Cloner", "Set gitdir to "+gitdir);
+			Log.d(TAG, "Set gitdir to "+gitdir);
 		}
 	};
     
     @Override
     protected void onResume() {
     	super.onResume();
-    	Log.d("Cloner", "onResume called");
+    	Log.d(TAG, "onResume called");
     	updateUIWithValidation();
     }
     

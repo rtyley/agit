@@ -3,11 +3,8 @@ package com.madgag.agit;
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.Thread.sleep;
-import static junit.framework.Assert.assertNotNull;
 
 import java.io.File;
-
-import junit.framework.Assert;
 
 import org.eclipse.jgit.transport.URIish;
 
@@ -15,19 +12,23 @@ import android.app.Notification;
 import android.content.Intent;
 import android.os.Environment;
 import android.test.ServiceTestCase;
+import android.util.Log;
 
 public class GitOperationsServiceTest extends ServiceTestCase<GitOperationsService> {
+	
+	private static final String TAG="GitOperationsServiceTest";
 	
 	public GitOperationsServiceTest() {
 		super(GitOperationsService.class);
 	}
 	
-	public void testUsesDefaultGitDirLocationIfOnlySourceUriIsProvidedInIntent() throws Exception {
+	public void testCanPerformSimpleReadOnlyCloneFromGitHub() throws Exception {
 		URIish uri= new URIish("git://github.com/agittest/small-project.git");
 		File gitdir=newFolder();
 		Intent cloneIntent = cloneOperationIntentFor(uri, gitdir);
         cloneIntent.setClass(getContext(), GitOperationsService.class);
         
+        Log.i(TAG, "About to start service with "+cloneIntent+" gitdir="+gitdir);
         startService(cloneIntent);
         
         RepositoryOperationContext repositoryOperationContext = getService().getOrCreateRepositoryOperationContextFor(gitdir);
