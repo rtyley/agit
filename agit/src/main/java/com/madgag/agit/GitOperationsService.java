@@ -32,13 +32,21 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.common.collect.Sets;
 import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 
 public class GitOperationsService extends Service {
 
 	public static final String TAG = "GitIntentService";
 	private Map<File,RepositoryOperationContext> map=new HashMap<File,RepositoryOperationContext>();
+	
+
+	public static Intent cloneOperationIntentFor(URIish uri, File gitdir) {
+		Intent intent = new Intent("git.CLONE");
+		intent
+			.putExtra("source-uri", uri.toPrivateString())
+			.putExtra("gitdir", gitdir.getAbsolutePath());
+		return intent;
+	}
 	
     public class GitOperationsBinder extends Binder {
     	GitOperationsService getService() {
