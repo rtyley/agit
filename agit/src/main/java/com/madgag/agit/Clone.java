@@ -1,9 +1,9 @@
 package com.madgag.agit;
 
-import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_LONG;
+import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +14,6 @@ import org.eclipse.jgit.transport.URIish;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
@@ -32,6 +31,8 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class Clone extends Activity {
 
+	public static String EXTRA_TARGET_DIR="target-dir",EXTRA_SOURCE_URI="source-uri";
+	
 	private final static String TAG="Clone";
 
 	private Button button;
@@ -104,7 +105,7 @@ public class Clone extends Activity {
     }
 
 	private void setSourceUriFrom(Intent intent) {
-		String sourceUri= intent.getStringExtra("source-uri");
+		String sourceUri= intent.getStringExtra(EXTRA_SOURCE_URI);
 		if (sourceUri!=null) { 
 			cloneUrlEditText.setText(sourceUri);
 			Log.d("Cloner", "Set cloneUrlEditText to "+sourceUri);
@@ -112,7 +113,7 @@ public class Clone extends Activity {
 	}
 
 	private void setGitDirFrom(Intent intent) {
-		String gitdir= intent.getStringExtra("gitdir");
+		String gitdir= intent.getStringExtra(EXTRA_TARGET_DIR);
 		useDefaultGitDirLocationButton.setChecked(gitdir==null);
 		if (gitdir!=null) { 
 			gitDirEditText.setText(gitdir);
@@ -124,6 +125,7 @@ public class Clone extends Activity {
     protected void onResume() {
     	super.onResume();
     	Log.d("Cloner", "onResume called");
+    	updateUIWithValidation();
     }
     
     public URIish getCloneUri() throws URISyntaxException {
@@ -156,14 +158,8 @@ public class Clone extends Activity {
 				throw new IOException(message);
 			}
     		File gitdir = new File(repoDir, Constants.DOT_GIT);
-    		Intent intent = new Intent("git.CLONE");
-    		intent
-    			.putExtra("source-uri", uri.toPrivateString())
-    			.putExtra("gitdir", gitdir.getAbsolutePath());
-    		Log.i(TAG, "Doin "+intent+" "+intent.getStringExtra("gitdir"));
-			startService(intent);
     		
-    		// cloneStuff(uri, gitdir);
+    		startService(cloneOperationIntentFor(uri, gitdir));
 		}
 
 
@@ -174,5 +170,6 @@ public class Clone extends Activity {
 		String localName = uri.getHumanishName();
 		File repoDir=new File(reposDir,localName);
 		return repoDir;
-	} 
+	}
+
 }

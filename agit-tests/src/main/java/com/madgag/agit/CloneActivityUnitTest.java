@@ -1,14 +1,18 @@
 package com.madgag.agit;
 
+import static com.madgag.agit.Clone.*;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Checkable;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import com.github.calculon.CalculonUnitTest;
 import com.github.calculon.predicate.Predicate;
 
 public class CloneActivityUnitTest extends CalculonUnitTest<Clone> {
+	
+	final String appleProjectSourceUri="/example/apple";
+	final String targetDir="/sdcard/tango";
 	
 	public CloneActivityUnitTest() {
 		super(Clone.class);
@@ -16,51 +20,42 @@ public class CloneActivityUnitTest extends CalculonUnitTest<Clone> {
 	
 	public void testUsesDefaultGitDirLocationIfOnlySourceUriIsProvidedInIntent() {
 		Bundle bundle = new Bundle();
-		final String cloneSourceUri="/example/apple";
-		bundle.putString("source-uri", cloneSourceUri);
+		bundle.putString(EXTRA_SOURCE_URI, appleProjectSourceUri);
 		
 		startActivity(bundle);
 		getInstrumentation().callActivityOnStart(getActivity());
 		
-		assertThat(R.id.CloneUrlEditText).satisfies(new Predicate<View>() {
-			public boolean check(View target) {
-				return ((EditText) target).getText().toString().equals(cloneSourceUri);
-			}
-		});
-		
-		assertThat(R.id.UseDefaultGitDirLocation).satisfies(new Predicate<View>() {
-			public boolean check(View target) {
-				return ((Checkable) target).isChecked()==true;
-			}
-		});
+		assertThat(R.id.CloneUrlEditText).satisfies(hasText(appleProjectSourceUri));
+		assertThat(R.id.UseDefaultGitDirLocation).satisfies(isChecked(true));
 	}
 	
-	public void testUsesSpecifiedGitDirLocationFromIntentIfSupplied() {
+	public void testUsesSpecifiedRepoDirLocationFromIntentIfSupplied() {
 		Bundle bundle = new Bundle();
-		final String cloneSourceUri="/example/apple";
-		final String gitdir="/sdcard/tango";
-		bundle.putString("source-uri", cloneSourceUri);
-		bundle.putString("gitdir", gitdir);
+		bundle.putString(EXTRA_SOURCE_URI, appleProjectSourceUri);
+		bundle.putString(EXTRA_TARGET_DIR, targetDir);
 		
 		startActivity(bundle);
 		getInstrumentation().callActivityOnStart(getActivity());
 		
-		assertThat(R.id.CloneUrlEditText).satisfies(new Predicate<View>() {
+		assertThat(R.id.GitDirEditText).satisfies(hasText(targetDir));
+		assertThat(R.id.UseDefaultGitDirLocation).satisfies(isChecked(false));
+		assertThat(R.id.CloneUrlEditText).satisfies(hasText(appleProjectSourceUri));
+	}
+
+	
+	private Predicate<View> isChecked(final boolean checked) {
+		return new Predicate<View>() {
 			public boolean check(View target) {
-				return ((EditText) target).getText().toString().equals(cloneSourceUri);
+				return ((Checkable) target).isChecked()==checked;
 			}
-		});
-		
-		assertThat(R.id.UseDefaultGitDirLocation).satisfies(new Predicate<View>() {
+		};
+	}
+	
+	private static Predicate<View> hasText(final String text) {
+		return new Predicate<View>() {
 			public boolean check(View target) {
-				return ((Checkable) target).isChecked()==false;
+				return ((TextView) target).getText().toString().equals(text);
 			}
-		});
-		
-		assertThat(R.id.GitDirEditText).satisfies(new Predicate<View>() {
-			public boolean check(View target) {
-				return ((EditText) target).getText().toString().equals(gitdir);
-			}
-		});
+		};
 	}
 }
