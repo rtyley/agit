@@ -1,10 +1,6 @@
 package com.madgag.agit;
 
-import static android.app.Notification.FLAG_AUTO_CANCEL;
-import static android.app.Notification.FLAG_ONGOING_EVENT;
 import static java.lang.System.currentTimeMillis;
-
-import java.net.URISyntaxException;
 
 import org.connectbot.service.PromptHelper;
 import org.eclipse.jgit.errors.NotSupportedException;
