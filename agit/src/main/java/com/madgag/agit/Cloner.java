@@ -78,15 +78,16 @@ public class Cloner extends GitOperation {
 	@Override
 	protected Notification doInBackground(Void... arg0) {
 		String remoteName = Constants.DEFAULT_REMOTE_NAME;
-		RemoteConfig rc;
-		try {
-			rc = new RemoteConfig(db.getConfig(), remoteName);
-		} catch (URISyntaxException e2) {
-			throw new RuntimeException(e2);
-		}
+
 		try {
     		db = new FileRepository(gitdir);
     		db.create();
+    		RemoteConfig rc;
+    		try {
+    			rc = new RemoteConfig(db.getConfig(), remoteName);
+    		} catch (URISyntaxException e2) {
+    			throw new RuntimeException(e2);
+    		}
     		//dst.getConfig().setBoolean("core", null, "bare", false);
     		//dst.getConfig().save();
     		
