@@ -67,8 +67,17 @@ public class GitOperationsService extends Service {
 	}
 	
     
+    @Override
+    public void onStart(Intent intent, int startId) {
+    	handleMethod(intent);
+    }
+    
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		return handleMethod(intent);
+    }
+
+	private int handleMethod(Intent intent) {
 		Log.i(TAG, "onStartCommand "+intent);
 		
         bindSshAgent();
@@ -106,7 +115,7 @@ public class GitOperationsService extends Service {
 		}
 
 		return START_STICKY;
-    }
+	}
 
 
     AndroidAuthAgent authAgent;
