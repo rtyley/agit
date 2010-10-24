@@ -43,23 +43,6 @@ public class RepositoryOperationContext {
 		return service;
 	}
 
-
-
-	public void notifyCompletion(Notification completedNotification) {
-		service.stopForeground(true); // Actually, we only want to call this if ALL threads are completed, I think...
-		completedNotification.flags |= FLAG_AUTO_CANCEL;
-		service.getNotificationManager().notify(fetchCompletionId, completedNotification);
-	}
-
-	public void notifyOngoing(Notification notification) {
-		service.getNotificationManager().notify(fetchOngoingId, notification);
-	}
-
-	public PendingIntent getRMAPendingIntent() {
-		
-		return manageGitRepo;
-	}
-
 	// grandiose name
 	public void enqueue(GitOperation gitOperation) {
 		currentOperation=gitOperation;
@@ -67,12 +50,40 @@ public class RepositoryOperationContext {
 		showOngoingNotificationFor(gitOperation);
 	}
 
+	public void notifyOngoing(Notification notification) {
+		service.getNotificationManager().notify(fetchOngoingId, notification);
+	}
+	
+	
 	private void showOngoingNotificationFor(GitOperation gitOperation) {
     	Notification ongoingNotification=gitOperation.createOngoingNotification();
     	ongoingNotification.flags = ongoingNotification.flags | FLAG_ONGOING_EVENT;
     	Log.i(TAG, "Starting "+gitOperation.getClass().getSimpleName()+" in the foreground...");
-    	getService().startForeground(fetchOngoingId, ongoingNotification);
+    	try {
+    		service.startForeground(fetchOngoingId, ongoingNotification);
+    	} catch (NullPointerException e) {
+    		Log.i(TAG, "startForeground NPE - see http://code.google.com/p/android/issues/detail?id=12117");
+    	}
 	}
+
+	public void notifyCompletion(Notification completedNotification) {
+		try {
+			service.stopForeground(true); // Actually, we only want to call this if ALL threads are completed, I think...
+		} catch (NullPointerException e) {
+    		Log.i(TAG, "stopForeground NPE - see http://code.google.com/p/android/issues/detail?id=12117",e);
+    	}
+		completedNotification.flags |= FLAG_AUTO_CANCEL;
+		service.getNotificationManager().notify(fetchCompletionId, completedNotification);
+	}
+
+
+
+	public PendingIntent getRMAPendingIntent() {
+		return manageGitRepo;
+	}
+
+
+
 
 	public GitOperation getCurrentOperation() {
 		return currentOperation;
