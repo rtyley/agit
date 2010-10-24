@@ -36,31 +36,20 @@ public abstract class GitOperation extends AsyncTask<Void, Progress, Notificatio
     @Override
     protected void onPreExecute() {
     	startTime = currentTimeMillis();
-    	ongoingNotification=createOngoingNotification();
-    	ongoingNotification.flags = ongoingNotification.flags | FLAG_ONGOING_EVENT;
-    	Log.i(TAG, "Starting "+getClass().getSimpleName()+" in the foreground...");
-    	repositoryOperationContext.getService().startForeground(repositoryOperationContext.fetchOngoingId, ongoingNotification);
     }
     
 	@Override
 	protected void onPostExecute(Notification completedNotification) {
 		long duration=currentTimeMillis()-startTime;
 		Log.i(TAG, "Completed in "+duration+" ms");
-		repositoryOperationContext.getService().stopForeground(true); // Actually, we only want to call this if ALL threads are completed, I think...
-		notifyCompletionWith(completedNotification);
+		repositoryOperationContext.notifyCompletion(completedNotification);
 	}
 	
-
-    protected Notification createNotificationWith(int drawable, String tickerText, String eventTitle,String eventDetail) {
+	protected Notification createNotificationWith(int drawable, String tickerText, String eventTitle,String eventDetail) {
     	Notification n=new Notification(drawable, tickerText, currentTimeMillis());
 		n.setLatestEventInfo(repositoryOperationContext.getService(), eventTitle, eventDetail, repositoryOperationContext.manageGitRepo);
 		return n;
     }
-	
-	private void notifyCompletionWith(Notification completedNotification) {
-		completedNotification.flags |= FLAG_AUTO_CANCEL;
-		repositoryOperationContext.notifyCompletion(completedNotification);
-	}
 	
 	abstract Notification createCompletionNotification();
 

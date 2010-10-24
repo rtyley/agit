@@ -1,5 +1,7 @@
 package com.madgag.agit;
 
+import static android.app.Notification.FLAG_AUTO_CANCEL;
+import static android.app.Notification.FLAG_ONGOING_EVENT;
 import static com.madgag.agit.RepositoryManagementActivity.manageGitRepo;
 
 import org.eclipse.jgit.lib.Repository;
@@ -9,8 +11,11 @@ import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.util.Log;
 
 public class RepositoryOperationContext {
+	
+	public static final String TAG = "RepositoryOperationContext";
 	
 	private final GitOperationsService service;
 	private final Repository repository;
@@ -41,6 +46,8 @@ public class RepositoryOperationContext {
 
 
 	public void notifyCompletion(Notification completedNotification) {
+		service.stopForeground(true); // Actually, we only want to call this if ALL threads are completed, I think...
+		completedNotification.flags |= FLAG_AUTO_CANCEL;
 		service.getNotificationManager().notify(fetchCompletionId, completedNotification);
 	}
 
@@ -57,6 +64,14 @@ public class RepositoryOperationContext {
 	public void enqueue(GitOperation gitOperation) {
 		currentOperation=gitOperation;
 		gitOperation.execute();
+		showOngoingNotificationFor(gitOperation);
+	}
+
+	private void showOngoingNotificationFor(GitOperation gitOperation) {
+    	Notification ongoingNotification=gitOperation.createOngoingNotification();
+    	ongoingNotification.flags = ongoingNotification.flags | FLAG_ONGOING_EVENT;
+    	Log.i(TAG, "Starting "+gitOperation.getClass().getSimpleName()+" in the foreground...");
+    	getService().startForeground(fetchOngoingId, ongoingNotification);
 	}
 
 	public GitOperation getCurrentOperation() {
