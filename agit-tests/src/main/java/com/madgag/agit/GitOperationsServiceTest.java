@@ -6,6 +6,8 @@ import static java.lang.Thread.sleep;
 
 import java.io.File;
 
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.URIish;
 
 import android.app.Notification;
@@ -35,6 +37,9 @@ public class GitOperationsServiceTest extends ServiceTestCase<GitOperationsServi
 		GitOperation gitOperation = waitForOperationIn(repositoryOperationContext);
 		Notification notification = gitOperation.get();
         assertNotNull(notification);
+        Repository repository = repositoryOperationContext.getRepository();
+        assertTrue(repository.hasObject(ObjectId.fromString( "9e0b5e42b3e1c59bc83b55142a8c50dfae36b144")));
+        assertFalse(repository.hasObject(ObjectId.fromString("111111111111111111111111111111111111cafe")));
 	}
 	
 	
