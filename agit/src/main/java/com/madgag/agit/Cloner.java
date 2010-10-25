@@ -2,6 +2,7 @@ package com.madgag.agit;
 
 import static android.R.drawable.stat_notify_error;
 import static android.R.drawable.stat_sys_download_done;
+import static android.widget.Toast.LENGTH_LONG;
 import static java.lang.System.currentTimeMillis;
 import static org.eclipse.jgit.lib.Constants.HEAD;
 import static org.eclipse.jgit.lib.Constants.R_HEADS;
@@ -36,6 +37,7 @@ import org.eclipse.jgit.transport.URIish;
 import android.app.Notification;
 import android.util.Log;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.jcraft.jsch.JSchException;
 
@@ -77,7 +79,15 @@ public class Cloner extends GitOperation {
 	
 	@Override
 	protected Notification doInBackground(Void... arg0) {
-		Log.i(TAG, "Starting doInBackground... "+gitdir);
+		File gitDirParentFolder = gitdir.getParentFile();
+		Log.i(TAG, "Starting doInBackground... will ensure parent of gitdir exists. gitdir="+gitdir);
+		if (!gitDirParentFolder.exists()) {
+			Log.d(TAG, "Parent folder "+gitDirParentFolder+" needs to be created...");
+			boolean created=gitDirParentFolder.mkdirs();
+			Log.d(TAG, "mkdirs 'created' returned : "+created);
+		}
+		
+		
 		String remoteName = Constants.DEFAULT_REMOTE_NAME;
 
 		try {
