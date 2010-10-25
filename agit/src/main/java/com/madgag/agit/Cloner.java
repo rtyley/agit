@@ -84,7 +84,7 @@ public class Cloner extends GitOperation {
 		if (!gitDirParentFolder.exists()) {
 			Log.d(TAG, "Parent folder "+gitDirParentFolder+" needs to be created...");
 			boolean created=gitDirParentFolder.mkdirs();
-			Log.d(TAG, "mkdirs 'created' returned : "+created);
+			Log.d(TAG, "mkdirs 'created' returned : "+created+" and gitDirParentFolder.exists()="+gitDirParentFolder.exists());
 		}
 		
 		
