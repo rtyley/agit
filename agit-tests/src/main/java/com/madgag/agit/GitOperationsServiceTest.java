@@ -3,9 +3,11 @@ package com.madgag.agit;
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.Thread.sleep;
+import static org.eclipse.jgit.lib.Constants.DOT_GIT;
 
 import java.io.File;
 
+import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.URIish;
@@ -26,7 +28,7 @@ public class GitOperationsServiceTest extends ServiceTestCase<GitOperationsServi
 	
 	public void testCanPerformSimpleReadOnlyCloneFromGitHub() throws Exception {
 		URIish uri= new URIish("git://github.com/agittest/small-project.git");
-		File gitdir=newFolder();
+		File gitdir=new File(newFolder(),DOT_GIT);
 		Intent cloneIntent = cloneOperationIntentFor(uri, gitdir);
         cloneIntent.setClass(getContext(), GitOperationsService.class);
         
