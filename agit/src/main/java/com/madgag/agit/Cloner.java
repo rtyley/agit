@@ -77,6 +77,7 @@ public class Cloner extends GitOperation {
 	
 	@Override
 	protected Notification doInBackground(Void... arg0) {
+		Log.i(TAG, "Starting doInBackground...");
 		String remoteName = Constants.DEFAULT_REMOTE_NAME;
 
 		try {
@@ -96,6 +97,7 @@ public class Cloner extends GitOperation {
     				.setSourceDestination(R_HEADS + "*", R_REMOTES + remoteName + "/*"));
     		rc.update(db.getConfig());
     		db.getConfig().save();
+    		Log.i(TAG, "About to run fetch : "+db.getDirectory());
 			final FetchResult r = runFetch(rc);
 			Log.i(TAG, "Finished fetch "+r);
 			final Ref branch = guessHEAD(r);

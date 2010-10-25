@@ -31,6 +31,7 @@ public abstract class GitOperation extends AsyncTask<Void, Progress, Notificatio
 	
     @Override
     protected void onPreExecute() {
+    	Log.i(TAG, "Starting onPreExecute "+repositoryOperationContext);
     	startTime = currentTimeMillis();
     }
     
