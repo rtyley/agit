@@ -62,7 +62,7 @@ public class GitOperationsServiceTest extends ServiceTestCase<GitOperationsServi
 	}
 	
 	private File newFolder() {
-		File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+		File path = new File(Environment.getExternalStorageDirectory(),"agit-test-repos");
 		return new File(path, ""+currentTimeMillis());
 	}
 }
