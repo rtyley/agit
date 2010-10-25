@@ -77,11 +77,12 @@ public class Cloner extends GitOperation {
 	
 	@Override
 	protected Notification doInBackground(Void... arg0) {
-		Log.i(TAG, "Starting doInBackground...");
+		Log.i(TAG, "Starting doInBackground... "+gitdir);
 		String remoteName = Constants.DEFAULT_REMOTE_NAME;
 
 		try {
     		db = new FileRepository(gitdir);
+    		Log.i(TAG, "about to execute create() on "+db);
     		db.create();
     		Log.i(TAG, "Created FileRepository "+db);
     		RemoteConfig rc;
@@ -110,6 +111,7 @@ public class Cloner extends GitOperation {
 			//notificationManager.cancel(notificationId); // It seems 'On-going' notifications can't be converted to ordinary ones.
 			return createCompletionNotification();
 		} catch (TransportException e1) {
+			Log.e(TAG, "TransportException ",e1);
 			String message=e1.getMessage();
 			Throwable cause=e1.getCause();
 			if (cause!=null && cause instanceof JSchException) {
@@ -121,6 +123,7 @@ public class Cloner extends GitOperation {
 	    			message,
 	    			sourceUri.toString());
 		} catch (IOException e) {
+			Log.e(TAG, "IOException ",e);
 			return createNotificationWith(
 	    			stat_notify_error,
 	    			"Clone failed",
