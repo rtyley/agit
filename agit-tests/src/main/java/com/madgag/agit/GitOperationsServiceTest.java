@@ -38,6 +38,7 @@ public class GitOperationsServiceTest extends ServiceTestCase<GitOperationsServi
 		Notification notification = gitOperation.get();
         assertNotNull(notification);
         Repository repository = repositoryOperationContext.getRepository();
+        Log.i(TAG, "After clone: repo directory="+repository.getDirectory()+" workTree="+repository.getWorkTree());
         assertTrue(repository.hasObject(ObjectId.fromString( "9e0b5e42b3e1c59bc83b55142a8c50dfae36b144")));
         assertFalse(repository.hasObject(ObjectId.fromString("111111111111111111111111111111111111cafe")));
 	}
