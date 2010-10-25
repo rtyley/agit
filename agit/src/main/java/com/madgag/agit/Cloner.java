@@ -83,6 +83,7 @@ public class Cloner extends GitOperation {
 		try {
     		db = new FileRepository(gitdir);
     		db.create();
+    		Log.i(TAG, "Created FileRepository "+db);
     		RemoteConfig rc;
     		try {
     			rc = new RemoteConfig(db.getConfig(), remoteName);
@@ -93,9 +94,11 @@ public class Cloner extends GitOperation {
     		//dst.getConfig().save();
     		
     		rc.addURI(sourceUri);
+    		Log.i(TAG, "GAMMA");
     		rc.addFetchRefSpec(new RefSpec().setForceUpdate(true)
     				.setSourceDestination(R_HEADS + "*", R_REMOTES + remoteName + "/*"));
     		rc.update(db.getConfig());
+    		Log.i(TAG, "About to save config...");
     		db.getConfig().save();
     		Log.i(TAG, "About to run fetch : "+db.getDirectory());
 			final FetchResult r = runFetch(rc);
