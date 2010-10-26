@@ -56,7 +56,7 @@ public class RepositoryOperationContext {
 	
 	
 	private void showOngoingNotificationFor(GitOperation gitOperation) {
-    	Notification ongoingNotification=gitOperation.createOngoingNotification();
+    	Notification ongoingNotification=gitOperation.getOngoingNotification();
     	ongoingNotification.flags = ongoingNotification.flags | FLAG_ONGOING_EVENT;
     	Log.i(TAG, "Starting "+gitOperation.getClass().getSimpleName()+" in the foreground...");
     	try {

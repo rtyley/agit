@@ -21,13 +21,14 @@ public abstract class GitOperation extends AsyncTask<Void, Progress, Notificatio
 	
 	protected final RepositoryOperationContext repositoryOperationContext;
 	private long startTime;
-	protected Notification ongoingNotification;
+	protected final Notification ongoingNotification;
 	protected PromptHelper promptHelper=new PromptHelper(TAG);
 	final MessagingProgressMonitor progressMonitor;
 	
 	public GitOperation(RepositoryOperationContext repositoryOperationContext) {
 		this.repositoryOperationContext = repositoryOperationContext;
 		progressMonitor = new MessagingProgressMonitor(this);
+		ongoingNotification=createOngoingNotification();
 	}
 	
     @Override
@@ -53,6 +54,10 @@ public abstract class GitOperation extends AsyncTask<Void, Progress, Notificatio
 
 	abstract Notification createOngoingNotification();
 
+	public Notification getOngoingNotification() {
+		return ongoingNotification;
+	}
+	
 	public void publish(Progress... values) {
 		publishProgress(values);
 	}
@@ -88,4 +93,5 @@ public abstract class GitOperation extends AsyncTask<Void, Progress, Notificatio
 		Log.i(TAG, "Finished fetch "+r);
 		return r;
 	}
+
 }
