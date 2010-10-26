@@ -13,6 +13,7 @@ import org.eclipse.jgit.transport.Transport;
 import android.app.Notification;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 public abstract class GitOperation extends AsyncTask<Void, Progress, Notification> implements ProgressListener<Progress> {
 	
@@ -60,8 +61,9 @@ public abstract class GitOperation extends AsyncTask<Void, Progress, Notificatio
 	protected void onProgressUpdate(Progress... values) {
 		Progress p=values[values.length-1];
 		Log.i(TAG, "Got prog "+p);
-		ongoingNotification.contentView.setProgressBar(R.id.status_progress,p.totalWork,p.totalCompleted,p.isIndeterminate());
-		ongoingNotification.contentView.setTextViewText(R.id.status_text, p.msg);
+		RemoteViews view = ongoingNotification.contentView;
+		view.setProgressBar(R.id.status_progress,p.totalWork,p.totalCompleted,p.isIndeterminate());
+		view.setTextViewText(R.id.status_text, p.msg);
 		repositoryOperationContext.notifyOngoing(ongoingNotification);
 	}
 
