@@ -34,7 +34,6 @@ public class Clone extends Activity {
 
 	public static String EXTRA_TARGET_DIR="target-dir",EXTRA_SOURCE_URI="source-uri";
 	
-
 	private Button button;
 	private CheckBox useDefaultGitDirLocationButton;
 	private TextView warningTextView;
