@@ -38,6 +38,11 @@
 		    <artifactId>android-test</artifactId>
 		    <scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-core</artifactId>
+			<version>1.2</version>
+		</dependency>
 	</dependencies>
     <build>
         <plugins>

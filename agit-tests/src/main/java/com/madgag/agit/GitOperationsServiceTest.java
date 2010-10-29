@@ -4,12 +4,17 @@ import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.Thread.sleep;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 import java.io.File;
 
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.URIish;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.core.Is;
 
 import android.app.Notification;
 import android.content.Intent;
@@ -41,6 +46,7 @@ public class GitOperationsServiceTest extends ServiceTestCase<GitOperationsServi
         Repository repository = repositoryOperationContext.getRepository();
         Log.i(TAG, "After clone: repo directory="+repository.getDirectory()+" workTree="+repository.getWorkTree());
         File readme=new File(repository.getWorkTree(),"README");
+        assertThat(readme,is(File.class));
         assertTrue(readme.exists());
         assertTrue(repository.hasObject(ObjectId.fromString("9e0b5e42b3e1c59bc83b55142a8c50dfae36b144")));
         assertFalse(repository.hasObject(ObjectId.fromString("111111111111111111111111111111111111cafe")));
