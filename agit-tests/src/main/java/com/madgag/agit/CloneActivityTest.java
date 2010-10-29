@@ -2,13 +2,10 @@ package com.madgag.agit;
 
 import static android.content.Context.BIND_AUTO_CREATE;
 
-import java.net.URISyntaxException;
 import java.util.Set;
 
-import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.transport.URIish;
 
-import android.app.Notification;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
