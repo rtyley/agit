@@ -1,6 +1,9 @@
 package com.madgag.agit;
 
-import static com.madgag.agit.Clone.*;
+import static com.madgag.agit.Clone.EXTRA_SOURCE_URI;
+import static com.madgag.agit.Clone.EXTRA_TARGET_DIR;
+import static java.lang.System.currentTimeMillis;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Checkable;
@@ -42,6 +45,24 @@ public class CloneActivityUnitTest extends CalculonUnitTest<Clone> {
 		assertThat(R.id.CloneUrlEditText).satisfies(hasText(appleProjectSourceUri));
 	}
 
+	public void testClickingCloneLaunchesTheGitOperationWithTheCorrectIntent() {
+		String littleTargetDir = targetDir+"/"+currentTimeMillis();
+
+		startActivity();
+		getInstrumentation().callActivityOnStart(getActivity());
+		
+		setUp(R.id.CloneUrlEditText).setText(appleProjectSourceUri);
+		setUp(R.id.UseDefaultGitDirLocation).setChecked(false);
+		setUp(R.id.GitDirEditText).setText(littleTargetDir);
+		
+		/*
+		 *  Unfortunately, assertions on the service-starting intent are not possible due to 
+		 *  http://code.google.com/p/android/issues/detail?id=12246
+
+		Intent intent = assertThat(R.id.GoCloneButton).click().starts(GitOperationsService.class);
+		assertEquals(intent.getStringExtra("gitdir"),littleTargetDir);
+		 */
+	}
 	
 	private Predicate<View> isChecked(final boolean checked) {
 		return new Predicate<View>() {
