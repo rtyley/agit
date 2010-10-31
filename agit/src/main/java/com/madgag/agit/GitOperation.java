@@ -44,11 +44,15 @@ public abstract class GitOperation extends AsyncTask<Void, Progress, Notificatio
 		repositoryOperationContext.notifyCompletion(completedNotification);
 	}
 	
-	protected Notification createNotificationWith(int drawable, String tickerText, String eventTitle,String eventDetail) {
+	protected Notification createNotificationWith(int drawable, String tickerText, String eventTitle, String eventDetail) {
     	Notification n=new Notification(drawable, tickerText, currentTimeMillis());
 		n.setLatestEventInfo(repositoryOperationContext.getService(), eventTitle, eventDetail, repositoryOperationContext.manageGitRepo);
 		return n;
     }
+	
+	protected RemoteViews remoteViewWithLayout(int layoutId) {
+		return new RemoteViews(repositoryOperationContext.getService().getApplicationContext().getPackageName(), layoutId);
+	}
 	
 	abstract Notification createCompletionNotification();
 

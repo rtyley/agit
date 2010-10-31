@@ -23,8 +23,6 @@ public class RepositoryOperationContext {
 	public final PendingIntent manageGitRepo;
 	private GitOperation currentOperation;
 	
-	//private FetchThread currentOperation;
-	
 	public RepositoryOperationContext(Repository repository, GitOperationsService service) {
 		this.repository = repository;
 		this.service = service;
@@ -76,32 +74,16 @@ public class RepositoryOperationContext {
 		service.getNotificationManager().notify(fetchCompletionId, completedNotification);
 	}
 
-
-
 	public PendingIntent getRMAPendingIntent() {
 		return manageGitRepo;
 	}
-
-
-
 
 	public GitOperation getCurrentOperation() {
 		return currentOperation;
 	}
 
-
-
 	public AndroidAuthAgent getAuthAgent() {
-		// TODO Auto-generated method stub
 		return service.authAgent;
 	}
-	
-//	public void setCurrentOperation(FetchThread currentOperation) {
-//		this.currentOperation = currentOperation;
-//	}
-//	
-//	public FetchThread getCurrentOperation() {
-//		return currentOperation;
-//	}
 
 }

@@ -1,9 +1,8 @@
 package com.madgag.agit;
 
 import static android.R.drawable.stat_notify_error;
+import static android.R.drawable.stat_sys_download;
 import static android.R.drawable.stat_sys_download_done;
-import static android.widget.Toast.LENGTH_LONG;
-import static java.lang.System.currentTimeMillis;
 import static org.eclipse.jgit.lib.Constants.HEAD;
 import static org.eclipse.jgit.lib.Constants.R_HEADS;
 import static org.eclipse.jgit.lib.Constants.R_REMOTES;
@@ -37,7 +36,6 @@ import org.eclipse.jgit.transport.URIish;
 import android.app.Notification;
 import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import com.jcraft.jsch.JSchException;
 
@@ -46,12 +44,12 @@ public class Cloner extends GitOperation {
 	public static final String TAG = "Cloner";
 	
 	private final URIish sourceUri;
+	private final File gitdir;
 
 	private MessagingProgressMonitor progressMonitor;
 	
 	private Repository db;
 
-	private final File gitdir;
 
 	Cloner(URIish sourceUri, File gitdir, RepositoryOperationContext operationContext) {
 		super(operationContext);
@@ -61,22 +59,20 @@ public class Cloner extends GitOperation {
 		progressMonitor = new MessagingProgressMonitor(this);
     }
 	
-	@Override
+	
 	Notification createOngoingNotification() {
-		Notification n = new Notification(android.R.drawable.stat_sys_download,"Clonin", currentTimeMillis());
-		n.setLatestEventInfo(repositoryOperationContext.getService(), "Cloning "+sourceUri, "Like a horse", repositoryOperationContext.manageGitRepo);
-		
-		n.contentView=fetchProgressNotificationRemoteView();
-		n.contentView.setTextViewText(R.id.status_text, "Cloning: "+sourceUri);
+		Notification n = createNotificationWith(stat_sys_download,"Clonin","Cloning "+sourceUri, "Like a horse");
+		n.contentView = cloneProgressNotificationView();
 		return n;
 	}
-	
-    private RemoteViews fetchProgressNotificationRemoteView() {
-		RemoteViews remoteView=new RemoteViews(repositoryOperationContext.getService().getApplicationContext().getPackageName(), R.layout.fetch_progress);
-		remoteView.setProgressBar(R.id.status_progress,1,0,true);
-		return remoteView;
-    }
-	
+
+	private RemoteViews cloneProgressNotificationView() {
+		RemoteViews v=remoteViewWithLayout(R.layout.fetch_progress);
+		v.setTextViewText(R.id.status_text, "Cloning: "+sourceUri);
+		v.setProgressBar(R.id.status_progress,1,0,true);
+		return v;
+	}
+
 	@Override
 	protected Notification doInBackground(Void... arg0) {
 		File gitDirParentFolder = gitdir.getParentFile();

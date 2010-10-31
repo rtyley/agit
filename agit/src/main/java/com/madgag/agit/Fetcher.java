@@ -3,18 +3,9 @@ package com.madgag.agit;
 import static android.R.drawable.stat_notify_error;
 import static android.R.drawable.stat_sys_download;
 import static android.R.drawable.stat_sys_download_done;
-import static java.lang.System.currentTimeMillis;
-
-import java.net.URISyntaxException;
 
 import org.connectbot.service.PromptHelper;
-import org.eclipse.jgit.errors.NotSupportedException;
-import org.eclipse.jgit.errors.TransportException;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RemoteConfig;
-import org.eclipse.jgit.transport.SshSessionFactory;
-import org.eclipse.jgit.transport.Transport;
 
 import android.app.Notification;
 import android.util.Log;
@@ -23,15 +14,13 @@ import android.widget.RemoteViews;
 public class Fetcher extends GitOperation {
 	
 	public static final String TAG = "Fetcher";
-	private final Repository db;
 	
 	private final RemoteConfig remoteConfig;
    
 	public Fetcher(RemoteConfig remoteConfig, RepositoryOperationContext operationContext) {
 		super(operationContext);
-		db = operationContext.getRepository();
 		this.remoteConfig = remoteConfig;
-		this.promptHelper=new PromptHelper(db);
+		this.promptHelper=new PromptHelper(operationContext.getRepository());
     }
     
     CancellationSignaller getCancellationSignaller() {
@@ -68,7 +57,8 @@ public class Fetcher extends GitOperation {
 	
 
     private RemoteViews fetchProgressNotificationRemoteView() {
-		RemoteViews remoteView=new RemoteViews(repositoryOperationContext.getService().getApplicationContext().getPackageName(), R.layout.fetch_progress);
+    	
+		RemoteViews remoteView=remoteViewWithLayout(R.layout.fetch_progress);
 		remoteView.setProgressBar(R.id.status_progress, 512, 128, true);
 		return remoteView;
     }
