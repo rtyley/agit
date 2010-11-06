@@ -97,7 +97,7 @@ public class GitOperationsService extends Service {
 			String sourceUriString = intent.getStringExtra("source-uri");
 			try {
 				URIish sourceUri=new URIish(sourceUriString);
-				repositoryOperationContext.enqueue(new Cloner(sourceUri, gitdir, repositoryOperationContext));
+				repositoryOperationContext.enqueue(new Cloner(sourceUri, gitdir));
 			} catch (URISyntaxException e) {
 				Toast.makeText(this, "Invalid uri "+sourceUriString, LENGTH_LONG);
 			}
@@ -105,7 +105,7 @@ public class GitOperationsService extends Service {
 			Repository repository = repositoryOperationContext.getRepository();
 			String remote=Constants.DEFAULT_REMOTE_NAME;
 			try {
-				repositoryOperationContext.enqueue(new Fetcher(new RemoteConfig(repository.getConfig(), remote), repositoryOperationContext));
+				repositoryOperationContext.enqueue(new Fetcher(new RemoteConfig(repository.getConfig(), remote)));
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 				Toast.makeText(this, "Bad config "+e, LENGTH_LONG).show();

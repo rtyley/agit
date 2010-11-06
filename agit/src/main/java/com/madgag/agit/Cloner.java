@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
+import org.eclipse.jgit.errors.NotSupportedException;
 import org.eclipse.jgit.errors.TransportException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.GitIndex;
@@ -31,6 +32,7 @@ import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
+import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.URIish;
 
 import android.app.Notification;
@@ -39,42 +41,40 @@ import android.widget.RemoteViews;
 
 import com.jcraft.jsch.JSchException;
 
-public class Cloner extends GitOperation {
+public class Cloner implements Action {
 	
 	public static final String TAG = "Cloner";
 	
 	private final URIish sourceUri;
 	private final File gitdir;
 
-	private MessagingProgressMonitor progressMonitor;
+	//private MessagingProgressMonitor progressMonitor;
 	
 	private Repository db;
 
 
-	Cloner(URIish sourceUri, File gitdir, RepositoryOperationContext operationContext) {
-		super(operationContext);
-        this.sourceUri = sourceUri;
+	Cloner(URIish sourceUri, File gitdir) {
+		this.sourceUri = sourceUri;
 		this.gitdir = gitdir;
 		Log.i(TAG, "Constructed with "+sourceUri+" gitdir="+gitdir);
-		progressMonitor = new MessagingProgressMonitor(this);
+		//progressMonitor = new MessagingProgressMonitor(this);
     }
 	
 	
-	Notification createOngoingNotification() {
-		Notification n = createNotificationWith(stat_sys_download,"Clonin","Cloning "+sourceUri, "Like a horse");
-		n.contentView = cloneProgressNotificationView();
-		return n;
-	}
+//	Notification createOngoingNotification() {
+//		Notification n = createNotificationWith(stat_sys_download,"Clonin","Cloning "+sourceUri, "Like a horse");
+//		n.contentView = cloneProgressNotificationView();
+//		return n;
+//	}
+//
+//	private RemoteViews cloneProgressNotificationView() {
+//		RemoteViews v=remoteViewWithLayout(R.layout.fetch_progress);
+//		v.setTextViewText(R.id.status_text, "Cloning: "+sourceUri);
+//		v.setProgressBar(R.id.status_progress,1,0,true);
+//		return v;
+//	}
 
-	private RemoteViews cloneProgressNotificationView() {
-		RemoteViews v=remoteViewWithLayout(R.layout.fetch_progress);
-		v.setTextViewText(R.id.status_text, "Cloning: "+sourceUri);
-		v.setProgressBar(R.id.status_progress,1,0,true);
-		return v;
-	}
-
-	@Override
-	protected Notification doInBackground(Void... arg0) {
+	public OpResult execute(RepositoryOperationContext repositoryOperationContext, ProgressListener<Progress> progressListener) {
 		File gitDirParentFolder = gitdir.getParentFile();
 		Log.i(TAG, "Starting doInBackground... will ensure parent of gitdir exists. gitdir="+gitdir);
 		if (!gitDirParentFolder.exists()) {
@@ -108,14 +108,24 @@ public class Cloner extends GitOperation {
     		Log.i(TAG, "About to save config...");
     		db.getConfig().save();
     		Log.i(TAG, "About to run fetch : "+db.getDirectory());
-			final FetchResult r = runFetch(rc);
-			Log.i(TAG, "Finished fetch "+r);
+    		Transport transport=repositoryOperationContext.transportFor(rc);
+    		FetchResult r=null;
+    		try {
+    			r = transport.fetch(new MessagingProgressMonitor(progressListener), null);
+    			Log.i(TAG, "No error during fetch it seems... "+r);
+    		} catch (NotSupportedException e) {
+    			e.printStackTrace();
+    		} catch (TransportException e) {
+    			e.printStackTrace();
+    		} finally {
+    			transport.close();
+    		}
 			final Ref branch = guessHEAD(r);
-			publishProgress(new Progress("Performing checkout"));
+			progressListener.publish(new Progress("Performing checkout"));
 			doCheckout(branch);
 			Log.i(TAG, "Completed checkout, thread done");
 			//notificationManager.cancel(notificationId); // It seems 'On-going' notifications can't be converted to ordinary ones.
-			return createCompletionNotification();
+			//return createCompletionNotification();
 		} catch (TransportException e1) {
 			Log.e(TAG, "TransportException ",e1);
 			String message=e1.getMessage();
@@ -123,29 +133,30 @@ public class Cloner extends GitOperation {
 			if (cause!=null && cause instanceof JSchException) {
 				message=((JSchException) cause).getMessage();
 			}
-			return createNotificationWith(
-	    			stat_notify_error,
-	    			"Clone failed",
-	    			message,
-	    			sourceUri.toString());
+//			return createNotificationWith(
+//	    			stat_notify_error,
+//	    			"Clone failed",
+//	    			message,
+//	    			sourceUri.toString());
 		} catch (IOException e) {
 			Log.e(TAG, "IOException ",e);
-			return createNotificationWith(
-	    			stat_notify_error,
-	    			"Clone failed",
-	    			e.getMessage(),
-	    			sourceUri.toString());
+//			return createNotificationWith(
+//	    			stat_notify_error,
+//	    			"Clone failed",
+//	    			e.getMessage(),
+//	    			sourceUri.toString());
 		}
+		return new OpResult(stat_sys_download_done,"Cloned "+sourceUri.getHumanishName(),"Clone completed",sourceUri.toString());
     }
 	
-	@Override
-	Notification createCompletionNotification() {
-    	return createNotificationWith(
-    			stat_sys_download_done,
-    			"Cloned "+sourceUri.getHumanishName(),
-    			"Clone completed",
-    			sourceUri.toString());
-	}
+//	@Override
+//	Notification createCompletionNotification() {
+//    	return createNotificationWith(
+//    			stat_sys_download_done,
+//    			"Cloned "+sourceUri.getHumanishName(),
+//    			"Clone completed",
+//    			sourceUri.toString());
+//	}
 	
 	private Ref guessHEAD(final FetchResult result) {
 		final Ref idHEAD = result.getAdvertisedRef(Constants.HEAD);
@@ -201,6 +212,15 @@ public class Cloner extends GitOperation {
 			rw.release();
 		}
 		return commit;
+	}
+
+
+	public int getOngoingIcon() {
+		return stat_sys_download_done;
+	}
+
+	public String getTickerText() {
+		return "Cloning "+sourceUri;
 	}
 
 }

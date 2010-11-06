@@ -4,14 +4,19 @@ import static android.app.Notification.FLAG_AUTO_CANCEL;
 import static android.app.Notification.FLAG_ONGOING_EVENT;
 import static com.madgag.agit.RepositoryManagementActivity.manageGitRepo;
 
+import org.connectbot.service.PromptHelper;
+import org.eclipse.jgit.errors.NotSupportedException;
 import org.eclipse.jgit.lib.Repository;
-
-import com.madgag.ssh.android.authagent.AndroidAuthAgent;
+import org.eclipse.jgit.transport.RemoteConfig;
+import org.eclipse.jgit.transport.SshTransport;
+import org.eclipse.jgit.transport.Transport;
 
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.util.Log;
+
+import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 
 public class RepositoryOperationContext {
 	
@@ -19,15 +24,17 @@ public class RepositoryOperationContext {
 	
 	private final GitOperationsService service;
 	private final Repository repository;
-	public final int fetchCompletionId,fetchOngoingId;
+	public final int opCompletionNotificationId,ongoingOpNotificationId;
 	public final PendingIntent manageGitRepo;
 	private GitOperation currentOperation;
+
+	private PromptHelper promptHelper;
 	
 	public RepositoryOperationContext(Repository repository, GitOperationsService service) {
 		this.repository = repository;
 		this.service = service;
-		this.fetchOngoingId = hashCode();
-		this.fetchCompletionId = fetchOngoingId;
+		this.ongoingOpNotificationId = hashCode();
+		this.opCompletionNotificationId = ongoingOpNotificationId;
 		manageGitRepo = manageGitRepo(getRepository(), service);
 	}
 	
@@ -42,23 +49,36 @@ public class RepositoryOperationContext {
 	}
 
 	// grandiose name
-	public void enqueue(GitOperation gitOperation) {
+	public void enqueue(Action action) {
+		GitOperation gitOperation = new GitOperation(this, action);
 		currentOperation=gitOperation;
 		gitOperation.execute();
 		showOngoingNotificationFor(gitOperation);
 	}
 
 	public void notifyOngoing(Notification notification) {
-		service.getNotificationManager().notify(fetchOngoingId, notification);
+		service.getNotificationManager().notify(ongoingOpNotificationId, notification);
 	}
 	
+	public Transport transportFor(RemoteConfig remoteConfig) {
+    	Transport tn;
+		try {
+			tn = Transport.open(getRepository(), remoteConfig);
+		} catch (NotSupportedException e) {
+			throw new RuntimeException(e);
+		}
+    	if (tn instanceof SshTransport) {
+			((SshTransport) tn).setSshSessionFactory(new AndroidSshSessionFactory(this, promptHelper));
+		}
+    	return tn;
+    }
 	
 	private void showOngoingNotificationFor(GitOperation gitOperation) {
     	Notification ongoingNotification=gitOperation.getOngoingNotification();
     	ongoingNotification.flags = ongoingNotification.flags | FLAG_ONGOING_EVENT;
     	Log.i(TAG, "Starting "+gitOperation.getClass().getSimpleName()+" in the foreground...");
     	try {
-    		service.startForeground(fetchOngoingId, ongoingNotification);
+    		service.startForeground(ongoingOpNotificationId, ongoingNotification);
     	} catch (NullPointerException e) {
     		Log.i(TAG, "startForeground NPE - see http://code.google.com/p/android/issues/detail?id=12117");
     	}
@@ -71,7 +91,7 @@ public class RepositoryOperationContext {
     		Log.i(TAG, "stopForeground NPE - see http://code.google.com/p/android/issues/detail?id=12117",e);
     	}
 		completedNotification.flags |= FLAG_AUTO_CANCEL;
-		service.getNotificationManager().notify(fetchCompletionId, completedNotification);
+		service.getNotificationManager().notify(opCompletionNotificationId, completedNotification);
 	}
 
 	public PendingIntent getRMAPendingIntent() {
