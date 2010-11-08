@@ -64,7 +64,7 @@ public class GitOperationsServiceTest extends ServiceTestCase<GitOperationsServi
 		return context.getCurrentOperation();
 	}
 	
-	private File newFolder() {
+	public static File newFolder() {
 		File path = new File(Environment.getExternalStorageDirectory(),"agit-test-repos");
 		return new File(path, ""+currentTimeMillis());
 	}

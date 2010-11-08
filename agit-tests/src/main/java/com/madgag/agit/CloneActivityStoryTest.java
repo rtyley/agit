@@ -1,5 +1,7 @@
 package com.madgag.agit;
 
+import static com.madgag.agit.GitOperationsServiceTest.newFolder;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -27,7 +29,7 @@ public class CloneActivityStoryTest extends CalculonStoryTest<Clone> {
     
     public void testWarningNotShownIfGitDirDoesNotAlreadyExist() {
     	setUp(R.id.UseDefaultGitDirLocation).setChecked(false).now();
-        assertThat(R.id.GitDirEditText).setText(newFolder()).implies(R.id.GitDirWarning).isInvisible();
+        assertThat(R.id.GitDirEditText).setText(newFolder().getAbsolutePath()).implies(R.id.GitDirWarning).isInvisible();
     }
     
     public void testDoesNotCrashDueToStackOverflow() {
@@ -35,10 +37,15 @@ public class CloneActivityStoryTest extends CalculonStoryTest<Clone> {
     	setUp(R.id.CloneUrlEditText).setText("/example/project").now();
         assertThat(R.id.UseDefaultGitDirLocation).setChecked(true).implies(R.id.UseDefaultGitDirLocation).isEnabled();
     }
-
-	private String newFolder() {
-		File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-		return path.getAbsolutePath()+"/32324432";
-	}
+    
+    
+//    public void testCheckoutToCustomLocationWorks() {
+//        File customLocation = newFolder();
+//        setUp(R.id.CloneUrlEditText).setText("git://github.com/agittest/small-project.git").now();
+//        setUp(R.id.UseDefaultGitDirLocation).setChecked(false).now();
+//        setUp(R.id.GitDirEditText).setText(customLocation.getAbsolutePath()).now();
+//        
+//        setUp(R.id.GoCloneButton).click().now();
+//    }
 
 }
