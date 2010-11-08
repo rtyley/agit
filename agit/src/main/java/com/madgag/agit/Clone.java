@@ -131,6 +131,10 @@ public class Clone extends Activity {
     	return new URIish(cloneUrlEditText.getText().toString());
     }
     
+    public File getCheckoutLocation() {
+    	return new File(gitDirEditText.getText().toString());
+    }
+    
     OnClickListener goCloneButtonListener = new OnClickListener() {
         public void onClick(View v) {
     		URIish uri;
@@ -140,8 +144,9 @@ public class Clone extends Activity {
 				Toast.makeText(v.getContext(), "bad dog", 10).show();
 				return;
 			}
+    		File checkoutLocation=getCheckoutLocation();
     		try {
-				wham(uri);
+				wham(uri,checkoutLocation);
 			} catch (Exception e) {
 				Toast.makeText(v.getContext(), "ARRG: "+e, 10).show();
 				// TODO Auto-generated catch block
@@ -149,8 +154,7 @@ public class Clone extends Activity {
 			}
         }
 
-		private void wham(URIish uri) throws IOException, URISyntaxException {
-			File repoDir = defaultRepoDirFor(uri);
+		private void wham(URIish uri, File repoDir) throws IOException, URISyntaxException {
 			if (!repoDir.mkdirs()) {
 				String message = "Couldn't create "+repoDir;
 				Toast.makeText(Clone.this, message, LENGTH_LONG).show();
