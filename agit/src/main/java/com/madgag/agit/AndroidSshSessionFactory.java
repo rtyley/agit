@@ -29,7 +29,6 @@ public class AndroidSshSessionFactory extends SshConfigSessionFactory {
 	
 	@Override
 	protected void configure(Host host, Session session) {
-		
 		session.setUserInfo(new AndroidUserInfo(operationContext, promptHelper));
 	}
 
