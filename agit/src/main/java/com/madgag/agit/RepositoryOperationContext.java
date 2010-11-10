@@ -2,7 +2,8 @@ package com.madgag.agit;
 
 import static android.app.Notification.FLAG_AUTO_CANCEL;
 import static android.app.Notification.FLAG_ONGOING_EVENT;
-import static com.madgag.agit.RepositoryManagementActivity.manageGitRepo;
+import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
+import static com.madgag.agit.RepositoryManagementActivity.manageRepoPendingIntent;
 
 import org.connectbot.service.PromptHelper;
 import org.eclipse.jgit.errors.NotSupportedException;
@@ -14,6 +15,7 @@ import org.eclipse.jgit.transport.Transport;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Intent;
 import android.util.Log;
 
 import com.madgag.ssh.android.authagent.AndroidAuthAgent;
@@ -28,14 +30,15 @@ public class RepositoryOperationContext {
 	public final PendingIntent manageGitRepo;
 	private GitOperation currentOperation;
 
-	private PromptHelper promptHelper;
+	private final PromptHelper promptHelper;
 	
 	public RepositoryOperationContext(Repository repository, GitOperationsService service) {
 		this.repository = repository;
 		this.service = service;
 		this.ongoingOpNotificationId = hashCode();
 		this.opCompletionNotificationId = ongoingOpNotificationId;
-		manageGitRepo = manageGitRepo(getRepository(), service);
+		promptHelper = new PromptHelper(TAG);
+		manageGitRepo = manageRepoPendingIntent(getRepository(), service);
 	}
 	
 	
@@ -97,6 +100,10 @@ public class RepositoryOperationContext {
 	public PendingIntent getRMAPendingIntent() {
 		return manageGitRepo;
 	}
+	
+	public Intent getRMAIntent() {
+		return manageRepoIntent(getRepository().getDirectory(), service);
+	}
 
 	public GitOperation getCurrentOperation() {
 		return currentOperation;
@@ -104,6 +111,12 @@ public class RepositoryOperationContext {
 
 	public AndroidAuthAgent getAuthAgent() {
 		return service.authAgent;
+	}
+
+
+
+	public PromptHelper getPromptHelper() {
+		return promptHelper;
 	}
 
 }

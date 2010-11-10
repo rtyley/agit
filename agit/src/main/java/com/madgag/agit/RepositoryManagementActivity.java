@@ -165,7 +165,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 	private android.content.DialogInterface.OnClickListener sendDialogResponseOf(final boolean bool) {
 		return new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				repositoryOperationContext.getCurrentOperation().promptHelper.setResponse(bool);
+				repositoryOperationContext.getPromptHelper().setResponse(bool);
 			}
 		};
 	}
@@ -184,7 +184,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 			});
 		case YES_NO_DIALOG:
 			AlertDialog alertDialog=(AlertDialog) dialog;
-			String msg = repositoryOperationContext.getCurrentOperation().promptHelper.promptInstructions;
+			String msg = repositoryOperationContext.getPromptHelper().promptInstructions;
 			Log.i(TAG, "Going to yes/no "+msg);
 			alertDialog.setMessage(msg);
 		default:
@@ -229,7 +229,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 			return;
 		}
 
-		PromptHelper prompt=currentOperation.promptHelper;
+		PromptHelper prompt=repositoryOperationContext.getPromptHelper();
 		if (String.class.equals(prompt.promptRequested)) {
 			showDialog(STRING_ENTRY_DIALOG);
 		} else if(Boolean.class.equals(prompt.promptRequested)) {
@@ -254,12 +254,16 @@ public class RepositoryManagementActivity extends android.app.Activity {
     	return gd;
 	}
 	
-	public static PendingIntent manageGitRepo(Repository repository,Context context) {
-		return manageGitRepo(repository.getDirectory(), context);
+	public static PendingIntent manageRepoPendingIntent(Repository repository, Context context) {
+		return manageRepoPendingIntent(repository.getDirectory(), context);
 	}
-	public static PendingIntent manageGitRepo(File gitdir,Context context) {
-		Intent intentForNotification = new Intent(ACTION_VIEW, Uri.fromFile(gitdir), context,RepositoryManagementActivity.class);
+	public static PendingIntent manageRepoPendingIntent(File gitdir,Context context) {
+		Intent intentForNotification = manageRepoIntent(gitdir, context);
         intentForNotification.setFlags(FLAG_ACTIVITY_NEW_TASK);
 		return PendingIntent.getActivity(context, 0, intentForNotification, 0);
+	}
+
+	public static Intent manageRepoIntent(File gitdir, Context context) {
+		return new Intent(ACTION_VIEW, Uri.fromFile(gitdir), context,RepositoryManagementActivity.class);
 	};
 }

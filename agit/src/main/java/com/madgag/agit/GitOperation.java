@@ -18,7 +18,6 @@ public class GitOperation extends AsyncTask<Void, Progress, OpResult> implements
 	
 	private long startTime;
 	protected final Notification ongoingNotification;
-	protected PromptHelper promptHelper=new PromptHelper(TAG);
 	
 	public GitOperation(RepositoryOperationContext repositoryOperationContext, Action action) {
 		this.repositoryOperationContext = repositoryOperationContext;

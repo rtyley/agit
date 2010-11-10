@@ -1,5 +1,6 @@
 package com.madgag.agit;
 
+import static android.R.drawable.stat_sys_warning;
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.Thread.sleep;
@@ -15,6 +16,8 @@ import org.eclipse.jgit.transport.URIish;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.core.Is;
+
+import com.madgag.agit.GitOperationsService.GitOperationsBinder;
 
 import android.app.Notification;
 import android.content.Intent;
@@ -51,6 +54,32 @@ public class GitOperationsServiceTest extends ServiceTestCase<GitOperationsServi
         assertTrue(repository.hasObject(ObjectId.fromString("9e0b5e42b3e1c59bc83b55142a8c50dfae36b144")));
         assertFalse(repository.hasObject(ObjectId.fromString("111111111111111111111111111111111111cafe")));
 	}
+	
+//	public void testCanShowAPromptToTheUser() throws Exception {
+//		File gitdir=new File(newFolder(),DOT_GIT);
+//        startService(new Intent());
+//        
+//        RepositoryOperationContext repositoryOperationContext = getService().getOrCreateRepositoryOperationContextFor(gitdir);
+//        
+//        repositoryOperationContext.enqueue(new Action() {
+//			public OpResult execute(RepositoryOperationContext repositoryOperationContext, ProgressListener<Progress> progressListener) {
+//				repositoryOperationContext.getPromptHelper().requestBooleanPrompt("Can you see this", "hint: say yes");
+//				return new OpResult(stat_sys_warning, "Done", "", "");
+//			}
+//
+//			public int getOngoingIcon() {
+//				return stat_sys_warning;
+//			}
+//
+//			public String getTickerText() {
+//				return "Frond";
+//			}
+//        });
+//        
+//        this.getContext().startActivity(repositoryOperationContext.getRMAIntent());
+//        
+//        
+//	}
 	
 	
 	private static GitOperation waitForOperationIn(RepositoryOperationContext context) {
