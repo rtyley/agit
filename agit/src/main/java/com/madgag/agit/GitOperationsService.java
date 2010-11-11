@@ -32,6 +32,8 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.madgag.agit.operations.Cloner;
+import com.madgag.agit.operations.Fetcher;
 import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 
 public class GitOperationsService extends Service {
@@ -204,5 +206,11 @@ public class GitOperationsService extends Service {
 //            }
         }
     };
+
+	public RepositoryOperationContext registerManagementActivity(RepositoryManagementActivity repositoryManagementActivity) {
+		RepositoryOperationContext operationContext = getOrCreateRepositoryOperationContextFor(repositoryManagementActivity.getGitDir());
+		operationContext.setManagementActivity(repositoryManagementActivity);
+		return operationContext;
+	}
 
 }

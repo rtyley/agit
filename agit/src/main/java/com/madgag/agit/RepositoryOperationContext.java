@@ -7,7 +7,9 @@ import static com.madgag.agit.RepositoryManagementActivity.manageRepoPendingInte
 
 import org.connectbot.service.PromptHelper;
 import org.eclipse.jgit.errors.NotSupportedException;
+import org.eclipse.jgit.errors.TransportException;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.SshTransport;
 import org.eclipse.jgit.transport.Transport;
@@ -18,6 +20,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.util.Log;
 
+import com.jcraft.jsch.JSchException;
 import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 
 public class RepositoryOperationContext {
@@ -28,7 +31,7 @@ public class RepositoryOperationContext {
 	private final Repository repository;
 	public final int opCompletionNotificationId,ongoingOpNotificationId;
 	public final PendingIntent manageGitRepo;
-	private GitOperation currentOperation;
+	private GitAsyncTask currentOperation;
 
 	private final PromptHelper promptHelper;
 	
@@ -52,8 +55,8 @@ public class RepositoryOperationContext {
 	}
 
 	// grandiose name
-	public void enqueue(Action action) {
-		GitOperation gitOperation = new GitOperation(this, action);
+	public void enqueue(GitOperation action) {
+		GitAsyncTask gitOperation = new GitAsyncTask(this, action);
 		currentOperation=gitOperation;
 		gitOperation.execute();
 		showOngoingNotificationFor(gitOperation);
@@ -76,7 +79,7 @@ public class RepositoryOperationContext {
     	return tn;
     }
 	
-	private void showOngoingNotificationFor(GitOperation gitOperation) {
+	private void showOngoingNotificationFor(GitAsyncTask gitOperation) {
     	Notification ongoingNotification=gitOperation.getOngoingNotification();
     	ongoingNotification.flags = ongoingNotification.flags | FLAG_ONGOING_EVENT;
     	Log.i(TAG, "Starting "+gitOperation.getClass().getSimpleName()+" in the foreground...");
@@ -105,7 +108,7 @@ public class RepositoryOperationContext {
 		return manageRepoIntent(getRepository().getDirectory(), service);
 	}
 
-	public GitOperation getCurrentOperation() {
+	public GitAsyncTask getCurrentOperation() {
 		return currentOperation;
 	}
 
@@ -117,6 +120,33 @@ public class RepositoryOperationContext {
 
 	public PromptHelper getPromptHelper() {
 		return promptHelper;
+	}
+
+
+
+	public void setManagementActivity(RepositoryManagementActivity repositoryManagementActivity) {
+		// err...
+	}
+
+
+
+	public FetchResult fetch(RemoteConfig remote, ProgressListener<Progress> progressListener) {
+		Transport transport=transportFor(remote);
+		try {
+			return transport.fetch(new MessagingProgressMonitor(progressListener), null);
+		} catch (NotSupportedException e) {
+			throw new RuntimeException(e);
+		} catch (TransportException e) {
+			Log.e(TAG, "TransportException ",e);
+			String message=e.getMessage();
+			Throwable cause=e.getCause();
+			if (cause!=null && cause instanceof JSchException) {
+				message="SSH: "+((JSchException) cause).getMessage();
+			}
+			throw new RuntimeException(message, e);
+		} finally {
+			transport.close();
+		}
 	}
 
 }

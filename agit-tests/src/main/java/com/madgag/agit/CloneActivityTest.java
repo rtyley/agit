@@ -18,20 +18,20 @@ import android.widget.EditText;
 
 import com.madgag.agit.GitOperationsService.GitOperationsBinder;
 
-public class CloneActivityTest extends ActivityInstrumentationTestCase2<Clone> {
+public class CloneActivityTest extends ActivityInstrumentationTestCase2<CloneLauncherActivity> {
 	private EditText cloneUrlEditText;
 	private Button button;
 	private GitOperationsService gitOperationsService;
 	private final String smallProjectUri = "git://github.com/agittest/small-project.git";
 
 	public CloneActivityTest() {
-		super(Clone.class);
+		super(CloneLauncherActivity.class);
 	}
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		final Clone activity = getActivity();
+		final CloneLauncherActivity activity = getActivity();
 		activity.bindService(new Intent(activity, GitOperationsService.class),
 				new ServiceConnection() {
 					public void onServiceDisconnected(ComponentName cn) {

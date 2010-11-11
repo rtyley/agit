@@ -9,12 +9,12 @@ import android.os.Environment;
 
 import com.github.calculon.CalculonStoryTest;
 
-public class CloneActivityStoryTest extends CalculonStoryTest<Clone> {
+public class CloneActivityStoryTest extends CalculonStoryTest<CloneLauncherActivity> {
 	
 	private String existingFolder = File.listRoots()[0].getAbsolutePath();
 
 	public CloneActivityStoryTest() {
-		super("com.agit",Clone.class);
+		super("com.agit",CloneLauncherActivity.class);
 	}
 	
 	public void testDefaultsToUseDefaultGitDirLocation() {

@@ -43,7 +43,7 @@ public class GitOperationsServiceTest extends ServiceTestCase<GitOperationsServi
         startService(cloneIntent);
         
         RepositoryOperationContext repositoryOperationContext = getService().getOrCreateRepositoryOperationContextFor(gitdir);
-		GitOperation gitOperation = waitForOperationIn(repositoryOperationContext);
+		GitAsyncTask gitOperation = waitForOperationIn(repositoryOperationContext);
 		OpResult opResult = gitOperation.get();
         assertNotNull(opResult);
         Repository repository = repositoryOperationContext.getRepository();
@@ -82,7 +82,7 @@ public class GitOperationsServiceTest extends ServiceTestCase<GitOperationsServi
 //	}
 	
 	
-	private static GitOperation waitForOperationIn(RepositoryOperationContext context) {
+	private static GitAsyncTask waitForOperationIn(RepositoryOperationContext context) {
 		while (context.getCurrentOperation()==null) {
 			try {
 				sleep(100L);

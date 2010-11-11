@@ -1,24 +1,25 @@
-package com.madgag.agit;
+package com.madgag.agit.operations;
 
 import static android.R.drawable.stat_sys_download;
 import static android.R.drawable.stat_sys_download_done;
 
-import org.eclipse.jgit.errors.NotSupportedException;
-import org.eclipse.jgit.errors.TransportException;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RemoteConfig;
-import org.eclipse.jgit.transport.Transport;
 
-import android.util.Log;
+import com.madgag.agit.GitOperation;
+import com.madgag.agit.OpResult;
+import com.madgag.agit.Progress;
+import com.madgag.agit.ProgressListener;
+import com.madgag.agit.RepositoryOperationContext;
 
-public class Fetcher implements Action {
+public class Fetcher implements GitOperation {
 	
 	public static final String TAG = "Fetcher";
 	
-	private final RemoteConfig remoteConfig;
+	private final RemoteConfig remote;
 
 	public Fetcher(RemoteConfig remoteConfig) {
-		this.remoteConfig = remoteConfig;
+		this.remote = remoteConfig;
     }
 	
 	public int getOngoingIcon() {
@@ -26,36 +27,14 @@ public class Fetcher implements Action {
 	}
 
 	public String getTickerText() {
-		return "Fetching "+remoteConfig.getName() + remoteConfig.getURIs().get(0).toString();
+		return "Fetching "+remote.getName() + " " + fetchUrl();
 	}
 	
     
 	public OpResult execute(RepositoryOperationContext repositoryOperationContext, ProgressListener<Progress> progressListener) {
-		Transport transport=repositoryOperationContext.transportFor(remoteConfig);
-		try {
-			FetchResult r = transport.fetch(new MessagingProgressMonitor(progressListener), null);
-			Log.i(TAG, "No error during fetch it seems... "+r);
-		} catch (NotSupportedException e) {
-			e.printStackTrace();
-		} catch (TransportException e) {
-			e.printStackTrace();
-		} finally {
-			transport.close();
-		}
-		return new OpResult(stat_sys_download_done,"Fetch complete", "Fetched "+remoteConfig.getName(), remoteConfig.getURIs().get(0).toString());
+		FetchResult r = repositoryOperationContext.fetch(remote, progressListener);
 		
-//		try {
-//			runFetch(remoteConfig);
-//			return createCompletionNotification();
-//		} catch (Exception e) {
-//			Log.e(TAG, "FETCH BROKE!",e);
-//			e.printStackTrace();
-//			return createNotificationWith(
-//	    			stat_notify_error,
-//	    			"Fetch failed",
-//	    			e.getMessage(),
-//	    			remoteConfig.getURIs().get(0).toString());
-//		}
+		return new OpResult(stat_sys_download_done,"Fetch complete", "Fetched "+remote.getName(), fetchUrl());
     }
 	
 //	@Override
@@ -87,7 +66,17 @@ public class Fetcher implements Action {
 //    			remoteConfig.getURIs().get(0).toString());
 //    }
 
+	public String getName() {
+		return "Fetch";
+	}
+	
+	public String getDescription() {
+		return "fetching "+remote.getName() + " " + fetchUrl();
+	}
 
+	private String fetchUrl() {
+		return remote.getURIs().get(0).toString();
+	}
 
     
 

@@ -14,7 +14,7 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name="Clone" android:label="@string/app_name">
+		<activity android:name="CloneLauncherActivity" android:label="@string/app_name">
 			<intent-filter>
 				<action android:name="com.madgag.git.clone.prepare" />
 				<category android:name="android.intent.category.DEFAULT" />

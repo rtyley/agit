@@ -63,7 +63,7 @@ public class RepositoryListActivity extends ListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case CLONE_ID:
-            startActivity(new Intent(this, Clone.class));
+            startActivity(new Intent(this, CloneLauncherActivity.class));
             return true;
         }
 

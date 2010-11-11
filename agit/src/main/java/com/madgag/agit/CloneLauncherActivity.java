@@ -29,8 +29,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-public class Clone extends Activity {
-	private final static String TAG="Clone";
+public class CloneLauncherActivity extends Activity {
+	private final static String TAG="CloneLauncherActivity";
 
 	public static String EXTRA_TARGET_DIR="target-dir",EXTRA_SOURCE_URI="source-uri";
 	
@@ -157,7 +157,7 @@ public class Clone extends Activity {
 		private void wham(URIish uri, File repoDir) throws IOException, URISyntaxException {
 			if (!repoDir.mkdirs()) {
 				String message = "Couldn't create "+repoDir;
-				Toast.makeText(Clone.this, message, LENGTH_LONG).show();
+				Toast.makeText(CloneLauncherActivity.this, message, LENGTH_LONG).show();
 				throw new IOException(message);
 			}
     		File gitdir = new File(repoDir, Constants.DOT_GIT);

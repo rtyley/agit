@@ -1,7 +1,7 @@
 package com.madgag.agit;
 
-import static com.madgag.agit.Clone.EXTRA_SOURCE_URI;
-import static com.madgag.agit.Clone.EXTRA_TARGET_DIR;
+import static com.madgag.agit.CloneLauncherActivity.EXTRA_SOURCE_URI;
+import static com.madgag.agit.CloneLauncherActivity.EXTRA_TARGET_DIR;
 import static java.lang.System.currentTimeMillis;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,13 +12,13 @@ import android.widget.TextView;
 import com.github.calculon.CalculonUnitTest;
 import com.github.calculon.predicate.Predicate;
 
-public class CloneActivityUnitTest extends CalculonUnitTest<Clone> {
+public class CloneActivityUnitTest extends CalculonUnitTest<CloneLauncherActivity> {
 	
 	final String appleProjectSourceUri="/example/apple";
 	final String targetDir="/sdcard/tango";
 	
 	public CloneActivityUnitTest() {
-		super(Clone.class);
+		super(CloneLauncherActivity.class);
 	}
 	
 	public void testUsesDefaultGitDirLocationIfOnlySourceUriIsProvidedInIntent() {

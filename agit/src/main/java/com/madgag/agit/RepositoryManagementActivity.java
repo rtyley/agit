@@ -58,7 +58,8 @@ public class RepositoryManagementActivity extends android.app.Activity {
 			}
 			
 			public void onServiceConnected(ComponentName name, IBinder binder) {
-				repositoryOperationContext=((GitOperationsBinder) binder).getService().getOrCreateRepositoryOperationContextFor(gitdir);
+				GitOperationsService service = ((GitOperationsBinder) binder).getService();
+				repositoryOperationContext=service.registerManagementActivity(RepositoryManagementActivity.this);
 				Log.i(TAG, "bound opService="+repositoryOperationContext);
 				updateUIToReflectServicePromptRequests();
 			}
@@ -222,7 +223,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 			//guess there's not been a running service yet...
 			return;
 		}
-		GitOperation currentOperation = repositoryOperationContext.getCurrentOperation();
+		GitAsyncTask currentOperation = repositoryOperationContext.getCurrentOperation();
 		Log.i(TAG, "updateUIToReflectServicePromptRequests currentOperation="+currentOperation);
 		if (currentOperation==null) {
 			// wipe dialogs?
@@ -265,5 +266,9 @@ public class RepositoryManagementActivity extends android.app.Activity {
 
 	public static Intent manageRepoIntent(File gitdir, Context context) {
 		return new Intent(ACTION_VIEW, Uri.fromFile(gitdir), context,RepositoryManagementActivity.class);
+	}
+
+	public File getGitDir() {
+		return gitdir;
 	};
 }
