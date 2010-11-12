@@ -44,7 +44,7 @@ public class GitOperationsServiceTest extends ServiceTestCase<GitOperationsServi
         
         RepositoryOperationContext repositoryOperationContext = getService().getOrCreateRepositoryOperationContextFor(gitdir);
 		GitAsyncTask gitOperation = waitForOperationIn(repositoryOperationContext);
-		OpResult opResult = gitOperation.get();
+		OpNotification opResult = gitOperation.get();
         assertNotNull(opResult);
         Repository repository = repositoryOperationContext.getRepository();
         Log.i(TAG, "After clone: repo directory="+repository.getDirectory()+" workTree="+repository.getWorkTree());

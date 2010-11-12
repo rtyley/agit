@@ -24,10 +24,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Binder;
-import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
@@ -192,20 +189,6 @@ public class GitOperationsService extends Service {
 			throw new RuntimeException();
 		}
 	}
-    
-    // Define the Handler that receives messages from the thread and update the progress
-    final Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-            Bundle bundle = msg.getData();
-//            if (bundle.containsKey("total")) {
-//            	progressDialog.setMax(bundle.getInt("total"));
-//            	progressDialog.setMessage(bundle.getString("title"));
-//            }
-//            if (bundle.containsKey("completed")) {
-//            	progressDialog.setProgress(bundle.getInt("completed"));
-//            }
-        }
-    };
 
 	public RepositoryOperationContext registerManagementActivity(RepositoryManagementActivity repositoryManagementActivity) {
 		RepositoryOperationContext operationContext = getOrCreateRepositoryOperationContextFor(repositoryManagementActivity.getGitDir());

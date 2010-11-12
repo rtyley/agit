@@ -1,5 +1,6 @@
 package com.madgag.agit;
 
+import static android.R.drawable.stat_sys_warning;
 import static java.lang.System.currentTimeMillis;
 
 import org.connectbot.service.PromptHelper;
@@ -32,33 +33,32 @@ public class AndroidUserInfo implements UserInfo {
 
 	public boolean promptPassphrase(String msg) {
 		Log.i(TAG, "promptPassphrase : "+msg);
-		notifyUserNeedsPrompt(msg);
-		passphrase = uiThreadConduit.requestStringPrompt(null, msg);
+		//notifyUserNeedsPrompt(msg);
+		passphrase = uiThreadConduit.requestStringPrompt(new OpNotification(stat_sys_warning, "Passphrase required", "Please enter your passphrase", msg));
 		return passphrase!=null;
 	}
 
 	public boolean promptPassword(String msg) {
 		Log.i(TAG, "promptPassword : "+msg);
-		notifyUserNeedsPrompt(msg);
-		password = uiThreadConduit.requestStringPrompt(null, msg);
+		//notifyUserNeedsPrompt(msg);
+		password = uiThreadConduit.requestStringPrompt(new OpNotification(stat_sys_warning, "Password required", "Please enter your password", msg));
 		return password!=null;
 	}
 
 	public boolean promptYesNo(String msg) {
 		Log.i(TAG, "promptYesNo : "+msg);
 		
-		notifyUserNeedsPrompt(msg);
+		//notifyUserNeedsPrompt(msg);
 		
-		Boolean bool = uiThreadConduit.requestBooleanPrompt(msg, null);
+		Boolean bool = uiThreadConduit.requestBooleanPrompt(new OpNotification(stat_sys_warning, msg, "", msg));
 		return bool!=null?bool:false;
-		//return true;
 	}
 
-	private void notifyUserNeedsPrompt(String msg) {
-		Notification n = new Notification(android.R.drawable.stat_sys_warning,"Need to know something", currentTimeMillis());
-		n.setLatestEventInfo(repositoryOperationContext.getService(), "SSH thing", msg, repositoryOperationContext.manageGitRepo);
-		repositoryOperationContext.notifyCompletion(n);
-	}
+//	private void notifyUserNeedsPrompt(String msg) {
+//		Notification n = new Notification(android.R.drawable.stat_sys_warning,"Need to know something", currentTimeMillis());
+//		n.setLatestEventInfo(repositoryOperationContext.getService(), "SSH thing", msg, repositoryOperationContext.manageGitRepo);
+//		repositoryOperationContext.notifyCompletion(n);
+//	}
 	
 	public void showMessage(String msg) {
 		Log.i(TAG, "Should show this: "+msg);

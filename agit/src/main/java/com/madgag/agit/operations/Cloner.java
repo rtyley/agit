@@ -35,7 +35,7 @@ import org.eclipse.jgit.transport.URIish;
 import android.util.Log;
 
 import com.madgag.agit.GitOperation;
-import com.madgag.agit.OpResult;
+import com.madgag.agit.OpNotification;
 import com.madgag.agit.Progress;
 import com.madgag.agit.ProgressListener;
 import com.madgag.agit.RepositoryOperationContext;
@@ -53,7 +53,7 @@ public class Cloner implements GitOperation {
 		Log.i(TAG, "Constructed with " + sourceUri + " gitdir=" + gitdir);
 	}
 
-	public OpResult execute(
+	public OpNotification execute(
 			RepositoryOperationContext repositoryOperationContext,
 			ProgressListener<Progress> progressListener) {
 		File gitDirParentFolder = gitdir.getParentFile();
@@ -91,7 +91,7 @@ public class Cloner implements GitOperation {
 			throw new RuntimeException(e);
 		}
 
-		return new OpResult(stat_sys_download_done, "Cloned "
+		return new OpNotification(stat_sys_download_done, "Cloned "
 				+ sourceUri.getHumanishName(), "Clone completed", sourceUri
 				.toString());
 	}

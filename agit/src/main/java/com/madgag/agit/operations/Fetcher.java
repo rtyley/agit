@@ -7,7 +7,7 @@ import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RemoteConfig;
 
 import com.madgag.agit.GitOperation;
-import com.madgag.agit.OpResult;
+import com.madgag.agit.OpNotification;
 import com.madgag.agit.Progress;
 import com.madgag.agit.ProgressListener;
 import com.madgag.agit.RepositoryOperationContext;
@@ -31,10 +31,10 @@ public class Fetcher implements GitOperation {
 	}
 	
     
-	public OpResult execute(RepositoryOperationContext repositoryOperationContext, ProgressListener<Progress> progressListener) {
+	public OpNotification execute(RepositoryOperationContext repositoryOperationContext, ProgressListener<Progress> progressListener) {
 		FetchResult r = repositoryOperationContext.fetch(remote, progressListener);
 		
-		return new OpResult(stat_sys_download_done,"Fetch complete", "Fetched "+remote.getName(), fetchUrl());
+		return new OpNotification(stat_sys_download_done,"Fetch complete", "Fetched "+remote.getName(), fetchUrl());
     }
 	
 //	@Override

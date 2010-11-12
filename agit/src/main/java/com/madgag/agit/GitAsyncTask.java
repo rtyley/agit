@@ -2,15 +2,12 @@ package com.madgag.agit;
 
 import static android.R.drawable.stat_notify_error;
 import static java.lang.System.currentTimeMillis;
-
-import org.connectbot.service.PromptHelper;
-
 import android.app.Notification;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-public class GitAsyncTask extends AsyncTask<Void, Progress, OpResult> implements ProgressListener<Progress> {
+public class GitAsyncTask extends AsyncTask<Void, Progress, OpNotification> implements ProgressListener<Progress> {
 	
 	public final String TAG = getClass().getSimpleName();
 	
@@ -33,37 +30,27 @@ public class GitAsyncTask extends AsyncTask<Void, Progress, OpResult> implements
     }
 
 	@Override
-	protected OpResult doInBackground(Void... params) {
+	protected OpNotification doInBackground(Void... params) {
 		try {
 			return operation.execute(repositoryOperationContext, this);
 		} catch (RuntimeException e) {
 			String eventTitle = "Error "+operation.getDescription();
 			Log.e(TAG, eventTitle, e);
 			String detail = e.getMessage()==null?e.toString():e.getMessage();
-			return new OpResult(stat_notify_error, operation.getName()+" failed", eventTitle, detail);
+			return new OpNotification(stat_notify_error, operation.getName()+" failed", eventTitle, detail);
 		}
 	}
 	
 	@Override
-	protected void onPostExecute(OpResult opResult) {
+	protected void onPostExecute(OpNotification opResult) {
 		long duration=currentTimeMillis()-startTime;
 		Log.i(TAG, "Completed in "+duration+" ms");
-		Notification notification=createNotificationWith(
-				opResult.getDrawable(), opResult.getTickerText(), opResult.getEventTitle(), opResult.getEventDetail());
+		Notification notification=repositoryOperationContext.createNotificationWith(opResult);
 		repositoryOperationContext.notifyCompletion(notification);
 	}
 	
-	private Notification createNotificationWith(int drawable, String tickerText, String eventTitle, String eventDetail) {
-    	Notification n=new Notification(drawable, tickerText, currentTimeMillis());
-		n.setLatestEventInfo(repositoryOperationContext.getService(), eventTitle, eventDetail, repositoryOperationContext.manageGitRepo);
-		return n;
-    }
-
-	
-	// abstract Notification createCompletionNotification();
-
 	private Notification createOngoingNotification() {
-		Notification n = createNotificationWith(operation.getOngoingIcon(),operation.getTickerText(),"Event title", "Event detail");
+		Notification n = repositoryOperationContext.createNotificationWith(new OpNotification(operation.getOngoingIcon(), operation.getTickerText(), "Event title", "Event detail"));
 		n.contentView = notificationView();
 		return n;
 	}

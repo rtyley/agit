@@ -4,6 +4,7 @@ import static android.app.Notification.FLAG_AUTO_CANCEL;
 import static android.app.Notification.FLAG_ONGOING_EVENT;
 import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
 import static com.madgag.agit.RepositoryManagementActivity.manageRepoPendingIntent;
+import static java.lang.System.currentTimeMillis;
 
 import org.connectbot.service.PromptHelper;
 import org.eclipse.jgit.errors.NotSupportedException;
@@ -18,6 +19,8 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.jcraft.jsch.JSchException;
@@ -29,20 +32,48 @@ public class RepositoryOperationContext {
 	
 	private final GitOperationsService service;
 	private final Repository repository;
-	public final int opCompletionNotificationId,ongoingOpNotificationId;
+	public final int opCompletionNotificationId,ongoingOpNotificationId,promptNotificationId;
 	public final PendingIntent manageGitRepo;
 	private GitAsyncTask currentOperation;
 
 	private final PromptHelper promptHelper;
 	
+	private Handler promptHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			OpPrompt<?> opPrompt = promptHelper.getOpPrompt();
+			if (repositoryManagementActivity!=null) {
+				Log.i("I could prob show this directly without status bar", opPrompt.getOpNotification().getEventDetail());
+				repositoryManagementActivity.updateUIToReflectServicePromptRequests();
+			} else {
+				showStatusBarNotificationFor(opPrompt);
+			}
+		}
+
+
+	};
+	
+
+
+	private RepositoryManagementActivity repositoryManagementActivity;	private void showStatusBarNotificationFor(OpPrompt<?> opPrompt) {
+		OpNotification opNotification = opPrompt.getOpNotification();
+		Notification n = createNotificationWith(opNotification);
+		n.flags |= FLAG_AUTO_CANCEL;
+		service.getNotificationManager().notify(promptNotificationId, n);
+	}
+
 	public RepositoryOperationContext(Repository repository, GitOperationsService service) {
 		this.repository = repository;
 		this.service = service;
 		this.ongoingOpNotificationId = hashCode();
 		this.opCompletionNotificationId = ongoingOpNotificationId;
+		this.promptNotificationId = ongoingOpNotificationId+1;
 		promptHelper = new PromptHelper(TAG);
+		promptHelper.setHandler(promptHandler);
 		manageGitRepo = manageRepoPendingIntent(getRepository(), service);
 	}
+	
+
 	
 	
 	
@@ -125,7 +156,7 @@ public class RepositoryOperationContext {
 
 
 	public void setManagementActivity(RepositoryManagementActivity repositoryManagementActivity) {
-		// err...
+		this.repositoryManagementActivity = repositoryManagementActivity;
 	}
 
 
@@ -147,6 +178,12 @@ public class RepositoryOperationContext {
 		} finally {
 			transport.close();
 		}
+	}
+
+	public Notification createNotificationWith(OpNotification opNotification) {
+		Notification n=new Notification(opNotification.getDrawable(), opNotification.getTickerText(), currentTimeMillis());
+		n.setLatestEventInfo(getService(), opNotification.getEventTitle(), opNotification.getEventDetail(), manageGitRepo);
+		return n;
 	}
 
 }

@@ -185,7 +185,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 			});
 		case YES_NO_DIALOG:
 			AlertDialog alertDialog=(AlertDialog) dialog;
-			String msg = repositoryOperationContext.getPromptHelper().promptInstructions;
+			String msg = repositoryOperationContext.getPromptHelper().getOpPrompt().getOpNotification().getEventDetail();
 			Log.i(TAG, "Going to yes/no "+msg);
 			alertDialog.setMessage(msg);
 		default:
@@ -208,16 +208,18 @@ public class RepositoryManagementActivity extends android.app.Activity {
     }
     
     private void registerRecieverForServicePromptRequests() {
-		// TODO Auto-generated method stub
-		
+    	if (repositoryOperationContext!=null) {
+			repositoryOperationContext.setManagementActivity(this);
+		}
 	}
 
 	private void unregisterRecieverForServicePromptRequests() {
-		// TODO Auto-generated method stub
-		
+		if (repositoryOperationContext!=null) {
+			repositoryOperationContext.setManagementActivity(null);
+		}
 	}
 	
-	private void updateUIToReflectServicePromptRequests() {
+	void updateUIToReflectServicePromptRequests() {
 		Log.i(TAG, "repositoryOperationContext="+repositoryOperationContext);
 		if (repositoryOperationContext==null) {
 			//guess there's not been a running service yet...
@@ -231,13 +233,17 @@ public class RepositoryManagementActivity extends android.app.Activity {
 		}
 
 		PromptHelper prompt=repositoryOperationContext.getPromptHelper();
-		if (String.class.equals(prompt.promptRequested)) {
-			showDialog(STRING_ENTRY_DIALOG);
-		} else if(Boolean.class.equals(prompt.promptRequested)) {
-			showDialog(YES_NO_DIALOG);
-		} else {
-//			hideAllPrompts();
-//			view.requestFocus();
+		OpPrompt<?> opPrompt = prompt.getOpPrompt();
+		if (opPrompt!=null) {
+			Class<?> requiredResponseType = opPrompt.getRequiredResponseType();
+			if (String.class.equals(requiredResponseType)) {
+				showDialog(STRING_ENTRY_DIALOG);
+			} else if(Boolean.class.equals(requiredResponseType)) {
+				showDialog(YES_NO_DIALOG);
+			} else {
+	//			hideAllPrompts();
+	//			view.requestFocus();
+			}
 		}
 	}
 

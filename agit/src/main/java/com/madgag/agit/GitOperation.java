@@ -5,7 +5,7 @@ public interface GitOperation {
 	
 	int getOngoingIcon(); 
 	
-	OpResult execute(RepositoryOperationContext repositoryOperationContext, ProgressListener<Progress> progressListener);
+	OpNotification execute(RepositoryOperationContext repositoryOperationContext, ProgressListener<Progress> progressListener);
 
 	String getName();
 

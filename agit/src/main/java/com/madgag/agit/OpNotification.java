@@ -1,11 +1,10 @@
 package com.madgag.agit;
 
-public class OpResult {
-
+public class OpNotification {
 	private final int icon;
 	private final String tickerText, eventTitle, eventDetail;
-
-	public OpResult(int icon, String tickerText, String eventTitle, String eventDetail) {
+	
+	public OpNotification(int icon, String tickerText, String eventTitle, String eventDetail) {
 		this.icon = icon;
 		this.tickerText = tickerText;
 		this.eventTitle = eventTitle;
@@ -27,5 +26,4 @@ public class OpResult {
 	public String getEventDetail() {
 		return eventDetail;
 	}
-
 }

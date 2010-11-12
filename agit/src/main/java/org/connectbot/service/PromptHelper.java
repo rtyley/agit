@@ -19,6 +19,9 @@ package org.connectbot.service;
 
 import java.util.concurrent.Semaphore;
 
+import com.madgag.agit.OpNotification;
+import com.madgag.agit.OpPrompt;
+
 import android.os.Handler;
 import android.os.Message;
 
@@ -26,7 +29,7 @@ import android.os.Message;
  * Helps provide a relay for prompts and responses between a possible user
  * interface and some underlying service.
  *
- * @author jsharkey
+ * @author jsharkey, rtyley
  */
 public class PromptHelper {
 	private final Object tag;
@@ -36,11 +39,11 @@ public class PromptHelper {
 	private Semaphore promptToken;
 	private Semaphore promptResponse;
 
-	public String promptInstructions = null;
-	public String promptHint = null;
-	public Object promptRequested = null;
+	private OpPrompt<?> opPrompt;
 
 	private Object response = null;
+
+
 
 	public PromptHelper(Object tag) {
 		this.tag = tag;
@@ -66,9 +69,7 @@ public class PromptHelper {
 	 */
 	public void setResponse(Object value) {
 		response = value;
-		promptRequested = null;
-		promptInstructions = null;
-		promptHint = null;
+		opPrompt = null;
 		promptResponse.release();
 	}
 
@@ -88,15 +89,13 @@ public class PromptHelper {
 	 * Only one thread can call this at a time. cancelPrompt() will force this to
 	 * immediately return.
 	 */
-	private Object requestPrompt(String instructions, String hint, Object type) throws InterruptedException {
+	private <T> T requestPrompt(OpPrompt<T> opPrompt) throws InterruptedException {
 		Object response = null;
 
 		promptToken.acquire();
 
 		try {
-			promptInstructions = instructions;
-			promptHint = hint;
-			promptRequested = type;
+			this.opPrompt = opPrompt;
 
 			// notify any parent watching for live events
 			if (handler != null)
@@ -110,7 +109,7 @@ public class PromptHelper {
 			promptToken.release();
 		}
 
-		return response;
+		return (T) response;
 	}
 
 	/**
@@ -119,10 +118,10 @@ public class PromptHelper {
 	 * @param hint prompt hint for user to answer
 	 * @return string user has entered
 	 */
-	public String requestStringPrompt(String instructions, String hint) {
+	public String requestStringPrompt(OpNotification opNotification) {
 		String value = null;
 		try {
-			value = (String)this.requestPrompt(instructions, hint, String.class);
+			value = this.requestPrompt(new OpPrompt<String>(opNotification, String.class));
 		} catch(Exception e) {
 		}
 		return value;
@@ -134,10 +133,10 @@ public class PromptHelper {
 	 * @param hint prompt hint for user to answer
 	 * @return choice user has made (yes/no)
 	 */
-	public Boolean requestBooleanPrompt(String instructions, String hint) {
+	public Boolean requestBooleanPrompt(OpNotification opNotification) {
 		Boolean value = null;
 		try {
-			value = (Boolean)this.requestPrompt(instructions, hint, Boolean.class);
+			value = this.requestPrompt(new OpPrompt<Boolean>(opNotification, Boolean.class));
 		} catch(Exception e) {
 		}
 		return value;
@@ -155,5 +154,10 @@ public class PromptHelper {
 			// No threads have acquired the token
 			promptToken.release();
 		}
+	}
+
+
+	public OpPrompt<?> getOpPrompt() {
+		return opPrompt;
 	}
 }
