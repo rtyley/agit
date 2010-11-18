@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:background="#FFF"
+	android:orientation="vertical"
+	android:layout_height="fill_parent">
+	<SeekBar
+		android:id="@+id/DiffPlayerSeekBar"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:padding="4px"
+		android:cacheColorHint="#FFF"/>
+	<TextView
+		android:id="@+id/DiffPlayerTextView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:bufferType="editable"
+		android:typeface="monospace" />
+		
+		<!-- 
+		android:focusableInTouchMode="true"
+		android:editable="true"
+		 -->
+	<com.madgag.agit.DiffPanel android:id="@+id/DiffPlayerDiffPanel"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content">
+	</com.madgag.agit.DiffPanel>
+	
+</LinearLayout>

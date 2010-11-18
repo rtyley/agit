@@ -1,5 +1,8 @@
 package com.madgag.agit;
 
+import static android.view.Gravity.CENTER_HORIZONTAL;
+import static android.view.Gravity.TOP;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -26,15 +29,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
+import android.widget.ViewSwitcher.ViewFactory;
 
 public class RevCommitViewer extends ExpandableListActivity {
 	
 	
 	private File gitdir;
-	private MyExpandableListAdapter mAdapter;
+	private CommitChangeListAdapter mAdapter;
 	private List<DiffEntry> files;
 	private Repository repository;
 
@@ -91,7 +98,7 @@ public class RevCommitViewer extends ExpandableListActivity {
 					if (detectRenames)
 					files = detectRenames(files);
 
-				mAdapter = new MyExpandableListAdapter(this);
+				mAdapter = new CommitChangeListAdapter(this);
 				setListAdapter(mAdapter);
 
 				// ListView listView=(ListView)
@@ -141,11 +148,11 @@ public class RevCommitViewer extends ExpandableListActivity {
 				|| ent.getChangeType() == ChangeType.COPY;
 	}
 
-	public class MyExpandableListAdapter extends BaseExpandableListAdapter {
+	public class CommitChangeListAdapter extends BaseExpandableListAdapter {
 
 		LayoutInflater mInflater;
 
-		public MyExpandableListAdapter(Context context) {
+		public CommitChangeListAdapter(Context context) {
 			mInflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		}
@@ -174,7 +181,7 @@ public class RevCommitViewer extends ExpandableListActivity {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			// TODO Auto-generated method stub
+			
 			return v;
 		}
 
