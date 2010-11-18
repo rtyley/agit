@@ -23,7 +23,8 @@ import android.widget.TextView;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
 /*
- *  When a user taps at the opposite end, the change in display from BEFORE to AFTER should not be instantaneous - it should be animated.
+ *  When a user taps at the opposite end, the change in display from BEFORE to AFTER should not be instantaneous - it should be 
+ *  rapidly animated.
  *  
  *  However, when the user is holding down the 'thumb', the display should update instantly (?) to reflect the exact value they are pointing to.
  *  Regarding 'instantly' - depending on the frame rate we can achieve, it might be better to show a very rapid, smooth animation to the correct point
@@ -60,6 +61,7 @@ public class DiffPlayerActivity extends Activity {
 		spannableText=(Editable) textView.getText();
 		
 		seekBar = (SeekBar) findViewById(R.id.DiffPlayerSeekBar);
+		seekBar.setMax(1000);
 		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 			public void onStopTrackingTouch(SeekBar seekBar) {
@@ -72,7 +74,7 @@ public class DiffPlayerActivity extends Activity {
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
 				if (progress==0 || seekBar.getMax()==progress) {
-					vibrator.vibrate(15);
+					vibrator.vibrate(18);
 				}
 				
 				float proportion = unitProgress(seekBar);
