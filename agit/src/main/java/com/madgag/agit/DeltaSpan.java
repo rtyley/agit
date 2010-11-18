@@ -8,7 +8,7 @@ import android.text.style.MetricAffectingSpan;
 
 public class DeltaSpan extends MetricAffectingSpan {
 
-	private final static int insertColour = 0x0000ff00,	deleteColour = 0x00ff0000;
+	private final static int insertColour = 0x00E6FFE6,	deleteColour = 0x00FFE6E6;
 
 	private final float magnitude;
 	private final int alpha;
