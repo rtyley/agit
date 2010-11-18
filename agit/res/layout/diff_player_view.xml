@@ -21,9 +21,4 @@
 		android:focusableInTouchMode="true"
 		android:editable="true"
 		 -->
-	<com.madgag.agit.DiffPanel android:id="@+id/DiffPlayerDiffPanel"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content">
-	</com.madgag.agit.DiffPanel>
-	
 </LinearLayout>

@@ -1,5 +1,6 @@
 package com.madgag.agit;
 
+import static java.lang.Math.max;
 import static java.lang.Math.round;
 import android.graphics.Color;
 import android.text.TextPaint;
@@ -15,7 +16,7 @@ public class DeltaSpan extends MetricAffectingSpan {
 
 	public DeltaSpan(boolean insertNotDelete, float progress) {
 		this.insertNotDelete = insertNotDelete;
-		this.magnitude = insertNotDelete ? progress : (1 - progress);
+		this.magnitude = max(0.01f,(insertNotDelete ? progress : (1 - progress))); // TODO max is HACK!
 
 		alpha = round(magnitude * 0xff);
 	}

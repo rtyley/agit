@@ -14,15 +14,13 @@ import name.fraser.neil.plaintext.diff_match_patch.Operation;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.text.Spannable;
+import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.style.CharacterStyle;
 import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-
-import com.google.common.collect.Lists;
 
 /*
  *  When a user taps at the opposite end, the change in display from BEFORE to AFTER should not be instantaneous - it should be animated.
@@ -34,9 +32,8 @@ public class DiffPlayerActivity extends Activity {
 
 	private SeekBar seekBar;
 	private TextView textView;
-	private DiffPanel diffPanel;
 
-	private SpannableStringBuilder spannableText;
+	private Editable spannableText;
 	private Vibrator vibrator;
 
 	private CharacterStyle deltaSpanStyle,fadeSpanStyle;
@@ -54,10 +51,11 @@ public class DiffPlayerActivity extends Activity {
 		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 		
 		setContentView(R.layout.diff_player_view);
-		diffPanel = (DiffPanel) findViewById(R.id.DiffPlayerDiffPanel);
 		textView = (TextView) findViewById(R.id.DiffPlayerTextView);
-		bonk("ALPHA FISH HAPPY but slightly slapdash.\nFrosting\nFroting","ALPHA GOOGLE HAPPY and slapping the side of the boat.\nFrosting\nFrosting");
+		bonk("ALPHA FISH HAPPY but slightly slapdash.\nFrosting\nFrotinghello\n\nGolly\nMoo\nBoo",
+				"ALPHA GOOGLE HAPPY and slapping the side of the boat.\nFrosting\nFrosting\nMoo");
 		textView.setText(spannableText);
+		spannableText=(Editable) textView.getText();
 		
 		seekBar = (SeekBar) findViewById(R.id.DiffPlayerSeekBar);
 		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -76,23 +74,17 @@ public class DiffPlayerActivity extends Activity {
 				}
 				
 				float proportion = unitProgress(seekBar);
-				Log.i("RAH", "proportion="+proportion);
 				insertSpan = new DeltaSpan(true, proportion);
 				deleteSpan = new DeltaSpan(false, proportion);
 				replace(insertSpans, insertSpan);
 				replace(deleteSpans, deleteSpan);
-
-				diffPanel.setProgress(seekBar.getProgress());
-				diffPanel.invalidate();
 				
 			}
 
 			private void replace(List<CharacterStyle> deltaSpans, CharacterStyle spanStyle) {
-				Log.i("RAH", "deltaSpans.size()="+deltaSpans.size());
 				for (int i=0;i<deltaSpans.size() ; ++i) {
 					CharacterStyle oldSpanStyle = deltaSpans.get(i);
 					int start=spannableText.getSpanStart(oldSpanStyle ),end=spannableText.getSpanEnd(oldSpanStyle);
-					Log.i("RAH", "oldSpanStyle "+start+"-"+end);
 					spannableText.removeSpan(oldSpanStyle);
 					CharacterStyle mySpanStyle = CharacterStyle.wrap(spanStyle);
 					spannableText.setSpan(mySpanStyle, start, end, SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -112,8 +104,8 @@ public class DiffPlayerActivity extends Activity {
 		LinkedList<Diff> diffs = differ.diff_main(before, after);
 		differ.diff_cleanupSemantic(diffs);
 		spannableText=new SpannableStringBuilder();
-		insertSpan = new DeltaSpan(true, 0);
-		deleteSpan = new DeltaSpan(false, 0);
+		insertSpan = new DeltaSpan(true, 0.5f);
+		deleteSpan = new DeltaSpan(false, 0.5f);
 		insertSpans = newArrayList();
 		deleteSpans = newArrayList();
 		for (Diff diff : diffs) {
