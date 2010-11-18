@@ -25,7 +25,9 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 /*
  *  When a user taps at the opposite end, the change in display from BEFORE to AFTER should not be instantaneous - it should be animated.
  *  
- *  However, when the user is holding down the 'thumb', the display should update instantly to reflect the exact value they are pointing to.
+ *  However, when the user is holding down the 'thumb', the display should update instantly (?) to reflect the exact value they are pointing to.
+ *  Regarding 'instantly' - depending on the frame rate we can achieve, it might be better to show a very rapid, smooth animation to the correct point
+ *  
  */
 public class DiffPlayerActivity extends Activity {
 	private final static String TAG = "DiffPlayerActivity";
@@ -74,22 +76,7 @@ public class DiffPlayerActivity extends Activity {
 				}
 				
 				float proportion = unitProgress(seekBar);
-				insertSpan = new DeltaSpan(true, proportion);
-				deleteSpan = new DeltaSpan(false, proportion);
-				replace(insertSpans, insertSpan);
-				replace(deleteSpans, deleteSpan);
-				
-			}
-
-			private void replace(List<CharacterStyle> deltaSpans, CharacterStyle spanStyle) {
-				for (int i=0;i<deltaSpans.size() ; ++i) {
-					CharacterStyle oldSpanStyle = deltaSpans.get(i);
-					int start=spannableText.getSpanStart(oldSpanStyle ),end=spannableText.getSpanEnd(oldSpanStyle);
-					spannableText.removeSpan(oldSpanStyle);
-					CharacterStyle mySpanStyle = CharacterStyle.wrap(spanStyle);
-					spannableText.setSpan(mySpanStyle, start, end, SPAN_EXCLUSIVE_EXCLUSIVE);
-					deltaSpans.set(i, mySpanStyle);
-				}
+				updateDisplayWith(proportion);
 			}
 
 			private float unitProgress(SeekBar seekBar) {
@@ -97,6 +84,26 @@ public class DiffPlayerActivity extends Activity {
 			}
 
 		});
+	}
+	
+	
+
+	private void updateDisplayWith(float proportion) {
+		insertSpan = new DeltaSpan(true, proportion);
+		deleteSpan = new DeltaSpan(false, proportion);
+		replace(insertSpans, insertSpan);
+		replace(deleteSpans, deleteSpan);
+	}
+
+	private void replace(List<CharacterStyle> deltaSpans, CharacterStyle spanStyle) {
+		for (int i=0;i<deltaSpans.size() ; ++i) {
+			CharacterStyle oldSpanStyle = deltaSpans.get(i);
+			int start=spannableText.getSpanStart(oldSpanStyle ),end=spannableText.getSpanEnd(oldSpanStyle);
+			spannableText.removeSpan(oldSpanStyle);
+			CharacterStyle mySpanStyle = CharacterStyle.wrap(spanStyle);
+			spannableText.setSpan(mySpanStyle, start, end, SPAN_EXCLUSIVE_EXCLUSIVE);
+			deltaSpans.set(i, mySpanStyle);
+		}
 	}
 	
 	private void bonk(String before,String after) {
