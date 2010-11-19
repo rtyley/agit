@@ -5,11 +5,13 @@
 	android:orientation="vertical"
 	android:layout_height="fill_parent">
 	<include android:id="@+id/include_top_bar"
-		layout="@layout/top_bar" />
+		layout="@layout/top_bar" android:layout_weight="2" />
 	<ExpandableListView
 	android:fastScrollEnabled="true"
 		android:id="@android:id/list"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:cacheColorHint="#FFF"/>
+		android:cacheColorHint="#FFF" android:layout_weight="1"/>
+	<include android:id="@+id/rev_commit_view_include_diff_seekbar" layout="@layout/diff_seekbar_view" android:layout_weight="2"
+	android:layout_gravity="right"/>
 </LinearLayout>

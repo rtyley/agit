@@ -1,54 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:background="#FFF"
-	android:orientation="vertical"
-	android:layout_height="fill_parent">
-	
-	<RelativeLayout 
-                android:layout_width="wrap_content" 
-                android:layout_height="wrap_content"
-                android:padding="10px" >
+	android:layout_width="fill_parent" android:background="#FFF"
+	android:orientation="vertical" android:layout_height="fill_parent">
 
-<SeekBar
-		android:id="@+id/DiffPlayerSeekBar"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:padding="4px"
-		android:progressDrawable="@drawable/diff_seekbar"
-		android:minWidth="120dip"
-		android:maxWidth="160dip"
-		android:cacheColorHint="#FFF"/>
-      <TextView android:id="@+id/DiffPlayerSeekBarBeforeLabel" 
-            android:layout_width="wrap_content" 
-            android:layout_height="wrap_content" 
-            android:layout_below="@id/DiffPlayerSeekBar"
-            android:layout_alignLeft="@id/DiffPlayerSeekBar"
-            android:textSize="8dp"
-            android:text="Before" />
-    <TextView android:id="@+id/DiffPlayerSeekBarAfterLabel" 
-            android:layout_width="wrap_content" 
-            android:layout_height="wrap_content" 
-            android:layout_below="@id/DiffPlayerSeekBar"
-            android:layout_alignRight="@id/DiffPlayerSeekBar"
-            android:textSize="8dp"
-            android:text="After" />
+	<include android:id="@+id/include_diff_seekbar" layout="@layout/diff_seekbar_view" />
+	
+	<TextView android:id="@+id/DiffPlayerTextView"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:bufferType="editable" android:typeface="monospace" />
 
-</RelativeLayout>
-	
-	
-	
-	
-		
-	<TextView
-		android:id="@+id/DiffPlayerTextView"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:bufferType="editable"
-		android:typeface="monospace" />
-		
-		<!-- 
-		android:focusableInTouchMode="true"
-		android:editable="true"
-		 -->
+	<!--
+		android:focusableInTouchMode="true" android:editable="true"
+	-->
 </LinearLayout>
