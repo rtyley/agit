@@ -4,12 +4,42 @@
 	android:background="#FFF"
 	android:orientation="vertical"
 	android:layout_height="fill_parent">
-	<SeekBar
+	
+	<RelativeLayout 
+                android:layout_width="wrap_content" 
+                android:layout_height="wrap_content"
+                android:padding="10px" >
+
+<SeekBar
 		android:id="@+id/DiffPlayerSeekBar"
-		android:layout_width="fill_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:padding="4px"
+		android:progressDrawable="@drawable/diff_seekbar"
+		android:minWidth="120dip"
+		android:maxWidth="160dip"
 		android:cacheColorHint="#FFF"/>
+      <TextView android:id="@+id/DiffPlayerSeekBarBeforeLabel" 
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content" 
+            android:layout_below="@id/DiffPlayerSeekBar"
+            android:layout_alignLeft="@id/DiffPlayerSeekBar"
+            android:textSize="8dp"
+            android:text="Before" />
+    <TextView android:id="@+id/DiffPlayerSeekBarAfterLabel" 
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content" 
+            android:layout_below="@id/DiffPlayerSeekBar"
+            android:layout_alignRight="@id/DiffPlayerSeekBar"
+            android:textSize="8dp"
+            android:text="After" />
+
+</RelativeLayout>
+	
+	
+	
+	
+		
 	<TextView
 		android:id="@+id/DiffPlayerTextView"
 		android:layout_width="wrap_content"

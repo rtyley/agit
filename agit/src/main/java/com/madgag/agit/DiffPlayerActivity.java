@@ -55,8 +55,8 @@ public class DiffPlayerActivity extends Activity {
 		
 		setContentView(R.layout.diff_player_view);
 		textView = (TextView) findViewById(R.id.DiffPlayerTextView);
-		bonk("ALPHA FISH HAPPY but slightly slapdash.\nFrosting\nFrotinghello\n\nGolly\nMoo\nBoo",
-				"ALPHA GOOGLE HAPPY and slapping the side of the boat.\nFrosting\nFrosting\nMoo");
+		bonk("ALPHA FISH HAPPY but slightly slapdash.\nFrosting\nFrotinghello\nFros ting\nGolly\nMoo\nBoo",
+				"ALPHA GOOGLE HAPPY and slapping the side of the boat.\nFrosting\nFrosting\nFrosting\nMoo");
 		textView.setText(spannableText);
 		spannableText=(Editable) textView.getText();
 		
@@ -74,7 +74,7 @@ public class DiffPlayerActivity extends Activity {
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
 				if (progress==0 || seekBar.getMax()==progress) {
-					vibrator.vibrate(18);
+					vibrator.vibrate(17);
 				}
 				
 				float proportion = unitProgress(seekBar);
