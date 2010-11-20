@@ -10,10 +10,4 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:typeface="monospace" />
-	<TextSwitcher android:id="@+id/diff_hunk_textswitcher"
-	android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:typeface="monospace"
-	/>
-		
 </LinearLayout>
