@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content" android:padding="10px">
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<SeekBar android:id="@+id/DiffPlayerSeekBar"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -17,4 +15,4 @@
 		android:layout_below="@id/DiffPlayerSeekBar"
 		android:layout_alignRight="@id/DiffPlayerSeekBar" android:textSize="8dp"
 		android:text="After" />
-</RelativeLayout>
+</merge>

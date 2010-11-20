@@ -1,8 +1,5 @@
 package com.madgag.agit;
 
-import static android.view.Gravity.CENTER_HORIZONTAL;
-import static android.view.Gravity.TOP;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -29,13 +26,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
-import android.widget.TextSwitcher;
 import android.widget.TextView;
-import android.widget.ViewSwitcher.ViewFactory;
 
 public class RevCommitViewer extends ExpandableListActivity {
 	

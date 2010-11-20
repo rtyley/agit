@@ -24,20 +24,20 @@ public class DiffPlayerActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.diff_player_view);
-		TextView textView = (TextView) findViewById(R.id.DiffPlayerTextView);
-		Editable spannableText=(Editable) textView.getText();
-		DiffText diffText = new DiffText(spannableText);
-
-		diffText.initWith("ALPHA FISH HAPPY but slightly slapdash.\nFrosting\nFronghello\nFros ting\nGolly\nMoo\nBoo\nGandalf said hi",
-				"ALPHA GOOGLE HAPPY and slapping the side of the boat.\nFrosting\nFrosting\nFrosting\nMoo\nGandalf says hi");
-		
-		SeekBar seekBar = (SeekBar) findViewById(R.id.DiffPlayerSeekBar);
-		seekBar.setMax(1000);
-		DiffSeekBarChangeListener foo = new DiffSeekBarChangeListener((Vibrator) getSystemService(VIBRATOR_SERVICE));
-		foo.add(diffText);
-		seekBar.setOnSeekBarChangeListener(foo);
-		seekBar.setProgress(1000);
+//		setContentView(R.layout.diff_player_view);
+//		TextView textView = (TextView) findViewById(R.id.DiffPlayerTextView);
+//		Editable spannableText=(Editable) textView.getText();
+//		DiffText diffText = new DiffText(spannableText);
+//
+//		diffText.initWith("ALPHA FISH HAPPY but slightly slapdash.\nFrosting\nFronghello\nFros ting\nGolly\nMoo\nBoo\nGandalf said hi",
+//				"ALPHA GOOGLE HAPPY and slapping the side of the boat.\nFrosting\nFrosting\nFrosting\nMoo\nGandalf says hi");
+//		
+//		SeekBar seekBar = (SeekBar) findViewById(R.id.DiffPlayerSeekBar);
+//		seekBar.setMax(1000);
+//		DiffSeekBarChangeListener foo = new DiffSeekBarChangeListener((Vibrator) getSystemService(VIBRATOR_SERVICE));
+//		foo.add(diffText);
+//		seekBar.setOnSeekBarChangeListener(foo);
+//		seekBar.setProgress(1000);
 	}
 
 }
