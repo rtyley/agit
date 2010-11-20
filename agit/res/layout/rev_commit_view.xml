@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:background="#FFF"
-	android:orientation="vertical" android:layout_height="fill_parent">
+	android:id="@+id/rev_commit_layout_root"
+	android:orientation="vertical"
+	android:background="#FFF"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
 
-	<include android:id="@+id/include_top_bar" layout="@layout/top_bar" android:gravity="top"
-		android:layout_weight="2" />
+	<LinearLayout android:layout_width="fill_parent"  android:layout_height="56dip"
+	android:background="@drawable/top_bar" android:orientation="horizontal"  android:gravity="right">
+	
+		<com.madgag.agit.DiffSliderView 
+		android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+	</LinearLayout>
+	
 	<ExpandableListView android:fastScrollEnabled="true"
 		android:id="@android:id/list"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:cacheColorHint="#FFF"
-		android:layout_weight="1" />
+		android:layout_height="fill_parent" android:cacheColorHint="#FFF" />
 
 
-	<LinearLayout android:layout_width="fill_parent" android:gravity="bottom"
-		android:layout_height="wrap_content" android:layout_weight="2"
-		android:orientation="horizontal">
-		<com.madgag.agit.DiffSliderView 
-		android:layout_width="wrap_content" android:layout_height="wrap_content" />
-	</LinearLayout> -->
+
 </LinearLayout>
