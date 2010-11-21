@@ -357,6 +357,7 @@ public class LineContextDiffer {
 			ByteArrayOutputStream bas = new ByteArrayOutputStream();
 			for (int line = startLine; line < endLine; ++line) {
 				rawText.writeLine(bas, line);
+				bas.write('\n');
 			}
 			return new String(bas.toByteArray(), "utf-8");
 		} catch (IOException e) {
