@@ -1,12 +1,14 @@
 package com.madgag.agit;
 
-import java.io.ByteArrayOutputStream;
+import static android.widget.ExpandableListView.getPackedPositionForChild;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.diff.RenameDetector;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.lib.ObjectId;
@@ -27,22 +29,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import com.madgag.agit.DiffSliderView.OnStateUpdateListener;
+import com.madgag.agit.LineContextDiffer.Hunk;
+
 public class RevCommitViewer extends ExpandableListActivity {
-	
+
+	private static final String TAG = "RevCommitViewer";
 	
 	private File gitdir;
 	private CommitChangeListAdapter mAdapter;
-	private List<DiffEntry> files;
+	private List<FileDiff> fileDiffs;
 	private Repository repository;
+	
+	private DiffSliderView diffSliderView;
+	
+	private Map<Long, DiffText> diffTexts=new HashMap<Long, DiffText>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.rev_commit_view);
+		diffSliderView=(DiffSliderView) findViewById(R.id.RevCommitDiffSlider);
 
 		Intent intent = getIntent();
 		gitdir = RepositoryManagementActivity.getGitDirFrom(intent);
@@ -71,7 +84,7 @@ public class RevCommitViewer extends ExpandableListActivity {
 				tw.addTree(commitTree);
 				TreeFilter pathFilter = TreeFilter.ANY_DIFF;
 				tw.setFilter(pathFilter);
-				files = DiffEntry.scan(tw);
+				List<DiffEntry> files = DiffEntry.scan(tw);
 				Log.i("RCCV", files.toString());
 
 				boolean detectRenames=true;
@@ -88,9 +101,14 @@ public class RevCommitViewer extends ExpandableListActivity {
 //					files = updateFollowFilter(detectRenames(DiffEntry.scan(tw)));
 //
 //				} else 
-					if (detectRenames)
+				if (detectRenames)
 					files = detectRenames(files);
 
+				final LineContextDiffer lineContextDiffer = new LineContextDiffer(repository);
+				fileDiffs=Lists.transform(files, new Function<DiffEntry,FileDiff>() {
+					public FileDiff apply(DiffEntry d) { return new FileDiff(lineContextDiffer, d); }
+				});
+				
 				mAdapter = new CommitChangeListAdapter(this);
 				setListAdapter(mAdapter);
 
@@ -141,18 +159,17 @@ public class RevCommitViewer extends ExpandableListActivity {
 				|| ent.getChangeType() == ChangeType.COPY;
 	}
 
-	public class CommitChangeListAdapter extends BaseExpandableListAdapter {
+	public class CommitChangeListAdapter extends BaseExpandableListAdapter implements OnStateUpdateListener {
 
 		LayoutInflater mInflater;
 
 		public CommitChangeListAdapter(Context context) {
-			mInflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			diffSliderView.setStateUpdateListener(this);
 		}
 
-		public Object getChild(int arg0, int arg1) {
-			// TODO Auto-generated method stub
-			return null;
+		public Object getChild(int groupPosition, int childPosition) {
+			return fileDiffs.get(groupPosition).getHunks().get(childPosition);
 		}
 
 		public long getChildId(int arg0, int arg1) {
@@ -162,36 +179,27 @@ public class RevCommitViewer extends ExpandableListActivity {
 
 		public View getChildView(int groupPosition, int childPosition,
 				boolean isLastChild, View convertView, ViewGroup parent) {
-			View v = mInflater.inflate(R.layout.diff_view, parent, false);
-			ByteArrayOutputStream bas = new ByteArrayOutputStream();
-			try {
-				DiffFormatter diffFormatter = new DiffFormatter(bas);
-				diffFormatter.setRepository(repository);
-				diffFormatter.format(files.get(groupPosition));
-				String rubbish = new String(bas.toByteArray(), "utf-8");
-				((TextView) v.findViewById(R.id.diff_hunk_textview))
-						.setText(rubbish);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			Hunk hunk = fileDiffs.get(groupPosition).getHunks().get(childPosition);
 			
+			HunkDiffView v = convertView!=null?((HunkDiffView)convertView):new HunkDiffView(RevCommitViewer.this, hunk);
+			diffTexts.put(getPackedPositionForChild(groupPosition, childPosition), v.getDiffText());
 			return v;
 		}
 
 		public int getChildrenCount(int groupPosition) {
-			return 1;
+			return fileDiffs.get(groupPosition).getHunks().size();
 		}
 
 		public Object getGroup(int index) {
-			return files.get(index);
+			return fileDiffs.get(index);
 		}
 
 		public int getGroupCount() {
-			return files.size();
+			return fileDiffs.size();
 		}
 
 		public long getGroupId(int index) {
-			return files.get(index).hashCode(); // Pretty lame
+			return fileDiffs.get(index).hashCode(); // Pretty lame
 		}
 
 		public View getGroupView(int groupPosition, boolean isExpanded,
@@ -202,7 +210,7 @@ public class RevCommitViewer extends ExpandableListActivity {
 			} else {
 				v = convertView;
 			}
-			DiffEntry diffEntry = files.get(groupPosition);
+			DiffEntry diffEntry = fileDiffs.get(groupPosition).getDiffEntry();
 			int changeTypeIcon = R.drawable.diff_changetype_modify;
 			String filename = diffEntry.getNewPath();
 			switch (diffEntry.getChangeType()) {
@@ -249,6 +257,20 @@ public class RevCommitViewer extends ExpandableListActivity {
 		public boolean isChildSelectable(int arg0, int arg1) {
 			// TODO Auto-generated method stub
 			return false;
+		}
+
+		public void onStateChanged(DiffSliderView diffSliderView, float state) {
+			ExpandableListView expandableListView = getExpandableListView();
+			for (int i=0;i<fileDiffs.size();++i) {
+				if (expandableListView.isGroupExpanded(i)) {
+					for (int j=0;j<getChildrenCount(i);++j) {
+						DiffText diffText = diffTexts.get(getPackedPositionForChild(i, j));
+						if (diffText!=null) {
+							diffText.setTransitionProgress(state);
+						}
+					}
+				}
+			}
 		}
 
 	}

@@ -9,7 +9,7 @@
 	<LinearLayout android:layout_width="fill_parent"  android:layout_height="wrap_content"
 	android:background="@drawable/top_bar" android:orientation="horizontal"  android:gravity="right">
 	
-		<com.madgag.agit.DiffSliderView 
+		<com.madgag.agit.DiffSliderView android:id="@+id/RevCommitDiffSlider"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"/>
 	</LinearLayout>
 	
