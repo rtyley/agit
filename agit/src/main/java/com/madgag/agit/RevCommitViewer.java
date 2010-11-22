@@ -179,12 +179,13 @@ public class RevCommitViewer extends ExpandableListActivity {
 				boolean isLastChild, View convertView, ViewGroup parent) {
 			Hunk hunk = fileDiffs.get(groupPosition).getHunks().get(childPosition);
 			HunkDiffView v;
-			if (convertView==null) {
+			// Disabling view re-use for Children - too unpredicateable, can not easily tell when my difftext should be invalidated!
+//			if (convertView==null || !(convertView instanceof HunkDiffView)) {
 				v=new HunkDiffView(RevCommitViewer.this, hunk);
-			} else {
-				v=((HunkDiffView)convertView);
-				v.setHunk(hunk);
-			}
+//			} else {
+//				v=((HunkDiffView)convertView);
+//				v.setHunk(hunk);
+//			}
 			diffTexts.put(keyFor(groupPosition, childPosition), v.getDiffText());
 			return v;
 		}
