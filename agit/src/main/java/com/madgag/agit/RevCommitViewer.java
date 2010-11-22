@@ -1,7 +1,5 @@
 package com.madgag.agit;
 
-import static android.widget.ExpandableListView.getPackedPositionForChild;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -180,9 +178,14 @@ public class RevCommitViewer extends ExpandableListActivity {
 		public View getChildView(int groupPosition, int childPosition,
 				boolean isLastChild, View convertView, ViewGroup parent) {
 			Hunk hunk = fileDiffs.get(groupPosition).getHunks().get(childPosition);
-			
-			HunkDiffView v = convertView!=null?((HunkDiffView)convertView):new HunkDiffView(RevCommitViewer.this, hunk);
-			diffTexts.put(getPackedPositionForChild(groupPosition, childPosition), v.getDiffText());
+			HunkDiffView v;
+			if (convertView==null) {
+				v=new HunkDiffView(RevCommitViewer.this, hunk);
+			} else {
+				v=((HunkDiffView)convertView);
+				v.setHunk(hunk);
+			}
+			diffTexts.put(keyFor(groupPosition, childPosition), v.getDiffText());
 			return v;
 		}
 
@@ -264,13 +267,17 @@ public class RevCommitViewer extends ExpandableListActivity {
 			for (int i=0;i<fileDiffs.size();++i) {
 				if (expandableListView.isGroupExpanded(i)) {
 					for (int j=0;j<getChildrenCount(i);++j) {
-						DiffText diffText = diffTexts.get(getPackedPositionForChild(i, j));
+						DiffText diffText = diffTexts.get(keyFor(i, j));
 						if (diffText!=null) {
 							diffText.setTransitionProgress(state);
 						}
 					}
 				}
 			}
+		}
+
+		private long keyFor(int i, int j) {
+			return (((long) i) << 32) + j;
 		}
 
 	}

@@ -338,7 +338,7 @@ public class LineContextDiffer {
 			Edit curEdit = edits.get(curIdx);
 			final int endIdx = findCombinedEnd(edits, curIdx);
 
-			Log.i("BUCK", "Will do edits "+curIdx+" - "+endIdx);
+			// Log.i("BUCK", "Will do edits "+curIdx+" - "+endIdx);
 			final Edit endEdit = edits.get(endIdx);
 
 			int aCur = max(0, curEdit.getBeginA() - context);

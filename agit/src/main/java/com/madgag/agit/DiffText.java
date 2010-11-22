@@ -49,9 +49,7 @@ public class DiffText {
 	}
 	
 	public void initWith(String before,String after) {
-		diff_match_patch differ = new diff_match_patch(new StandardBreakScorer());
-		LinkedList<Diff> diffs = differ.diff_main(before, after);
-		differ.diff_cleanupSemantic(diffs);
+		LinkedList<Diff> diffs = diffsFor(before, after);
 		DeltaSpan insertSpan = new DeltaSpan(true, 0.5f);
 		DeltaSpan deleteSpan = new DeltaSpan(false, 0.5f);
 		insertSpans = newArrayList();
@@ -68,6 +66,13 @@ public class DiffText {
 			
 		}
 		
+	}
+
+	private LinkedList<Diff> diffsFor(String before, String after) {
+		diff_match_patch differ = new diff_match_patch(new StandardBreakScorer());
+		LinkedList<Diff> diffs = differ.diff_main(before, after);
+		differ.diff_cleanupSemantic(diffs);
+		return diffs;
 	}
 	
 	private CharacterStyle deltaSpan(float proportion) {
