@@ -72,7 +72,7 @@ public class MessagingProgressMonitor implements ProgressMonitor, CancellationSi
 
 	public void update(int completed) {
 		final int cmp = lastWorked + completed;
-		Log.d(TAG, "cmp "+cmp);
+		//Log.d(TAG, "cmp "+cmp);
 		
 		if (totalWork == UNKNOWN) {
 			display(cmp);
