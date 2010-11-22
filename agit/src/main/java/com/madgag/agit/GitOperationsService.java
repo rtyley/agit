@@ -83,7 +83,7 @@ public class GitOperationsService extends Service {
 		
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     	if (intent==null) {
-    		return START_STICKY;
+    		return START_NOT_STICKY;
     	}
 		
 		String action = intent.getAction();
