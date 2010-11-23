@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:padding="5dp">
-	<ImageView android:id="@+id/status_icon"
-		android:layout_width="wrap_content" android:layout_height="fill_parent"
-		android:layout_alignParentLeft="true" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent" android:paddingLeft="5dp"
+	android:orientation="vertical">
 
-	<RelativeLayout android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:layout_toRightOf="@id/status_icon">
-
-		<TextView android:id="@+id/status_text" android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:layout_alignParentTop="true" />
-		<ProgressBar android:id="@+id/status_progress"
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="vertical">
+		<TextView android:id="@+id/operation_description"
+			android:layout_width="fill_parent" android:textStyle="bold"
+			android:layout_height="wrap_content" android:layout_alignParentTop="true"
+			android:textColor="#ff000000" />
+		<TextView android:id="@+id/operation_long_url"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:layout_below="@id/status_text"
+            android:singleLine="true" android:ellipsize="middle"
+			android:layout_alignParentBottom="true" />
+	</LinearLayout>
+	<LinearLayout 
+		android:layout_width="fill_parent" android:layout_height="wrap_content" 
+		android:orientation="horizontal">
+		<ProgressBar android:id="@+id/status_progress" android:layout_weight="1"
+			android:layout_width="160dp" android:layout_height="wrap_content"
 			style="?android:attr/progressBarStyleHorizontal"
 			android:progressDrawable="@android:drawable/progress_horizontal"
-			android:indeterminate="false" android:indeterminateOnly="false" />
-
-	</RelativeLayout>
-
-</RelativeLayout>
+			android:indeterminate="false" android:indeterminateOnly="false" android:paddingRight="5dp" />
+		<TextView android:id="@+id/status_text" android:layout_width="fill_parent" android:layout_weight="2"
+			android:textColor="#ff000000" android:layout_height="wrap_content"
+			android:layout_below="@id/status_progress" />
+	</LinearLayout>
+</LinearLayout>

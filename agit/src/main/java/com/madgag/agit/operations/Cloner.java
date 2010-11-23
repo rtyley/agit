@@ -186,4 +186,12 @@ public class Cloner implements GitOperation {
 	public String getDescription() {
 		return "cloning " + sourceUri;
 	}
+
+	public CharSequence getUrl() {
+		return sourceUri.toString();
+	}
+
+	public String getShortDescription() {
+		return "Cloning";
+	}
 }

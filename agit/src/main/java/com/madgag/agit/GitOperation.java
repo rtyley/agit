@@ -9,5 +9,9 @@ public interface GitOperation {
 
 	String getName();
 
+	String getShortDescription();
+	
 	String getDescription();
+
+	CharSequence getUrl();
 }

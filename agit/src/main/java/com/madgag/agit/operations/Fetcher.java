@@ -78,6 +78,12 @@ public class Fetcher implements GitOperation {
 		return remote.getURIs().get(0).toString();
 	}
 
-    
+	public CharSequence getUrl() {
+		return fetchUrl();
+	}
+
+	public String getShortDescription() {
+		return "Fetching "+remote.getName();
+	}
 
 }

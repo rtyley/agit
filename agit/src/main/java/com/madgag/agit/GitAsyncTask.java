@@ -57,7 +57,9 @@ public class GitAsyncTask extends AsyncTask<Void, Progress, OpNotification> impl
 	
 	private RemoteViews notificationView() {
 		RemoteViews v=remoteViewWithLayout(R.layout.fetch_progress);
-		v.setTextViewText(R.id.status_text, operation.getTickerText()); // TO-DO more suitable text?
+		v.setTextViewText(R.id.operation_description, operation.getShortDescription()); // TO-DO more suitable text?
+		v.setTextViewText(R.id.operation_long_url, operation.getUrl());
+		v.setTextViewText(R.id.status_text, "Please wait...");
 		v.setProgressBar(R.id.status_progress,1,0,true);
 		return v;
 	}
