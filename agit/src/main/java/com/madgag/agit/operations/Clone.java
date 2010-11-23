@@ -34,20 +34,18 @@ import org.eclipse.jgit.transport.URIish;
 
 import android.util.Log;
 
-import com.madgag.agit.GitOperation;
-import com.madgag.agit.OpNotification;
 import com.madgag.agit.Progress;
 import com.madgag.agit.ProgressListener;
 import com.madgag.agit.RepositoryOperationContext;
 
-public class Cloner implements GitOperation {
+public class Clone implements GitOperation {
 
 	public static final String TAG = "Cloner";
 
 	private final URIish sourceUri;
 	private final File gitdir;
 
-	public Cloner(URIish sourceUri, File gitdir) {
+	public Clone(URIish sourceUri, File gitdir) {
 		this.sourceUri = sourceUri;
 		this.gitdir = gitdir;
 		Log.i(TAG, "Constructed with " + sourceUri + " gitdir=" + gitdir);

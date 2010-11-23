@@ -1,4 +1,8 @@
-package com.madgag.agit;
+package com.madgag.agit.operations;
+
+import com.madgag.agit.Progress;
+import com.madgag.agit.ProgressListener;
+import com.madgag.agit.RepositoryOperationContext;
 
 public interface GitOperation {
 	String getTickerText();

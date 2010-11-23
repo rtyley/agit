@@ -2,11 +2,6 @@ package com.madgag.agit;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Vibrator;
-import android.text.Editable;
-import android.util.Log;
-import android.widget.SeekBar;
-import android.widget.TextView;
 
 /*
  *  When a user taps at the opposite end, the change in display from BEFORE to AFTER should not be instantaneous - it should be 

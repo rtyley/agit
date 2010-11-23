@@ -6,8 +6,8 @@ package com.madgag.agit;
 import static org.eclipse.jgit.lib.ProgressMonitor.UNKNOWN;
 
 public class Progress {
-	final String msg;
-	final int totalWork,totalCompleted;
+	public final String msg;
+	public final int totalWork,totalCompleted;
 	
 	public Progress(String msg) {
 		this.msg = msg;

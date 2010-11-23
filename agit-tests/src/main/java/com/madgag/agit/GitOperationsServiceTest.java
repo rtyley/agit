@@ -18,6 +18,8 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.core.Is;
 
 import com.madgag.agit.GitOperationsService.GitOperationsBinder;
+import com.madgag.agit.operations.GitAsyncTask;
+import com.madgag.agit.operations.OpNotification;
 
 import android.app.Notification;
 import android.content.Intent;

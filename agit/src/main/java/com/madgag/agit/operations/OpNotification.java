@@ -1,4 +1,4 @@
-package com.madgag.agit;
+package com.madgag.agit.operations;
 
 public class OpNotification {
 	private final int icon;

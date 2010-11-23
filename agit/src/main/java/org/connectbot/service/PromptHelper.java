@@ -19,11 +19,11 @@ package org.connectbot.service;
 
 import java.util.concurrent.Semaphore;
 
-import com.madgag.agit.OpNotification;
-import com.madgag.agit.OpPrompt;
-
 import android.os.Handler;
 import android.os.Message;
+
+import com.madgag.agit.operations.OpNotification;
+import com.madgag.agit.operations.OpPrompt;
 
 /**
  * Helps provide a relay for prompts and responses between a possible user

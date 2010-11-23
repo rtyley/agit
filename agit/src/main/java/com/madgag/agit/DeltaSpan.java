@@ -2,7 +2,6 @@ package com.madgag.agit;
 
 import static java.lang.Math.max;
 import static java.lang.Math.round;
-import android.graphics.Color;
 import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
 

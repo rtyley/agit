@@ -33,6 +33,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.madgag.agit.GitOperationsService.GitOperationsBinder;
+import com.madgag.agit.operations.GitAsyncTask;
+import com.madgag.agit.operations.OpPrompt;
 
 
 public class RepositoryManagementActivity extends android.app.Activity {

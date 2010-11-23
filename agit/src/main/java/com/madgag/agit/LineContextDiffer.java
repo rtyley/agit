@@ -11,9 +11,7 @@ import static org.eclipse.jgit.lib.FileMode.GITLINK;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jgit.JGitText;
@@ -42,10 +40,6 @@ import org.eclipse.jgit.patch.HunkHeader;
 import org.eclipse.jgit.patch.FileHeader.PatchType;
 import org.eclipse.jgit.util.QuotedString;
 import org.eclipse.jgit.util.io.DisabledOutputStream;
-
-import android.util.Log;
-
-import com.google.common.collect.Lists;
 
 /**
  * Format an {@link EditList} as a Git style unified patch script.

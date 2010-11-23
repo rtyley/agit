@@ -1,7 +1,15 @@
-package com.madgag.agit;
+package com.madgag.agit.operations;
 
 import static android.R.drawable.stat_notify_error;
 import static java.lang.System.currentTimeMillis;
+
+import com.madgag.agit.Progress;
+import com.madgag.agit.ProgressListener;
+import com.madgag.agit.R;
+import com.madgag.agit.RepositoryOperationContext;
+import com.madgag.agit.R.id;
+import com.madgag.agit.R.layout;
+
 import android.app.Notification;
 import android.os.AsyncTask;
 import android.util.Log;

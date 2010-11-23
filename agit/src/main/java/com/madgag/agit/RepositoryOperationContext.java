@@ -24,6 +24,10 @@ import android.os.Message;
 import android.util.Log;
 
 import com.jcraft.jsch.JSchException;
+import com.madgag.agit.operations.GitAsyncTask;
+import com.madgag.agit.operations.GitOperation;
+import com.madgag.agit.operations.OpNotification;
+import com.madgag.agit.operations.OpPrompt;
 import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 
 public class RepositoryOperationContext {

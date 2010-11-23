@@ -29,8 +29,8 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.madgag.agit.operations.Cloner;
-import com.madgag.agit.operations.Fetcher;
+import com.madgag.agit.operations.Clone;
+import com.madgag.agit.operations.Fetch;
 import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 
 public class GitOperationsService extends Service {
@@ -96,7 +96,7 @@ public class GitOperationsService extends Service {
 			String sourceUriString = intent.getStringExtra("source-uri");
 			try {
 				URIish sourceUri=new URIish(sourceUriString);
-				repositoryOperationContext.enqueue(new Cloner(sourceUri, gitdir));
+				repositoryOperationContext.enqueue(new Clone(sourceUri, gitdir));
 			} catch (URISyntaxException e) {
 				Toast.makeText(this, "Invalid uri "+sourceUriString, LENGTH_LONG);
 			}
@@ -104,7 +104,7 @@ public class GitOperationsService extends Service {
 			Repository repository = repositoryOperationContext.getRepository();
 			String remote=Constants.DEFAULT_REMOTE_NAME;
 			try {
-				repositoryOperationContext.enqueue(new Fetcher(new RemoteConfig(repository.getConfig(), remote)));
+				repositoryOperationContext.enqueue(new Fetch(new RemoteConfig(repository.getConfig(), remote)));
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 				Toast.makeText(this, "Bad config "+e, LENGTH_LONG).show();

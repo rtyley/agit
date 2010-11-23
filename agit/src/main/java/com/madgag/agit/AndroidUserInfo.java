@@ -1,14 +1,13 @@
 package com.madgag.agit;
 
 import static android.R.drawable.stat_sys_warning;
-import static java.lang.System.currentTimeMillis;
 
 import org.connectbot.service.PromptHelper;
 
-import android.app.Notification;
 import android.util.Log;
 
 import com.jcraft.jsch.UserInfo;
+import com.madgag.agit.operations.OpNotification;
 
 public class AndroidUserInfo implements UserInfo {
 	private final static String TAG="AndroidUserInfo";
@@ -50,7 +49,7 @@ public class AndroidUserInfo implements UserInfo {
 		
 		//notifyUserNeedsPrompt(msg);
 		
-		Boolean bool = uiThreadConduit.requestBooleanPrompt(new OpNotification(stat_sys_warning, msg, "", msg));
+		Boolean bool = uiThreadConduit.requestBooleanPrompt(new OpNotification(stat_sys_warning, msg, "SSH", msg));
 		return bool!=null?bool:false;
 	}
 
