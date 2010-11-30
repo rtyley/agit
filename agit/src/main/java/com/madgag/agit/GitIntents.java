@@ -11,6 +11,7 @@ public class GitIntents {
 	
 	public static File gitDirFrom(Intent intent) {
 		String gitdirString = intent.getStringExtra("gitdir");
+		Log.i(TAG, "gitdirString = "+gitdirString);
 		File gitdir=new File(gitdirString);
 		Log.i(TAG, "gitdir for "+intent+" = "+gitdir.getAbsolutePath());
 		return gitdir;

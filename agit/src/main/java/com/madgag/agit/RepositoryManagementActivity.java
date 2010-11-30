@@ -4,6 +4,7 @@ import static android.content.Intent.ACTION_VIEW;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.madgag.agit.MessagingProgressMonitor.GIT_OPERATION_PROGRESS_UPDATE;
 import static com.madgag.agit.RepoDeleter.REPO_DELETE_COMPLETED;
+import static com.madgag.agit.RepoLogActivity.repoLogIntentFor;
 
 import java.io.File;
 
@@ -79,8 +80,8 @@ public class RepositoryManagementActivity extends android.app.Activity {
 		});
         buttonUp(R.id.LogButton,new OnClickListener() {
 			public void onClick(View v) {
-				startActivity(new Intent("git.log", Uri.fromFile(gitdir), RepositoryManagementActivity.this,RepoLogActivity.class));
-			}
+				startActivity(repoLogIntentFor(gitdir));
+			}			
 		});
     }
     

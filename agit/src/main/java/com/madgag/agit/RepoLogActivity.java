@@ -8,8 +8,10 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepository;
+import org.eclipse.jgit.transport.URIish;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,13 +24,20 @@ import android.widget.AdapterView.OnItemClickListener;
 public class RepoLogActivity extends ListActivity {
     private File gitdir;
 
+    public static Intent repoLogIntentFor(File gitdir) {
+		Intent intent = new Intent("git.LOG");
+		intent
+			.putExtra("gitdir", gitdir.getAbsolutePath());
+		return intent;
+	}
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.rev_commit_list);
 
-        gitdir=RepositoryManagementActivity.getGitDirFrom(getIntent());
+        gitdir = GitIntents.gitDirFrom(getIntent());
         
         try {
 			Repository repository=new FileRepository(gitdir);

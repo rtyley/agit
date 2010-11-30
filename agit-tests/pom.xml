@@ -17,6 +17,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.madgag</groupId>
+			<artifactId>util-compress</artifactId>
+			<version>1.24</version>
+		</dependency>
+		<dependency>
+			<groupId>com.madgag</groupId>
 			<artifactId>agit</artifactId>
 			<version>1.0-SNAPSHOT</version>
 			<type>apk</type>
@@ -34,9 +39,9 @@
 			<version>1.0.5-UNOFFICIAL-BUILD</version>
 		</dependency>
 		<dependency>
-		    <groupId>com.google.android</groupId>
-		    <artifactId>android-test</artifactId>
-		    <scope>provided</scope>
+			<groupId>com.google.android</groupId>
+			<artifactId>android-test</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
@@ -44,12 +49,12 @@
 			<version>1.2</version>
 		</dependency>
 	</dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-                <artifactId>maven-android-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<artifactId>maven-android-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 </project>
