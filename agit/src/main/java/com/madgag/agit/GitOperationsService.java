@@ -2,6 +2,7 @@ package com.madgag.agit;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static com.google.common.collect.Sets.newHashSet;
+import static com.madgag.agit.GitIntents.addGitDirTo;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,9 +41,8 @@ public class GitOperationsService extends Service {
 
 	public static Intent cloneOperationIntentFor(URIish uri, File gitdir) {
 		Intent intent = new Intent("git.CLONE");
-		intent
-			.putExtra("source-uri", uri.toPrivateString())
-			.putExtra("gitdir", gitdir.getAbsolutePath());
+		intent.putExtra("source-uri", uri.toPrivateString());
+		addGitDirTo(intent, gitdir);
 		return intent;
 	}
 	

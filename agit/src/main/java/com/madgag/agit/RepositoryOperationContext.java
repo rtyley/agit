@@ -140,7 +140,7 @@ public class RepositoryOperationContext {
 	}
 	
 	public Intent getRMAIntent() {
-		return manageRepoIntent(getRepository().getDirectory(), service);
+		return manageRepoIntent(getRepository().getDirectory());
 	}
 
 	public GitAsyncTask getCurrentOperation() {

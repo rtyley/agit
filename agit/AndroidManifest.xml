@@ -9,6 +9,9 @@
 		<activity android:name="RepositoryManagementActivity"
 			android:label="@string/app_name">
 			<intent-filter>
+				<action android:name="git.repo.MANAGE" />
+			</intent-filter>
+			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<data android:scheme="file" />
 			</intent-filter>

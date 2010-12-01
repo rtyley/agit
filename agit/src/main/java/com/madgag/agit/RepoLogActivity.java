@@ -36,7 +36,7 @@ public class RepoLogActivity extends ListActivity {
         
         setContentView(R.layout.rev_commit_list);
 
-        gitdir = gitDirFrom(getIntent());
+        setGitDirFromIntent();
         
         try {
 			Repository repository=new FileRepository(gitdir);
@@ -57,10 +57,16 @@ public class RepoLogActivity extends ListActivity {
 			}
 		});
     }
-    
+
 	@Override
     protected void onResume() {
     	super.onResume();
-        gitdir=gitDirFrom(getIntent());
+        setGitDirFromIntent();
     }
+	
+	
+	private void setGitDirFromIntent() {
+		gitdir = gitDirFrom(getIntent());
+	}
+    
 }

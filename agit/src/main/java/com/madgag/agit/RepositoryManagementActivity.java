@@ -2,6 +2,7 @@ package com.madgag.agit;
 
 import static android.content.Intent.ACTION_VIEW;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.madgag.agit.GitIntents.addGitDirTo;
 import static com.madgag.agit.GitIntents.gitDirFrom;
 import static com.madgag.agit.MessagingProgressMonitor.GIT_OPERATION_PROGRESS_UPDATE;
 import static com.madgag.agit.RepoDeleter.REPO_DELETE_COMPLETED;
@@ -262,13 +263,15 @@ public class RepositoryManagementActivity extends android.app.Activity {
 		return manageRepoPendingIntent(repository.getDirectory(), context);
 	}
 	public static PendingIntent manageRepoPendingIntent(File gitdir,Context context) {
-		Intent intentForNotification = manageRepoIntent(gitdir, context);
+		Intent intentForNotification = manageRepoIntent(gitdir);
         intentForNotification.setFlags(FLAG_ACTIVITY_NEW_TASK);
 		return PendingIntent.getActivity(context, 0, intentForNotification, 0);
 	}
 
-	public static Intent manageRepoIntent(File gitdir, Context context) {
-		return new Intent(ACTION_VIEW, Uri.fromFile(gitdir), context,RepositoryManagementActivity.class);
+	public static Intent manageRepoIntent(File gitdir) {
+		Intent intent = new Intent("git.repo.MANAGE");
+		addGitDirTo(intent, gitdir);
+		return intent;
 	}
 
 	public File getGitDir() {
