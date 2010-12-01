@@ -4,6 +4,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.Collections.emptyList;
+import static org.eclipse.jgit.diff.RawTextComparator.DEFAULT;
 import static org.eclipse.jgit.lib.Constants.encode;
 import static org.eclipse.jgit.lib.Constants.encodeASCII;
 import static org.eclipse.jgit.lib.FileMode.GITLINK;
@@ -20,12 +21,7 @@ import org.eclipse.jgit.diff.Edit;
 import org.eclipse.jgit.diff.EditList;
 import org.eclipse.jgit.diff.MyersDiff;
 import org.eclipse.jgit.diff.RawText;
-import org.eclipse.jgit.diff.RawTextIgnoreAllWhitespace;
-import org.eclipse.jgit.diff.RawTextIgnoreLeadingWhitespace;
-import org.eclipse.jgit.diff.RawTextIgnoreTrailingWhitespace;
-import org.eclipse.jgit.diff.RawTextIgnoreWhitespaceChange;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
-import org.eclipse.jgit.errors.CorruptObjectException;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.AbbreviatedObjectId;
 import org.eclipse.jgit.lib.Constants;
@@ -35,11 +31,7 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.patch.FileHeader;
-import org.eclipse.jgit.patch.HunkHeader;
-import org.eclipse.jgit.patch.FileHeader.PatchType;
 import org.eclipse.jgit.util.QuotedString;
-import org.eclipse.jgit.util.io.DisabledOutputStream;
 
 /**
  * Format an {@link EditList} as a Git style unified patch script.
@@ -61,9 +53,7 @@ public class LineContextDiffer {
 
 	private int abbreviationLength;
 
-	private RawText.Factory rawTextFactory = RawText.FACTORY;
-
-	private int bigFileThreshold = 50 * 1024 * 1024;
+	private int bigFileThreshold = 1 * 1024 * 1024;
 
 	private final Repository repository;
 
@@ -73,7 +63,6 @@ public class LineContextDiffer {
 	public LineContextDiffer(Repository repository) {
 		this.repository = repository;
 		CoreConfig cfg = repository.getConfig().get(CoreConfig.KEY);
-		bigFileThreshold = cfg.getStreamFileThreshold();
 		setContext(3);
 		setAbbreviationLength(7);
 	}
@@ -104,23 +93,6 @@ public class LineContextDiffer {
 			throw new IllegalArgumentException(
 					JGitText.get().abbreviationLengthMustBeNonNegative);
 		abbreviationLength = count;
-	}
-
-	/**
-	 * Set the helper that constructs difference output.
-	 * 
-	 * @param type
-	 *            the factory to create different output. Different types of
-	 *            factories can produce different whitespace behavior, for
-	 *            example.
-	 * @see RawText#FACTORY
-	 * @see RawTextIgnoreAllWhitespace#FACTORY
-	 * @see RawTextIgnoreLeadingWhitespace#FACTORY
-	 * @see RawTextIgnoreTrailingWhitespace#FACTORY
-	 * @see RawTextIgnoreWhitespaceChange#FACTORY
-	 */
-	public void setRawTextFactory(RawText.Factory type) {
-		rawTextFactory = type;
 	}
 
 	/**
@@ -183,9 +155,9 @@ public class LineContextDiffer {
 				//out.write(encodeASCII("Binary files differ\n"));
 				return emptyList();
 			} else {
-				RawText a = rawTextFactory.create(aRaw);
-				RawText b = rawTextFactory.create(bRaw);
-				return formatEdits(a, b, new MyersDiff(a, b).getEdits());
+				RawText a = new RawText(aRaw);
+				RawText b = new RawText(bRaw);
+				return formatEdits(a, b, MyersDiff.INSTANCE.diff(DEFAULT, a, b));
 			}
 		}
 	}
@@ -357,68 +329,6 @@ public class LineContextDiffer {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-
-	/**
-	 * Creates a {@link FileHeader} representing the given {@link DiffEntry}
-	 * <p>
-	 * This method does not use the OutputStream associated with this
-	 * DiffFormatter instance. It is therefore safe to instantiate this
-	 * DiffFormatter instance with a {@link DisabledOutputStream} if this method
-	 * is the only one that will be used.
-	 * 
-	 * @param ent
-	 *            the DiffEntry to create the FileHeader for
-	 * @return a FileHeader representing the DiffEntry. The FileHeader's buffer
-	 *         will contain only the header of the diff output. It will also
-	 *         contain one {@link HunkHeader}.
-	 * @throws IOException
-	 *             the stream threw an exception while writing to it, or one of
-	 *             the blobs referenced by the DiffEntry could not be read.
-	 * @throws CorruptObjectException
-	 *             one of the blobs referenced by the DiffEntry is corrupt.
-	 * @throws MissingObjectException
-	 *             one of the blobs referenced by the DiffEntry is missing.
-	 */
-	public FileHeader createFileHeader(DiffEntry ent) throws IOException,
-			CorruptObjectException, MissingObjectException {
-		ByteArrayOutputStream buf = new ByteArrayOutputStream();
-		final EditList editList;
-		final FileHeader.PatchType type;
-
-		writeDiffHeader(buf, ent);
-
-		if (ent.getOldMode() == GITLINK || ent.getNewMode() == GITLINK) {
-			writeGitLinkDiffText(buf, ent);
-			editList = new EditList();
-			type = PatchType.UNIFIED;
-		} else {
-			if (repository == null)
-				throw new IllegalStateException(
-						JGitText.get().repositoryIsRequired);
-			ObjectReader reader = repository.newObjectReader();
-			byte[] aRaw, bRaw;
-			try {
-				aRaw = open(reader, ent.getOldMode(), ent.getOldId());
-				bRaw = open(reader, ent.getNewMode(), ent.getNewId());
-			} finally {
-				reader.release();
-			}
-
-			if (RawText.isBinary(aRaw) || RawText.isBinary(bRaw)) {
-				buf.write(encodeASCII("Binary files differ\n"));
-				editList = new EditList();
-				type = PatchType.BINARY;
-			} else {
-				RawText a = rawTextFactory.create(aRaw);
-				RawText b = rawTextFactory.create(bRaw);
-				editList = new MyersDiff(a, b).getEdits();
-				type = PatchType.UNIFIED;
-			}
-		}
-
-		return new FileHeader(buf.toByteArray(), editList, type);
 	}
 
 	private int findCombinedEnd(final List<Edit> edits, final int i) {
