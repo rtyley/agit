@@ -2,6 +2,7 @@ package com.madgag.agit;
 
 import static android.content.Intent.ACTION_VIEW;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.madgag.agit.GitIntents.gitDirFrom;
 import static com.madgag.agit.MessagingProgressMonitor.GIT_OPERATION_PROGRESS_UPDATE;
 import static com.madgag.agit.RepoDeleter.REPO_DELETE_COMPLETED;
 import static com.madgag.agit.RepoLogActivity.repoLogIntentFor;
@@ -199,7 +200,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
     protected void onResume() {
     	super.onResume();
     	Log.i(TAG, "onResume called!");
-        gitdir=getGitDirFrom(getIntent());
+        gitdir=gitDirFrom(getIntent());
 		((TextView) findViewById(R.id.RepositoryFileLocation)).setText(gitdir.getAbsolutePath());
 		registerReceiver(operationProgressBroadcastReceiver, new IntentFilter("git.operation.progress.update"));
 		
@@ -256,13 +257,6 @@ public class RepositoryManagementActivity extends android.app.Activity {
     	unregisterReceiver(operationProgressBroadcastReceiver);
     	unregisterRecieverForServicePromptRequests();
     }
-
-
-	public static File getGitDirFrom(Intent intent) {
-		File gd=new File(intent.getData().getPath());
-    	Log.i(TAG, "gd is "+gd.getAbsolutePath());
-    	return gd;
-	}
 	
 	public static PendingIntent manageRepoPendingIntent(Repository repository, Context context) {
 		return manageRepoPendingIntent(repository.getDirectory(), context);

@@ -1,5 +1,7 @@
 package com.madgag.agit;
 
+import static com.madgag.agit.GitIntents.gitDirFrom;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -56,7 +58,7 @@ public class RevCommitViewer extends ExpandableListActivity {
 		diffSliderView=(DiffSliderView) findViewById(R.id.RevCommitDiffSlider);
 
 		Intent intent = getIntent();
-		gitdir = RepositoryManagementActivity.getGitDirFrom(intent);
+		gitdir = gitDirFrom(intent);
 
 		try {
 			

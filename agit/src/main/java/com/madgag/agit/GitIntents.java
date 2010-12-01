@@ -16,4 +16,8 @@ public class GitIntents {
 		Log.i(TAG, "gitdir for "+intent+" = "+gitdir.getAbsolutePath());
 		return gitdir;
 	}
+
+	public static void addGitDirTo(Intent intent, File gitdir) {
+		intent.putExtra("gitdir", gitdir.getAbsolutePath());
+	}
 }

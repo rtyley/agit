@@ -1,6 +1,8 @@
 package com.madgag.agit;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.madgag.agit.GitIntents.addGitDirTo;
+import static com.madgag.agit.GitIntents.gitDirFrom;
 
 import java.io.File;
 
@@ -8,10 +10,8 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepository;
-import org.eclipse.jgit.transport.URIish;
 
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,8 +26,7 @@ public class RepoLogActivity extends ListActivity {
 
     public static Intent repoLogIntentFor(File gitdir) {
 		Intent intent = new Intent("git.LOG");
-		intent
-			.putExtra("gitdir", gitdir.getAbsolutePath());
+		addGitDirTo(intent, gitdir);
 		return intent;
 	}
     
@@ -37,7 +36,7 @@ public class RepoLogActivity extends ListActivity {
         
         setContentView(R.layout.rev_commit_list);
 
-        gitdir = GitIntents.gitDirFrom(getIntent());
+        gitdir = gitDirFrom(getIntent());
         
         try {
 			Repository repository=new FileRepository(gitdir);
@@ -62,6 +61,6 @@ public class RepoLogActivity extends ListActivity {
 	@Override
     protected void onResume() {
     	super.onResume();
-        gitdir=RepositoryManagementActivity.getGitDirFrom(getIntent());
+        gitdir=gitDirFrom(getIntent());
     }
 }
