@@ -18,7 +18,7 @@ public class RevCommitListAdapter extends BaseAdapter {
 	private Context m_context;
 	private LayoutInflater m_inflater;
 	private HashMap<String, Bitmap> m_gravatars;
-	private final List<RevCommit> commits;
+	private List<RevCommit> commits;
 
 	/**
 	 * Get the Gravatars of all users in the commit log 
@@ -58,6 +58,11 @@ public class RevCommitListAdapter extends BaseAdapter {
 
 	public long getItemId(int i) {
 		return i;
+	}
+	
+	public void updateWith(List<RevCommit> commits) {
+		this.commits=commits;
+		notifyDataSetChanged();
 	}
 
 	public View getView(int index, View convertView, ViewGroup parent) {

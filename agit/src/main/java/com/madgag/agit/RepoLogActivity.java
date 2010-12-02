@@ -5,8 +5,12 @@ import static com.madgag.agit.GitIntents.addGitDirTo;
 import static com.madgag.agit.GitIntents.gitDirFrom;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepository;
@@ -15,6 +19,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -22,6 +27,8 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class RepoLogActivity extends ListActivity {
+	private static final String TAG = "RepoLogActivity";
+	
     private File gitdir;
 
     public static Intent repoLogIntentFor(Repository repository) {
@@ -43,10 +50,7 @@ public class RepoLogActivity extends ListActivity {
         setGitDirFromIntent();
         
         try {
-			Repository repository=new FileRepository(gitdir);
-			Iterable<RevCommit> commits = new Git(repository).log().call();
-			
-			setListAdapter(new RevCommitListAdapter(this, newArrayList(commits)));
+			setListAdapter(new RevCommitListAdapter(this, commitListForRepo()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -62,10 +66,24 @@ public class RepoLogActivity extends ListActivity {
 		});
     }
 
+	private List<RevCommit> commitListForRepo() throws IOException,
+			NoHeadException {
+		Repository repository=new FileRepository(gitdir);
+		List<RevCommit> commits = newArrayList(new Git(repository).log().call());
+		Log.d(TAG, "Found "+commits.size()+" commits");
+		return commits;
+	}
+
 	@Override
     protected void onResume() {
     	super.onResume();
         setGitDirFromIntent();
+        try {
+        	Log.d(TAG, "Resuming... "+gitdir);
+			((RevCommitListAdapter) getListAdapter()).updateWith(commitListForRepo());
+		} catch (Exception e) {
+			Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+		}
     }
 	
 	
