@@ -1,6 +1,7 @@
 package com.madgag.agit;
 
 import static android.content.Intent.ACTION_VIEW;
+import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
 
 import java.io.File;
 
@@ -78,17 +79,7 @@ public class RepositoryListActivity extends ListActivity {
     
     protected void onListItemClick(ListView l, View v, int position, long id) {
         String gitdir=((TextView)v.findViewById(android.R.id.text1)).getText().toString();
-        Uri gitdirUri = Uri.fromFile(new File(gitdir));
-        startActivity(new Intent(ACTION_VIEW, gitdirUri, this, RepositoryManagementActivity.class));
-//        String action = getIntent().getAction();
-//        if (Intent.ACTION_PICK.equals(action) || Intent.ACTION_GET_CONTENT.equals(action)) {
-//            // The caller is waiting for us to return a note selected by
-//            // the user.  The have clicked on one, so return it now.
-//            setResult(RESULT_OK, new Intent().setData(uri));
-//        } else {
-//            // Launch activity to view/edit the currently selected item
-//            startActivity(new Intent(Intent.ACTION_EDIT, uri));
-//        }
+        startActivity(manageRepoIntent(new File(gitdir)));
     }
 
 }

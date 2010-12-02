@@ -10,6 +10,7 @@
 			android:label="@string/app_name">
 			<intent-filter>
 				<action android:name="git.repo.MANAGE" />
+				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
