@@ -41,8 +41,7 @@
 
 		<activity android:name="RepoLogActivity">
 			<intent-filter>
-				<action android:name="git.log" />
-				<data android:scheme="file" />
+				<action android:name="git.LOG" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
@@ -55,6 +54,7 @@
 		</activity>
 		<activity android:name="RevCommitViewer">
 			<intent-filter>
+				<action android:name="git.view.COMMIT" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>

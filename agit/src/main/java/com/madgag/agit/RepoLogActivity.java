@@ -3,6 +3,7 @@ package com.madgag.agit;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.GitIntents.addGitDirTo;
 import static com.madgag.agit.GitIntents.gitDirFrom;
+import static com.madgag.agit.RevCommitViewer.revCommitViewIntentFor;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,9 +60,8 @@ public class RepoLogActivity extends ListActivity {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				RevCommit commit = (RevCommit) ((RevCommitListAdapter) parent.getAdapter()).getItem(position);
 				Toast.makeText(RepoLogActivity.this, commit.getName(), Toast.LENGTH_SHORT).show();
-				Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromFile(gitdir),RepoLogActivity.this, RevCommitViewer.class);
-				i.putExtra("commit", commit.name());
-				RepoLogActivity.this.startActivity(i);
+				
+				RepoLogActivity.this.startActivity(revCommitViewIntentFor(gitdir, commit));
 			}
 		});
     }

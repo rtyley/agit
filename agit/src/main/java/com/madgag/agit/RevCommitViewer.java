@@ -1,6 +1,6 @@
 package com.madgag.agit;
 
-import static com.madgag.agit.GitIntents.gitDirFrom;
+import static com.madgag.agit.GitIntents.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +39,15 @@ import com.madgag.agit.DiffSliderView.OnStateUpdateListener;
 import com.madgag.agit.LineContextDiffer.Hunk;
 
 public class RevCommitViewer extends ExpandableListActivity {
+
+    public static Intent revCommitViewIntentFor(File gitdir, RevCommit revCommit) {
+		Intent intent = new Intent("git.view.COMMIT");
+		addGitDirTo(intent, gitdir);
+		addRevCommitTo(intent, revCommit);
+		return intent;
+	}
+	
+
 
 	private static final String TAG = "RevCommitViewer";
 	

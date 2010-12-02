@@ -2,6 +2,8 @@ package com.madgag.agit;
 
 import java.io.File;
 
+import org.eclipse.jgit.revwalk.RevCommit;
+
 import android.content.Intent;
 import android.util.Log;
 
@@ -19,5 +21,9 @@ public class GitIntents {
 
 	public static void addGitDirTo(Intent intent, File gitdir) {
 		intent.putExtra("gitdir", gitdir.getAbsolutePath());
+	}
+	
+	public static void addRevCommitTo(Intent intent, RevCommit revCommit) {
+		intent.putExtra("commit", revCommit.name());
 	}
 }
