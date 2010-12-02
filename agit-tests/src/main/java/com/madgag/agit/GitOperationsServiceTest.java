@@ -95,8 +95,10 @@ public class GitOperationsServiceTest extends ServiceTestCase<GitOperationsServi
 		return context.getCurrentOperation();
 	}
 	
+	private static long unique_number=currentTimeMillis();
+	
 	public static File newFolder() {
 		File path = new File(Environment.getExternalStorageDirectory(),"agit-test-repos");
-		return new File(path, ""+currentTimeMillis());
+		return new File(path, ""+(unique_number++));
 	}
 }

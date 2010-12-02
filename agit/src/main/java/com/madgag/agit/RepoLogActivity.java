@@ -24,6 +24,10 @@ import android.widget.AdapterView.OnItemClickListener;
 public class RepoLogActivity extends ListActivity {
     private File gitdir;
 
+    public static Intent repoLogIntentFor(Repository repository) {
+		return repoLogIntentFor(repository.getDirectory());
+	}
+    
     public static Intent repoLogIntentFor(File gitdir) {
 		Intent intent = new Intent("git.LOG");
 		addGitDirTo(intent, gitdir);
