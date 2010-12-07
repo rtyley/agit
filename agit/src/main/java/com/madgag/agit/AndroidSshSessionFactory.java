@@ -22,7 +22,7 @@ public class AndroidSshSessionFactory extends SshConfigSessionFactory {
 	private final PromptHelper promptHelper;
 	private final RepositoryOperationContext operationContext;
 	
-	AndroidSshSessionFactory(RepositoryOperationContext operationContext, PromptHelper promptHelper) {
+	public AndroidSshSessionFactory(RepositoryOperationContext operationContext, PromptHelper promptHelper) {
 		this.operationContext = operationContext;
 		this.promptHelper = promptHelper;
 	}
