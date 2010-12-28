@@ -23,7 +23,7 @@
 		<dependency>
 			<groupId>com.madgag</groupId>
 			<artifactId>org.eclipse.jgit</artifactId>
-			<version>0.9.9.3-UNOFFICIAL-ROBERTO-RELEASE-SNAPSHOT</version>
+			<version>0.10.99.0</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
