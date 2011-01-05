@@ -49,4 +49,9 @@ public class AndroidFS extends FS {
 	public String toString() {
 		return getClass().getSimpleName()+"["+context+"]";
 	}
+
+	@Override
+	public File gitPrefix() {
+		return null; // there is no C-GIT on this platform...
+	}
 }
