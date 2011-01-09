@@ -59,7 +59,9 @@ public class RepositoryOperationContext {
 	
 
 
-	private RepositoryManagementActivity repositoryManagementActivity;	private void showStatusBarNotificationFor(OpPrompt<?> opPrompt) {
+	private RepositoryManagementActivity repositoryManagementActivity;
+	
+	private void showStatusBarNotificationFor(OpPrompt<?> opPrompt) {
 		OpNotification opNotification = opPrompt.getOpNotification();
 		Notification n = createNotificationWith(opNotification);
 		n.flags |= FLAG_AUTO_CANCEL;
@@ -69,17 +71,13 @@ public class RepositoryOperationContext {
 	public RepositoryOperationContext(Repository repository, GitOperationsService service) {
 		this.repository = repository;
 		this.service = service;
-		this.ongoingOpNotificationId = hashCode();
+		this.ongoingOpNotificationId = repository.getDirectory().getAbsoluteFile().hashCode();
 		this.opCompletionNotificationId = ongoingOpNotificationId;
 		this.promptNotificationId = ongoingOpNotificationId+1;
 		promptHelper = new PromptHelper(TAG);
 		promptHelper.setHandler(promptHandler);
 		manageGitRepo = manageRepoPendingIntent(getRepository(), service);
 	}
-	
-
-	
-	
 	
 	public Repository getRepository() {
 		return repository;
@@ -134,10 +132,6 @@ public class RepositoryOperationContext {
 		completedNotification.flags |= FLAG_AUTO_CANCEL;
 		service.getNotificationManager().notify(opCompletionNotificationId, completedNotification);
 	}
-
-	public PendingIntent getRMAPendingIntent() {
-		return manageGitRepo;
-	}
 	
 	public Intent getRMAIntent() {
 		return manageRepoIntent(getRepository().getDirectory());
@@ -187,6 +181,7 @@ public class RepositoryOperationContext {
 	public Notification createNotificationWith(OpNotification opNotification) {
 		Notification n=new Notification(opNotification.getDrawable(), opNotification.getTickerText(), currentTimeMillis());
 		n.setLatestEventInfo(getService(), opNotification.getEventTitle(), opNotification.getEventDetail(), manageGitRepo);
+		Log.i(TAG, "createNotificationWith... and I am "+repository.getDirectory());
 		return n;
 	}
 

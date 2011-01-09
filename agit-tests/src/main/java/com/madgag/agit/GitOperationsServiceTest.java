@@ -1,6 +1,5 @@
 package com.madgag.agit;
 
-import static android.R.drawable.stat_sys_warning;
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.Thread.sleep;
@@ -13,19 +12,14 @@ import java.io.File;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.URIish;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.core.Is;
 
-import com.madgag.agit.GitOperationsService.GitOperationsBinder;
-import com.madgag.agit.operations.GitAsyncTask;
-import com.madgag.agit.operations.OpNotification;
-
-import android.app.Notification;
 import android.content.Intent;
 import android.os.Environment;
 import android.test.ServiceTestCase;
 import android.util.Log;
+
+import com.madgag.agit.operations.GitAsyncTask;
+import com.madgag.agit.operations.OpNotification;
 
 public class GitOperationsServiceTest extends ServiceTestCase<GitOperationsService> {
 	
@@ -36,13 +30,8 @@ public class GitOperationsServiceTest extends ServiceTestCase<GitOperationsServi
 	}
 	
 	public void testCanPerformSimpleReadOnlyCloneFromGitHub() throws Exception {
-		URIish uri= new URIish("git://github.com/agittest/small-project.git");
 		File gitdir=new File(newFolder(),DOT_GIT);
-		Intent cloneIntent = cloneOperationIntentFor(uri, gitdir);
-        cloneIntent.setClass(getContext(), GitOperationsService.class);
-        
-        Log.i(TAG, "About to start service with "+cloneIntent+" gitdir="+gitdir);
-        startService(cloneIntent);
+		startServiceCloning(new URIish("git://github.com/agittest/small-project.git"), gitdir);
         
         RepositoryOperationContext repositoryOperationContext = getService().getOrCreateRepositoryOperationContextFor(gitdir);
 		GitAsyncTask gitOperation = waitForOperationIn(repositoryOperationContext);
@@ -55,6 +44,12 @@ public class GitOperationsServiceTest extends ServiceTestCase<GitOperationsServi
         assertTrue(readme.exists());
         assertTrue(repository.hasObject(ObjectId.fromString("9e0b5e42b3e1c59bc83b55142a8c50dfae36b144")));
         assertFalse(repository.hasObject(ObjectId.fromString("111111111111111111111111111111111111cafe")));
+	}
+
+	private void startServiceCloning(URIish uri, File gitdir) {
+		Intent cloneIntent = cloneOperationIntentFor(uri, gitdir);
+        Log.i(TAG, "About to start service with "+cloneIntent+" gitdir="+gitdir);
+        startService(cloneIntent);
 	}
 	
 //	public void testCanShowAPromptToTheUser() throws Exception {

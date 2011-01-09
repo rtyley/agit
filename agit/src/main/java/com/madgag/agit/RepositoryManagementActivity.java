@@ -202,6 +202,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
     	super.onResume();
     	Log.i(TAG, "onResume called!");
         gitdir=gitDirFrom(getIntent());
+        Log.i(TAG, "onResume called with gitdir="+gitdir);
 		((TextView) findViewById(R.id.RepositoryFileLocation)).setText(gitdir.getAbsolutePath());
 		registerReceiver(operationProgressBroadcastReceiver, new IntentFilter("git.operation.progress.update"));
 		
