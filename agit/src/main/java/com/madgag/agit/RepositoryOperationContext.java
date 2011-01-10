@@ -37,7 +37,7 @@ public class RepositoryOperationContext {
 	private final GitOperationsService service;
 	private final Repository repository;
 	public final int opCompletionNotificationId,ongoingOpNotificationId,promptNotificationId;
-	public final PendingIntent manageGitRepo;
+	// private final PendingIntent manageGitRepo;
 	private GitAsyncTask currentOperation;
 
 	private final PromptHelper promptHelper;
@@ -61,12 +61,7 @@ public class RepositoryOperationContext {
 
 	private RepositoryManagementActivity repositoryManagementActivity;
 	
-	private void showStatusBarNotificationFor(OpPrompt<?> opPrompt) {
-		OpNotification opNotification = opPrompt.getOpNotification();
-		Notification n = createNotificationWith(opNotification);
-		n.flags |= FLAG_AUTO_CANCEL;
-		service.getNotificationManager().notify(promptNotificationId, n);
-	}
+
 
 	public RepositoryOperationContext(Repository repository, GitOperationsService service) {
 		this.repository = repository;
@@ -76,7 +71,18 @@ public class RepositoryOperationContext {
 		this.promptNotificationId = ongoingOpNotificationId+1;
 		promptHelper = new PromptHelper(TAG);
 		promptHelper.setHandler(promptHandler);
-		manageGitRepo = manageRepoPendingIntent(getRepository(), service);
+		// manageGitRepo = createManageRepoPendingIntent();
+	}
+
+	private PendingIntent createManageRepoPendingIntent() {
+		return manageRepoPendingIntent(repository, service);
+	}
+
+	private void showStatusBarNotificationFor(OpPrompt<?> opPrompt) {
+		OpNotification opNotification = opPrompt.getOpNotification();
+		Notification n = createNotificationWith(opNotification);
+		n.flags |= FLAG_AUTO_CANCEL;
+		service.getNotificationManager().notify(promptNotificationId, n);
 	}
 	
 	public Repository getRepository() {
@@ -130,6 +136,7 @@ public class RepositoryOperationContext {
     		Log.i(TAG, "stopForeground NPE - see http://code.google.com/p/android/issues/detail?id=12117",e);
     	}
 		completedNotification.flags |= FLAG_AUTO_CANCEL;
+		Log.i(TAG, "notifyCompletion() "+this+" : "+completedNotification);
 		service.getNotificationManager().notify(opCompletionNotificationId, completedNotification);
 	}
 	
@@ -180,9 +187,14 @@ public class RepositoryOperationContext {
 
 	public Notification createNotificationWith(OpNotification opNotification) {
 		Notification n=new Notification(opNotification.getDrawable(), opNotification.getTickerText(), currentTimeMillis());
-		n.setLatestEventInfo(getService(), opNotification.getEventTitle(), opNotification.getEventDetail(), manageGitRepo);
+		n.setLatestEventInfo(getService(), opNotification.getEventTitle(), opNotification.getEventDetail(), createManageRepoPendingIntent());
 		Log.i(TAG, "createNotificationWith... and I am "+repository.getDirectory());
 		return n;
 	}
 
+	@Override
+	public String toString() {
+		return getClass().getSimpleName()+"["+repository.getDirectory()+"]";
+	}
+	
 }

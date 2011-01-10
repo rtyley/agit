@@ -197,10 +197,14 @@ public class RepositoryManagementActivity extends android.app.Activity {
 		}
 	}
 	
+	@Override
+	protected void onNewIntent(Intent newIntent) {
+		Log.i(TAG, "onNewIntent called with "+newIntent+" "+gitDirFrom(newIntent));
+	}
+	
     @Override
     protected void onResume() {
     	super.onResume();
-    	Log.i(TAG, "onResume called!");
         gitdir=gitDirFrom(getIntent());
         Log.i(TAG, "onResume called with gitdir="+gitdir);
 		((TextView) findViewById(R.id.RepositoryFileLocation)).setText(gitdir.getAbsolutePath());
@@ -264,9 +268,10 @@ public class RepositoryManagementActivity extends android.app.Activity {
 		return manageRepoPendingIntent(repository.getDirectory(), context);
 	}
 	public static PendingIntent manageRepoPendingIntent(File gitdir,Context context) {
+		Log.i(TAG, "manageRepoPendingIntent yeah - creating with "+gitdir);
 		Intent intentForNotification = manageRepoIntent(gitdir);
         intentForNotification.setFlags(FLAG_ACTIVITY_NEW_TASK);
-		return PendingIntent.getActivity(context, 0, intentForNotification, 0);
+		return PendingIntent.getActivity(context, 0, intentForNotification, PendingIntent.FLAG_ONE_SHOT);
 	}
 
 	public static Intent manageRepoIntent(File gitdir) {
