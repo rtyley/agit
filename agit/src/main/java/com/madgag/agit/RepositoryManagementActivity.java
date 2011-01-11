@@ -1,6 +1,5 @@
 package com.madgag.agit;
 
-import static android.content.Intent.ACTION_VIEW;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.madgag.agit.GitIntents.addGitDirTo;
 import static com.madgag.agit.GitIntents.gitDirFrom;
@@ -21,10 +20,10 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.DialogInterface.OnCancelListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -271,7 +270,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 		Log.i(TAG, "manageRepoPendingIntent yeah - creating with "+gitdir);
 		Intent intentForNotification = manageRepoIntent(gitdir);
         intentForNotification.setFlags(FLAG_ACTIVITY_NEW_TASK);
-		return PendingIntent.getActivity(context, 0, intentForNotification, PendingIntent.FLAG_ONE_SHOT);
+		return PendingIntent.getActivity(context, gitdir.hashCode(), intentForNotification, 0);
 	}
 
 	public static Intent manageRepoIntent(File gitdir) {
