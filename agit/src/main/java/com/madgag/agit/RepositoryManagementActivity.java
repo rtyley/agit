@@ -55,7 +55,14 @@ public class RepositoryManagementActivity extends android.app.Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.repo_management);
-        bindService(new Intent(this,GitOperationsService.class), new ServiceConnection() {
+        bindService(new Intent(this,GitOperationsService.class), serviceConnectionToRegisterThisAsManagementUI(), BIND_AUTO_CREATE);
+        buttonUp(R.id.FetchButton, clickToFetch());
+        buttonUp(R.id.DeleteButton,clickToDelete());
+        buttonUp(R.id.LogButton,clickToShowLog());
+    }
+
+	private ServiceConnection serviceConnectionToRegisterThisAsManagementUI() {
+		return new ServiceConnection() {
 			public void onServiceDisconnected(ComponentName name) {
 				Log.i(TAG, "onServiceDisconnected - losing "+repositoryOperationContext);
 				repositoryOperationContext=null;
@@ -67,28 +74,34 @@ public class RepositoryManagementActivity extends android.app.Activity {
 				Log.i(TAG, "bound opService="+repositoryOperationContext);
 				updateUIToReflectServicePromptRequests();
 			}
-		}, BIND_AUTO_CREATE);
-        buttonUp(R.id.FetchButton, new OnClickListener() {
+		};
+	}
+
+	private OnClickListener clickToFetch() {
+		return new OnClickListener() {
 			public void onClick(View v) {
 				startService(new Intent("git.FETCH").putExtra("gitdir", gitdir.getAbsolutePath()));
 			}
-		});
-        buttonUp(R.id.DeleteButton,new OnClickListener() {
+		};
+	}
+
+	private OnClickListener clickToDelete() {
+		return new OnClickListener() {
 			public void onClick(View v) {
 				showDialog(DELETION_DIALOG);
 				new RepoDeleter(gitdir, RepositoryManagementActivity.this).execute();
 			}
-		});
-        buttonUp(R.id.LogButton,new OnClickListener() {
-			public void onClick(View v) {
-				startActivity(repoLogIntentFor(gitdir));
-			}			
-		});
-    }
+		};
+	}
+
+	private OnClickListener clickToShowLog() {
+		return new OnClickListener() {
+			public void onClick(View v) { startActivity(repoLogIntentFor(gitdir)); }			
+		};
+	}
     
     private void buttonUp(int id, OnClickListener listener) {
-    	Button button = (Button) findViewById(id);
-		button.setOnClickListener(listener);
+    	((Button) findViewById(id)).setOnClickListener(listener);
     }
     
     
