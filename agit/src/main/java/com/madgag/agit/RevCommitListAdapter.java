@@ -97,7 +97,7 @@ public class RevCommitListAdapter extends BaseAdapter {
 		}
 		
 		public void updateViewFor(RevCommit commit) {
-			commit_date.setText(commitDateTextFor(commit));
+			commit_date.setText(commitDateTextFor(commit)+" - "+commit.getCommitterIdent().getName());
 			//gravatar.setImageBitmap(gravatar.get(m_data.getJSONObject(index).getJSONObject("author").getString("login")));
 			commit_shortdesc.setText(commit.getShortMessage());
 		}
