@@ -83,6 +83,10 @@ public class RepositoryOperationContext {
 		service.getNotificationManager().notify(promptNotificationId, n);
 	}
 	
+	void clearPromptNotificationFromStatusBar() {
+		service.getNotificationManager().cancel(promptNotificationId);
+	}
+	
 	public Repository getRepository() {
 		return repository;
 	}
