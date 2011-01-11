@@ -60,7 +60,8 @@ public class CloneLauncherActivity extends Activity {
 			
 			public void afterTextChanged(Editable gitDirEditText) { updateUIWithValidation(); }
 		};
-		((TextView) findViewById(R.id.GitDirEditText)).addTextChangedListener(watcher);
+		cloneUrlEditText.addTextChangedListener(watcher);
+		gitDirEditText.addTextChangedListener(watcher);
     }
     
     protected void updateUIWithValidation() {
