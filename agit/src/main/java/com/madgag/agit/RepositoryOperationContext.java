@@ -16,6 +16,7 @@ import org.eclipse.jgit.transport.SshTransport;
 import org.eclipse.jgit.transport.Transport;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
@@ -37,7 +38,7 @@ public class RepositoryOperationContext {
 	private final GitOperationsService service;
 	private final Repository repository;
 	public final int opCompletionNotificationId,ongoingOpNotificationId,promptNotificationId;
-	// private final PendingIntent manageGitRepo;
+	private final PendingIntent manageGitRepo;
 	private GitAsyncTask currentOperation;
 
 	private final PromptHelper promptHelper;
@@ -60,6 +61,7 @@ public class RepositoryOperationContext {
 
 
 	private RepositoryManagementActivity repositoryManagementActivity;
+
 	
 
 
@@ -67,15 +69,11 @@ public class RepositoryOperationContext {
 		this.repository = repository;
 		this.service = service;
 		this.ongoingOpNotificationId = repository.getDirectory().getAbsoluteFile().hashCode();
-		this.opCompletionNotificationId = ongoingOpNotificationId;
-		this.promptNotificationId = ongoingOpNotificationId+1;
+		this.opCompletionNotificationId = ongoingOpNotificationId+1;
+		this.promptNotificationId = opCompletionNotificationId+1;
 		promptHelper = new PromptHelper(TAG);
 		promptHelper.setHandler(promptHandler);
-		// manageGitRepo = createManageRepoPendingIntent();
-	}
-
-	private PendingIntent createManageRepoPendingIntent() {
-		return manageRepoPendingIntent(repository, service);
+		manageGitRepo = manageRepoPendingIntent(repository, service);
 	}
 
 	private void showStatusBarNotificationFor(OpPrompt<?> opPrompt) {
@@ -189,7 +187,7 @@ public class RepositoryOperationContext {
 
 	public Notification createNotificationWith(OpNotification opNotification) {
 		Notification n=new Notification(opNotification.getDrawable(), opNotification.getTickerText(), currentTimeMillis());
-		n.setLatestEventInfo(getService(), opNotification.getEventTitle(), opNotification.getEventDetail(), createManageRepoPendingIntent());
+		n.setLatestEventInfo(getService(), opNotification.getEventTitle(), opNotification.getEventDetail(), manageGitRepo);
 		Log.i(TAG, "createNotificationWith... and I am "+repository.getDirectory());
 		return n;
 	}
