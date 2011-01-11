@@ -135,9 +135,11 @@ public class RepositoryOperationContext {
 		} catch (NullPointerException e) {
     		Log.i(TAG, "stopForeground NPE - see http://code.google.com/p/android/issues/detail?id=12117",e);
     	}
+		NotificationManager notificationManager = service.getNotificationManager();
+		notificationManager.cancel(ongoingOpNotificationId);
 		completedNotification.flags |= FLAG_AUTO_CANCEL;
 		Log.i(TAG, "notifyCompletion() "+this+" : "+completedNotification);
-		service.getNotificationManager().notify(opCompletionNotificationId, completedNotification);
+		notificationManager.notify(opCompletionNotificationId, completedNotification);
 	}
 	
 	public Intent getRMAIntent() {
