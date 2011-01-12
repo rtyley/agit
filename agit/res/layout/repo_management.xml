@@ -21,4 +21,10 @@
 	android:id="@+id/GitOperationStatus"
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" android:text="Status..."/>
+<ListView
+		android:id="@android:id/list"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:cacheColorHint="#FFF">
+	</ListView> 
 </LinearLayout>

@@ -7,6 +7,7 @@ import static com.madgag.agit.RepositoryManagementActivity.manageRepoPendingInte
 import static java.lang.System.currentTimeMillis;
 
 import org.connectbot.service.PromptHelper;
+import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.errors.NotSupportedException;
 import org.eclipse.jgit.errors.TransportException;
 import org.eclipse.jgit.lib.Repository;
@@ -199,6 +200,10 @@ public class RepositoryOperationContext {
 	@Override
 	public String toString() {
 		return getClass().getSimpleName()+"["+repository.getDirectory()+"]";
+	}
+
+	public Git getGit() {
+		return new Git(repository);
 	}
 	
 }

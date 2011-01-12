@@ -171,9 +171,11 @@ public class CloneLauncherActivity extends Activity {
     
 	private File defaultRepoDirFor(URIish uri) {
 		File reposDir=new File(Environment.getExternalStorageDirectory(),"git-repos");
-		String localName = uri.getHumanishName();
-		File repoDir=new File(reposDir,localName);
-		return repoDir;
+		try {
+			return new File(reposDir, uri.getHumanishName());
+		} catch (IllegalArgumentException e) {
+			return new File(reposDir, "repo");
+		}
 	}
 
 }

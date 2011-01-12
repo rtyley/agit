@@ -46,6 +46,13 @@
 			</intent-filter>
 		</activity>
 		
+		<activity android:name="BranchViewer">
+			<intent-filter>
+				<action android:name="git.view.BRANCH" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+		
 		<activity android:name="RepositoryListActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
