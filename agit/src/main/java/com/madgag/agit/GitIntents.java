@@ -1,9 +1,15 @@
 package com.madgag.agit;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.RepositoryCache;
+import org.eclipse.jgit.lib.RepositoryCache.FileKey;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.util.FS;
 
 import android.content.Intent;
 import android.util.Log;
@@ -34,6 +40,14 @@ public class GitIntents {
 	
 	public static void addRevCommitTo(Intent intent, RevCommit revCommit) {
 		intent.putExtra("commit", revCommit.name());
+	}
+
+	public static Repository repositoryFrom(Intent intent) {
+		try {
+			return RepositoryCache.open(FileKey.lenient(gitDirFrom(intent), FS.DETECTED));
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }

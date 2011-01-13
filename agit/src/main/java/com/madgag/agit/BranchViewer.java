@@ -4,7 +4,6 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.GitIntents.addBranchTo;
 import static com.madgag.agit.GitIntents.addGitDirTo;
 import static com.madgag.agit.GitIntents.branchNameFrom;
-import static com.madgag.agit.GitIntents.gitDirFrom;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,13 +12,12 @@ import java.util.List;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.storage.file.FileRepository;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ListView;
 
 public class BranchViewer extends android.app.Activity {
 
@@ -32,23 +30,25 @@ public class BranchViewer extends android.app.Activity {
 
 	private static final String TAG = "BranchViewer";
 	
-	private Repository repository;
+    private Repository repository;
+	private RevCommitListView revCommitListView;
+	
 	private Ref branch;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.branch_view);
-		Intent intent = getIntent();
-		File gitdir = gitDirFrom(intent);
+		revCommitListView = (RevCommitListView) findViewById(android.R.id.list);
+		
+		repository = GitIntents.repositoryFrom(getIntent());
 		try {
-			repository = new FileRepository(gitdir);
-			branch = repository.getRef(branchNameFrom(intent));
+			branch = repository.getRef(branchNameFrom(getIntent()));
 		} catch (IOException e) {
 			Log.e(TAG, "Couldn't get branch ref", e);
 			e.printStackTrace();
 		}
-		((ListView) findViewById(android.R.id.list)).setAdapter(new RevCommitListAdapter(this, commitListForRepo()));
+		revCommitListView.setCommits(repository, commitListForRepo());
 	}
 
 	private List<RevCommit> commitListForRepo() {
@@ -66,5 +66,10 @@ public class BranchViewer extends android.app.Activity {
 		}
 	}
 
-
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		RepositoryCache.close(repository);
+	}
 }

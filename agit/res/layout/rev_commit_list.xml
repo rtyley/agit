@@ -21,11 +21,7 @@
 		android:layout_height="10dip"
 		android:orientation="vertical"
 		android:background="@drawable/shadow" />
-	<ListView
-		android:fastScrollEnabled="true"
-		android:id="@android:id/list"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:cacheColorHint="#FFF">
-	</ListView>
+	
+	<com.madgag.agit.RevCommitListView android:id="@android:id/list"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"  android:cacheColorHint="#FFF"/>
 </LinearLayout>
