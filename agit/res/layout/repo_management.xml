@@ -12,6 +12,9 @@
 	android:textStyle="bold"
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" android:text="..."/>
+    
+    
+
 <Button android:text="Fetch" android:id="@+id/FetchButton" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
 <Button android:text="Log" android:id="@+id/LogButton" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
 
@@ -21,10 +24,24 @@
 	android:id="@+id/GitOperationStatus"
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" android:text="Status..."/>
+    
+    
 <ListView
-		android:id="@android:id/list"
+		android:id="@+id/BranchList"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:cacheColorHint="#FFF">
-	</ListView> 
+		android:layout_height="wrap_content"
+		android:cacheColorHint="#FFF" />
+		
+<ListView
+		android:id="@+id/TagList"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:cacheColorHint="#FFF" />		
+	
+<ListView
+		android:id="@+id/RemoteList"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:cacheColorHint="#FFF" />
+	
 </LinearLayout>

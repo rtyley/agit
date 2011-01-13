@@ -9,6 +9,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.lib.RepositoryCache.FileKey;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.util.FS;
 
 import android.content.Intent;
@@ -34,14 +35,6 @@ public class GitIntents {
 		intent.putExtra("gitdir", gitdir.getAbsolutePath());
 	}
 	
-	public static void addBranchTo(Intent intent, Ref ref) {
-		intent.putExtra("branch", ref.getName());
-	}
-	
-	public static void addRevCommitTo(Intent intent, RevCommit revCommit) {
-		intent.putExtra("commit", revCommit.name());
-	}
-
 	public static Repository repositoryFrom(Intent intent) {
 		try {
 			return RepositoryCache.open(FileKey.lenient(gitDirFrom(intent), FS.DETECTED));
@@ -49,5 +42,6 @@ public class GitIntents {
 			throw new RuntimeException(e);
 		}
 	}
+
 
 }

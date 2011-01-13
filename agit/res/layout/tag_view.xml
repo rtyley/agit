@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/tag_layout_root"
+	android:orientation="vertical"
+	android:background="#FFF"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+
+	<TextView
+         android:id="@+id/tv_tag_viewer_title"
+         android:layout_width="fill_parent"
+         android:layout_height="56dip"
+         android:gravity="center"
+         android:background="@drawable/top_bar"
+         android:textColor="@color/textColor"
+         android:textSize="20dip"
+         android:textStyle="bold" />
+	
+	<ListView 
+		android:id="@android:id/list"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:cacheColorHint="#FFF" />
+</LinearLayout>

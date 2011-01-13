@@ -40,11 +40,8 @@ import com.madgag.agit.LineContextDiffer.Hunk;
 
 public class RevCommitViewer extends ExpandableListActivity {
 
-    public static Intent revCommitViewIntentFor(File gitdir, RevCommit revCommit) {
-		Intent intent = new Intent("git.view.COMMIT");
-		addGitDirTo(intent, gitdir);
-		addRevCommitTo(intent, revCommit);
-		return intent;
+    public static Intent revCommitViewIntentFor(File gitdir, RevCommit commit) {
+		return new GitIntentBuilder("git.view.COMMIT").gitdir(gitdir).commit(commit).toIntent();
 	}
 	
 

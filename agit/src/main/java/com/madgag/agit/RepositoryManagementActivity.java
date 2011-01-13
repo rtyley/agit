@@ -4,28 +4,22 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.madgag.agit.BranchViewer.branchViewerIntentFor;
 import static com.madgag.agit.GitIntents.addGitDirTo;
 import static com.madgag.agit.GitIntents.gitDirFrom;
+import static com.madgag.agit.GitIntents.repositoryFrom;
 import static com.madgag.agit.MessagingProgressMonitor.GIT_OPERATION_PROGRESS_UPDATE;
 import static com.madgag.agit.RepoDeleter.REPO_DELETE_COMPLETED;
 import static com.madgag.agit.RepoLogActivity.repoLogIntentFor;
-import static com.madgag.agit.RevCommitViewer.revCommitViewIntentFor;
-import static org.eclipse.jgit.api.ListBranchCommand.ListMode.ALL;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import org.connectbot.service.PromptHelper;
-import org.eclipse.jgit.api.ListBranchCommand.ListMode;
-import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefDatabase;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.storage.file.FileRepository;
-import org.eclipse.jgit.util.RefMap;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -39,23 +33,19 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.madgag.agit.GitOperationsService.GitOperationsBinder;
 import com.madgag.agit.operations.GitAsyncTask;
@@ -70,7 +60,9 @@ public class RepositoryManagementActivity extends android.app.Activity {
 	final int PROGRESS_DIALOG=0,STRING_ENTRY_DIALOG=1, YES_NO_DIALOG=2;
 	private final int DELETION_DIALOG=3;
 	public static final String TAG = "RepositoryManagementActivity";
-	private File gitdir;
+	
+    private Repository repository;
+	
 	private RepositoryOperationContext repositoryOperationContext;
 	
     /** Called when the activity is first created. */
@@ -78,20 +70,21 @@ public class RepositoryManagementActivity extends android.app.Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.repo_management);
+        repository = repositoryFrom(getIntent());
+        
         bindService(new Intent(this,GitOperationsService.class), serviceConnectionToRegisterThisAsManagementUI(), BIND_AUTO_CREATE);
         buttonUp(R.id.FetchButton, clickToFetch());
         buttonUp(R.id.DeleteButton,clickToDelete());
         buttonUp(R.id.LogButton,clickToShowLog());
         
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-		ListView listView = (ListView) findViewById(android.R.id.list);
-		listView.setAdapter(adapter);
-		listView.setOnItemClickListener(new OnItemClickListener(){
+		ListView branchList = (ListView) findViewById(R.id.BranchList);
+		branchList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1));
+		branchList.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				String branchName = (String) adapter.getItem(position);
 				try {
-					Ref branch = new FileRepository(gitdir).getRef(branchName);
-					RepositoryManagementActivity.this.startActivity(branchViewerIntentFor(gitdir, branch));
+					Ref branch = repository.getRef(branchName);
+					RepositoryManagementActivity.this.startActivity(branchViewerIntentFor(repository.getDirectory(), branch));
 				} catch (IOException e) {}
 				
 			}
@@ -118,7 +111,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 	private OnClickListener clickToFetch() {
 		return new OnClickListener() {
 			public void onClick(View v) {
-				startService(new Intent("git.FETCH").putExtra("gitdir", gitdir.getAbsolutePath()));
+				startService(new GitIntentBuilder("git.FETCH").repository(repository).toIntent());
 			}
 		};
 	}
@@ -127,14 +120,14 @@ public class RepositoryManagementActivity extends android.app.Activity {
 		return new OnClickListener() {
 			public void onClick(View v) {
 				showDialog(DELETION_DIALOG);
-				new RepoDeleter(gitdir, RepositoryManagementActivity.this).execute();
+				new RepoDeleter(repository.getDirectory(), RepositoryManagementActivity.this).execute();
 			}
 		};
 	}
 
 	private OnClickListener clickToShowLog() {
 		return new OnClickListener() {
-			public void onClick(View v) { startActivity(repoLogIntentFor(gitdir)); }			
+			public void onClick(View v) { startActivity(repoLogIntentFor(repository.getDirectory())); }			
 		};
 	}
     
@@ -152,7 +145,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 			} else if (action.equals("git.user.interation.request")) {
 				Log.d(TAG, "I should probably do something helpful");
 			} else if (action.equals(REPO_DELETE_COMPLETED)) {
-				if (intent.getData().equals(Uri.fromFile(gitdir))) {
+				if (intent.getData().equals(Uri.fromFile(repository.getDirectory()))) {
 					finish();
 				}
 			}
@@ -161,8 +154,8 @@ public class RepositoryManagementActivity extends android.app.Activity {
 	
 	BroadcastReceiver deletionBroadcastReceiver = new BroadcastReceiver() {
 		public void onReceive(Context context, Intent intent) {
-			Log.d(TAG, "deletionBroadcastReceiver "+gitdir+" got broadcast : "+intent);
-			if (!gitdir.exists()) {
+			Log.d(TAG, "deletionBroadcastReceiver got broadcast : "+intent);
+			if (!repository.getDirectory().exists()) {
 			//if (intent.getData().equals(Uri.fromFile(gitdir))) {
 				finish();
 			}
@@ -257,9 +250,9 @@ public class RepositoryManagementActivity extends android.app.Activity {
     @Override
     protected void onResume() {
     	super.onResume();
-        gitdir=gitDirFrom(getIntent());
-        Log.i(TAG, "onResume called with gitdir="+gitdir);
-		((TextView) findViewById(R.id.RepositoryFileLocation)).setText(gitdir.getAbsolutePath());
+    	repository = repositoryFrom(getIntent());
+        Log.i(TAG, "onResume called with gitdir="+repository.getDirectory());
+		((TextView) findViewById(R.id.RepositoryFileLocation)).setText(repository.getDirectory().getAbsolutePath());
 		registerReceiver(operationProgressBroadcastReceiver, new IntentFilter("git.operation.progress.update"));
 		
 		registerReceiver(deletionBroadcastReceiver, new IntentFilter(REPO_DELETE_COMPLETED));
@@ -333,37 +326,28 @@ public class RepositoryManagementActivity extends android.app.Activity {
 		return intent;
 	}
 
-	public File getGitDir() {
-		return gitdir;
-	}
-
 	private void updateBranches() {
 		if (repositoryOperationContext==null) {
 			return;
 		}
 		
-		RefDatabase refDatabase = repositoryOperationContext.getRepository().getRefDatabase();
+		RefDatabase refDatabase = repository.getRefDatabase();
 		adapter.clear();
 		try {
 			Map<String, Ref> remoteRefs = refDatabase.getRefs(Constants.R_REMOTES);
 			for (Ref ref : remoteRefs.values()) {
 				adapter.add(ref.getName());
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		
+		} catch (IOException e) { throw new RuntimeException(e); }
 	}
 
-	private void sample(String voo) throws IOException {
-		Map<String, Ref> remoteRefs = repositoryOperationContext.getRepository().getRefDatabase().getRefs(voo);
-		
-		for (Map.Entry<String, Ref> remoteRef : remoteRefs.entrySet()) {
-			Ref ref = remoteRef.getValue();
-			Log.i(TAG, "remoteRef "+voo+"::"+remoteRef.getKey()+" --- "+ref.getName() );
-		}
-	};
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		RepositoryCache.close(repository);
+	}
+
+	public Repository getRepository() {
+		return repository;
+	}
 }

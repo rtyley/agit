@@ -1,8 +1,6 @@
 package com.madgag.agit;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.madgag.agit.GitIntents.addBranchTo;
-import static com.madgag.agit.GitIntents.addGitDirTo;
 import static com.madgag.agit.GitIntents.branchNameFrom;
 
 import java.io.File;
@@ -20,12 +18,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 public class BranchViewer extends android.app.Activity {
-
+    
     public static Intent branchViewerIntentFor(File gitdir, Ref branch) {
-		Intent intent = new Intent("git.view.BRANCH");
-		addGitDirTo(intent, gitdir);
-		addBranchTo(intent, branch);
-		return intent;
+		return new GitIntentBuilder("git.view.BRANCH").gitdir(gitdir).branch(branch).toIntent();
 	}
 
 	private static final String TAG = "BranchViewer";

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Agit</string>
     <string name="enter_clone_url">Enter the url of the git repository to clone:</string>
     <string name="clone_menu_option">Clone...</string>
-    <string name="app_name">Agit</string>
+    <string name="delete_tag_menu_option">Delete Tag</string>
 </resources>

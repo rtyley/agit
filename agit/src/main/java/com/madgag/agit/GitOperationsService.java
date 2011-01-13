@@ -191,7 +191,7 @@ public class GitOperationsService extends Service {
 	}
 
 	public RepositoryOperationContext registerManagementActivity(RepositoryManagementActivity repositoryManagementActivity) {
-		RepositoryOperationContext operationContext = getOrCreateRepositoryOperationContextFor(repositoryManagementActivity.getGitDir());
+		RepositoryOperationContext operationContext = getOrCreateRepositoryOperationContextFor(repositoryManagementActivity.getRepository());
 		operationContext.setManagementActivity(repositoryManagementActivity);
 		return operationContext;
 	}
