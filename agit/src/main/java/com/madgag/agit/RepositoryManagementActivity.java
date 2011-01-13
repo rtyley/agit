@@ -89,6 +89,9 @@ public class RepositoryManagementActivity extends android.app.Activity {
 				} catch (IOException e) {}
 			}
 		});
+		
+		tagList = (ListView) findViewById(R.id.TagList);
+		tagList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1));
     }
 
 	private ServiceConnection serviceConnectionToRegisterThisAsManagementUI() {
@@ -102,7 +105,6 @@ public class RepositoryManagementActivity extends android.app.Activity {
 				GitOperationsService service = ((GitOperationsBinder) binder).getService();
 				repositoryOperationContext=service.registerManagementActivity(RepositoryManagementActivity.this);
 				Log.i(TAG, "bound opService="+repositoryOperationContext);
-				updateBranches();
 				updateUIToReflectServicePromptRequests();
 			}
 		};
@@ -162,6 +164,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 		}
 	};
 	private ListView branchList;
+	private ListView tagList;
 	
 //	private void updateOperationProgressDisplay() {
 //		Log.d(TAG, "Updating Operation Progress display");
@@ -260,6 +263,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 		
 		//repositoryOperationContext.getCurrentOperation().getPromptHelper().;
 		updateBranches();
+		updateTags();
 		updateUIToReflectServicePromptRequests();
     }
     
@@ -325,7 +329,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 	}
 
 	private void updateBranches() {
-		if (repositoryOperationContext==null) {
+		if (repository==null) {
 			return;
 		}
 		
@@ -334,10 +338,25 @@ public class RepositoryManagementActivity extends android.app.Activity {
 		adapter.clear();
 		try {
 			Map<String, Ref> remoteRefs = refDatabase.getRefs(Constants.R_REMOTES);
+			Log.d(TAG, "found "+remoteRefs.size()+" remote branches");
 			for (Ref ref : remoteRefs.values()) {
 				adapter.add(ref.getName());
 			}
 		} catch (IOException e) { throw new RuntimeException(e); }
+	}
+	
+	private void updateTags() {
+		if (repository==null) {
+			return;
+		}
+		
+		ArrayAdapter<String> adapter = (ArrayAdapter<String>) tagList.getAdapter();
+		adapter.clear();
+		Map<String, Ref> tagRefs = repository.getTags();
+		Log.d(TAG, "found "+tagRefs.size()+" tags");
+		for (String tagRef : tagRefs.keySet()) {
+			adapter.add(tagRef);
+		}
 	}
 
 	@Override
