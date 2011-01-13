@@ -44,6 +44,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -77,16 +78,15 @@ public class RepositoryManagementActivity extends android.app.Activity {
         buttonUp(R.id.DeleteButton,clickToDelete());
         buttonUp(R.id.LogButton,clickToShowLog());
         
-		ListView branchList = (ListView) findViewById(R.id.BranchList);
+		branchList = (ListView) findViewById(R.id.BranchList);
 		branchList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1));
 		branchList.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				String branchName = (String) adapter.getItem(position);
+				String branchName = (String) parent.getAdapter().getItem(position);
 				try {
 					Ref branch = repository.getRef(branchName);
 					RepositoryManagementActivity.this.startActivity(branchViewerIntentFor(repository.getDirectory(), branch));
 				} catch (IOException e) {}
-				
 			}
 		});
     }
@@ -161,7 +161,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 			}
 		}
 	};
-	private ArrayAdapter<String> adapter;
+	private ListView branchList;
 	
 //	private void updateOperationProgressDisplay() {
 //		Log.d(TAG, "Updating Operation Progress display");
@@ -321,9 +321,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 	}
 
 	public static Intent manageRepoIntent(File gitdir) {
-		Intent intent = new Intent("git.repo.MANAGE");
-		addGitDirTo(intent, gitdir);
-		return intent;
+		return new GitIntentBuilder("git.repo.MANAGE").gitdir(gitdir).toIntent();
 	}
 
 	private void updateBranches() {
@@ -332,6 +330,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 		}
 		
 		RefDatabase refDatabase = repository.getRefDatabase();
+		ArrayAdapter<String> adapter = (ArrayAdapter<String>) branchList.getAdapter();
 		adapter.clear();
 		try {
 			Map<String, Ref> remoteRefs = refDatabase.getRefs(Constants.R_REMOTES);
