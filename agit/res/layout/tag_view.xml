@@ -16,6 +16,11 @@
          android:textSize="20dip"
          android:textStyle="bold" />
 	
+	<TextView
+         android:id="@+id/tv_tag_tagger"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"/>
+	
 	<ListView 
 		android:id="@android:id/list"
 		android:layout_width="fill_parent"

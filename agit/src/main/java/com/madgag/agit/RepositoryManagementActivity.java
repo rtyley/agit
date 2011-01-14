@@ -8,6 +8,7 @@ import static com.madgag.agit.GitIntents.repositoryFrom;
 import static com.madgag.agit.MessagingProgressMonitor.GIT_OPERATION_PROGRESS_UPDATE;
 import static com.madgag.agit.RepoDeleter.REPO_DELETE_COMPLETED;
 import static com.madgag.agit.RepoLogActivity.repoLogIntentFor;
+import static com.madgag.agit.TagViewer.tagViewerIntentFor;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +54,7 @@ import com.madgag.agit.operations.GitAsyncTask;
 import com.madgag.agit.operations.OpPrompt;
 
 
-public class RepositoryManagementActivity extends android.app.Activity {
+public class RepositoryManagementActivity extends RepositoryActivity {
 
 	private ProgressDialog progressDialog;
 	private AlertDialog stringEntryDialog,yesNoDialog;
@@ -61,8 +62,6 @@ public class RepositoryManagementActivity extends android.app.Activity {
 	final int PROGRESS_DIALOG=0,STRING_ENTRY_DIALOG=1, YES_NO_DIALOG=2;
 	private final int DELETION_DIALOG=3;
 	public static final String TAG = "RepositoryManagementActivity";
-	
-    private Repository repository;
 	
 	private RepositoryOperationContext repositoryOperationContext;
 	
@@ -95,7 +94,7 @@ public class RepositoryManagementActivity extends android.app.Activity {
 		tagList.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				String tagName = (String) parent.getAdapter().getItem(position);
-				RepositoryManagementActivity.this.startActivity(TagViewer.tagViewerIntentFor(repository, tagName));
+				RepositoryManagementActivity.this.startActivity(tagViewerIntentFor(repository, tagName));
 			}
 		});
     }
@@ -363,12 +362,6 @@ public class RepositoryManagementActivity extends android.app.Activity {
 		for (String tagRef : tagRefs.keySet()) {
 			adapter.add(tagRef);
 		}
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		RepositoryCache.close(repository);
 	}
 
 	public Repository getRepository() {

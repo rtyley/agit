@@ -53,6 +53,13 @@
 			</intent-filter>
 		</activity>
 		
+		<activity android:name="TagViewer">
+			<intent-filter>
+				<action android:name="git.view.TAG" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+		
 		<activity android:name="RepositoryListActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
