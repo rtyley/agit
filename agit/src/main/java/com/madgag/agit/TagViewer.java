@@ -2,6 +2,7 @@ package com.madgag.agit;
 
 import static com.madgag.agit.GitIntents.branchNameFrom;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.jgit.lib.Ref;
@@ -10,6 +11,7 @@ import org.eclipse.jgit.lib.RefUpdate.Result;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,9 +20,9 @@ import android.widget.Toast;
 
 public class TagViewer extends android.app.Activity {
 
-//    public static Intent tagViewerIntentFor(File gitdir, Ref tag) {
-//		return new GitIntentBuilder("git.view.TAG").gitdir(gitdir).tag(tag).toIntent();
-//	}
+    public static Intent tagViewerIntentFor(Repository repository, String tagName) {
+		return new GitIntentBuilder("git.view.TAG").repository(repository).tag(tagName).toIntent();
+	}
 
 	private static final String TAG = "TagViewer";
 
@@ -37,7 +39,7 @@ public class TagViewer extends android.app.Activity {
 		
 		repository = GitIntents.repositoryFrom(getIntent());
 		try {
-			tagRef = repository.getRef(branchNameFrom(getIntent()));
+			tagRef = repository.getRef(GitIntents.tagNameFrom(getIntent()));
 		} catch (IOException e) {
 			Log.e(TAG, "Couldn't get tag ref", e);
 			throw new RuntimeException(e);

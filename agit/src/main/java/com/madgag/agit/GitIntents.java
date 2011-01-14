@@ -31,6 +31,10 @@ public class GitIntents {
 		return intent.getStringExtra("branch");
 	}
 	
+	public static String tagNameFrom(Intent intent) {
+		return intent.getStringExtra("tag");
+	}
+	
 	public static void addGitDirTo(Intent intent, File gitdir) {
 		intent.putExtra("gitdir", gitdir.getAbsolutePath());
 	}

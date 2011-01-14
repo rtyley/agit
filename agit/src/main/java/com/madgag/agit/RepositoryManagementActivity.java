@@ -92,6 +92,12 @@ public class RepositoryManagementActivity extends android.app.Activity {
 		
 		tagList = (ListView) findViewById(R.id.TagList);
 		tagList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1));
+		tagList.setOnItemClickListener(new OnItemClickListener(){
+			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+				String tagName = (String) parent.getAdapter().getItem(position);
+				RepositoryManagementActivity.this.startActivity(TagViewer.tagViewerIntentFor(repository, tagName));
+			}
+		});
     }
 
 	private ServiceConnection serviceConnectionToRegisterThisAsManagementUI() {
