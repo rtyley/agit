@@ -3,6 +3,7 @@ package com.madgag.agit;
 import static android.widget.Toast.LENGTH_LONG;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.madgag.agit.GitIntents.addGitDirTo;
+import static com.madgag.agit.GitIntents.repositoryFrom;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.util.Set;
 
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.RemoteConfig;
@@ -91,7 +93,7 @@ public class GitOperationsService extends Service {
 		
 		File gitdir = GitIntents.gitDirFrom(intent);
 		
-		RepositoryOperationContext repositoryOperationContext=getOrCreateRepositoryOperationContextFor(gitdir);
+		RepositoryOperationContext repositoryOperationContext=getOrCreateRepositoryOperationContextFor(repositoryFrom(intent));
 		if (action.equals("git.CLONE")) {
 			String sourceUriString = intent.getStringExtra("source-uri");
 			try {
@@ -162,33 +164,12 @@ public class GitOperationsService extends Service {
     }
 
 	public RepositoryOperationContext getOrCreateRepositoryOperationContextFor(Repository db) {
-		return getOrCreateRepositoryOperationContextFor(db.getDirectory());
-	}
-    
-    RepositoryOperationContext getOrCreateRepositoryOperationContextFor(File gitdir) {
-    	if (!map.containsKey(gitdir)) {
-				map.put(gitdir, new RepositoryOperationContext(fileRepoFor(gitdir),this));
+    	if (!map.containsKey(db.getDirectory())) {
+				map.put(db.getDirectory(), new RepositoryOperationContext(db,this));
 			
     	}
-    	return map.get(gitdir);
+    	return map.get(db.getDirectory());
     }
-
-	private FileRepository fileRepoFor(File gitdir) {
-//		Log.i(TAG, "about to hand over "+this);
-//		AndroidFS androidFS = new AndroidFS(this);
-//		Log.i(TAG, "androidFS="+androidFS);
-		try {
-			FileRepository fileRepo = new FileRepository(
-					new FileRepositoryBuilder()
-						.setGitDir(gitdir)
-						// .setFS(androidFS)
-						.setup());
-			return fileRepo;
-		} catch (IOException e) {
-			Log.i(TAG, "whoop arg "+e);
-			throw new RuntimeException();
-		}
-	}
 
 	public RepositoryOperationContext registerManagementActivity(RepositoryManagementActivity repositoryManagementActivity) {
 		RepositoryOperationContext operationContext = getOrCreateRepositoryOperationContextFor(repositoryManagementActivity.getRepository());

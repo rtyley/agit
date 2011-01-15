@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.connectbot.service.PromptHelper;
+import org.eclipse.jgit.events.IndexChangedEvent;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefDatabase;
@@ -62,6 +63,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 	final int PROGRESS_DIALOG=0,STRING_ENTRY_DIALOG=1, YES_NO_DIALOG=2;
 	private final int DELETION_DIALOG=3;
 	public static final String TAG = "RepositoryManagementActivity";
+	@Override String TAG() { return TAG; }
 	
 	private RepositoryOperationContext repositoryOperationContext;
 	
@@ -70,7 +72,6 @@ public class RepositoryManagementActivity extends RepositoryActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.repo_management);
-        repository = repositoryFrom(getIntent());
         
         bindService(new Intent(this,GitOperationsService.class), serviceConnectionToRegisterThisAsManagementUI(), BIND_AUTO_CREATE);
         buttonUp(R.id.FetchButton, clickToFetch());
@@ -83,8 +84,8 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				String branchName = (String) parent.getAdapter().getItem(position);
 				try {
-					Ref branch = repository.getRef(branchName);
-					RepositoryManagementActivity.this.startActivity(branchViewerIntentFor(repository.getDirectory(), branch));
+					Ref branch = repo().getRef(branchName);
+					RepositoryManagementActivity.this.startActivity(branchViewerIntentFor(repo().getDirectory(), branch));
 				} catch (IOException e) {}
 			}
 		});
@@ -94,7 +95,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 		tagList.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				String tagName = (String) parent.getAdapter().getItem(position);
-				RepositoryManagementActivity.this.startActivity(tagViewerIntentFor(repository, tagName));
+				RepositoryManagementActivity.this.startActivity(tagViewerIntentFor(repo(), tagName));
 			}
 		});
     }
@@ -118,7 +119,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 	private OnClickListener clickToFetch() {
 		return new OnClickListener() {
 			public void onClick(View v) {
-				startService(new GitIntentBuilder("git.FETCH").repository(repository).toIntent());
+				startService(new GitIntentBuilder("git.FETCH").repository(repo()).toIntent());
 			}
 		};
 	}
@@ -127,14 +128,14 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 		return new OnClickListener() {
 			public void onClick(View v) {
 				showDialog(DELETION_DIALOG);
-				new RepoDeleter(repository.getDirectory(), RepositoryManagementActivity.this).execute();
+				new RepoDeleter(gitdir(), RepositoryManagementActivity.this).execute();
 			}
 		};
 	}
 
 	private OnClickListener clickToShowLog() {
 		return new OnClickListener() {
-			public void onClick(View v) { startActivity(repoLogIntentFor(repository.getDirectory())); }			
+			public void onClick(View v) { startActivity(repoLogIntentFor(repo().getDirectory())); }			
 		};
 	}
     
@@ -152,7 +153,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 			} else if (action.equals("git.user.interation.request")) {
 				Log.d(TAG, "I should probably do something helpful");
 			} else if (action.equals(REPO_DELETE_COMPLETED)) {
-				if (intent.getData().equals(Uri.fromFile(repository.getDirectory()))) {
+				if (intent.getData().equals(Uri.fromFile(gitdir()))) {
 					finish();
 				}
 			}
@@ -162,7 +163,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 	BroadcastReceiver deletionBroadcastReceiver = new BroadcastReceiver() {
 		public void onReceive(Context context, Intent intent) {
 			Log.d(TAG, "deletionBroadcastReceiver got broadcast : "+intent);
-			if (!repository.getDirectory().exists()) {
+			if (!gitdir().exists()) {
 			//if (intent.getData().equals(Uri.fromFile(gitdir))) {
 				finish();
 			}
@@ -258,19 +259,21 @@ public class RepositoryManagementActivity extends RepositoryActivity {
     @Override
     protected void onResume() {
     	super.onResume();
-    	repository = repositoryFrom(getIntent());
-        Log.i(TAG, "onResume called with gitdir="+repository.getDirectory());
-		((TextView) findViewById(R.id.RepositoryFileLocation)).setText(repository.getDirectory().getAbsolutePath());
+		((TextView) findViewById(R.id.RepositoryFileLocation)).setText(repo().getDirectory().getAbsolutePath());
 		registerReceiver(operationProgressBroadcastReceiver, new IntentFilter("git.operation.progress.update"));
 		
 		registerReceiver(deletionBroadcastReceiver, new IntentFilter(REPO_DELETE_COMPLETED));
 		registerRecieverForServicePromptRequests();
 		
 		//repositoryOperationContext.getCurrentOperation().getPromptHelper().;
-		updateBranches();
-		updateTags();
+		updateUI();
 		updateUIToReflectServicePromptRequests();
     }
+
+	void updateUI() {
+		updateBranches();
+		updateTags();
+	}
     
     private void registerRecieverForServicePromptRequests() {
     	if (repositoryOperationContext!=null) {
@@ -334,11 +337,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 	}
 
 	private void updateBranches() {
-		if (repository==null) {
-			return;
-		}
-		
-		RefDatabase refDatabase = repository.getRefDatabase();
+		RefDatabase refDatabase = repo().getRefDatabase();
 		ArrayAdapter<String> adapter = (ArrayAdapter<String>) branchList.getAdapter();
 		adapter.clear();
 		try {
@@ -351,13 +350,9 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 	}
 	
 	private void updateTags() {
-		if (repository==null) {
-			return;
-		}
-		
 		ArrayAdapter<String> adapter = (ArrayAdapter<String>) tagList.getAdapter();
 		adapter.clear();
-		Map<String, Ref> tagRefs = repository.getTags();
+		Map<String, Ref> tagRefs = repo().getTags();
 		Log.d(TAG, "found "+tagRefs.size()+" tags");
 		for (String tagRef : tagRefs.keySet()) {
 			adapter.add(tagRef);
@@ -365,6 +360,6 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 	}
 
 	public Repository getRepository() {
-		return repository;
+		return repo();
 	}
 }

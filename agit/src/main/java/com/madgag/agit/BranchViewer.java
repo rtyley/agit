@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import android.content.Intent;
@@ -23,6 +22,7 @@ public class BranchViewer extends RepositoryActivity {
 	}
 
 	private static final String TAG = "BranchViewer";
+	@Override String TAG() { return TAG; }
 	
 	private RevCommitListView revCommitListView;
 	
@@ -35,16 +35,16 @@ public class BranchViewer extends RepositoryActivity {
 		revCommitListView = (RevCommitListView) findViewById(android.R.id.list);
 		
 		try {
-			branch = repository.getRef(branchNameFrom(getIntent()));
+			branch = repo().getRef(branchNameFrom(getIntent()));
 		} catch (IOException e) {
 			Log.e(TAG, "Couldn't get branch ref", e);
 			e.printStackTrace();
 		}
-		revCommitListView.setCommits(repository, commitListForRepo());
+		revCommitListView.setCommits(repo(), commitListForRepo());
 	}
 
 	private List<RevCommit> commitListForRepo() {
-		Git git = new Git(repository);
+		Git git = new Git(repo());
 		Iterable<RevCommit> logWaa;
 		try {
 			logWaa = git.log().add(branch.getObjectId()).call();
@@ -56,5 +56,10 @@ public class BranchViewer extends RepositoryActivity {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	@Override
+	void updateUI() {
+		
 	}
 }

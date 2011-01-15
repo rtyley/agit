@@ -1,5 +1,7 @@
 package com.madgag.agit;
 
+import static java.lang.System.identityHashCode;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -41,7 +43,10 @@ public class GitIntents {
 	
 	public static Repository repositoryFrom(Intent intent) {
 		try {
-			return RepositoryCache.open(FileKey.lenient(gitDirFrom(intent), FS.DETECTED));
+			File gitdir = gitDirFrom(intent);
+			Repository repository = RepositoryCache.open(FileKey.lenient(gitdir, FS.DETECTED));
+			Log.d("GitIntents", "Got repo "+identityHashCode(repository) + " " + repository.getDirectory());
+			return repository;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

@@ -26,27 +26,23 @@ public class TagViewer extends RepositoryActivity {
 	}
 
 	private static final String TAG = "TagViewer";
+	
+	@Override String TAG() { return TAG; }
 
 	private final static int DELETE_ID=Menu.FIRST;
 	
 	private RevTag revTag;
 
 	private Ref tagRef;
+
+	private TextView titleTextView, taggerTextView;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tag_view);
-		try {
-			tagRef = repository.getTags().get(tagNameFrom(getIntent()));	
-			revTag = new RevWalk(repository).parseTag(tagRef.getObjectId());
-			
-			((TextView) findViewById(R.id.tv_tag_viewer_title)).setText(revTag.getTagName());
-			((TextView) findViewById(R.id.tv_tag_tagger)).setText(revTag.getTaggerIdent().getName());
-		} catch (IOException e) {
-			Log.e(TAG, "Couldn't get tag ref", e);
-			throw new RuntimeException(e);
-		}
+		titleTextView = (TextView) findViewById(R.id.tv_tag_viewer_title);
+		taggerTextView = (TextView) findViewById(R.id.tv_tag_tagger);
 	}
 
     @Override
@@ -62,7 +58,7 @@ public class TagViewer extends RepositoryActivity {
         switch (item.getItemId()) {
         case DELETE_ID:
 			try {
-				RefUpdate update = repository.updateRef(tagRef.getName());
+				RefUpdate update = repo().updateRef(tagRef.getName());
 				update.setForceUpdate(true);
 				// update.setNewObjectId(head);
 				// update.setForceUpdate(force || remote);
@@ -76,5 +72,25 @@ public class TagViewer extends RepositoryActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
+    void updateUI() {
+    	Log.d(TAG, "updateUI called");
+    	tagRef = repo().getTags().get(tagNameFrom(getIntent()));	
+    	
+		if (tagRef==null) {
+			titleTextView.setText("unknown");
+			taggerTextView.setText("");
+		} else {
+			try {
+				revTag = new RevWalk(repo()).parseTag(tagRef.getObjectId());
+				titleTextView.setText(revTag.getTagName());
+				taggerTextView.setText(revTag.getTaggerIdent().getName());
+			} catch (IOException e) {
+				Log.e(TAG, "Couldn't get tag ref", e);
+				throw new RuntimeException(e);
+			}
+		}
     }
 }

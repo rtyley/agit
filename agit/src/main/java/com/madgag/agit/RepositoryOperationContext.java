@@ -5,6 +5,7 @@ import static android.app.Notification.FLAG_ONGOING_EVENT;
 import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
 import static com.madgag.agit.RepositoryManagementActivity.manageRepoPendingIntent;
 import static java.lang.System.currentTimeMillis;
+import static java.lang.System.identityHashCode;
 
 import org.connectbot.service.PromptHelper;
 import org.eclipse.jgit.api.Git;
@@ -111,7 +112,9 @@ public class RepositoryOperationContext {
 	public Transport transportFor(RemoteConfig remoteConfig) {
     	Transport tn;
 		try {
-			tn = Transport.open(getRepository(), remoteConfig);
+			Repository repo = getRepository();
+			Log.i(TAG, "Creating transport for repo with "+identityHashCode(repo));
+			tn = Transport.open(repo, remoteConfig);
 		} catch (NotSupportedException e) {
 			throw new RuntimeException(e);
 		}

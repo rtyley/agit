@@ -15,6 +15,7 @@ public class RemoteViewer extends RepositoryActivity {
 	}
 
 	private static final String TAG = "RemoteViewer";
+	@Override String TAG() { return TAG; }
 	
 	private RemoteConfig remote;
 	
@@ -24,9 +25,15 @@ public class RemoteViewer extends RepositoryActivity {
 		setContentView(R.layout.remote_view);
 		
 		try {
-			remote = new RemoteConfig(repository.getConfig(), getIntent().getStringExtra("remote"));
+			remote = new RemoteConfig(repo().getConfig(), getIntent().getStringExtra("remote"));
 		} catch (URISyntaxException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	@Override
+	void updateUI() {
+		// TODO Auto-generated method stub
+		
 	}
 }
