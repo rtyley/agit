@@ -57,9 +57,4 @@ public class BranchViewer extends RepositoryActivity {
 			throw new RuntimeException(e);
 		}
 	}
-	
-	@Override
-	void updateUI() {
-		
-	}
 }

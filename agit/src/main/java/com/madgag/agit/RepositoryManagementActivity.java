@@ -82,20 +82,8 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 		branchList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_2));
 		branchList.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				String branchName = (String) parent.getAdapter().getItem(position);
-				try {
-					Ref branch = repo().getRef(branchName);
-					RepositoryManagementActivity.this.startActivity(branchViewerIntentFor(repo().getDirectory(), branch));
-				} catch (IOException e) {}
-			}
-		});
-		
-		tagList = (ListView) findViewById(R.id.TagList);
-		tagList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1));
-		tagList.setOnItemClickListener(new OnItemClickListener(){
-			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				String tagName = (String) parent.getAdapter().getItem(position);
-				RepositoryManagementActivity.this.startActivity(tagViewerIntentFor(repo(), tagName));
+				RepoDomainType<?> rdt = (RepoDomainType<?>) parent.getAdapter().getItem(position);
+				startActivity(rdt.listIntent());
 			}
 		});
     }

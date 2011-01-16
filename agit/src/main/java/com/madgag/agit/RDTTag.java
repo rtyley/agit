@@ -11,6 +11,9 @@ public class RDTTag extends RepoDomainType<Ref> {
 		super(repository);
 	}
 
+	@Override
+	String name() { return "tag"; }
+	
 	public Collection<Ref> getAll() {
 		return repository.getTags().values();
 	}

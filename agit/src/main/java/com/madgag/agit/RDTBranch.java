@@ -15,6 +15,9 @@ public class RDTBranch extends RepoDomainType<Ref> {
 		super(repository);
 	}
 
+	@Override
+	String name() { return "branch"; }
+	
 	public Collection<Ref> getAll() {
 		RefDatabase refDatabase = repository.getRefDatabase();
 		try {

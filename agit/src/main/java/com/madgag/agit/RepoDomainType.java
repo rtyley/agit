@@ -4,13 +4,17 @@ import java.util.Collection;
 
 import org.eclipse.jgit.lib.Repository;
 
-public abstract class RepoDomainType<E> {
+import android.content.Intent;
+
+public abstract class RepoDomainType<E> { 
 	
 	protected final Repository repository;
 
 	public RepoDomainType(Repository repository) {
 		this.repository = repository;
 	}
+	
+	abstract String name();
 	
 	abstract Collection<E> getAll();
 	
@@ -34,5 +38,10 @@ public abstract class RepoDomainType<E> {
 
 	public CharSequence summariseAll() {
 		return summarise(getAll());
+	}
+
+	public Intent listIntent() {
+		String action = "git."+name()+".LIST";
+		return new GitIntentBuilder(action).repository(repository).toIntent();
 	}
 }

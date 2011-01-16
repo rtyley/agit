@@ -47,8 +47,8 @@ public class RDTypesListAdapter extends BaseAdapter {
 		
 		ViewHolder holder = (ViewHolder) convertView.getTag();
 		
-		holder.updateViewFor(rdtList.get(index));
-
+		RepoDomainType<?> repoDomainType = rdtList.get(index);
+		holder.updateViewFor(repoDomainType);
 		return convertView;
 	}
 

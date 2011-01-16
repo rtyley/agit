@@ -75,9 +75,10 @@ public class TagViewer extends RepositoryActivity {
     }
     
     @Override
-    void updateUI() {
+    public void onContentChanged() {
     	Log.d(TAG, "updateUI called");
     	tagRef = repo().getTags().get(tagNameFrom(getIntent()));	
+    	
     	
 		if (tagRef==null) {
 			titleTextView.setText("unknown");

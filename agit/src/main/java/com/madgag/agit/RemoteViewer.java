@@ -31,9 +31,4 @@ public class RemoteViewer extends RepositoryActivity {
 		}
 	}
 	
-	@Override
-	void updateUI() {
-		// TODO Auto-generated method stub
-		
-	}
 }
