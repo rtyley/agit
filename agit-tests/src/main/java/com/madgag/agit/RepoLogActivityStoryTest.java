@@ -54,7 +54,7 @@ public class RepoLogActivityStoryTest extends ActivityInstrumentationTestCase2<R
 		describeRepos(earlyRepo,laterRepo);
 		
 		setActivityIntent(repoLogIntentFor(earlyRepo));
-		RepoLogActivity activity = getActivity();
+		final RepoLogActivity activity = getActivity();
 		
 		ListView listView = (ListView) activity.getListView();
 		assertTrue(listView.getChildCount()==1);
@@ -70,8 +70,12 @@ public class RepoLogActivityStoryTest extends ActivityInstrumentationTestCase2<R
 		
 		describeRepos(earlyRepo,laterRepo);
 		
+		getInstrumentation().runOnMainSync(new Runnable() {
+			public void run() {
+				getInstrumentation().callActivityOnResume(activity);
+			}
+		});
 		
-		getInstrumentation().callActivityOnResume(activity);
 		
 		// assertTrue(listView.getChildCount()>1); // TODO you know...
 	}

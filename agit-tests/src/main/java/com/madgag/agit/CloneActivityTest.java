@@ -71,7 +71,7 @@ public class CloneActivityTest extends ActivityInstrumentationTestCase2<CloneLau
 		try {
 			Thread.sleep(2000L); // TODO Ah, blaaaaa!
 		} catch (InterruptedException e) {}
-		Set<RepositoryOperationContext> rocs = gitOperationsService.getRepositoryOperationContextsFor(new URIish(smallProjectUri));
+		//Set<RepositoryOperationContext> rocs = gitOperationsService.getRepositoryOperationContextsFor(new URIish(smallProjectUri));
 //		assertTrue("Well, I should be seeing 1 dude "+rocs, rocs.size()==1);
 //		RepositoryOperationContext roc = rocs.iterator().next();
 //		Notification notification = roc.getCurrentOperation().get();

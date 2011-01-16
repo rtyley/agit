@@ -3,17 +3,18 @@ package com.madgag.agit.operations;
 import static android.R.drawable.stat_notify_error;
 import static java.lang.System.currentTimeMillis;
 
-import com.madgag.agit.Progress;
-import com.madgag.agit.ProgressListener;
-import com.madgag.agit.R;
-import com.madgag.agit.RepositoryOperationContext;
-import com.madgag.agit.R.id;
-import com.madgag.agit.R.layout;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.RepositoryCache;
 
 import android.app.Notification;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.RemoteViews;
+
+import com.madgag.agit.Progress;
+import com.madgag.agit.ProgressListener;
+import com.madgag.agit.R;
+import com.madgag.agit.RepositoryOperationContext;
 
 public class GitAsyncTask extends AsyncTask<Void, Progress, OpNotification> implements ProgressListener<Progress> {
 	
@@ -53,8 +54,19 @@ public class GitAsyncTask extends AsyncTask<Void, Progress, OpNotification> impl
 	protected void onPostExecute(OpNotification opResult) {
 		long duration=currentTimeMillis()-startTime;
 		Log.i(TAG, "Completed in "+duration+" ms");
+		
+		closeRepoIfUsed();
+		
 		Notification notification=repositoryOperationContext.createNotificationWith(opResult);
 		repositoryOperationContext.notifyCompletion(notification);
+	}
+
+	private void closeRepoIfUsed() {
+		Repository repository = operation.getRepository();
+		Log.d(TAG, "Closing repo for : "+repository);
+		if (repository!=null) {
+			RepositoryCache.close(repository);
+		}
 	}
 	
 	private Notification createOngoingNotification() {

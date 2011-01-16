@@ -5,17 +5,17 @@ import android.util.Log;
 
 import com.jcraft.jsch.Identity;
 import com.jcraft.jsch.JSchException;
-import com.madgag.ssh.android.authagent.AndroidAuthAgent;
+import com.madgag.agit.AndroidAuthAgentProvider;
 
 public class SSHAgentIdentity implements Identity {
 	private final String TAG="SSHAgentIdentity";
 
-	private final AndroidAuthAgent authAgent;
+	private final AndroidAuthAgentProvider authAgentProvider;
 	private final byte[] publicKey;
 	private final String name;
 	
-	public SSHAgentIdentity(AndroidAuthAgent authAgent, byte[] publicKey, String name) {
-		this.authAgent = authAgent;
+	public SSHAgentIdentity(AndroidAuthAgentProvider authAgentProvider, byte[] publicKey, String name) {
+		this.authAgentProvider = authAgentProvider;
 		this.publicKey = publicKey;
 		this.name = name;
 	}
@@ -41,7 +41,7 @@ public class SSHAgentIdentity implements Identity {
 
 	public byte[] getSignature(byte[] data) {
 		try {
-			return authAgent.sign(publicKey, data);
+			return authAgentProvider.getAuthAgent().sign(publicKey, data);
 		} catch (RemoteException e) {
 			Log.e(TAG, "sign() failed", e);
 			throw new RuntimeException(e);

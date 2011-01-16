@@ -19,24 +19,24 @@ import com.madgag.ssh.authagent.client.jsch.SSHAgentIdentity;
 
 public class AndroidSshSessionFactory extends SshConfigSessionFactory {
 
+	private final AndroidAuthAgentProvider androidAuthAgentProvider;
 	private final PromptHelper promptHelper;
-	private final RepositoryOperationContext operationContext;
 	
-	public AndroidSshSessionFactory(RepositoryOperationContext operationContext, PromptHelper promptHelper) {
-		this.operationContext = operationContext;
+	public AndroidSshSessionFactory(AndroidAuthAgentProvider androidAuthAgentProvider, PromptHelper promptHelper) {
+		this.androidAuthAgentProvider = androidAuthAgentProvider;
 		this.promptHelper = promptHelper;
 	}
 	
 	@Override
 	protected void configure(Host host, Session session) {
-		session.setUserInfo(new AndroidUserInfo(operationContext, promptHelper));
+		session.setUserInfo(new AndroidUserInfo(promptHelper));
 	}
 
 	@Override
 	protected JSch createDefaultJSch(FS fs) throws JSchException {
 		final JSch jsch = new JSch();
 		// knownHosts(jsch, fs);
-		AndroidAuthAgent authAgent=operationContext.getAuthAgent(); //operationContext.
+		AndroidAuthAgent authAgent=androidAuthAgentProvider.getAuthAgent();
 		Map<String, byte[]> identities;
 		try {
 			identities = authAgent.getIdentities();
@@ -46,7 +46,7 @@ public class AndroidSshSessionFactory extends SshConfigSessionFactory {
 		for (Entry<String,byte[]> i : identities.entrySet()) {			
 			byte[] publicKey = i.getValue();
 			String name = i.getKey();
-			Identity identity = new SSHAgentIdentity(authAgent, publicKey, name);
+			Identity identity = new SSHAgentIdentity(androidAuthAgentProvider, publicKey, name);
 			jsch.addIdentity(identity , null);
 		}
 		return jsch;

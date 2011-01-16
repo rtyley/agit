@@ -2,6 +2,7 @@ package com.madgag.agit;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.GitIntents.repositoryFrom;
+import static com.madgag.agit.Repos.describe;
 import static java.lang.System.identityHashCode;
 
 import java.io.File;
@@ -66,7 +67,7 @@ public abstract class RepositoryActivity extends android.app.Activity implements
 	abstract void updateUI();
 	
 	private void removeListeners() {
-		Log.d(TAG(), "Removing listeners for " + repoDescription());
+		Log.d(TAG(), "Removing listeners for " + describe(repository));
 		for (ListenerHandle handle : listeners) {
 			handle.remove();
 		}
@@ -75,7 +76,7 @@ public abstract class RepositoryActivity extends android.app.Activity implements
 	
 	private void addListeners() {
 		removeListeners();
-		Log.d(TAG(), "Adding listeners for "+repoDescription());
+		Log.d(TAG(), "Adding listeners for "+describe(repository));
 		ListenerList listenerList = repository.getListenerList();
 		listeners.add(listenerList.addIndexChangedListener(this));
 		listeners.add(listenerList.addRefsChangedListener(this));
@@ -97,7 +98,4 @@ public abstract class RepositoryActivity extends android.app.Activity implements
 		handler.post(updateUIRunnable);
 	}
 
-	private String repoDescription() {
-		return "a repo with "+identityHashCode(repository) + " " + repository.getDirectory();
-	}
 }

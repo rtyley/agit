@@ -12,10 +12,8 @@ import com.madgag.agit.operations.OpNotification;
 public class AndroidUserInfo implements UserInfo {
 	private final static String TAG="AndroidUserInfo";
 	private final PromptHelper uiThreadConduit;
-	private final RepositoryOperationContext repositoryOperationContext;
 
-	public AndroidUserInfo(RepositoryOperationContext repositoryOperationContext, PromptHelper uiThreadConduit) {
-		this.repositoryOperationContext = repositoryOperationContext;
+	public AndroidUserInfo(PromptHelper uiThreadConduit) {
 		this.uiThreadConduit = uiThreadConduit;
 	}
 	

@@ -28,10 +28,10 @@ public class RepositoryOperationContextTest  extends ServiceTestCase<GitOperatio
         Log.i(TAG, "About to start service with "+cloneIntent+" gitdir="+gitdir);
         startService(cloneIntent);
 
-        FileRepository repo1 = new FileRepository("/tmp/poo1");
+        File repo1 = new File("/tmp/poo1");
 		RepositoryOperationContext roc1a = new RepositoryOperationContext(repo1, getService());
         RepositoryOperationContext roc1b = new RepositoryOperationContext(repo1, getService());
-		RepositoryOperationContext roc2 = new RepositoryOperationContext(new FileRepository("/tmp/poo2"), getService());
+		RepositoryOperationContext roc2 = new RepositoryOperationContext(new File("/tmp/poo2"), getService());
 		assertTrue(roc1a.opCompletionNotificationId==roc1b.opCompletionNotificationId);
 		assertFalse(roc1a.opCompletionNotificationId==roc2.opCompletionNotificationId);
 	}

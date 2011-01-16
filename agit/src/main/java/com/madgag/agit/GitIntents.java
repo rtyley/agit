@@ -1,5 +1,6 @@
 package com.madgag.agit;
 
+import static com.madgag.agit.Repos.openRepoFor;
 import static java.lang.System.identityHashCode;
 
 import java.io.File;
@@ -42,14 +43,7 @@ public class GitIntents {
 	}
 	
 	public static Repository repositoryFrom(Intent intent) {
-		try {
-			File gitdir = gitDirFrom(intent);
-			Repository repository = RepositoryCache.open(FileKey.lenient(gitdir, FS.DETECTED));
-			Log.d("GitIntents", "Got repo "+identityHashCode(repository) + " " + repository.getDirectory());
-			return repository;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		return openRepoFor(gitDirFrom(intent));
 	}
 
 

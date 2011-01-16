@@ -2,6 +2,7 @@ package com.madgag.agit.operations;
 
 import static android.R.drawable.stat_sys_download;
 import static android.R.drawable.stat_sys_download_done;
+import static com.madgag.agit.Repos.openRepoFor;
 import static org.eclipse.jgit.lib.Constants.HEAD;
 import static org.eclipse.jgit.lib.Constants.R_HEADS;
 import static org.eclipse.jgit.lib.Constants.R_REMOTES;
@@ -21,9 +22,11 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefComparator;
 import org.eclipse.jgit.lib.RefUpdate;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.lib.Tree;
 import org.eclipse.jgit.lib.WorkDirCheckout;
+import org.eclipse.jgit.lib.RepositoryCache.FileKey;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepository;
@@ -31,11 +34,13 @@ import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
+import org.eclipse.jgit.util.FS;
 
 import android.util.Log;
 
 import com.madgag.agit.Progress;
 import com.madgag.agit.ProgressListener;
+import com.madgag.agit.Repos;
 import com.madgag.agit.RepositoryOperationContext;
 
 public class Clone implements GitOperation {
@@ -44,6 +49,8 @@ public class Clone implements GitOperation {
 
 	private final URIish sourceUri;
 	private final File gitdir;
+
+	private Repository repository;
 
 	public Clone(URIish sourceUri, File gitdir) {
 		this.sourceUri = sourceUri;
@@ -70,19 +77,19 @@ public class Clone implements GitOperation {
 		String remoteName = Constants.DEFAULT_REMOTE_NAME;
 
 		try {
-			Repository db = new FileRepository(gitdir);
-			Log.d(TAG, "about to execute create() on " + db);
-			db.create();
-			Log.d(TAG, "Created FileRepository " + db);
-			RemoteConfig remote = createRemote(remoteName,db.getConfig());
+			repository = openRepoFor(gitdir);
+			Log.d(TAG, "about to execute create() on " + repository);
+			repository.create();
+			Log.d(TAG, "Created FileRepository " + repository);
+			RemoteConfig remote = createRemote(remoteName,repository.getConfig());
 			
 			Log.d(TAG, "About to save config...");
-			db.getConfig().save();
-			Log.d(TAG, "About to run fetch : " + db.getDirectory());
-			FetchResult r = repositoryOperationContext.fetch(remote,progressListener);
+			repository.getConfig().save();
+			Log.d(TAG, "About to run fetch : " + repository.getDirectory());
+			FetchResult r = repositoryOperationContext.fetch(repository,remote, progressListener);
 			Ref branch = guessHEAD(r);
 			progressListener.publish(new Progress("Performing checkout"));
-			doCheckout(db, branch);
+			doCheckout(repository, branch);
 			Log.d(TAG, "Completed checkout!");
 		} catch (IOException e) {
 			Log.e(TAG, "An actual IO exception", e);
@@ -191,5 +198,9 @@ public class Clone implements GitOperation {
 
 	public String getShortDescription() {
 		return "Cloning";
+	}
+	
+	public Repository getRepository() {
+		return repository;
 	}
 }

@@ -3,7 +3,9 @@ package com.madgag.agit;
 import static android.widget.Toast.LENGTH_LONG;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.madgag.agit.GitIntents.addGitDirTo;
+import static com.madgag.agit.GitIntents.gitDirFrom;
 import static com.madgag.agit.GitIntents.repositoryFrom;
+import static com.madgag.agit.Repos.openRepoFor;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +38,7 @@ import com.madgag.agit.operations.Clone;
 import com.madgag.agit.operations.Fetch;
 import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 
-public class GitOperationsService extends Service {
+public class GitOperationsService extends Service implements AndroidAuthAgentProvider {
 
 	public static final String TAG = "GitIntentService";
 	private Map<File,RepositoryOperationContext> map=new HashMap<File,RepositoryOperationContext>();
@@ -93,7 +95,7 @@ public class GitOperationsService extends Service {
 		
 		File gitdir = GitIntents.gitDirFrom(intent);
 		
-		RepositoryOperationContext repositoryOperationContext=getOrCreateRepositoryOperationContextFor(repositoryFrom(intent));
+		RepositoryOperationContext repositoryOperationContext=getOrCreateRepositoryOperationContextFor(gitDirFrom(intent));
 		if (action.equals("git.CLONE")) {
 			String sourceUriString = intent.getStringExtra("source-uri");
 			try {
@@ -103,10 +105,9 @@ public class GitOperationsService extends Service {
 				Toast.makeText(this, "Invalid uri "+sourceUriString, LENGTH_LONG);
 			}
 		} else if (action.equals("git.FETCH")) {
-			Repository repository = repositoryOperationContext.getRepository();
 			String remote=Constants.DEFAULT_REMOTE_NAME;
 			try {
-				repositoryOperationContext.enqueue(new Fetch(new RemoteConfig(repository.getConfig(), remote)));
+				repositoryOperationContext.enqueue(new Fetch(openRepoFor(gitdir), remote));
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 				Toast.makeText(this, "Bad config "+e, LENGTH_LONG).show();
@@ -119,8 +120,12 @@ public class GitOperationsService extends Service {
 	}
 
 
-    AndroidAuthAgent authAgent;
-    
+    private AndroidAuthAgent authAgent;
+
+	public AndroidAuthAgent getAuthAgent() {
+		return authAgent;
+	}
+	
 	private void bindSshAgent() {
 		bindService(new Intent("com.madgag.android.ssh.BIND_SSH_AGENT_SERVICE"), new ServiceConnection() {
 			public void onServiceDisconnected(ComponentName name) {
@@ -142,39 +147,18 @@ public class GitOperationsService extends Service {
         Log.i(TAG, "Asked for my SSH_AGENT_SERVICE ");
 	}
 
-    public Set<RepositoryOperationContext> getRepositoryOperationContextsFor(URIish remote) {
-    	Set<RepositoryOperationContext> rocs = newHashSet();
-    	for (RepositoryOperationContext roc : map.values()) {
-    		Repository repo = roc.getRepository();
-			if (repo!=null) {
-				List<RemoteConfig> allRemoteConfigs;
-				try {
-					allRemoteConfigs = RemoteConfig.getAllRemoteConfigs(repo.getConfig());
-				} catch (URISyntaxException e) {
-					throw new RuntimeException(e);
-				}
-				for (RemoteConfig rc : allRemoteConfigs) {
-					if (rc.getURIs().contains(remote)) {
-						rocs.add(roc);
-					}
-				}
-			}
+	public RepositoryOperationContext getOrCreateRepositoryOperationContextFor(File gitdir) {
+    	if (!map.containsKey(gitdir)) {
+				map.put(gitdir, new RepositoryOperationContext(gitdir,this));
     	}
-    	return rocs;
-    }
-
-	public RepositoryOperationContext getOrCreateRepositoryOperationContextFor(Repository db) {
-    	if (!map.containsKey(db.getDirectory())) {
-				map.put(db.getDirectory(), new RepositoryOperationContext(db,this));
-			
-    	}
-    	return map.get(db.getDirectory());
+    	return map.get(gitdir);
     }
 
 	public RepositoryOperationContext registerManagementActivity(RepositoryManagementActivity repositoryManagementActivity) {
-		RepositoryOperationContext operationContext = getOrCreateRepositoryOperationContextFor(repositoryManagementActivity.getRepository());
+		RepositoryOperationContext operationContext = getOrCreateRepositoryOperationContextFor(repositoryManagementActivity.gitdir());
 		operationContext.setManagementActivity(repositoryManagementActivity);
 		return operationContext;
 	}
+
 
 }

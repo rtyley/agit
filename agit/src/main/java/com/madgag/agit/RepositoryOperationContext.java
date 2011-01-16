@@ -7,6 +7,8 @@ import static com.madgag.agit.RepositoryManagementActivity.manageRepoPendingInte
 import static java.lang.System.currentTimeMillis;
 import static java.lang.System.identityHashCode;
 
+import java.io.File;
+
 import org.connectbot.service.PromptHelper;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.errors.NotSupportedException;
@@ -38,7 +40,7 @@ public class RepositoryOperationContext {
 	public static final String TAG = "RepositoryOperationContext";
 	
 	private final GitOperationsService service;
-	private final Repository repository;
+	private final File gitdir;
 	public final int opCompletionNotificationId,ongoingOpNotificationId,promptNotificationId;
 	private final PendingIntent manageGitRepo;
 	private GitAsyncTask currentOperation;
@@ -67,15 +69,15 @@ public class RepositoryOperationContext {
 	
 
 
-	public RepositoryOperationContext(Repository repository, GitOperationsService service) {
-		this.repository = repository;
+	public RepositoryOperationContext(File gitdir, GitOperationsService service) {
+		this.gitdir = gitdir.getAbsoluteFile();
 		this.service = service;
-		this.ongoingOpNotificationId = repository.getDirectory().getAbsoluteFile().hashCode();
+		this.ongoingOpNotificationId = this.gitdir.hashCode();
 		this.opCompletionNotificationId = ongoingOpNotificationId+1;
 		this.promptNotificationId = opCompletionNotificationId+1;
 		promptHelper = new PromptHelper(TAG);
 		promptHelper.setHandler(promptHandler);
-		manageGitRepo = manageRepoPendingIntent(repository, service);
+		manageGitRepo = manageRepoPendingIntent(gitdir, service);
 	}
 
 	private void showStatusBarNotificationFor(OpPrompt<?> opPrompt) {
@@ -87,10 +89,6 @@ public class RepositoryOperationContext {
 	
 	void clearPromptNotificationFromStatusBar() {
 		service.getNotificationManager().cancel(promptNotificationId);
-	}
-	
-	public Repository getRepository() {
-		return repository;
 	}
 
 	public Service getService() {
@@ -109,17 +107,16 @@ public class RepositoryOperationContext {
 		service.getNotificationManager().notify(ongoingOpNotificationId, notification);
 	}
 	
-	public Transport transportFor(RemoteConfig remoteConfig) {
+	public Transport transportFor(Repository repo, RemoteConfig remoteConfig) {
     	Transport tn;
 		try {
-			Repository repo = getRepository();
 			Log.i(TAG, "Creating transport for repo with "+identityHashCode(repo));
 			tn = Transport.open(repo, remoteConfig);
 		} catch (NotSupportedException e) {
 			throw new RuntimeException(e);
 		}
     	if (tn instanceof SshTransport) {
-			((SshTransport) tn).setSshSessionFactory(new AndroidSshSessionFactory(this, promptHelper));
+			((SshTransport) tn).setSshSessionFactory(new AndroidSshSessionFactory(service, promptHelper));
 		}
     	return tn;
     }
@@ -149,18 +146,12 @@ public class RepositoryOperationContext {
 	}
 	
 	public Intent getRMAIntent() {
-		return manageRepoIntent(getRepository().getDirectory());
+		return manageRepoIntent(gitdir);
 	}
 
 	public GitAsyncTask getCurrentOperation() {
 		return currentOperation;
 	}
-
-	public AndroidAuthAgent getAuthAgent() {
-		return service.authAgent;
-	}
-
-
 
 	public PromptHelper getPromptHelper() {
 		return promptHelper;
@@ -174,8 +165,8 @@ public class RepositoryOperationContext {
 
 
 
-	public FetchResult fetch(RemoteConfig remote, ProgressListener<Progress> progressListener) {
-		Transport transport=transportFor(remote);
+	public FetchResult fetch(Repository repository, RemoteConfig remote, ProgressListener<Progress> progressListener) {
+		Transport transport=transportFor(repository,remote);
 		try {
 			return transport.fetch(new MessagingProgressMonitor(progressListener), null);
 		} catch (NotSupportedException e) {
@@ -196,17 +187,13 @@ public class RepositoryOperationContext {
 	public Notification createNotificationWith(OpNotification opNotification) {
 		Notification n=new Notification(opNotification.getDrawable(), opNotification.getTickerText(), currentTimeMillis());
 		n.setLatestEventInfo(getService(), opNotification.getEventTitle(), opNotification.getEventDetail(), manageGitRepo);
-		Log.i(TAG, "createNotificationWith... and I am "+repository.getDirectory());
+		Log.i(TAG, "createNotificationWith... and I am "+gitdir);
 		return n;
 	}
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName()+"["+repository.getDirectory()+"]";
-	}
-
-	public Git getGit() {
-		return new Git(repository);
+		return getClass().getSimpleName()+"["+gitdir+"]";
 	}
 	
 }

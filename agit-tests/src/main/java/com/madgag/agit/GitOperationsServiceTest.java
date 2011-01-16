@@ -11,6 +11,7 @@ import java.io.File;
 
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.URIish;
 
 import android.content.Intent;
@@ -37,7 +38,7 @@ public class GitOperationsServiceTest extends ServiceTestCase<GitOperationsServi
 		GitAsyncTask gitOperation = waitForOperationIn(repositoryOperationContext);
 		OpNotification opResult = gitOperation.get();
         assertNotNull(opResult);
-        Repository repository = repositoryOperationContext.getRepository();
+        Repository repository = new FileRepository(gitdir);
         Log.i(TAG, "After clone: repo directory="+repository.getDirectory()+" workTree="+repository.getWorkTree());
         File readme=new File(repository.getWorkTree(),"README");
         assertThat(readme,is(File.class));
