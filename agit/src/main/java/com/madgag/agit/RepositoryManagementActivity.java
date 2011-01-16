@@ -79,7 +79,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
         buttonUp(R.id.LogButton,clickToShowLog());
         
 		branchList = (ListView) findViewById(R.id.BranchList);
-		branchList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1));
+		branchList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_2));
 		branchList.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				String branchName = (String) parent.getAdapter().getItem(position);
@@ -271,8 +271,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
     }
 
 	void updateUI() {
-		updateBranches();
-		updateTags();
+		branchList.setAdapter(new RDTypesListAdapter(this, repo()));
 	}
     
     private void registerRecieverForServicePromptRequests() {
@@ -335,30 +334,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 	public static Intent manageRepoIntent(File gitdir) {
 		return new GitIntentBuilder("git.repo.MANAGE").gitdir(gitdir).toIntent();
 	}
-
-	private void updateBranches() {
-		RefDatabase refDatabase = repo().getRefDatabase();
-		ArrayAdapter<String> adapter = (ArrayAdapter<String>) branchList.getAdapter();
-		adapter.clear();
-		try {
-			Map<String, Ref> remoteRefs = refDatabase.getRefs(Constants.R_REMOTES);
-			Log.d(TAG, "found "+remoteRefs.size()+" remote branches");
-			for (Ref ref : remoteRefs.values()) {
-				adapter.add(ref.getName());
-			}
-		} catch (IOException e) { throw new RuntimeException(e); }
-	}
 	
-	private void updateTags() {
-		ArrayAdapter<String> adapter = (ArrayAdapter<String>) tagList.getAdapter();
-		adapter.clear();
-		Map<String, Ref> tagRefs = repo().getTags();
-		Log.d(TAG, "found "+tagRefs.size()+" tags");
-		for (String tagRef : tagRefs.keySet()) {
-			adapter.add(tagRef);
-		}
-	}
-
 	public Repository getRepository() {
 		return repo();
 	}

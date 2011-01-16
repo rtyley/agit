@@ -23,6 +23,6 @@ public class Repos {
 	}
 	
 	public static String describe(Repository repository) {
-		return "repo with "+identityHashCode(repository) + " " + repository.getDirectory();
+		return repository+" #"+identityHashCode(repository);
 	}
 }
