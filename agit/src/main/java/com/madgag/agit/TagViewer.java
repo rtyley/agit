@@ -22,7 +22,7 @@ import android.widget.Toast;
 public class TagViewer extends RepositoryActivity {
 
     public static Intent tagViewerIntentFor(Repository repository, String tagName) {
-		return new GitIntentBuilder("git.view.TAG").repository(repository).tag(tagName).toIntent();
+		return new GitIntentBuilder("git.tag.VIEW").repository(repository).tag(tagName).toIntent();
 	}
 
 	private static final String TAG = "TagViewer";
@@ -47,7 +47,6 @@ public class TagViewer extends RepositoryActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
         menu.add(0, DELETE_ID, 0, R.string.delete_tag_menu_option).setShortcut('0', 'd');
         return true;
     }
@@ -78,7 +77,9 @@ public class TagViewer extends RepositoryActivity {
     public void onContentChanged() {
     	Log.d(TAG, "updateUI called");
     	tagRef = repo().getTags().get(tagNameFrom(getIntent()));	
-    	
+    	if (titleTextView==null) {
+    		return;
+    	}
     	
 		if (tagRef==null) {
 			titleTextView.setText("unknown");

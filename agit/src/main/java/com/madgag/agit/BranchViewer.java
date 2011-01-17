@@ -18,7 +18,7 @@ import android.util.Log;
 public class BranchViewer extends RepositoryActivity {
     
     public static Intent branchViewerIntentFor(File gitdir, Ref branch) {
-		return new GitIntentBuilder("git.view.BRANCH").gitdir(gitdir).branch(branch).toIntent();
+		return new GitIntentBuilder("git.branch.VIEW").gitdir(gitdir).branch(branch).toIntent();
 	}
 
 	private static final String TAG = "BranchViewer";

@@ -68,14 +68,14 @@
 		
 		<activity android:name="BranchViewer">
 			<intent-filter>
-				<action android:name="git.view.BRANCH" />
+				<action android:name="git.branch.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
 		
 		<activity android:name="TagViewer">
 			<intent-filter>
-				<action android:name="git.view.TAG" />
+				<action android:name="git.tag.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
