@@ -47,6 +47,7 @@ public class TagViewer extends RepositoryActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+    	super.onCreateOptionsMenu(menu);
         menu.add(0, DELETE_ID, 0, R.string.delete_tag_menu_option).setShortcut('0', 'd');
         return true;
     }
