@@ -65,8 +65,8 @@ public class RDTypeListAdapter<E> extends BaseAdapter {
 		}
 		
 		public void updateViewFor(E e) {
-			detail.setText(rdt.conciseSummary(e));
-			title.setText("...");
+			detail.setText(rdt.idFor(e));
+			title.setText(rdt.shortDescriptionOf(e));
 		}
 	}
 }

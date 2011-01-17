@@ -1,5 +1,7 @@
 package com.madgag.agit;
 
+import static org.eclipse.jgit.lib.Repository.shortenRefName;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
@@ -28,7 +30,7 @@ public class RDTBranch extends RepoDomainType<Ref> {
 	
 	@Override
 	CharSequence conciseSummary(Ref branchRef) {
-		return branchRef.getName();
+		return idFor(branchRef);
 	}
 
 	@Override
@@ -39,5 +41,15 @@ public class RDTBranch extends RepoDomainType<Ref> {
 	@Override
 	CharSequence conciseSummaryTitle() {
 		return "Branches";
+	}
+
+	@Override
+	String idFor(Ref branchRef) {
+		return shortenRefName(branchRef.getName());
+	}
+	
+	@Override
+	CharSequence shortDescriptionOf(Ref e) {
+		return "...";
 	}
 }

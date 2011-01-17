@@ -1,5 +1,7 @@
 package com.madgag.agit;
 
+import static org.eclipse.jgit.lib.Repository.shortenRefName;
+
 import java.util.Collection;
 
 import org.eclipse.jgit.lib.Ref;
@@ -25,11 +27,22 @@ public class RDTTag extends RepoDomainType<Ref> {
 
 	@Override
 	CharSequence conciseSummary(Ref tagRef) {
-		return tagRef.getLeaf().getName();
+		return idFor(tagRef);
 	}
 
+	@Override
+	String idFor(Ref e) {
+		return shortenRefName(e.getName());
+	}
+	
 	@Override
 	CharSequence conciseSummaryTitle() {
 		return "Tags";
 	}
+	
+	@Override
+	CharSequence shortDescriptionOf(Ref e) {
+		return "...";
+	}
+
 }

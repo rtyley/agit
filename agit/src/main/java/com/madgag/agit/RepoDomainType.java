@@ -22,6 +22,8 @@ public abstract class RepoDomainType<E> {
 	
 	abstract CharSequence conciseSummary(E e);
 	
+	abstract CharSequence shortDescriptionOf(E e);
+	
 	
 	public CharSequence summarise(Collection<E> list) {
 		StringBuilder sb = new StringBuilder();
@@ -41,7 +43,18 @@ public abstract class RepoDomainType<E> {
 	}
 
 	public Intent listIntent() {
-		String action = "git."+name()+".LIST";
-		return new GitIntentBuilder(action).repository(repository).toIntent();
+		return action("git."+name()+".LIST").toIntent();
 	}
+
+	
+	public Intent viewIntentFor(E e) {
+		return action("git."+name()+".VIEW").add(name(),idFor(e)).toIntent();
+	}
+	
+	abstract String idFor(E e);
+
+	private GitIntentBuilder action(String action) {
+		return new GitIntentBuilder(action).repository(repository);
+	}
+	
 }

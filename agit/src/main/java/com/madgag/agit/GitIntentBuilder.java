@@ -5,7 +5,6 @@ import java.io.File;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.transport.RemoteConfig;
 
 import android.content.Intent;
@@ -38,7 +37,7 @@ public class GitIntentBuilder {
 		return intent;
 	}
 
-	private GitIntentBuilder add(String fieldName, String value) {
+	GitIntentBuilder add(String fieldName, String value) {
 		intent.putExtra(fieldName, value);
 		return this;
 	}

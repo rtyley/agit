@@ -5,6 +5,7 @@ import static org.eclipse.jgit.transport.RemoteConfig.getAllRemoteConfigs;
 import java.net.URISyntaxException;
 import java.util.Collection;
 
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.RemoteConfig;
 
@@ -36,5 +37,14 @@ public class RDTRemote extends RepoDomainType<RemoteConfig> {
 	@Override
 	CharSequence conciseSummaryTitle() {
 		return "Remotes";
+	}
+	@Override
+	String idFor(RemoteConfig e) {
+		return e.getName();
+	}
+	
+	@Override
+	CharSequence shortDescriptionOf(RemoteConfig rc) {
+		return rc.getURIs().get(0).toString();
 	}
 }
