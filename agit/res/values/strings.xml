@@ -3,5 +3,6 @@
     <string name="app_name">Agit</string>
     <string name="enter_clone_url">Enter the url of the git repository to clone:</string>
     <string name="clone_menu_option">Clone...</string>
+    <string name="delete_repo_menu_option">Delete Repo</string>
     <string name="delete_tag_menu_option">Delete Tag</string>
 </resources>

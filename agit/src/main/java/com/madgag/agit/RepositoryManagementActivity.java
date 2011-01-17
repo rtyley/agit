@@ -19,8 +19,10 @@ import org.eclipse.jgit.events.IndexChangedEvent;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefDatabase;
+import org.eclipse.jgit.lib.RefUpdate;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
+import org.eclipse.jgit.lib.RefUpdate.Result;
 import org.eclipse.jgit.storage.file.FileRepository;
 
 import android.app.AlertDialog;
@@ -39,6 +41,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -49,6 +53,7 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.madgag.agit.GitOperationsService.GitOperationsBinder;
 import com.madgag.agit.operations.GitAsyncTask;
@@ -59,6 +64,8 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 
 	private ProgressDialog progressDialog;
 	private AlertDialog stringEntryDialog,yesNoDialog;
+	
+	private final static int DELETE_ID=Menu.FIRST;
 	
 	final int PROGRESS_DIALOG=0,STRING_ENTRY_DIALOG=1, YES_NO_DIALOG=2;
 	private final int DELETION_DIALOG=3;
@@ -75,7 +82,6 @@ public class RepositoryManagementActivity extends RepositoryActivity {
         
         bindService(new Intent(this,GitOperationsService.class), serviceConnectionToRegisterThisAsManagementUI(), BIND_AUTO_CREATE);
         buttonUp(R.id.FetchButton, clickToFetch());
-        buttonUp(R.id.DeleteButton,clickToDelete());
         buttonUp(R.id.LogButton,clickToShowLog());
         
 		branchList = (ListView) findViewById(R.id.BranchList);
@@ -88,6 +94,23 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 		});
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0, DELETE_ID, 0, R.string.delete_repo_menu_option).setShortcut('0', 'd');
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case DELETE_ID:
+        	showDialog(DELETION_DIALOG);
+			new RepoDeleter(gitdir(), RepositoryManagementActivity.this).execute();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    
 	private ServiceConnection serviceConnectionToRegisterThisAsManagementUI() {
 		return new ServiceConnection() {
 			public void onServiceDisconnected(ComponentName name) {
@@ -108,15 +131,6 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 		return new OnClickListener() {
 			public void onClick(View v) {
 				startService(new GitIntentBuilder("git.FETCH").repository(repo()).toIntent());
-			}
-		};
-	}
-
-	private OnClickListener clickToDelete() {
-		return new OnClickListener() {
-			public void onClick(View v) {
-				showDialog(DELETION_DIALOG);
-				new RepoDeleter(gitdir(), RepositoryManagementActivity.this).execute();
 			}
 		};
 	}
