@@ -43,7 +43,7 @@ public class CloneLauncherActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.clone_launcher);
         button = (Button) findViewById(R.id.GoCloneButton);
         gitDirEditText = (EditText) findViewById(R.id.GitDirEditText);
         warningTextView = (TextView) findViewById(R.id.GitDirWarning);

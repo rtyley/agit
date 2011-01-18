@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+	<TextView android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="@string/enter_clone_url" />
+
+	<EditText 
+		android:id="@+id/CloneUrlEditText"
+		android:layout_height="wrap_content" 
+		android:layout_width="fill_parent"
+		android:inputType="textUri" />
+		
+	<CheckBox android:id="@+id/UseDefaultGitDirLocation"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:text="Use default location" android:checked="true" />
+	<EditText android:layout_height="wrap_content" android:id="@+id/GitDirEditText"
+		android:layout_width="fill_parent"></EditText>
+	<TextView android:id="@+id/GitDirWarning" android:visibility="invisible"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:text="Bad checkout location" />
+	<Button android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/GoCloneButton"
+		android:text="Clone!"></Button>
+</LinearLayout>
