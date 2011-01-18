@@ -1,6 +1,6 @@
 package com.madgag.agit;
 
-import static com.madgag.agit.GitIntents.*;
+import static com.madgag.agit.GitIntents.gitDirFrom;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,9 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
+import org.eclipse.jgit.api.errors.InvalidTagNameException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.diff.RenameDetector;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
+import org.eclipse.jgit.diff.RenameDetector;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -20,12 +25,17 @@ import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ExpandableListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -40,6 +50,8 @@ import com.madgag.agit.LineContextDiffer.Hunk;
 
 public class RevCommitViewer extends ExpandableListActivity {
 
+	private final static int TAG_ID=Menu.FIRST;
+	
     public static Intent revCommitViewIntentFor(File gitdir, RevCommit commit) {
 		return new GitIntentBuilder("git.view.COMMIT").gitdir(gitdir).commit(commit).toIntent();
 	}
@@ -57,6 +69,10 @@ public class RevCommitViewer extends ExpandableListActivity {
 	
 	private Map<Long, DiffText> diffTexts=new HashMap<Long, DiffText>();
 
+	final int CREATE_TAG_DIALOG=0;
+
+	private RevCommit commit;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,7 +88,7 @@ public class RevCommitViewer extends ExpandableListActivity {
 			String revisionId = intent.getStringExtra("commit");
 			Log.i("RCCV", revisionId);
 			RevWalk revWalk = new RevWalk(repository);
-			RevCommit commit = revWalk.parseCommit(ObjectId
+			commit = revWalk.parseCommit(ObjectId
 					.fromString(revisionId));
 			Log.i("RCCV", commit.getFullMessage());
 
@@ -130,6 +146,50 @@ public class RevCommitViewer extends ExpandableListActivity {
 		}
 	}
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	super.onCreateOptionsMenu(menu);
+        menu.add(0, TAG_ID, 0, R.string.tag_commit_menu_option).setShortcut('0', 't');
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case TAG_ID:
+        	showDialog(CREATE_TAG_DIALOG);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        switch (id) {
+        case CREATE_TAG_DIALOG:
+            LayoutInflater factory = LayoutInflater.from(this);
+            final View textEntryView = factory.inflate(R.layout.create_tag_dialog, null);
+            return new AlertDialog.Builder(this)
+//                .setIcon(R.drawable.alert_dialog_icon)
+//                .setTitle(R.string.alert_dialog_text_entry)
+                .setView(textEntryView)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    	 String tagName=((TextView) textEntryView.findViewById(R.id.tag_name_edit)).getText().toString();
+                    	 try {
+							new Git(repository).tag().setName(tagName).setObjectId(commit).call();
+						} catch (Exception e) {
+							throw new RuntimeException(e);
+						}
+                    }
+                })
+                .create();
+        }
+        return null;
+    }
+	
+	
+	
 	private List<DiffEntry> detectRenames(List<DiffEntry> files)
 			throws IOException {
 		RenameDetector rd = new RenameDetector(repository);
