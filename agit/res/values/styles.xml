@@ -15,7 +15,7 @@
     	<item name="android:textColor">@color/removedText</item>
 	</style>
 	
-	<style name="Theme.App" parent="android:Theme.Light">
+	<style name="Theme.App" parent="android:Theme.Light.NoTitleBar">
 	    <item name="android:fadeScrollbars">true</item>
 	 </style>
 </resources>
