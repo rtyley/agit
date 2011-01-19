@@ -1,5 +1,7 @@
 package com.madgag.agit;
 
+import com.markupartist.android.widget.ActionBar;
+
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +17,9 @@ public class RDTypeListActivity<E> extends ListActivity {
 		super.onCreate(savedInstanceState);
 		rc = new RepositoryContext(this, TAG);
 		rdt = extractRDTFromIntent();
+		setContentView(R.layout.rdt_type_list);
+		ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
+		actionBar.setTitle(rdt.conciseSummaryTitle());
 		setListAdapter(new RDTypeListAdapter<E>(this, rdt));
 	}
 	

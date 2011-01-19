@@ -58,6 +58,8 @@ import android.widget.Toast;
 import com.madgag.agit.GitOperationsService.GitOperationsBinder;
 import com.madgag.agit.operations.GitAsyncTask;
 import com.madgag.agit.operations.OpPrompt;
+import com.markupartist.android.widget.ActionBar;
+import com.markupartist.android.widget.ActionBar.Action;
 
 
 public class RepositoryManagementActivity extends RepositoryActivity {
@@ -81,8 +83,18 @@ public class RepositoryManagementActivity extends RepositoryActivity {
         setContentView(R.layout.repo_management);
         
         bindService(new Intent(this,GitOperationsService.class), serviceConnectionToRegisterThisAsManagementUI(), BIND_AUTO_CREATE);
-        buttonUp(R.id.FetchButton, clickToFetch());
-        buttonUp(R.id.LogButton,clickToShowLog());
+        
+        ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
+        actionBar.setTitle(repo().getWorkTree().getName());
+        actionBar.addAction(new Action() {
+			public void performAction() {
+				startService(new GitIntentBuilder("git.FETCH").repository(repo()).toIntent());
+			}
+			
+			public int getDrawable() {
+				return R.drawable.ic_title_fetch;
+			}
+		});
         
 		branchList = (ListView) findViewById(R.id.BranchList);
 		branchList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_2));
@@ -125,20 +137,6 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 				Log.i(TAG, "bound opService="+repositoryOperationContext);
 				updateUIToReflectServicePromptRequests();
 			}
-		};
-	}
-
-	private OnClickListener clickToFetch() {
-		return new OnClickListener() {
-			public void onClick(View v) {
-				startService(new GitIntentBuilder("git.FETCH").repository(repo()).toIntent());
-			}
-		};
-	}
-
-	private OnClickListener clickToShowLog() {
-		return new OnClickListener() {
-			public void onClick(View v) { startActivity(repoLogIntentFor(repo().getDirectory())); }			
 		};
 	}
     

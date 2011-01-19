@@ -4,6 +4,11 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
+
+    <com.markupartist.android.widget.ActionBar
+	    android:id="@+id/actionbar"
+	    style="@style/ActionBar"
+        />
 <TextView  
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" android:text="Repository Location :"/>
@@ -12,16 +17,6 @@
 	android:textStyle="bold"
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" android:text="..."/>
-    
-    
-
-<Button android:text="Fetch" android:id="@+id/FetchButton" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-<Button android:text="Log" android:id="@+id/LogButton" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-
-<TextView  
-	android:id="@+id/GitOperationStatus"
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" android:text="Status..."/>
     
     
 <ListView
