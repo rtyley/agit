@@ -11,6 +11,8 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 
+import com.markupartist.android.widget.ActionBar;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,14 +34,22 @@ public class BranchViewer extends RepositoryActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.branch_view);
-		revCommitListView = (RevCommitListView) findViewById(android.R.id.list);
 		
+		ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
+
 		try {
-			branch = repo().getRef(branchNameFrom(getIntent()));
+			String branchName = branchNameFrom(getIntent());
+			branch = repo().getRef(branchName);
+			actionBar.setTitle(branchName);
 		} catch (IOException e) {
 			Log.e(TAG, "Couldn't get branch ref", e);
 			e.printStackTrace();
 		}
+		
+		
+		
+		revCommitListView = (RevCommitListView) findViewById(android.R.id.list);
+		
 		revCommitListView.setCommits(repo(), commitListForRepo());
 	}
 
