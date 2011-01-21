@@ -10,14 +10,17 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.TabActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.markupartist.android.widget.ActionBar;
@@ -46,8 +49,30 @@ public class CommitViewer extends TabActivity {
 			Log.i("RCCV", revisionId.getName());
 			RevWalk revWalk = new RevWalk(rc.repo());
 			commit = revWalk.parseCommit(revisionId);
+			
 			actionBar.setTitle(commit.name());
 			Log.i("RCCV", commit.getFullMessage());
+			
+			
+			Resources res = getResources(); // Resource object to get Drawables
+			TabHost tabHost = getTabHost();  // The activity TabHost
+		    TabHost.TabSpec spec;  // Resusable TabSpec for each tab
+
+		    // Initialize a TabSpec for each tab and add it to the TabHost
+		    spec = tabHost.newTabSpec("commit_details")
+		    	.setIndicator(newTabIndicator(tabHost, "Commit"))
+		    	.setContent(R.id.content);
+		    tabHost.addTab(spec);
+		    
+		    for (RevCommit parentCommit : commit.getParents()) {
+		    	parentCommit = revWalk.parseCommit(parentCommit);
+		    	spec = tabHost.newTabSpec(parentCommit.getName());
+		    	String text = "Δ"+parentCommit.abbreviate(4).name();
+		    	spec.setIndicator(newTabIndicator(tabHost, text))
+		    		.setContent(R.id.content);
+			    tabHost.addTab(spec);
+		    }
+		    
 
 			Log.i("RCCV", "Parent count " + commit.getParentCount());
 			if (commit.getParentCount() == 1) {
@@ -57,6 +82,12 @@ public class CommitViewer extends TabActivity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private TextView newTabIndicator(TabHost tabHost, String text) {
+		TextView v=(TextView) getLayoutInflater().inflate(R.layout.tab_indicator, tabHost.getTabWidget(), false);
+		v.setText(text);
+		return v;
 	}
 	
 	private CommitChangeListAdapter mAdapter;
