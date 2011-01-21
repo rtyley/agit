@@ -106,7 +106,13 @@ public class CloneLauncherActivity extends Activity {
 
 	private void setSourceUriFrom(Intent intent) {
 		String sourceUri= intent.getStringExtra(EXTRA_SOURCE_URI);
-		if (sourceUri!=null) { 
+		if (sourceUri == null && intent.getData()!=null) { 
+			//https://github.com/rtyley/jgit
+			//git@github.com:rtyley/jgit.git RW
+			//git://github.com/spearce/jgit.git R
+			sourceUri = "git://github.com"+intent.getData().getPath()+".git";
+		}
+		if (sourceUri != null) {
 			cloneUrlEditText.setText(sourceUri);
 			Log.d(TAG, "Set cloneUrlEditText to "+sourceUri);
 		}
