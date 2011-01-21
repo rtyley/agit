@@ -1,6 +1,9 @@
 package com.madgag.agit;
 
+import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
+
 import java.io.File;
+import java.util.Map;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.ObjectId;
@@ -10,7 +13,6 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.TabActivity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -20,9 +22,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ExpandableListView;
 import android.widget.TabHost;
+import android.widget.TabHost.TabContentFactory;
 import android.widget.TextView;
 
+import com.google.common.collect.Maps;
 import com.markupartist.android.widget.ActionBar;
 
 public class CommitViewer extends TabActivity {
@@ -35,6 +40,10 @@ public class CommitViewer extends TabActivity {
 	}
 
 	private RepositoryContext rc;
+
+	private RevCommit commit;
+	
+	private Map<String, RevCommit> commitParents;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -64,12 +73,25 @@ public class CommitViewer extends TabActivity {
 		    	.setContent(R.id.content);
 		    tabHost.addTab(spec);
 		    
+		    commitParents = newHashMapWithExpectedSize(commit.getParentCount());
+		    TabContentFactory contentFactory = new TabContentFactory() {
+				public View createTabContent(String tag) {
+					RevCommit parentCommit = commitParents.get(tag);
+					View v = getLayoutInflater().inflate(R.layout.rev_commit_view, getTabWidget(), false);
+					DiffSliderView diffSlider = (DiffSliderView) v.findViewById(R.id.RevCommitDiffSlider);
+					ExpandableListView expandableList = (ExpandableListView) v.findViewById(android.R.id.list);
+					expandableList.setAdapter(new CommitChangeListAdapter(rc.repo(), parentCommit, diffSlider, expandableList, CommitViewer.this));
+					return v;
+				}
+			};
 		    for (RevCommit parentCommit : commit.getParents()) {
 		    	parentCommit = revWalk.parseCommit(parentCommit);
-		    	spec = tabHost.newTabSpec(parentCommit.getName());
-		    	String text = "Δ"+parentCommit.abbreviate(4).name();
-		    	spec.setIndicator(newTabIndicator(tabHost, text))
-		    		.setContent(R.id.content);
+		    	String parentId = parentCommit.getName();
+				commitParents.put(parentId, parentCommit);
+		    	spec = tabHost.newTabSpec(parentId);
+		    	String text = "Δ "+parentId.substring(0, 2);
+		    	
+				spec.setIndicator(newTabIndicator(tabHost, text)).setContent(contentFactory);
 			    tabHost.addTab(spec);
 		    }
 		    
@@ -93,7 +115,6 @@ public class CommitViewer extends TabActivity {
 	private CommitChangeListAdapter mAdapter;
 	final int CREATE_TAG_DIALOG=0;
 
-	private RevCommit commit;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

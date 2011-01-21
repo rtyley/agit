@@ -42,9 +42,7 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
 		private final Context context;
 		private final RevCommit commit;
 		private final Repository repository;
-		
-
-		List<FileDiff> fileDiffs;
+		private final List<FileDiff> fileDiffs;
 		Map<Long, DiffText> diffTexts=new HashMap<Long, DiffText>();
 
 		public CommitChangeListAdapter(Repository repository, RevCommit commit, DiffSliderView diffSlider, ExpandableListView expandableList, Context context) {
@@ -56,7 +54,7 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
 			mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			diffSlider.setStateUpdateListener(this);
 			try {
-				setupFileDiffs(new RevWalk(repository));
+				fileDiffs=setupFileDiffs(new RevWalk(repository));
 			} catch (Exception e) { throw new RuntimeException(e); }
 		}
 
