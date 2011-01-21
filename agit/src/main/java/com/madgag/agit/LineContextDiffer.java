@@ -55,14 +55,13 @@ public class LineContextDiffer {
 
 	private int bigFileThreshold = 1 * 1024 * 1024;
 
-	private final Repository repository;
+	private final ObjectReader objectReader;
 
 	/**
 	 * Create a new formatter with a default level of context.
 	 */
-	public LineContextDiffer(Repository repository) {
-		this.repository = repository;
-		CoreConfig cfg = repository.getConfig().get(CoreConfig.KEY);
+	public LineContextDiffer(ObjectReader objectReader) {
+		this.objectReader = objectReader;
 		setContext(3);
 		setAbbreviationLength(7);
 	}
@@ -138,17 +137,12 @@ public class LineContextDiffer {
 			// writeGitLinkDiffText(out, ent);
 			return emptyList();
 		} else {
-			if (repository == null)
-				throw new IllegalStateException(
-						JGitText.get().repositoryIsRequired);
-
-			ObjectReader reader = repository.newObjectReader();
 			byte[] aRaw, bRaw;
 			try {
-				aRaw = open(reader, ent.getOldMode(), ent.getOldId());
-				bRaw = open(reader, ent.getNewMode(), ent.getNewId());
+				aRaw = open(objectReader, ent.getOldMode(), ent.getOldId());
+				bRaw = open(objectReader, ent.getNewMode(), ent.getNewId());
 			} finally {
-				reader.release();
+				// objectReader.release();
 			}
 
 			if (RawText.isBinary(aRaw) || RawText.isBinary(bRaw)) {
@@ -258,14 +252,13 @@ public class LineContextDiffer {
 	}
 
 	private String format(AbbreviatedObjectId id) {
-		if (id.isComplete() && repository != null) {
-			ObjectReader reader = repository.newObjectReader();
+		if (id.isComplete()) {
 			try {
-				id = reader.abbreviate(id.toObjectId(), abbreviationLength);
+				id = objectReader.abbreviate(id.toObjectId(), abbreviationLength);
 			} catch (IOException cannotAbbreviate) {
 				// Ignore this. We'll report the full identity.
 			} finally {
-				reader.release();
+				// reader.release();
 			}
 		}
 		return id.name();

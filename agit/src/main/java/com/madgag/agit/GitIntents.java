@@ -1,19 +1,11 @@
 package com.madgag.agit;
 
 import static com.madgag.agit.Repos.openRepoFor;
-import static java.lang.System.identityHashCode;
 
 import java.io.File;
-import java.io.IOException;
 
-import org.eclipse.jgit.errors.RepositoryNotFoundException;
-import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.lib.RepositoryCache;
-import org.eclipse.jgit.lib.RepositoryCache.FileKey;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.transport.RemoteConfig;
-import org.eclipse.jgit.util.FS;
 
 import android.content.Intent;
 import android.util.Log;
@@ -44,6 +36,10 @@ public class GitIntents {
 	
 	public static Repository repositoryFrom(Intent intent) {
 		return openRepoFor(gitDirFrom(intent));
+	}
+
+	public static ObjectId commitIdFrom(Intent intent) {
+		return ObjectId.fromString(intent.getStringExtra("commit"));
 	}
 
 
