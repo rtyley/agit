@@ -73,6 +73,9 @@ public class CommitViewer extends TabActivity {
 		    	.setContent(R.id.content);
 		    tabHost.addTab(spec);
 		    
+		    TextView commitDetailText = (TextView) findViewById(R.id.commit_detail_text);
+		    commitDetailText.setText(commit.getFullMessage());
+		    
 		    commitParents = newHashMapWithExpectedSize(commit.getParentCount());
 		    TabContentFactory contentFactory = new TabContentFactory() {
 				public View createTabContent(String tag) {
@@ -80,7 +83,7 @@ public class CommitViewer extends TabActivity {
 					View v = getLayoutInflater().inflate(R.layout.rev_commit_view, getTabWidget(), false);
 					DiffSliderView diffSlider = (DiffSliderView) v.findViewById(R.id.RevCommitDiffSlider);
 					ExpandableListView expandableList = (ExpandableListView) v.findViewById(android.R.id.list);
-					expandableList.setAdapter(new CommitChangeListAdapter(rc.repo(), parentCommit, diffSlider, expandableList, CommitViewer.this));
+					expandableList.setAdapter(new CommitChangeListAdapter(rc.repo(),commit, parentCommit, diffSlider, expandableList, CommitViewer.this));
 					return v;
 				}
 			};

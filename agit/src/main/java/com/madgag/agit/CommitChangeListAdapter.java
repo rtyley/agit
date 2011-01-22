@@ -44,10 +44,12 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
 		private final Repository repository;
 		private final List<FileDiff> fileDiffs;
 		Map<Long, DiffText> diffTexts=new HashMap<Long, DiffText>();
+		private final RevCommit parentCommit;
 
-		public CommitChangeListAdapter(Repository repository, RevCommit commit, DiffSliderView diffSlider, ExpandableListView expandableList, Context context) {
+		public CommitChangeListAdapter(Repository repository, RevCommit commit, RevCommit parentCommit, DiffSliderView diffSlider, ExpandableListView expandableList, Context context) {
 			this.repository = repository;
 			this.commit = commit;
+			this.parentCommit = parentCommit;
 			this.diffSlider = diffSlider;
 			this.expandableList = expandableList;
 			this.context = context;
@@ -184,8 +186,7 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
 			final TreeWalk tw = new TreeWalk(revWalk.getObjectReader());
 			tw.setRecursive(true);
 			tw.reset();
-			RevCommit commitParent = revWalk.parseCommit(commit.getParent(0));
-			RevTree commitParentTree = revWalk.parseTree(commitParent.getTree());
+			RevTree commitParentTree = revWalk.parseTree(parentCommit.getTree());
 			tw.addTree(commitParentTree);
 			RevTree commitTree = revWalk.parseTree(commit.getTree());
 			tw.addTree(commitTree);
