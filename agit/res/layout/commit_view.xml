@@ -37,8 +37,14 @@
                       android:orientation="vertical"
                       android:layout_width="fill_parent"
                       android:layout_height="fill_parent">
-                      <TextView android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:text="I am a robot" />
+                      <TextView
+						android:id="@+id/commit_detail_text"
+						android:layout_width="fill_parent"
+						android:layout_height="wrap_content"
+						android:autoLink="web|email|map"
+						android:typeface="monospace" 
+						android:textAppearance="?android:attr/textAppearanceSmall"
+						/>
                  </LinearLayout>
         </FrameLayout>
     </LinearLayout>
