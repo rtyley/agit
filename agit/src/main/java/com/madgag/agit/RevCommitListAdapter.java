@@ -1,12 +1,13 @@
 package com.madgag.agit;
 
-import java.util.HashMap;
 import java.util.List;
 
+import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,40 +15,32 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class RevCommitListAdapter extends BaseAdapter {
-	private Context m_context;
-	private LayoutInflater m_inflater;
-	private HashMap<String, Bitmap> m_gravatars;
-	private List<RevCommit> commits;
+import com.madgag.gravatar.android.GravatarLoadListener;
+import com.madgag.gravatar.android.GravatarProvider;
+import com.madgag.gravatar.android.GravatarSession;
 
-	/**
-	 * Get the Gravatars of all users in the commit log 
-	 */
-	public void loadGravatars()
-	{
-		// int length = m_data.length();
-		// for (int i = 0; i < length; i++) {
-		// try {
-		// String login =
-		// m_data.getJSONObject(i).getJSONObject("author").getString("login");
-		// if (!m_gravatars.containsKey(login)) {
-		// m_gravatars.put(login,
-		// Hubroid.getGravatar(Hubroid.getGravatarID(login), 30));
-		// }
-		// } catch (JSONException e) {
-		// e.printStackTrace();
-		// }
-		// }
-	}
+public class RevCommitListAdapter extends BaseAdapter {
+	private final Context m_context;
+	private final LayoutInflater m_inflater;
+	private final GravatarSession gravatarSession;
+	private List<RevCommit> commits;
 
 	public RevCommitListAdapter(final Context context, List<RevCommit> commits) {
 		this.commits = commits;
 		m_context = context;
+		gravatarSession=new GravatarSession(new GravatarProvider(),m_context.getResources(), 32);
 		m_inflater = LayoutInflater.from(m_context);
-		//m_gravatars = new HashMap<String, Bitmap>(m_data.length());
-		this.loadGravatars();
 	}
 
+	@Override
+	public boolean hasStableIds() {
+		return true;
+	}
+	
+	public long getItemId(int i) {
+		return commits.get(i).hashCode();
+	}
+	
 	public int getCount() {
 		return commits.size();
 	}
@@ -56,9 +49,6 @@ public class RevCommitListAdapter extends BaseAdapter {
 		return commits.get(index);
 	}
 
-	public long getItemId(int i) {
-		return i;
-	}
 	
 	public void updateWith(List<RevCommit> commits) {
 		this.commits=commits;
@@ -86,7 +76,7 @@ public class RevCommitListAdapter extends BaseAdapter {
 	}
 
 
-	public static class ViewHolder {
+	public class ViewHolder {
 		private final TextView commit_shortdesc,commit_date;
 		private final ImageView gravatar;
 		
@@ -97,8 +87,17 @@ public class RevCommitListAdapter extends BaseAdapter {
 		}
 		
 		public void updateViewFor(RevCommit commit) {
-			commit_date.setText(commitDateTextFor(commit)+" - "+commit.getCommitterIdent().getName());
-			//gravatar.setImageBitmap(gravatar.get(m_data.getJSONObject(index).getJSONObject("author").getString("login")));
+			PersonIdent committer = commit.getCommitterIdent();
+			commit_date.setText(commitDateTextFor(commit)+" - "+committer.getName());
+			
+			Drawable gravatarBitmap = gravatarSession.getGravatar(committer.getEmailAddress(), new Runnable() {
+				public void run() {
+					notifyDataSetChanged();
+				}
+			});
+			gravatar.setImageDrawable(gravatarBitmap);
+
+			
 			commit_shortdesc.setText(commit.getShortMessage());
 		}
 

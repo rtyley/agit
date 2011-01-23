@@ -35,13 +35,8 @@
 			<artifactId>google-collections</artifactId>
 			<version>1.0</version>
 		</dependency>
-<!--
-		<dependency>
-			<groupId>com.madgag</groupId>
-			<artifactId>util-intervals</artifactId>
-			<version>1.21</version>
-		</dependency>
--->
+		<!-- <dependency> <groupId>com.madgag</groupId> <artifactId>util-intervals</artifactId> 
+			<version>1.21</version> </dependency> -->
 		<dependency>
 			<groupId>com.madgag</groupId>
 			<artifactId>util-diff</artifactId>
@@ -49,12 +44,12 @@
 		</dependency>
 
 	</dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-                <artifactId>maven-android-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<artifactId>maven-android-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 </project>

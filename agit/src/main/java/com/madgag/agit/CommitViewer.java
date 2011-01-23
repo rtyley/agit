@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 
@@ -58,9 +59,7 @@ public class CommitViewer extends TabActivity {
 			Log.i("RCCV", revisionId.getName());
 			RevWalk revWalk = new RevWalk(rc.repo());
 			commit = revWalk.parseCommit(revisionId);
-			
-			actionBar.setTitle(commit.name());
-			Log.i("RCCV", commit.getFullMessage());
+			actionBar.setTitle(commit.name().substring(0, 4)+" "+commit.getShortMessage());
 			
 			
 			Resources res = getResources(); // Resource object to get Drawables
@@ -73,8 +72,13 @@ public class CommitViewer extends TabActivity {
 		    	.setContent(R.id.content);
 		    tabHost.addTab(spec);
 		    
-		    TextView commitDetailText = (TextView) findViewById(R.id.commit_detail_text);
-		    commitDetailText.setText(commit.getFullMessage());
+		    text(R.id.commit_id_text,commit.getName());
+		    PersonIdent commiter = commit.getAuthorIdent(), author = commit.getCommitterIdent();
+		    if (!author.equals(commiter)) {		    	
+		    	text(R.id.commit_author_text,author.toExternalString());
+		    }
+			text(R.id.commit_commiter_text,commiter.toExternalString());
+		    text(R.id.commit_message_text,commit.getFullMessage());
 		    
 		    commitParents = newHashMapWithExpectedSize(commit.getParentCount());
 		    TabContentFactory contentFactory = new TabContentFactory() {
@@ -107,6 +111,11 @@ public class CommitViewer extends TabActivity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void text(int textViewId, String text) {
+		 TextView textView = (TextView) findViewById(textViewId);
+		 textView.setText(text);
 	}
 
 	private TextView newTabIndicator(TabHost tabHost, String text) {
