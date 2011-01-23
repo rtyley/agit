@@ -1,6 +1,5 @@
 package com.madgag.agit;
 
-import static android.content.Intent.ACTION_VIEW;
 import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
 
 import java.io.File;
@@ -8,7 +7,6 @@ import java.io.File;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +19,6 @@ import android.widget.TextView;
 public class RepositoryListActivity extends ListActivity {
 	public static final String TAG = "RepositoryListActivity";
 	private final static int CLONE_ID=Menu.FIRST;
-	private final static int DIFF_PLAY_ID=CLONE_ID+1;
 	
     /** Called when the activity is first created. */
     @Override
@@ -57,7 +54,6 @@ public class RepositoryListActivity extends ListActivity {
         super.onCreateOptionsMenu(menu);
 
         menu.add(0, CLONE_ID, 0, R.string.clone_menu_option).setShortcut('0', 'c');
-        menu.add(0, DIFF_PLAY_ID, 0, "Diffo").setShortcut('1', 'd');
 
         return true;
     }
@@ -67,9 +63,6 @@ public class RepositoryListActivity extends ListActivity {
         switch (item.getItemId()) {
         case CLONE_ID:
             startActivity(new Intent(this, CloneLauncherActivity.class));
-            return true;
-        case DIFF_PLAY_ID:
-            startActivity(new Intent(this, DiffPlayerActivity.class));
             return true;
         }
 

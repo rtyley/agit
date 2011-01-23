@@ -30,13 +30,6 @@
 			</intent-filter>
 		</activity>
 
-
-
-
-
-
-		<activity android:name="DiffPlayerActivity" android:label="@string/app_name" />
-
 		<activity android:name="CloneLauncherActivity" android:label="@string/app_name">
 			<intent-filter>
 				<action android:name="com.madgag.git.clone.prepare" />
