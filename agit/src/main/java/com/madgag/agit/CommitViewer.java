@@ -4,12 +4,18 @@ import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 
 import java.io.File;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.lib.AnyObjectId;
+import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.revplot.PlotCommit;
+import org.eclipse.jgit.revplot.PlotCommitList;
+import org.eclipse.jgit.revplot.PlotLane;
+import org.eclipse.jgit.revplot.PlotWalk;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevWalk;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -23,12 +29,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TextView;
 
-import com.google.common.collect.Maps;
+import com.google.common.base.Joiner;
 import com.markupartist.android.widget.ActionBar;
 
 public class CommitViewer extends TabActivity {
@@ -39,12 +47,16 @@ public class CommitViewer extends TabActivity {
     public static Intent revCommitViewIntentFor(File gitdir, RevCommit commit) {
 		return new GitIntentBuilder("git.view.COMMIT").gitdir(gitdir).commit(commit).toIntent();
 	}
+    
+    public static Intent revCommitViewIntentFor(File gitdir, String commitId) {
+		return new GitIntentBuilder("git.view.COMMIT").gitdir(gitdir).commit(commitId).toIntent();
+	}
 
 	private RepositoryContext rc;
 
-	private RevCommit commit;
+	private PlotCommit<PlotLane> commit;
 	
-	private Map<String, RevCommit> commitParents;
+	private Map<String, RevCommit> commitParents, commitChildren;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,8 +69,19 @@ public class CommitViewer extends TabActivity {
 			
 			ObjectId revisionId = GitIntents.commitIdFrom(getIntent()); // intent.getStringExtra("commit");
 			Log.i("RCCV", revisionId.getName());
-			RevWalk revWalk = new RevWalk(rc.repo());
-			commit = revWalk.parseCommit(revisionId);
+			
+
+			
+			
+			PlotWalk revWalk = new PlotWalk(rc.repo());
+			final AnyObjectId headId = rc.repo().resolve(Constants.HEAD);
+			RevCommit root = revWalk.parseCommit(headId);
+			revWalk.markStart(root);
+			PlotCommitList<PlotLane> plotCommitList = new PlotCommitList<PlotLane>();
+			plotCommitList.source(revWalk);
+			plotCommitList.fillTo(Integer.MAX_VALUE);
+			commit = (PlotCommit<PlotLane>) revWalk.parseCommit(revisionId);
+			
 			actionBar.setTitle(commit.name().substring(0, 4)+" "+commit.getShortMessage());
 			
 			
@@ -78,7 +101,6 @@ public class CommitViewer extends TabActivity {
 		    	text(R.id.commit_author_text,author.toExternalString());
 		    }
 			text(R.id.commit_commiter_text,commiter.toExternalString());
-		    text(R.id.commit_message_text,commit.getFullMessage());
 		    
 		    commitParents = newHashMapWithExpectedSize(commit.getParentCount());
 		    TabContentFactory contentFactory = new TabContentFactory() {
@@ -91,6 +113,8 @@ public class CommitViewer extends TabActivity {
 					return v;
 				}
 			};
+			
+			
 		    for (RevCommit parentCommit : commit.getParents()) {
 		    	parentCommit = revWalk.parseCommit(parentCommit);
 		    	String parentId = parentCommit.getName();
@@ -102,15 +126,36 @@ public class CommitViewer extends TabActivity {
 			    tabHost.addTab(spec);
 		    }
 		    
-
-			Log.i("RCCV", "Parent count " + commit.getParentCount());
-			if (commit.getParentCount() == 1) {
-				//setThoseListThings(revWalk);
-			}
-
+		    commitChildren = newHashMapWithExpectedSize(commit.getChildCount());
+		    for (int i=0;i<commit.getChildCount();++i) {
+		    	PlotCommit child = commit.getChild(i);
+		    	commitChildren.put(child.getName(), child);
+		    }
+		    
+		    addButtonsFor(R.id.commit_parent_navigation, commitParents.keySet());
+		    addButtonsFor(R.id.commit_child_navigation, commitChildren.keySet());
+		    
+		    text(R.id.commit_message_text,commit.getFullMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void addButtonsFor(int navigation_view_id, Set<String> relatedCommits) {
+		LinearLayout layout = (LinearLayout) findViewById(navigation_view_id);
+		LayoutInflater layoutInflater = getLayoutInflater();
+		
+		for (final String relatedCommit : relatedCommits) {
+			Button button = (Button) layoutInflater.inflate(R.layout.related_commit_button, layout, false);
+			layout.addView(button);
+			button.setText(relatedCommit.substring(0, 4));
+			button.setOnClickListener(new View.OnClickListener() {
+	             public void onClick(View v) {
+	                 startActivity(CommitViewer.revCommitViewIntentFor(rc.gitdir(), relatedCommit));
+	             }
+	         });
+		}
+		Log.d("CV", "Added to "+navigation_view_id+" : "+relatedCommits);
 	}
 
 	private void text(int textViewId, String text) {

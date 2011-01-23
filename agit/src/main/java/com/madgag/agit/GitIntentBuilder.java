@@ -47,7 +47,11 @@ public class GitIntentBuilder {
 	}
 
 	public GitIntentBuilder commit(RevCommit revCommit) {
-		return add("commit", revCommit.name());
+		return commit(revCommit.name());
+	}
+
+	public GitIntentBuilder commit(String commitId) {
+		return add("commit", commitId);
 	}
 
 }

@@ -6,7 +6,6 @@ import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +14,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.madgag.gravatar.android.GravatarLoadListener;
 import com.madgag.gravatar.android.GravatarProvider;
 import com.madgag.gravatar.android.GravatarSession;
 
