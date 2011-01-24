@@ -71,25 +71,8 @@
 						/>
 						
 						
-						<LinearLayout
-						        android:orientation="horizontal"
-						        android:layout_width="match_parent"
-						        android:layout_height="wrap_content"
-						        android:height="100dip"
-						        >
-						        <LinearLayout
-							        android:id="@+id/commit_parent_navigation"
-							        android:orientation="vertical"
-							        android:layout_width="wrap_content"
-							        android:layout_height="match_parent"
-							        android:layout_weight="1" />
-						        <LinearLayout
-							        android:id="@+id/commit_child_navigation"
-							        android:orientation="vertical"
-							        android:layout_width="wrap_content"
-							        android:layout_height="match_parent"
-							        android:layout_weight="1" />
-						</LinearLayout>        
+						<com.madgag.agit.CommitNavigationView android:id="@+id/commit_navigation"
+							android:layout_width="fill_parent" android:layout_height="fill_parent"/>     
                  </LinearLayout>
         </FrameLayout>
     </LinearLayout>

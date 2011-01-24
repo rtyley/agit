@@ -1,6 +1,6 @@
 package com.madgag.agit;
 
-import static com.madgag.agit.CommitViewer.revCommitViewIntentFor;
+import static com.madgag.agit.CommitViewerActivity.revCommitViewIntentFor;
 
 import java.util.List;
 

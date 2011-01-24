@@ -81,7 +81,8 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name="CommitViewer">
+		
+		<activity android:name="CommitViewerActivity">
 			<intent-filter>
 				<action android:name="git.view.COMMIT" />
 				<category android:name="android.intent.category.DEFAULT" />
