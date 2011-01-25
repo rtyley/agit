@@ -17,12 +17,14 @@
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:autoLink="web|email" />
 	<TextView android:id="@+id/commit_message_text"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:layout_height="0px"
+		android:layout_weight="1"
 		android:autoLink="web|email|map" android:typeface="monospace"
 		android:textAppearance="?android:attr/textAppearanceSmall" />
 
 	<com.madgag.agit.CommitNavigationView
 		android:id="@+id/commit_navigation"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent" />
+		android:layout_height="100dip" />
 </LinearLayout>

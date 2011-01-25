@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:height="100dip"
+        android:layout_height="100dip"
         >
         <LinearLayout
 	        android:id="@+id/commit_parent_navigation"
