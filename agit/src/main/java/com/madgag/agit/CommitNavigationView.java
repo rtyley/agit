@@ -51,7 +51,9 @@ public class CommitNavigationView extends LinearLayout {
 		for (PlotCommit<PlotLane> relatedCommit : relation.relationsOf(commit)) {
 			Button button = (Button) layoutInflater.inflate(R.layout.related_commit_button, buttonGroup, false);
 			button.setTag(relatedCommit);
-			button.setText(relatedCommit.getName().substring(0, 4));
+			String abbrId = relatedCommit.getName().substring(0, 4);
+			String buttonText = (relation==PARENT)?("« "+abbrId):(abbrId+" »");
+			button.setText(buttonText);
 			button.setOnClickListener(clickListener);
 			buttonGroup.addView(button);
 		}
