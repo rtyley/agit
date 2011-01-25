@@ -1,26 +1,16 @@
 package com.madgag.agit;
 
 import static android.widget.Toast.LENGTH_LONG;
-import static com.google.common.collect.Sets.newHashSet;
 import static com.madgag.agit.GitIntents.addGitDirTo;
 import static com.madgag.agit.GitIntents.gitDirFrom;
-import static com.madgag.agit.GitIntents.repositoryFrom;
 import static com.madgag.agit.Repos.openRepoFor;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.lib.RepositoryCache;
-import org.eclipse.jgit.storage.file.FileRepository;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
 
 import android.app.NotificationManager;
@@ -127,7 +117,7 @@ public class GitOperationsService extends Service implements AndroidAuthAgentPro
 	}
 	
 	private void bindSshAgent() {
-		bindService(new Intent("com.madgag.android.ssh.BIND_SSH_AGENT_SERVICE"), new ServiceConnection() {
+		bindService(new Intent("org.openintents.ssh.BIND_SSH_AGENT_SERVICE"), new ServiceConnection() {
 			public void onServiceDisconnected(ComponentName name) {
 				Log.i(TAG, "onServiceDisconnected - losing "+authAgent);
 				authAgent=null;

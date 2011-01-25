@@ -92,8 +92,8 @@
 	<uses-sdk android:minSdkVersion="7" />
 
 	<uses-permission android:name="android.permission.VIBRATE" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
-	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
-	<uses-permission android:name="com.madgag.android.ssh.permission.ACCESS_SSH_AGENT"></uses-permission>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="org.openintents.ssh.permission.ACCESS_SSH_AGENT" />
 
 </manifest> 

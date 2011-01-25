@@ -16,6 +16,11 @@
 	<TextView android:id="@+id/commit_commiter_text"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:autoLink="web|email" />
+	<LinearLayout android:id="@+id/commit_refs_group"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+        
 	<TextView android:id="@+id/commit_message_text"
 		android:layout_width="fill_parent"
 		android:layout_height="0px"
