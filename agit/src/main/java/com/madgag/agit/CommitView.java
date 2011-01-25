@@ -23,6 +23,7 @@ import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.TabContentFactory;
+import android.widget.TabHost.TabSpec;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
@@ -72,27 +73,9 @@ public class CommitView extends LinearLayout {
 			
 			tabHost.clearAllTabs();
 					
-		    TabHost.TabSpec spec;
-		    spec = tabHost.newTabSpec("commit_details")
-		    	.setIndicator(newTabIndicator(tabHost, "Commit"))
-		    	.setContent(new TabContentFactory() {
-					public View createTabContent(String tag) {
-						return layoutInflater.inflate(R.layout.commit_detail_view, tabHost.getTabWidget(), false);
-					}
-				});
-		    tabHost.addTab(spec);
+		    tabHost.addTab(detailTabSpec());
 		    
-		    commitNavigationView = (CommitNavigationView) findViewById(R.id.commit_navigation);
-			Log.d("CV", "Got commitNavigationView="+commitNavigationView+" commitSelectedListener="+commitSelectedListener);
-			commitNavigationView.setCommitSelectedListener(commitSelectedListener);
-			
-		    text(R.id.commit_id_text,commit.getName());
-		    PersonIdent commiter = commit.getAuthorIdent(), author = commit.getCommitterIdent();
-		    
-		    text(R.id.commit_author_text,author.toExternalString());
-			text(R.id.commit_commiter_text,commiter.toExternalString());
-
-		    text(R.id.commit_message_text,commit.getFullMessage());
+		    showCommitDetailsFor(commit);
 		    
 		    commitParents = newHashMapWithExpectedSize(commit.getParentCount());
 		    TabContentFactory contentFactory = new TabContentFactory() {
@@ -111,8 +94,8 @@ public class CommitView extends LinearLayout {
 		    	parentCommit = revWalk.parseCommit(parentCommit);
 		    	String parentId = parentCommit.getName();
 				commitParents.put(parentId, parentCommit);
-		    	spec = tabHost.newTabSpec(parentId);
-		    	String text = "Δ "+parentId.substring(0, 2);
+		    	TabSpec spec = tabHost.newTabSpec(parentId);
+		    	String text = "Δ "+parentId.substring(0, 4);
 		    	
 				spec.setIndicator(newTabIndicator(tabHost, text)).setContent(contentFactory);
 			    tabHost.addTab(spec);
@@ -120,6 +103,32 @@ public class CommitView extends LinearLayout {
 		    
 		    commitNavigationView.setCommit(commit);
 		    
+	}
+
+	private void showCommitDetailsFor(final PlotCommit<PlotLane> commit) {
+		commitNavigationView = (CommitNavigationView) findViewById(R.id.commit_navigation);
+		Log.d("CV", "Got commitNavigationView="+commitNavigationView+" commitSelectedListener="+commitSelectedListener);
+		commitNavigationView.setCommitSelectedListener(commitSelectedListener);
+		
+		text(R.id.commit_id_text,commit.getName());
+		PersonIdent commiter = commit.getAuthorIdent(), author = commit.getCommitterIdent();
+		
+		text(R.id.commit_author_text,author.toExternalString());
+		text(R.id.commit_commiter_text,commiter.toExternalString());
+
+		text(R.id.commit_message_text,commit.getFullMessage());
+	}
+
+	private TabHost.TabSpec detailTabSpec() {
+		TabHost.TabSpec spec;
+		spec = tabHost.newTabSpec("commit_details")
+			.setIndicator(newTabIndicator(tabHost, "Commit"))
+			.setContent(new TabContentFactory() {
+				public View createTabContent(String tag) {
+					return layoutInflater.inflate(R.layout.commit_detail_view, tabHost.getTabWidget(), false);
+				}
+			});
+		return spec;
 	}
 	
 	public void setCommitSelectedListener(CommitSelectedListener commitSelectedListener) {
