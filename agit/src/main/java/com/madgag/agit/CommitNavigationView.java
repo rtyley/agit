@@ -1,18 +1,16 @@
 package com.madgag.agit;
 
-import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
+import static com.google.common.collect.Maps.newEnumMap;
 import static com.madgag.agit.Relation.CHILD;
 import static com.madgag.agit.Relation.PARENT;
 
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.jgit.revplot.PlotCommit;
 import org.eclipse.jgit.revplot.PlotLane;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,49 +18,51 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 public class CommitNavigationView extends LinearLayout {
-	
-	private static final String TAG = "CNV";
+
 	private final LayoutInflater layoutInflater;
-	private final ViewGroup parentsButtonGroup, childrenButtonGroup;
-	
-	private PlotCommit<PlotLane> commit;
-	private Map<String, PlotCommit<PlotLane>>
-		commitParents = newHashMapWithExpectedSize(1), 
-		commitChildren = newHashMapWithExpectedSize(1);
+	private final Map<Relation, ViewGroup> buttonGroups = newEnumMap(Relation.class);
+
+	private CommitSelectedListener commitSelectedListener;
 
 	public CommitNavigationView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		layoutInflater = LayoutInflater.from(context);
-		
+
 		layoutInflater.inflate(R.layout.commit_navigation_view, this);
-		parentsButtonGroup = (ViewGroup) findViewById(R.id.commit_parent_navigation);
-		childrenButtonGroup = (ViewGroup) findViewById(R.id.commit_child_navigation);
-	}
-	
-	public void setCommit(final PlotCommit<PlotLane> commit) {
-			this.commit = commit;
-			commitParents = PARENT.relationsOf(commit);
-			commitChildren = CHILD.relationsOf(commit);
-		    
-		    addButtonsFor(parentsButtonGroup, commitParents.keySet(), PARENT);
-		    addButtonsFor(childrenButtonGroup, commitChildren.keySet(), CHILD );
+		buttonGroups.put(PARENT, (ViewGroup) findViewById(R.id.commit_parent_navigation));
+		buttonGroups.put(CHILD, (ViewGroup) findViewById(R.id.commit_child_navigation));
 	}
 
-	
+	public void setCommit(PlotCommit<PlotLane> commit) {
+		addButtonsFor(commit, PARENT);
+		addButtonsFor(commit, CHILD);
+	}
 
-	private void addButtonsFor(ViewGroup buttonGroup, Set<String> relatedCommits, Relation relation) {
+	private void addButtonsFor(PlotCommit<PlotLane> commit, final Relation relation) {
+		ViewGroup buttonGroup = buttonGroups.get(relation);
 		buttonGroup.removeAllViews();
-		for (final String relatedCommit : relatedCommits) {
+		View.OnClickListener clickListener = new View.OnClickListener() {
+			@SuppressWarnings("unchecked")
+			public void onClick(View v) {
+				commitSelectedListener.onCommitSelected(relation, (PlotCommit<PlotLane>) v.getTag());
+			}
+		};
+		
+		for (PlotCommit<PlotLane> relatedCommit : relation.relationsOf(commit)) {
 			Button button = (Button) layoutInflater.inflate(R.layout.related_commit_button, buttonGroup, false);
-			button.setText(relatedCommit.substring(0, 4));
-			button.setOnClickListener(new View.OnClickListener() {
-	             public void onClick(View v) {
-	                 // startActivity(CommitViewer.revCommitViewIntentFor(gitdir(), relatedCommit));
-	             }
-	        });
+			button.setTag(relatedCommit);
+			button.setText(relatedCommit.getName().substring(0, 4));
+			button.setOnClickListener(clickListener);
 			buttonGroup.addView(button);
 		}
-		Log.d(TAG, "Added to "+buttonGroup+" : "+relatedCommits);
 	}
-	
+
+	public void setCommitSelectedListener(
+			CommitSelectedListener commitSelectedListener) {
+		this.commitSelectedListener = commitSelectedListener;
+	}
+
+	public interface CommitSelectedListener {
+		void onCommitSelected(Relation relation, PlotCommit<PlotLane> commit);
+	}
 }

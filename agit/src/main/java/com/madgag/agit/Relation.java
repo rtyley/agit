@@ -1,35 +1,30 @@
 package com.madgag.agit;
 
-import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
+import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
+import static java.util.Arrays.asList;
 
-import java.util.Map;
+import java.util.List;
 
 import org.eclipse.jgit.revplot.PlotCommit;
 import org.eclipse.jgit.revplot.PlotLane;
 
 public enum Relation {
 	PARENT  {
-		@Override
-		Map<String, PlotCommit<PlotLane>> relationsOf(PlotCommit<PlotLane> commit) {
-			Map<String, PlotCommit<PlotLane>> commitParents = newHashMapWithExpectedSize(commit.getParentCount());
-			for (int i=0;i<commit.getParentCount();++i) {
-				PlotCommit parent = (PlotCommit) commit.getParent(i);
-				commitParents.put(parent.getName(), parent);
-			}
-			return commitParents;
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		List<PlotCommit<PlotLane>> relationsOf(PlotCommit<PlotLane> commit) {
+			return (List) asList(commit.getParents());
 		}
 	},
 	CHILD {
-		@Override
-		Map<String, PlotCommit<PlotLane>> relationsOf(PlotCommit<PlotLane> commit) {
-			Map<String, PlotCommit<PlotLane>> commitChildren = newHashMapWithExpectedSize(commit.getParentCount());
+		@SuppressWarnings({ "unchecked" })
+		List<PlotCommit<PlotLane>> relationsOf(PlotCommit<PlotLane> commit) {
+			List<PlotCommit<PlotLane>> commitChildren = newArrayListWithExpectedSize(commit.getParentCount());
 			for (int i=0;i<commit.getChildCount();++i) {
-				PlotCommit child = commit.getChild(i);
-				commitChildren.put(child.getName(), child);
+				commitChildren.add(commit.getChild(i));
 			}
 			return commitChildren;
 		}
 	};
 	
-	abstract Map<String, PlotCommit<PlotLane>> relationsOf(PlotCommit<PlotLane> commit);
+	abstract List<PlotCommit<PlotLane>> relationsOf(PlotCommit<PlotLane> commit);
 }

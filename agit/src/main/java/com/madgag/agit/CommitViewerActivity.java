@@ -24,6 +24,8 @@ import org.eclipse.jgit.revplot.PlotLane;
 import org.eclipse.jgit.revplot.PlotWalk;
 import org.eclipse.jgit.revwalk.RevCommit;
 
+import com.madgag.agit.CommitNavigationView.CommitSelectedListener;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -81,16 +83,25 @@ public class CommitViewerActivity extends RepositoryActivity {
 		currentCommitView = (CommitView) findViewById(R.id.commit_nav_current_commit);
 		nextCommitView = (CommitView) findViewById(R.id.commit_nav_next_commit);
 		
+		CommitSelectedListener commitSelectedListener = new CommitSelectedListener() {
+			public void onCommitSelected(Relation relation, PlotCommit<PlotLane> commit) {
+				setCommit(commit, relation);
+			}
+		};
 		try {
+
 			
 			ObjectId revisionId = GitIntents.commitIdFrom(getIntent()); // intent.getStringExtra("commit");
 			Log.i("RCCV", revisionId.getName());
 			PlotWalk revWalk = generatePlotWalk();
-			currentCommitView.setRepositoryContext(repo(), revWalk);
-			nextCommitView.setRepositoryContext(repo(), revWalk);
 			
 			commit = (PlotCommit<PlotLane>) revWalk.parseCommit(revisionId);
-		    currentCommitView.setCommit(commit);
+			
+			currentCommitView.setRepositoryContext(repo(), revWalk);
+			nextCommitView.setRepositoryContext(repo(), revWalk);
+			currentCommitView.setCommitSelectedListener(commitSelectedListener);
+			nextCommitView.setCommitSelectedListener(commitSelectedListener);
+			currentCommitView.setCommit(commit);
 		    setCurrentCommitViewVisible();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -112,6 +123,9 @@ public class CommitViewerActivity extends RepositoryActivity {
 			throw new RuntimeException(e);
 		}
 		relationAnimations.get(relation).animateViews();
+		CommitView oldCurrent = currentCommitView;
+		currentCommitView = nextCommitView;
+		nextCommitView = oldCurrent;
 		setCurrentCommitViewVisible();
 	}
 

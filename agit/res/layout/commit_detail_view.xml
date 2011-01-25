@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent" >
+
+	<TextView android:id="@+id/commit_id_text"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:typeface="monospace" />
+	<TextView android:id="@+id/commit_time_text"
+		android:layout_width="wrap_content" android:layout_height="wrap_content" />
+	<TextView android:id="@+id/commit_author_text"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:autoLink="web|email" />
+	<TextView android:id="@+id/commit_commiter_text"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:autoLink="web|email" />
+	<TextView android:id="@+id/commit_message_text"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:autoLink="web|email|map" android:typeface="monospace"
+		android:textAppearance="?android:attr/textAppearanceSmall" />
+
+	<com.madgag.agit.CommitNavigationView
+		android:id="@+id/commit_navigation"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" />
+</LinearLayout>
