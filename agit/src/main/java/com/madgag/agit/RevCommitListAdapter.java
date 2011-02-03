@@ -1,12 +1,17 @@
 package com.madgag.agit;
 
+import static com.madgag.android.lazydrawables.gravatar.Gravatars.gravatarIdFor;
+
+import java.io.File;
 import java.util.List;
 
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,19 +19,28 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.madgag.gravatar.android.GravatarProvider;
-import com.madgag.gravatar.android.GravatarSession;
+import com.madgag.android.lazydrawables.BitmapFileStore;
+import com.madgag.android.lazydrawables.ImageProcessor;
+import com.madgag.android.lazydrawables.ImageResourceDownloader;
+import com.madgag.android.lazydrawables.ImageResourceStore;
+import com.madgag.android.lazydrawables.ImageSession;
+import com.madgag.android.lazydrawables.ScaledBitmapDrawableGenerator;
+import com.madgag.android.lazydrawables.gravatar.GravatarBitmapDownloader;
 
 public class RevCommitListAdapter extends BaseAdapter {
 	private final Context m_context;
 	private final LayoutInflater m_inflater;
-	private final GravatarSession gravatarSession;
+	private final ImageSession<String, Bitmap> gravatarSession;
 	private List<RevCommit> commits;
 
 	public RevCommitListAdapter(final Context context, List<RevCommit> commits) {
 		this.commits = commits;
 		m_context = context;
-		gravatarSession=new GravatarSession(new GravatarProvider(),m_context.getResources(), 32);
+		ImageProcessor<Bitmap> imageProcessor = new ScaledBitmapDrawableGenerator(34, context.getResources());
+		ImageResourceDownloader<String, Bitmap> downloader = new GravatarBitmapDownloader();
+		File file = new File(Environment.getExternalStorageDirectory(),"gravagroovy");
+		ImageResourceStore<String, Bitmap> imageResourceStore = new BitmapFileStore<String>(file);
+		gravatarSession=new ImageSession<String, Bitmap>(imageProcessor, downloader, imageResourceStore, context.getResources().getDrawable(R.drawable.loading_34_centred));
 		m_inflater = LayoutInflater.from(m_context);
 	}
 
@@ -85,14 +99,10 @@ public class RevCommitListAdapter extends BaseAdapter {
 		}
 		
 		public void updateViewFor(RevCommit commit) {
-			PersonIdent committer = commit.getCommitterIdent();
-			commit_date.setText(commitDateTextFor(commit)+" - "+committer.getName());
+			PersonIdent author = commit.getAuthorIdent();
+			commit_date.setText(commitDateTextFor(commit)+" - "+author.getName());
 			
-			Drawable gravatarBitmap = gravatarSession.getGravatar(committer.getEmailAddress(), new Runnable() {
-				public void run() {
-					notifyDataSetChanged();
-				}
-			});
+			Drawable gravatarBitmap = gravatarSession.get(gravatarIdFor(author.getEmailAddress()));
 			gravatar.setImageDrawable(gravatarBitmap);
 
 			

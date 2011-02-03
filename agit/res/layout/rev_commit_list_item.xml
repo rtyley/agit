@@ -20,8 +20,8 @@
 		android:text="24 hours ago" />
 	<ImageView
 		android:id="@+id/iv_commit_list_item_gravatar"
-		android:layout_width="36px"
-		android:layout_height="36px"
+		android:layout_width="36dip"
+		android:layout_height="36dip"
 		android:layout_below="@id/iv_commit_list_item_icon"
 		android:layout_alignRight="@id/iv_commit_list_item_icon"
 		android:scaleType="center"
