@@ -2,6 +2,7 @@ package com.madgag.agit;
 
 import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -16,6 +17,8 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.filter.CommitterRevFilter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.Environment;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +33,13 @@ import android.widget.TabWidget;
 import android.widget.TextView;
 
 import com.madgag.agit.CommitNavigationView.CommitSelectedListener;
+import com.madgag.android.lazydrawables.BitmapFileStore;
+import com.madgag.android.lazydrawables.ImageProcessor;
+import com.madgag.android.lazydrawables.ImageResourceDownloader;
+import com.madgag.android.lazydrawables.ImageResourceStore;
+import com.madgag.android.lazydrawables.ImageSession;
+import com.madgag.android.lazydrawables.ScaledBitmapDrawableGenerator;
+import com.madgag.android.lazydrawables.gravatar.GravatarBitmapDownloader;
 import com.markupartist.android.widget.ActionBar;
 
 public class CommitView extends LinearLayout {
@@ -51,8 +61,18 @@ public class CommitView extends LinearLayout {
 
 	private CommitSelectedListener commitSelectedListener;
 
+	private ImageSession<String, Bitmap> is;
+
 	public CommitView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		
+		ImageProcessor<Bitmap> imageProcessor = new ScaledBitmapDrawableGenerator(34, getResources());
+		ImageResourceDownloader<String, Bitmap> downloader = new GravatarBitmapDownloader();
+		File file = new File(Environment.getExternalStorageDirectory(),"gravagroovy");
+		ImageResourceStore<String, Bitmap> imageResourceStore = new BitmapFileStore<String>(file);
+		is=new ImageSession<String, Bitmap>(imageProcessor, downloader, imageResourceStore, getResources().getDrawable(R.drawable.loading_34_centred));
+		
+		
 		layoutInflater = LayoutInflater.from(context);
 		
 		layoutInflater.inflate(R.layout.commit_view, this);
@@ -114,10 +134,12 @@ public class CommitView extends LinearLayout {
 		commitNavigationView.setCommitSelectedListener(commitSelectedListener);
 		
 		text(R.id.commit_id_text,commit.getName());
-		PersonIdent commiter = commit.getAuthorIdent(), author = commit.getCommitterIdent();
+		PersonIdent author = commit.getCommitterIdent();
 
-		text(R.id.commit_author_text,author.toExternalString());
-		text(R.id.commit_commiter_text,commiter.toExternalString());
+		ViewGroup vg = (ViewGroup) findViewById(R.id.commit_people_group);
+		addPerson("Author",commit.getAuthorIdent(), vg);
+		addPerson("Committer",commit.getCommitterIdent(), vg);
+		
 //		ViewGroup vg = (ViewGroup) findViewById(R.id.commit_refs_group);
 //		for (int i=0; i<commit.getRefCount(); ++i) {
 //			TextView tv = new TextView(getContext());
@@ -125,6 +147,12 @@ public class CommitView extends LinearLayout {
 //			vg.addView(tv);
 //		}
 		text(R.id.commit_message_text,commit.getFullMessage());
+	}
+
+	private void addPerson(String title, PersonIdent commiter, ViewGroup vg) {
+		PersonIdentView personIdentView = new PersonIdentView(getContext(), null);
+		personIdentView.setIdent(is, title, commiter);
+		vg.addView(personIdentView);
 	}
 
 	private TabHost.TabSpec detailTabSpec() {

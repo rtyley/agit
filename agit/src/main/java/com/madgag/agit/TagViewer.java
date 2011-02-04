@@ -51,7 +51,7 @@ public class TagViewer extends RepositoryActivity {
 
 	private Ref tagRef;
 
-	private ImageSession<String, Bitmap> gravatarSession;
+	private ImageSession<String, Bitmap> avatarSession;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class TagViewer extends RepositoryActivity {
 		ImageResourceDownloader<String, Bitmap> downloader = new GravatarBitmapDownloader();
 		File file = new File(Environment.getExternalStorageDirectory(),"gravagroovy");
 		ImageResourceStore<String, Bitmap> imageResourceStore = new BitmapFileStore<String>(file);
-		gravatarSession=new ImageSession<String, Bitmap>(imageProcessor, downloader, imageResourceStore, getResources().getDrawable(R.drawable.loading_34_centred));
+		avatarSession=new ImageSession<String, Bitmap>(imageProcessor, downloader, imageResourceStore, getResources().getDrawable(R.drawable.loading_34_centred));
 		
 		actionBar = (ActionBar) findViewById(R.id.actionbar);
 		taggerIdentView = (PersonIdentView) findViewById(R.id.tv_tag_tagger_ident);
@@ -112,7 +112,7 @@ public class TagViewer extends RepositoryActivity {
 			try {
 				revTag = new RevWalk(repo()).parseTag(tagId);
 				actionBar.setTitle(revTag.getTagName());
-				taggerIdentView.setIdent(gravatarSession, revTag.getTaggerIdent());
+				taggerIdentView.setIdent(avatarSession, "Tagger", revTag.getTaggerIdent());
 			} catch (IOException e) {
 				Log.e(TAG, "Couldn't get parse tag", e);
 				Toast.makeText(this, "Couldn't get tag "+tagId, Toast.LENGTH_LONG).show();

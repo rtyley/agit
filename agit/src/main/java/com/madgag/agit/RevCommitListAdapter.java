@@ -30,7 +30,7 @@ import com.madgag.android.lazydrawables.gravatar.GravatarBitmapDownloader;
 public class RevCommitListAdapter extends BaseAdapter {
 	private final Context m_context;
 	private final LayoutInflater m_inflater;
-	private final ImageSession<String, Bitmap> gravatarSession;
+	private final ImageSession<String, Bitmap> avatarSession;
 	private List<RevCommit> commits;
 
 	public RevCommitListAdapter(final Context context, List<RevCommit> commits) {
@@ -40,7 +40,7 @@ public class RevCommitListAdapter extends BaseAdapter {
 		ImageResourceDownloader<String, Bitmap> downloader = new GravatarBitmapDownloader();
 		File file = new File(Environment.getExternalStorageDirectory(),"gravagroovy");
 		ImageResourceStore<String, Bitmap> imageResourceStore = new BitmapFileStore<String>(file);
-		gravatarSession=new ImageSession<String, Bitmap>(imageProcessor, downloader, imageResourceStore, context.getResources().getDrawable(R.drawable.loading_34_centred));
+		avatarSession=new ImageSession<String, Bitmap>(imageProcessor, downloader, imageResourceStore, context.getResources().getDrawable(R.drawable.loading_34_centred));
 		m_inflater = LayoutInflater.from(m_context);
 	}
 
@@ -102,7 +102,7 @@ public class RevCommitListAdapter extends BaseAdapter {
 			PersonIdent author = commit.getAuthorIdent();
 			commit_date.setText(commitDateTextFor(commit)+" - "+author.getName());
 			
-			Drawable gravatarBitmap = gravatarSession.get(gravatarIdFor(author.getEmailAddress()));
+			Drawable gravatarBitmap = avatarSession.get(gravatarIdFor(author.getEmailAddress()));
 			gravatar.setImageDrawable(gravatarBitmap);
 
 			
