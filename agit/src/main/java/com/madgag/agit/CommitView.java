@@ -134,12 +134,16 @@ public class CommitView extends LinearLayout {
 		commitNavigationView.setCommitSelectedListener(commitSelectedListener);
 		
 		text(R.id.commit_id_text,commit.getName());
-		PersonIdent author = commit.getCommitterIdent();
 
 		ViewGroup vg = (ViewGroup) findViewById(R.id.commit_people_group);
-		addPerson("Author",commit.getAuthorIdent(), vg);
-		addPerson("Committer",commit.getCommitterIdent(), vg);
 		
+		PersonIdent author = commit.getAuthorIdent(), committer = commit.getCommitterIdent();
+		if (author.equals(committer)) {
+			addPerson("Author & Committer",author, vg);
+		} else {
+			addPerson("Author",author, vg);
+			addPerson("Committer",committer, vg);
+		}
 //		ViewGroup vg = (ViewGroup) findViewById(R.id.commit_refs_group);
 //		for (int i=0; i<commit.getRefCount(); ++i) {
 //			TextView tv = new TextView(getContext());
