@@ -6,18 +6,13 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 
-	<TextView
-         android:id="@+id/tv_tag_viewer_title"
-         android:layout_width="fill_parent"
-         android:layout_height="56dip"
-         android:gravity="center"
-         android:background="@drawable/top_bar"
-         android:textColor="@color/textColor"
-         android:textSize="20dip"
-         android:textStyle="bold" />
+	<com.markupartist.android.widget.ActionBar
+		    android:id="@+id/actionbar"
+		    style="@style/ActionBar"
+	        />
 	
-	<TextView
-         android:id="@+id/tv_tag_tagger"
+	<com.madgag.agit.PersonIdentView
+         android:id="@+id/tv_tag_tagger_ident"
          android:layout_width="fill_parent"
          android:layout_height="wrap_content"/>
 	

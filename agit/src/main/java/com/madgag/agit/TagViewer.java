@@ -2,8 +2,10 @@ package com.madgag.agit;
 
 import static com.madgag.agit.GitIntents.tagNameFrom;
 
+import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefUpdate;
 import org.eclipse.jgit.lib.RefUpdate.Result;
@@ -11,8 +13,19 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevWalk;
 
+import com.madgag.android.lazydrawables.BitmapFileStore;
+import com.madgag.android.lazydrawables.ImageProcessor;
+import com.madgag.android.lazydrawables.ImageResourceDownloader;
+import com.madgag.android.lazydrawables.ImageResourceStore;
+import com.madgag.android.lazydrawables.ImageSession;
+import com.madgag.android.lazydrawables.ScaledBitmapDrawableGenerator;
+import com.madgag.android.lazydrawables.gravatar.GravatarBitmapDownloader;
+import com.markupartist.android.widget.ActionBar;
+
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,24 +38,34 @@ public class TagViewer extends RepositoryActivity {
 		return new GitIntentBuilder("git.tag.VIEW").repository(repository).tag(tagName).toIntent();
 	}
 
-	private static final String TAG = "TagViewer";
+	private static final String TAG = "TV";
 	
 	@Override String TAG() { return TAG; }
 
 	private final static int DELETE_ID=Menu.FIRST;
 	
+	private ActionBar actionBar;
+	private PersonIdentView taggerIdentView;
+	
 	private RevTag revTag;
 
 	private Ref tagRef;
 
-	private TextView titleTextView, taggerTextView;
+	private ImageSession<String, Bitmap> gravatarSession;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tag_view);
-		titleTextView = (TextView) findViewById(R.id.tv_tag_viewer_title);
-		taggerTextView = (TextView) findViewById(R.id.tv_tag_tagger);
+		
+		ImageProcessor<Bitmap> imageProcessor = new ScaledBitmapDrawableGenerator(34, getResources());
+		ImageResourceDownloader<String, Bitmap> downloader = new GravatarBitmapDownloader();
+		File file = new File(Environment.getExternalStorageDirectory(),"gravagroovy");
+		ImageResourceStore<String, Bitmap> imageResourceStore = new BitmapFileStore<String>(file);
+		gravatarSession=new ImageSession<String, Bitmap>(imageProcessor, downloader, imageResourceStore, getResources().getDrawable(R.drawable.loading_34_centred));
+		
+		actionBar = (ActionBar) findViewById(R.id.actionbar);
+		taggerIdentView = (PersonIdentView) findViewById(R.id.tv_tag_tagger_ident);
 	}
 
     @Override
@@ -78,21 +101,21 @@ public class TagViewer extends RepositoryActivity {
     public void onContentChanged() {
     	Log.d(TAG, "updateUI called");
     	tagRef = repo().getTags().get(tagNameFrom(getIntent()));	
-    	if (titleTextView==null) {
+    	if (taggerIdentView==null) {
     		return;
     	}
     	
 		if (tagRef==null) {
-			titleTextView.setText("unknown");
-			taggerTextView.setText("");
+			actionBar.setTitle("unknown tag");
 		} else {
+			ObjectId tagId = tagRef.getObjectId();
 			try {
-				revTag = new RevWalk(repo()).parseTag(tagRef.getObjectId());
-				titleTextView.setText(revTag.getTagName());
-				taggerTextView.setText(revTag.getTaggerIdent().getName());
+				revTag = new RevWalk(repo()).parseTag(tagId);
+				actionBar.setTitle(revTag.getTagName());
+				taggerIdentView.setIdent(gravatarSession, revTag.getTaggerIdent());
 			} catch (IOException e) {
-				Log.e(TAG, "Couldn't get tag ref", e);
-				throw new RuntimeException(e);
+				Log.e(TAG, "Couldn't get parse tag", e);
+				Toast.makeText(this, "Couldn't get tag "+tagId, Toast.LENGTH_LONG).show();
 			}
 		}
     }

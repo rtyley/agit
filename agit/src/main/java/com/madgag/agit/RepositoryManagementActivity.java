@@ -71,7 +71,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 	
 	final int PROGRESS_DIALOG=0,STRING_ENTRY_DIALOG=1, YES_NO_DIALOG=2;
 	private final int DELETION_DIALOG=3;
-	public static final String TAG = "RepositoryManagementActivity";
+	public static final String TAG = "RMA";
 	@Override String TAG() { return TAG; }
 	
 	private RepositoryOperationContext repositoryOperationContext;
@@ -85,7 +85,9 @@ public class RepositoryManagementActivity extends RepositoryActivity {
         bindService(new Intent(this,GitOperationsService.class), serviceConnectionToRegisterThisAsManagementUI(), BIND_AUTO_CREATE);
         
         ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
-        actionBar.setTitle(repo().getWorkTree().getName());
+        File workTree = repo().getWorkTree();
+        Log.d(TAG, "workTree="+workTree);
+		actionBar.setTitle(workTree.getName());
         actionBar.addAction(new Action() {
 			public void performAction() {
 				startService(new GitIntentBuilder("git.FETCH").repository(repo()).toIntent());

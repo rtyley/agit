@@ -97,15 +97,21 @@ public class CommitViewerActivity extends RepositoryActivity {
 			
 			commit = (PlotCommit<PlotLane>) revWalk.parseCommit(revisionId);
 			
-			currentCommitView.setRepositoryContext(repo(), revWalk);
-			nextCommitView.setRepositoryContext(repo(), revWalk);
-			currentCommitView.setCommitSelectedListener(commitSelectedListener);
-			nextCommitView.setCommitSelectedListener(commitSelectedListener);
+			setup(currentCommitView, commitSelectedListener, revWalk);
+			setup(nextCommitView, commitSelectedListener, revWalk);
+			
 			currentCommitView.setCommit(commit);
 		    setCurrentCommitViewVisible();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void setup(CommitView commitView,
+			CommitSelectedListener commitSelectedListener,
+			PlotWalk revWalk) {
+		commitView.setRepositoryContext(repo(), revWalk);
+		commitView.setCommitSelectedListener(commitSelectedListener);
 	}
 
 	

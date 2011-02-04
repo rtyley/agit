@@ -13,12 +13,14 @@ import org.eclipse.jgit.revplot.PlotCommit;
 import org.eclipse.jgit.revplot.PlotLane;
 import org.eclipse.jgit.revplot.PlotWalk;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.filter.CommitterRevFilter;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
@@ -65,8 +67,9 @@ public class CommitView extends LinearLayout {
 		this.revWalk = revWalk;
 	}
 	
-	public void setCommit(final PlotCommit<PlotLane> commit) throws MissingObjectException, IncorrectObjectTypeException, IOException {
-			this.commit = commit;
+	public void setCommit(final PlotCommit<PlotLane> c) throws MissingObjectException, IncorrectObjectTypeException, IOException {
+			//this.commit = (PlotCommit<PlotLane>) revWalk.parseCommit(c);
+			this.commit = c;
 			Log.d(TAG, "setCommit : "+commit);
 			Log.d(TAG, "actionBar : "+actionBar);
 			actionBar.setTitle(commit.name().substring(0, 4)+" "+commit.getShortMessage());
@@ -112,10 +115,15 @@ public class CommitView extends LinearLayout {
 		
 		text(R.id.commit_id_text,commit.getName());
 		PersonIdent commiter = commit.getAuthorIdent(), author = commit.getCommitterIdent();
-		
+
 		text(R.id.commit_author_text,author.toExternalString());
 		text(R.id.commit_commiter_text,commiter.toExternalString());
-
+//		ViewGroup vg = (ViewGroup) findViewById(R.id.commit_refs_group);
+//		for (int i=0; i<commit.getRefCount(); ++i) {
+//			TextView tv = new TextView(getContext());
+//			tv.setText(commit.getRef(i).getName());
+//			vg.addView(tv);
+//		}
 		text(R.id.commit_message_text,commit.getFullMessage());
 	}
 

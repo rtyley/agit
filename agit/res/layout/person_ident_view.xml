@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="horizontal"
+	android:padding="10dip">
+	<ImageView
+		android:id="@+id/person_ident_avatar"
+		android:layout_width="36dip"
+		android:layout_height="36dip"
+		android:scaleType="center"
+		android:background="@drawable/gravatar_border" />
+	<TextView
+		android:id="@+id/person_ident_name"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="7.5dip"
+		android:textStyle="italic"
+		android:text="someone" />
+</LinearLayout>
