@@ -10,6 +10,3 @@
     android:minHeight="38dp"
     android:background="@drawable/minitab"
     />
-    <!-- 
-    android:background="@drawable/minitab"
-    -->

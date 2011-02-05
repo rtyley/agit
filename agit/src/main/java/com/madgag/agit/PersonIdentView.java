@@ -20,7 +20,7 @@ public class PersonIdentView extends RelativeLayout {
 	private static final String TAG = "PIV";
 	
 	private final ImageView avatarView;
-	private final TextView nameView, titleView;
+	private final TextView nameView, titleView, whenView;
 	
 	public PersonIdentView(Context context, AttributeSet attrs) {
 		super(context, attrs);	
@@ -29,6 +29,7 @@ public class PersonIdentView extends RelativeLayout {
 		titleView = (TextView) findViewById(R.id.person_ident_title);
 		avatarView = (ImageView) findViewById(R.id.person_ident_avatar);
 		nameView = (TextView) findViewById(R.id.person_ident_name);
+		whenView = (TextView) findViewById(R.id.person_ident_when);
 	}
 	
 	
@@ -37,5 +38,6 @@ public class PersonIdentView extends RelativeLayout {
 		titleView.setText(title);
 		avatarView.setImageDrawable(avatar);
 		nameView.setText(ident.getName());
+		whenView.setText(Time.timeSinceMS(ident.getWhen().getTime()));
 	}	
 }

@@ -10,7 +10,7 @@
 		android:typeface="monospace" />
 
 	<LinearLayout android:id="@+id/commit_people_group"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
