@@ -1,10 +1,13 @@
 package com.madgag.agit;
 
+import static android.text.Html.fromHtml;
+
 import java.util.Collection;
 
 import org.eclipse.jgit.lib.Repository;
 
 import android.content.Intent;
+import android.text.Html;
 
 public abstract class RepoDomainType<E> { 
 	
@@ -26,6 +29,9 @@ public abstract class RepoDomainType<E> {
 	
 	
 	public CharSequence summarise(Collection<E> list) {
+		if (list.isEmpty()) {
+			return fromHtml("<i>« none »</i>");
+		}
 		StringBuilder sb = new StringBuilder();
 		for (E e : list) {
 			if (sb.length()>0) {
