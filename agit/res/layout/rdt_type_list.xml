@@ -9,10 +9,25 @@
 	    android:id="@+id/actionbar"
 	    style="@style/ActionBar"
         />
-	
-	<ListView android:fastScrollEnabled="true"
-		android:id="@android:id/list"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:cacheColorHint="#FFF" />
+	<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
+	    <ListView android:id="@android:id/list"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:fastScrollEnabled="true"
+	        android:cacheColorHint="#FFF" />
+	
+	    <TextView android:id="@+id/empty"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:gravity="center"
+	        android:textSize="36sp"
+	        android:textColor="#999"
+	        android:visibility="gone"
+	        android:textStyle="italic"
+	        android:text="@string/empty_list" />
+	
+	</FrameLayout>
 </LinearLayout>

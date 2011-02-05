@@ -5,8 +5,10 @@
     <string name="clone_menu_option">Clone...</string>
     <string name="delete_repo_menu_option">Delete Repo</string>
     <string name="delete_tag_menu_option">Delete Tag</string>
-    <string name="tag_commit_menu_option">Tag...</string>
+    
+    <string name="empty_list">« none »</string>
     
     <string name="tag_name_label">Name:</string>
     <string name="tag_message_label">Message (optional):</string>
+    <string name="tag_commit_menu_option">Tag...</string>
 </resources>
