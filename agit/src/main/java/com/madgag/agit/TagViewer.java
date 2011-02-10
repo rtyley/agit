@@ -13,6 +13,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevWalk;
 
+import roboguice.inject.InjectView;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -43,8 +44,14 @@ public class TagViewer extends RepositoryActivity {
 
 	private final static int DELETE_ID=Menu.FIRST;
 	
+	@InjectView(R.id.actionbar)
 	private ActionBar actionBar;
+	
+	@InjectView(R.id.tv_tag_tagger_ident)
 	private PersonIdentView taggerIdentView;
+	
+	@InjectView(R.id.tv_tag_tagged_object)
+	private ObjectSummaryView objectSummaryView;
 	
 	private RevTag revTag;
 
@@ -52,8 +59,6 @@ public class TagViewer extends RepositoryActivity {
 
 	private ImageSession<String, Bitmap> avatarSession;
 
-	private ObjectSummaryView objectSummaryView;
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,10 +70,7 @@ public class TagViewer extends RepositoryActivity {
 		ImageResourceStore<String, Bitmap> imageResourceStore = new BitmapFileStore<String>(file);
 		avatarSession=new ImageSession<String, Bitmap>(imageProcessor, downloader, imageResourceStore, getResources().getDrawable(R.drawable.loading_34_centred));
 		
-		actionBar = (ActionBar) findViewById(R.id.actionbar);
-		taggerIdentView = (PersonIdentView) findViewById(R.id.tv_tag_tagger_ident);
-		
-		objectSummaryView = (ObjectSummaryView) findViewById(R.id.tv_tag_tagged_object);
+		Log.d(TAG, "Roboguice THINGO "+actionBar+" "+taggerIdentView+" "+objectSummaryView);
 	}
 
     @Override

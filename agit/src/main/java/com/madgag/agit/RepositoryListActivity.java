@@ -4,7 +4,7 @@ import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
 
 import java.io.File;
 
-import android.app.ListActivity;
+import roboguice.activity.RoboListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -16,7 +16,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-public class RepositoryListActivity extends ListActivity {
+public class RepositoryListActivity extends RoboListActivity {
 	public static final String TAG = "RepositoryListActivity";
 	private final static int CLONE_ID=Menu.FIRST;
 	

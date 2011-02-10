@@ -4,10 +4,10 @@ import java.io.File;
 
 import org.eclipse.jgit.lib.Repository;
 
-import android.app.Activity;
+import roboguice.activity.RoboActivity;
 import android.os.Bundle;
 
-public abstract class RepositoryActivity extends Activity {
+public abstract class RepositoryActivity extends RoboActivity {
 	
     private RepositoryContext rc;
 	

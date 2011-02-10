@@ -40,8 +40,16 @@
 			<artifactId>google-collections</artifactId>
 			<version>1.0</version>
 		</dependency>
-		<!-- <dependency> <groupId>com.madgag</groupId> <artifactId>util-intervals</artifactId> 
-			<version>1.21</version> </dependency> -->
+		<dependency>
+			<groupId>org.roboguice</groupId>
+			<artifactId>roboguice</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>2.0-no_aop</version>
+        </dependency>
 		<dependency>
 			<groupId>com.madgag</groupId>
 			<artifactId>util-diff</artifactId>
