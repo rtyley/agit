@@ -7,7 +7,6 @@ import java.util.Collection;
 import org.eclipse.jgit.lib.Repository;
 
 import android.content.Intent;
-import android.text.Html;
 
 public abstract class RepoDomainType<E> { 
 	

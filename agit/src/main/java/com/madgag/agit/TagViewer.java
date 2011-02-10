@@ -13,6 +13,15 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevWalk;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
+
 import com.madgag.android.lazydrawables.BitmapFileStore;
 import com.madgag.android.lazydrawables.ImageProcessor;
 import com.madgag.android.lazydrawables.ImageResourceDownloader;
@@ -21,16 +30,6 @@ import com.madgag.android.lazydrawables.ImageSession;
 import com.madgag.android.lazydrawables.ScaledBitmapDrawableGenerator;
 import com.madgag.android.lazydrawables.gravatar.GravatarBitmapDownloader;
 import com.markupartist.android.widget.ActionBar;
-
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class TagViewer extends RepositoryActivity {
 
@@ -52,6 +51,8 @@ public class TagViewer extends RepositoryActivity {
 	private Ref tagRef;
 
 	private ImageSession<String, Bitmap> avatarSession;
+
+	private ObjectSummaryView objectSummaryView;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,8 @@ public class TagViewer extends RepositoryActivity {
 		
 		actionBar = (ActionBar) findViewById(R.id.actionbar);
 		taggerIdentView = (PersonIdentView) findViewById(R.id.tv_tag_tagger_ident);
+		
+		objectSummaryView = (ObjectSummaryView) findViewById(R.id.tv_tag_tagged_object);
 	}
 
     @Override
@@ -108,9 +111,14 @@ public class TagViewer extends RepositoryActivity {
 		if (tagRef==null) {
 			actionBar.setTitle("unknown tag");
 		} else {
+			ObjectId peeledObjectId = repo().peel(tagRef).getPeeledObjectId();
+			ObjectId taggedId = peeledObjectId==null?tagRef.getObjectId():peeledObjectId;
+			RevWalk revWalk = new RevWalk(repo());
+			
 			ObjectId tagId = tagRef.getObjectId();
 			try {
-				revTag = new RevWalk(repo()).parseTag(tagId);
+				objectSummaryView.setObject(repo(),revWalk.parseAny(taggedId));
+				revTag = revWalk.parseTag(tagId);
 				actionBar.setTitle(revTag.getTagName());
 				taggerIdentView.setIdent(avatarSession, "Tagger", revTag.getTaggerIdent());
 			} catch (IOException e) {
