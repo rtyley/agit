@@ -1,5 +1,6 @@
 package com.madgag.agit;
 
+import static android.R.id.list;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.GitIntents.branchNameFrom;
 
@@ -10,6 +11,8 @@ import java.util.List;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
+
+import roboguice.inject.InjectView;
 
 import com.markupartist.android.widget.ActionBar;
 
@@ -26,6 +29,7 @@ public class BranchViewer extends RepositoryActivity {
 	private static final String TAG = "BranchViewer";
 	@Override String TAG() { return TAG; }
 	
+	@InjectView(list)
 	private RevCommitListView revCommitListView;
 	
 	private Ref branch;
@@ -46,18 +50,13 @@ public class BranchViewer extends RepositoryActivity {
 			e.printStackTrace();
 		}
 		
-		
-		
-		revCommitListView = (RevCommitListView) findViewById(android.R.id.list);
-		
 		revCommitListView.setCommits(repo(), commitListForRepo());
 	}
 
 	private List<RevCommit> commitListForRepo() {
 		Git git = new Git(repo());
-		Iterable<RevCommit> logWaa;
 		try {
-			logWaa = git.log().add(branch.getObjectId()).call();
+			Iterable<RevCommit> logWaa = git.log().add(branch.getObjectId()).call();
 			List<RevCommit> sampleRevCommits = newArrayList(logWaa);
 			
 			Log.d(TAG, "Found "+sampleRevCommits.size()+" commits");

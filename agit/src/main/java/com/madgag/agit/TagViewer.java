@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.inject.Inject;
 import com.madgag.android.lazydrawables.BitmapFileStore;
 import com.madgag.android.lazydrawables.ImageProcessor;
 import com.madgag.android.lazydrawables.ImageResourceDownloader;
@@ -44,6 +45,9 @@ public class TagViewer extends RepositoryActivity {
 
 	private final static int DELETE_ID=Menu.FIRST;
 	
+	@Inject
+	private ImageSession avatarSession;
+	
 	@InjectView(R.id.actionbar)
 	private ActionBar actionBar;
 	
@@ -57,19 +61,12 @@ public class TagViewer extends RepositoryActivity {
 
 	private Ref tagRef;
 
-	private ImageSession<String, Bitmap> avatarSession;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tag_view);
-		
-		ImageProcessor<Bitmap> imageProcessor = new ScaledBitmapDrawableGenerator(34, getResources());
-		ImageResourceDownloader<String, Bitmap> downloader = new GravatarBitmapDownloader();
-		File file = new File(Environment.getExternalStorageDirectory(),"gravagroovy");
-		ImageResourceStore<String, Bitmap> imageResourceStore = new BitmapFileStore<String>(file);
-		avatarSession=new ImageSession<String, Bitmap>(imageProcessor, downloader, imageResourceStore, getResources().getDrawable(R.drawable.loading_34_centred));
-		
+			
 		Log.d(TAG, "Roboguice THINGO "+actionBar+" "+taggerIdentView+" "+objectSummaryView);
 	}
 
