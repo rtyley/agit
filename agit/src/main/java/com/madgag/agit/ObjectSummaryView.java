@@ -33,8 +33,9 @@ public class ObjectSummaryView extends LinearLayout {
 		});
 		int typeSpecificLayout = R.layout.commit_summary_view;
 		View typeSpecificView = LayoutInflater.from(getContext()).inflate(typeSpecificLayout, this, false);
+		this.addView(typeSpecificView);
 		RevCommit commit = (RevCommit) revObject;
-		PersonIdentView personIdentView = (PersonIdentView) findViewById(R.id.csv_commit_author_ident);
-		//personIdentView.setIdent(is, "Author", commit.getAuthorIdent());
+		PersonIdentView personIdentView = (PersonIdentView) typeSpecificView.findViewById(R.id.csv_commit_author_ident);
+		personIdentView.setIdent("Author", commit.getAuthorIdent());
 	}
 }

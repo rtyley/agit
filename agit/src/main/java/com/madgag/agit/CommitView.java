@@ -61,18 +61,8 @@ public class CommitView extends LinearLayout {
 
 	private CommitSelectedListener commitSelectedListener;
 
-	private ImageSession<String, Bitmap> is;
-
 	public CommitView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		
-		ImageProcessor<Bitmap> imageProcessor = new ScaledBitmapDrawableGenerator(34, getResources());
-		ImageResourceDownloader<String, Bitmap> downloader = new GravatarBitmapDownloader();
-		File file = new File(Environment.getExternalStorageDirectory(),"gravagroovy");
-		ImageResourceStore<String, Bitmap> imageResourceStore = new BitmapFileStore<String>(file);
-		is=new ImageSession<String, Bitmap>(imageProcessor, downloader, imageResourceStore, getResources().getDrawable(R.drawable.loading_34_centred));
-		
-		
+		super(context, attrs);	
 		layoutInflater = LayoutInflater.from(context);
 		
 		layoutInflater.inflate(R.layout.commit_view, this);
@@ -155,7 +145,7 @@ public class CommitView extends LinearLayout {
 
 	private void addPerson(String title, PersonIdent commiter, ViewGroup vg) {
 		PersonIdentView personIdentView = new PersonIdentView(getContext(), null);
-		personIdentView.setIdent(is, title, commiter);
+		personIdentView.setIdent(title, commiter);
 		vg.addView(personIdentView);
 	}
 

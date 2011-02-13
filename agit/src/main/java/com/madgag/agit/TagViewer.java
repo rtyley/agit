@@ -2,7 +2,6 @@ package com.madgag.agit;
 
 import static com.madgag.agit.GitIntents.tagNameFrom;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.jgit.lib.ObjectId;
@@ -15,22 +14,14 @@ import org.eclipse.jgit.revwalk.RevWalk;
 
 import roboguice.inject.InjectView;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
-import com.madgag.android.lazydrawables.BitmapFileStore;
-import com.madgag.android.lazydrawables.ImageProcessor;
-import com.madgag.android.lazydrawables.ImageResourceDownloader;
-import com.madgag.android.lazydrawables.ImageResourceStore;
 import com.madgag.android.lazydrawables.ImageSession;
-import com.madgag.android.lazydrawables.ScaledBitmapDrawableGenerator;
-import com.madgag.android.lazydrawables.gravatar.GravatarBitmapDownloader;
 import com.markupartist.android.widget.ActionBar;
 
 public class TagViewer extends RepositoryActivity {
@@ -119,7 +110,7 @@ public class TagViewer extends RepositoryActivity {
 				objectSummaryView.setObject(repo(),revWalk.parseAny(taggedId));
 				revTag = revWalk.parseTag(tagId);
 				actionBar.setTitle(revTag.getTagName());
-				taggerIdentView.setIdent(avatarSession, "Tagger", revTag.getTaggerIdent());
+				taggerIdentView.setIdent("Tagger", revTag.getTaggerIdent());
 			} catch (IOException e) {
 				Log.e(TAG, "Couldn't get parse tag", e);
 				Toast.makeText(this, "Couldn't get tag "+tagId, Toast.LENGTH_LONG).show();

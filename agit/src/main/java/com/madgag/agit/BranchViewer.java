@@ -2,23 +2,23 @@ package com.madgag.agit;
 
 import static android.R.id.list;
 import static com.google.common.collect.Lists.newArrayList;
-import static com.madgag.agit.GitIntents.branchNameFrom;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import roboguice.inject.InjectView;
-
-import com.markupartist.android.widget.ActionBar;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import com.markupartist.android.widget.ActionBar;
 
 public class BranchViewer extends RepositoryActivity {
     
@@ -29,32 +29,30 @@ public class BranchViewer extends RepositoryActivity {
 	private static final String TAG = "BranchViewer";
 	@Override String TAG() { return TAG; }
 	
+	@InjectView(R.id.actionbar)
+	ActionBar actionBar;
+	
 	@InjectView(list)
 	private RevCommitListView revCommitListView;
 	
-	private Ref branch;
+	@Inject
+	Repository repository;
+	
+	@Inject @Named("branch")
+	Ref branch;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.branch_view);
 		
-		ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
-
-		try {
-			String branchName = branchNameFrom(getIntent());
-			branch = repo().getRef(branchName);
-			actionBar.setTitle(branchName);
-		} catch (IOException e) {
-			Log.e(TAG, "Couldn't get branch ref", e);
-			e.printStackTrace();
-		}
+		actionBar.setTitle(branch.getName());
 		
-		revCommitListView.setCommits(repo(), commitListForRepo());
+		revCommitListView.setCommits(repository, commitListForRepo());
 	}
 
 	private List<RevCommit> commitListForRepo() {
-		Git git = new Git(repo());
+		Git git = new Git(repository);
 		try {
 			Iterable<RevCommit> logWaa = git.log().add(branch.getObjectId()).call();
 			List<RevCommit> sampleRevCommits = newArrayList(logWaa);

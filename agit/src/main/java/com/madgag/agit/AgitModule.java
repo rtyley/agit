@@ -1,15 +1,23 @@
 package com.madgag.agit;
 
 import java.io.File;
+import java.io.IOException;
+
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
 
 import roboguice.config.AbstractAndroidModule;
 import roboguice.inject.ContextScoped;
+import roboguice.inject.InjectExtra;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.util.Log;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.name.Named;
+import com.google.inject.name.Names;
 import com.madgag.android.lazydrawables.BitmapFileStore;
 import com.madgag.android.lazydrawables.ImageProcessor;
 import com.madgag.android.lazydrawables.ImageResourceDownloader;
@@ -23,7 +31,34 @@ public class AgitModule extends AbstractAndroidModule {
 	@Override
     protected void configure() {
     	bind(ImageSession.class).toProvider(ImageSessionProvider.class);
+    	bind(Repository.class).toProvider(RepositoryProvider.class);
+    	bind(Ref.class).annotatedWith(Names.named("branch")).toProvider(BranchRefProvider.class);
     }
+	
+	@ContextScoped
+    public static class BranchRefProvider implements Provider<Ref> {
+		@Inject Repository repository;
+		@InjectExtra("branch") String branchName;
+		
+		public Ref get() {
+			try {
+				return repository.getRef(branchName);
+			} catch (IOException e) {
+				Log.e("BRP", "Couldn't get branch ref", e);
+				return null;
+			} 
+		}
+	}
+	
+	@ContextScoped
+    public static class RepositoryProvider implements Provider<Repository> {
+		@InjectExtra("gitdir") String gitdir;
+		
+		public Repository get() {
+			return Repos.openRepoFor(new File(gitdir));
+		}
+	}
+	
 	
 	@ContextScoped
     public static class ImageSessionProvider implements Provider<ImageSession<String, Bitmap>> {
@@ -31,6 +66,7 @@ public class AgitModule extends AbstractAndroidModule {
         @Inject Resources resources;
 
         public ImageSession<String, Bitmap> get() {
+        	Log.i("BRP", "ImageSessionProvider INVOKED");
     		ImageProcessor<Bitmap> imageProcessor = new ScaledBitmapDrawableGenerator(34, resources);
     		ImageResourceDownloader<String, Bitmap> downloader = new GravatarBitmapDownloader();
     		File file = new File(Environment.getExternalStorageDirectory(),"boho");
