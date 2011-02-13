@@ -10,4 +10,9 @@
 		android:layout_height="wrap_content"
 		android:typeface="monospace"
 		android:textAppearance="?android:attr/textAppearanceSmall" />
+	<FrameLayout
+		android:id="@+id/osv_type_specific_data_frame"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        />
 </merge>

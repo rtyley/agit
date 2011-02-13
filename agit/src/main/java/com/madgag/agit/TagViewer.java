@@ -107,7 +107,7 @@ public class TagViewer extends RepositoryActivity {
 			
 			ObjectId tagId = tagRef.getObjectId();
 			try {
-				objectSummaryView.setObject(repo(),revWalk.parseAny(taggedId));
+				objectSummaryView.setObject(revWalk.parseAny(taggedId));
 				revTag = revWalk.parseTag(tagId);
 				actionBar.setTitle(revTag.getTagName());
 				taggerIdentView.setIdent("Tagger", revTag.getTaggerIdent());
