@@ -18,7 +18,8 @@ public class ObjectSummaryView extends LinearLayout {
 	private TextView objectIdView;
 
 	public ObjectSummaryView(Context context, AttributeSet attrs) {
-		super(context, attrs);	
+		super(context, attrs);
+		setOrientation(VERTICAL);
 		LayoutInflater.from(context).inflate(R.layout.object_summary_view, this);
 		
 		objectIdView = (TextView) findViewById(R.id.osv_object_id_text);
@@ -34,6 +35,7 @@ public class ObjectSummaryView extends LinearLayout {
 		int typeSpecificLayout = R.layout.commit_summary_view;
 		View typeSpecificView = LayoutInflater.from(getContext()).inflate(typeSpecificLayout, this, false);
 		this.addView(typeSpecificView);
+		this.requestLayout();
 		RevCommit commit = (RevCommit) revObject;
 		PersonIdentView personIdentView = (PersonIdentView) typeSpecificView.findViewById(R.id.csv_commit_author_ident);
 		personIdentView.setIdent("Author", commit.getAuthorIdent());
