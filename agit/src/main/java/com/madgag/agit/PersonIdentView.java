@@ -7,7 +7,6 @@ import org.eclipse.jgit.lib.PersonIdent;
 
 import roboguice.inject.InjectorProvider;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -17,7 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.madgag.android.lazydrawables.ImageSession;
 
 public class PersonIdentView extends RelativeLayout {
@@ -33,7 +31,6 @@ public class PersonIdentView extends RelativeLayout {
 	public PersonIdentView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		((InjectorProvider)context).getInjector().injectMembers(this);
-		
 		LayoutInflater.from(context).inflate(R.layout.person_ident_view, this);
 		
 		titleView = (TextView) findViewById(R.id.person_ident_title);
