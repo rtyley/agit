@@ -6,10 +6,14 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
+import org.eclipse.jgit.errors.IncorrectObjectTypeException;
+import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefDatabase;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 
 public class RDTBranch extends RepoDomainType<Ref> {
 
@@ -49,7 +53,13 @@ public class RDTBranch extends RepoDomainType<Ref> {
 	}
 	
 	@Override
-	CharSequence shortDescriptionOf(Ref e) {
-		return "...";
+	CharSequence shortDescriptionOf(Ref branchRef) {
+		RevWalk revWalk = new RevWalk(repository);
+		try {
+			RevCommit branchHeadCommit = revWalk.parseCommit(branchRef.getObjectId());
+			return branchHeadCommit.getShortMessage()+" "+Time.timeSinceSeconds(branchHeadCommit.getCommitTime());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 }
