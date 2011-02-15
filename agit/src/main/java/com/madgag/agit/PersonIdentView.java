@@ -25,8 +25,7 @@ public class PersonIdentView extends RelativeLayout {
 	private final ImageView avatarView;
 	private final TextView nameView, titleView, whenView;
 	
-	@Inject
-	private ImageSession imageSession;
+	@Inject ImageSession avatarSession;
 	
 	public PersonIdentView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -41,9 +40,8 @@ public class PersonIdentView extends RelativeLayout {
 	
 	
 	public void setIdent(String title, PersonIdent ident) {
-		Log.i(TAG, "imos="+imageSession);
 		titleView.setText(title);
-		Drawable avatar = imageSession.get(gravatarIdFor(ident.getEmailAddress()));
+		Drawable avatar = avatarSession.get(gravatarIdFor(ident.getEmailAddress()));
 		avatarView.setImageDrawable(avatar);
 		nameView.setText(ident.getName());
 		whenView.setText(timeSinceMS(ident.getWhen().getTime()));

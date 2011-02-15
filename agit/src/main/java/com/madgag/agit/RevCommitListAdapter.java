@@ -8,6 +8,8 @@ import java.util.List;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.revwalk.RevCommit;
 
+import roboguice.inject.InjectorProvider;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -19,6 +21,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
 import com.madgag.android.lazydrawables.BitmapFileStore;
 import com.madgag.android.lazydrawables.ImageProcessor;
 import com.madgag.android.lazydrawables.ImageResourceDownloader;
@@ -30,17 +33,14 @@ import com.madgag.android.lazydrawables.gravatar.GravatarBitmapDownloader;
 public class RevCommitListAdapter extends BaseAdapter {
 	private final Context m_context;
 	private final LayoutInflater m_inflater;
-	private final ImageSession<String, Bitmap> avatarSession;
 	private List<RevCommit> commits;
 
+	@Inject ImageSession avatarSession;
+
 	public RevCommitListAdapter(final Context context, List<RevCommit> commits) {
+		((InjectorProvider)context).getInjector().injectMembers(this);
 		this.commits = commits;
 		m_context = context;
-		ImageProcessor<Bitmap> imageProcessor = new ScaledBitmapDrawableGenerator(34, context.getResources());
-		ImageResourceDownloader<String, Bitmap> downloader = new GravatarBitmapDownloader();
-		File file = new File(Environment.getExternalStorageDirectory(),"gravagroovy");
-		ImageResourceStore<String, Bitmap> imageResourceStore = new BitmapFileStore<String>(file);
-		avatarSession=new ImageSession<String, Bitmap>(imageProcessor, downloader, imageResourceStore, context.getResources().getDrawable(R.drawable.loading_34_centred));
 		m_inflater = LayoutInflater.from(m_context);
 	}
 
@@ -99,13 +99,11 @@ public class RevCommitListAdapter extends BaseAdapter {
 		}
 		
 		public void updateViewFor(RevCommit commit) {
-			PersonIdent author = commit.getAuthorIdent();
 			commit_date.setText(Time.timeSinceSeconds(commit.getCommitTime()));
 			
-			Drawable gravatarBitmap = avatarSession.get(gravatarIdFor(author.getEmailAddress()));
-			gravatar.setImageDrawable(gravatarBitmap);
+			Drawable avatarBitmap = avatarSession.get(gravatarIdFor(commit.getAuthorIdent().getEmailAddress()));
+			gravatar.setImageDrawable(avatarBitmap);
 
-			
 			commit_shortdesc.setText(commit.getShortMessage());
 		}
 
