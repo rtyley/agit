@@ -6,6 +6,7 @@ import static android.view.animation.AnimationUtils.loadAnimation;
 import static com.google.common.collect.Maps.newEnumMap;
 import static com.madgag.agit.Relation.CHILD;
 import static com.madgag.agit.Relation.PARENT;
+import static org.eclipse.jgit.lib.Constants.HEAD;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,16 +16,13 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
-import org.eclipse.jgit.lib.AnyObjectId;
-import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revplot.PlotCommit;
 import org.eclipse.jgit.revplot.PlotCommitList;
 import org.eclipse.jgit.revplot.PlotLane;
 import org.eclipse.jgit.revplot.PlotWalk;
 import org.eclipse.jgit.revwalk.RevCommit;
-
-import com.madgag.agit.CommitNavigationView.CommitSelectedListener;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -39,19 +37,35 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.TextView;
 
+import com.google.common.base.Function;
+import com.google.inject.Inject;
+import com.google.inject.internal.Nullable;
+import com.google.inject.name.Named;
+import com.madgag.agit.CommitNavigationView.CommitSelectedListener;
+
 public class CommitViewerActivity extends RepositoryActivity {
 	private static final String TAG = "CVA";
 	
 	private final static int TAG_ID=Menu.FIRST;
 	
-    public static Intent revCommitViewIntentFor(File gitdir, RevCommit commit) {
-		return new GitIntentBuilder("git.view.COMMIT").gitdir(gitdir).commit(commit).toIntent();
+    public static Function<RevCommit, Intent> commitViewerIntentCreatorFor(final File gitdir, final Ref branch) {
+		return new Function<RevCommit, Intent>() {
+			public Intent apply(RevCommit commit) {
+				return commitViewerIntentBuilderFor(gitdir).branch(branch).commit(commit).toIntent();
+			}
+		};
 	}
     
     public static Intent revCommitViewIntentFor(File gitdir, String commitId) {
-		return new GitIntentBuilder("git.view.COMMIT").gitdir(gitdir).commit(commitId).toIntent();
+		return commitViewerIntentBuilderFor(gitdir).commit(commitId).toIntent();
+	}
+    
+	private static GitIntentBuilder commitViewerIntentBuilderFor(File gitdir) {
+		return new GitIntentBuilder("git.view.COMMIT").gitdir(gitdir);
 	}
 
+	@Inject @Named("branch") @Nullable Ref branch;
+	
 	private PlotCommit<PlotLane> commit;
 	
 	private CommitView currentCommitView, nextCommitView;
@@ -138,8 +152,9 @@ public class CommitViewerActivity extends RepositoryActivity {
 	private PlotWalk generatePlotWalk() throws AmbiguousObjectException,
 			IOException, MissingObjectException, IncorrectObjectTypeException {
 		PlotWalk revWalk = new PlotWalk(repo());
-		final AnyObjectId headId = repo().resolve(Constants.HEAD);
-		RevCommit root = revWalk.parseCommit(headId);
+		ObjectId rootId = (branch==null)?repo().resolve(HEAD):branch.getObjectId();
+		Log.d(TAG,"Using root "+rootId+" branch="+branch);
+		RevCommit root = revWalk.parseCommit(rootId);
 		revWalk.markStart(root);
 		PlotCommitList<PlotLane> plotCommitList = new PlotCommitList<PlotLane>();
 		plotCommitList.source(revWalk);

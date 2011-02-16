@@ -1,29 +1,14 @@
 package com.madgag.agit;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
-import static com.madgag.agit.BranchViewer.branchViewerIntentFor;
-import static com.madgag.agit.GitIntents.addGitDirTo;
 import static com.madgag.agit.GitIntents.gitDirFrom;
-import static com.madgag.agit.GitIntents.repositoryFrom;
 import static com.madgag.agit.MessagingProgressMonitor.GIT_OPERATION_PROGRESS_UPDATE;
 import static com.madgag.agit.RepoDeleter.REPO_DELETE_COMPLETED;
-import static com.madgag.agit.RepoLogActivity.repoLogIntentFor;
-import static com.madgag.agit.TagViewer.tagViewerIntentFor;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Map;
 
 import org.connectbot.service.PromptHelper;
-import org.eclipse.jgit.events.IndexChangedEvent;
-import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.RefDatabase;
-import org.eclipse.jgit.lib.RefUpdate;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.lib.RepositoryCache;
-import org.eclipse.jgit.lib.RefUpdate.Result;
-import org.eclipse.jgit.storage.file.FileRepository;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -50,10 +35,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.madgag.agit.GitOperationsService.GitOperationsBinder;
 import com.madgag.agit.operations.GitAsyncTask;

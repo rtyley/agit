@@ -2,6 +2,7 @@ package com.madgag.agit;
 
 import static android.R.id.list;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.madgag.agit.CommitViewerActivity.commitViewerIntentCreatorFor;
 
 import java.io.File;
 import java.util.List;
@@ -47,8 +48,7 @@ public class BranchViewer extends RepositoryActivity {
 		setContentView(R.layout.branch_view);
 		
 		actionBar.setTitle(branch.getName());
-		
-		revCommitListView.setCommits(repository, commitListForRepo());
+		revCommitListView.setCommits(commitViewerIntentCreatorFor(repository.getDirectory(), branch), commitListForRepo());
 	}
 
 	private List<RevCommit> commitListForRepo() {

@@ -63,13 +63,6 @@
 
 		<provider android:name="GitInfoProvider" android:authorities="com.madgag.agit.gitinfoprovider"></provider>
 
-		<activity android:name="RepoLogActivity">
-			<intent-filter>
-				<action android:name="git.LOG" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>
-
 		<activity android:name="BranchViewer">
 			<intent-filter>
 				<action android:name="git.branch.VIEW" />

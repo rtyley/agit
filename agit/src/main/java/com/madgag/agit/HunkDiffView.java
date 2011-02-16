@@ -3,8 +3,10 @@
  */
 package com.madgag.agit;
 
+import static android.graphics.Typeface.MONOSPACE;
 import static android.widget.TextView.BufferType.EDITABLE;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.Editable;
 import android.widget.TextView;
 
@@ -16,6 +18,7 @@ public class HunkDiffView extends TextView {
 
 	public HunkDiffView(Context context, Hunk hunk) {
 		super(context);
+		setTypeface(MONOSPACE);
 		setHunk(hunk);
 	}
 	

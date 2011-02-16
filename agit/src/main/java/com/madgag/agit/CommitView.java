@@ -2,7 +2,6 @@ package com.madgag.agit;
 
 import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -14,13 +13,11 @@ import org.eclipse.jgit.revplot.PlotCommit;
 import org.eclipse.jgit.revplot.PlotLane;
 import org.eclipse.jgit.revplot.PlotWalk;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.filter.CommitterRevFilter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.os.Environment;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,13 +30,6 @@ import android.widget.TabWidget;
 import android.widget.TextView;
 
 import com.madgag.agit.CommitNavigationView.CommitSelectedListener;
-import com.madgag.android.lazydrawables.BitmapFileStore;
-import com.madgag.android.lazydrawables.ImageProcessor;
-import com.madgag.android.lazydrawables.ImageResourceDownloader;
-import com.madgag.android.lazydrawables.ImageResourceStore;
-import com.madgag.android.lazydrawables.ImageSession;
-import com.madgag.android.lazydrawables.ScaledBitmapDrawableGenerator;
-import com.madgag.android.lazydrawables.gravatar.GravatarBitmapDownloader;
 import com.markupartist.android.widget.ActionBar;
 
 public class CommitView extends LinearLayout {
@@ -140,7 +130,12 @@ public class CommitView extends LinearLayout {
 //			tv.setText(commit.getRef(i).getName());
 //			vg.addView(tv);
 //		}
-		text(R.id.commit_message_text,commit.getFullMessage());
+		TextView textView = (TextView) findViewById(R.id.commit_message_text);
+		textView.setText(commit.getFullMessage());
+		
+		int width=textView.getBackground().getIntrinsicWidth();
+		Log.d("CV", "M Width = "+width);
+		textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, width/80);
 	}
 
 	private void addPerson(String title, PersonIdent commiter, ViewGroup vg) {

@@ -37,15 +37,16 @@ public class AgitModule extends AbstractAndroidModule {
 	@ContextScoped
     public static class BranchRefProvider implements Provider<Ref> {
 		@Inject Repository repository;
-		@InjectExtra("branch") String branchName;
+		@InjectExtra(value="branch",optional=true) String branchName;
 		
 		public Ref get() {
 			try {
-				return repository.getRef(branchName);
+				if (branchName!=null)
+					return repository.getRef(branchName);
 			} catch (IOException e) {
 				Log.e("BRP", "Couldn't get branch ref", e);
-				return null;
 			} 
+			return null;
 		}
 	}
 	

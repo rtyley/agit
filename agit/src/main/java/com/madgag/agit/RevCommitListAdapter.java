@@ -2,18 +2,13 @@ package com.madgag.agit;
 
 import static com.madgag.android.lazydrawables.gravatar.Gravatars.gravatarIdFor;
 
-import java.io.File;
 import java.util.List;
 
-import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import roboguice.inject.InjectorProvider;
-
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,13 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
-import com.madgag.android.lazydrawables.BitmapFileStore;
-import com.madgag.android.lazydrawables.ImageProcessor;
-import com.madgag.android.lazydrawables.ImageResourceDownloader;
-import com.madgag.android.lazydrawables.ImageResourceStore;
 import com.madgag.android.lazydrawables.ImageSession;
-import com.madgag.android.lazydrawables.ScaledBitmapDrawableGenerator;
-import com.madgag.android.lazydrawables.gravatar.GravatarBitmapDownloader;
 
 public class RevCommitListAdapter extends BaseAdapter {
 	private final Context m_context;

@@ -40,7 +40,7 @@ public class ObjectSummaryView extends LinearLayout {
 		objectIdView.setText(revObject.getId().abbreviate(4).name());
 		setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				getContext().startActivity(revCommitViewIntentFor(repository.getDirectory(), (RevCommit) revObject));
+				getContext().startActivity(revCommitViewIntentFor(repository.getDirectory(), revObject.getName()));
 			}
 		});
 		
