@@ -3,11 +3,13 @@ package com.madgag.agit;
 import com.markupartist.android.widget.ActionBar;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 
 public class RDTypeListActivity<E> extends ListActivity {
+	
 	private static final String TAG = "RDTL";
 	private RepositoryContext rc;
 	private RepoDomainType<E> rdt;

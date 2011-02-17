@@ -21,7 +21,6 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
 import com.madgag.agit.RDTBranch.BranchSummary;
 
 public class RDTBranch extends RepoDomainType<BranchSummary> {
