@@ -83,13 +83,29 @@
           </libs>
           <obfuscate>false</obfuscate>
           <options>
-            <option> -keep public class * extends android.app.Activity</option>
+          
+          	<option>-keepclassmembers enum * {
+			    public static **[] values();
+			    public static ** valueOf(java.lang.String);
+			}</option>
+          
+            <option>-keep public class * extends android.app.Activity</option>
             <option>-keep public class * extends android.app.Application</option>
             <option>-keep public class * extends android.app.Service</option>
-            <option>-keep public class * extends
-              android.content.BroadcastReceiver</option>
-            <option>-keep public class * extends
-              android.content.ContentProvider</option>
+            <option>-keep public class * extends android.content.BroadcastReceiver</option>
+            <option>-keep public class * extends android.content.ContentProvider</option>
+            
+            <option>-keep public class * extends android.view.View {
+			    public &lt;init&gt;(android.content.Context);
+			    public &lt;init&gt;(android.content.Context, android.util.AttributeSet);
+			    public &lt;init&gt;(android.content.Context, android.util.AttributeSet, int);
+			    public void set*(...);
+			}</option>
+            
+            <option>-keep public class roboguice.**</option>
+            <option>-keep class com.google.inject.Binder</option>
+            <option>-keepclassmembers class * { @com.google.inject.Inject &lt;init&gt;(...); }</option>
+            
             <option>-dontskipnonpubliclibraryclasses</option>
             <option>-dontoptimize</option>
             <option>-printmapping map.txt</option>
