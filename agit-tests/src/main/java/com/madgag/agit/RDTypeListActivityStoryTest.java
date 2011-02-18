@@ -1,26 +1,21 @@
 package com.madgag.agit;
 
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.GitOperationsServiceTest.newFolder;
 import static com.madgag.compress.CompressUtil.unzip;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import org.apache.commons.compress.archivers.ArchiveException;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepository;
 
 import android.content.res.AssetManager;
 import android.test.ActivityInstrumentationTestCase2;
-import android.util.Log;
 import android.widget.ListView;
 
 public class RDTypeListActivityStoryTest extends ActivityInstrumentationTestCase2<RDTypeListActivity> {
@@ -41,7 +36,9 @@ public class RDTypeListActivityStoryTest extends ActivityInstrumentationTestCase
 		final RDTypeListActivity activity = getActivity();
 		
 		ListView listView = (ListView) activity.getListView();
-		assertTrue(listView.getChildCount()==1);
+
+		assertThat(tagDomainType.getAll().size(), is(4));
+		assertThat(listView.getChildCount(), is(4));
 	}
 
 	private Repository unpackRepo(String fileName) throws IOException, ArchiveException {

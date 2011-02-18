@@ -44,9 +44,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-core</artifactId>
-			<version>1.2</version>
+		    <groupId>org.hamcrest</groupId>
+		    <artifactId>hamcrest-core</artifactId>
+		    <version>1.2.1</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -55,6 +55,10 @@
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>maven-android-plugin</artifactId>
 			</plugin>
+
+			
+			
+			
 		</plugins>
 	</build>
 </project>
