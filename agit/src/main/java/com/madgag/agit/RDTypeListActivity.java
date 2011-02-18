@@ -1,12 +1,11 @@
 package com.madgag.agit;
 
-import com.markupartist.android.widget.ActionBar;
-
 import android.app.ListActivity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+
+import com.markupartist.android.widget.ActionBar;
 
 public class RDTypeListActivity<E> extends ListActivity {
 	
