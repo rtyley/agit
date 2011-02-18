@@ -17,6 +17,7 @@ import org.eclipse.jgit.storage.file.FileRepository;
 import android.content.res.AssetManager;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class RDTypeListActivityStoryTest extends ActivityInstrumentationTestCase2<RDTypeListActivity> {
 	
@@ -37,8 +38,10 @@ public class RDTypeListActivityStoryTest extends ActivityInstrumentationTestCase
 		
 		ListView listView = (ListView) activity.getListView();
 
-		assertThat(tagDomainType.getAll().size(), is(4));
-		assertThat(listView.getChildCount(), is(4));
+		assertThat(listView.getChildCount()>8, is(true));
+		// assertThat(tagDomainType.getAll().size(), is(4));
+		TextView tv1 = (TextView) listView.getChildAt(0).findViewById(android.R.id.text1);
+		assertThat(tv1.getText(), is((CharSequence)"Stuff"));
 	}
 
 	private Repository unpackRepo(String fileName) throws IOException, ArchiveException {
