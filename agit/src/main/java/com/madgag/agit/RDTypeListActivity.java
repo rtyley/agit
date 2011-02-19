@@ -11,9 +11,7 @@ public class RDTypeListActivity<E> extends ListActivity {
 	
 	private static final String TAG = "RDTL";
 	private RepositoryContext rc;
-	private RepoDomainType<E> rdt;
-	private View mEmptyView;
-	
+	private RepoDomainType<E> rdt;	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -22,10 +20,9 @@ public class RDTypeListActivity<E> extends ListActivity {
 		setContentView(R.layout.rdt_type_list);
 		ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
 		actionBar.setTitle(rdt.conciseSummaryTitle());
-		setListAdapter(new RDTypeListAdapter<E>(this, rdt));
+		setListAdapter(new RDTypeListAdapter<E>(getLayoutInflater(), rdt));
 		
-		mEmptyView = findViewById(R.id.empty);
-        getListView().setEmptyView(mEmptyView);
+        getListView().setEmptyView(findViewById(R.id.empty));
 	}
 	
 	@Override

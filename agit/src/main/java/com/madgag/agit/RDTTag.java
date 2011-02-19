@@ -118,6 +118,11 @@ public class RDTTag extends RepoDomainType<TagSummary> {
 			this.tagObject = tagObject;
 			this.taggedObject = taggedObject;
 		}
+		
+		@Override
+		public String toString() {
+			return name;
+		}
 
 		public RevObject getTaggedObject() {
 			return taggedObject;
@@ -153,6 +158,5 @@ public class RDTTag extends RepoDomainType<TagSummary> {
 					return tag.getTaggerIdent().getWhen().getTime();
 				}
 		};
-		
 	}
 }

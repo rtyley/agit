@@ -5,6 +5,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,16 +13,16 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 public class RDTypeListAdapter<E> extends BaseAdapter {
-	private Context m_context;
-	private LayoutInflater m_inflater;
+	private final LayoutInflater layoutInflater;
 	private final RepoDomainType<E> rdt;
 	private final List<E> list;
+	private static String TAG="RDTLA";
 
-	public RDTypeListAdapter(final Context context, RepoDomainType<E> rdt) {
-		m_context = context;
+	public RDTypeListAdapter(LayoutInflater layoutInflater, RepoDomainType<E> rdt) {
+		this.layoutInflater = layoutInflater;
 		this.rdt = rdt;
 		list = newArrayList(rdt.getAll());
-		m_inflater = LayoutInflater.from(m_context);
+		Log.i(TAG, "Got "+rdt.name()+" list of size "+list.size());
 	}
 
 	public int getCount() {
@@ -49,7 +50,7 @@ public class RDTypeListAdapter<E> extends BaseAdapter {
 
 	private View createViewIfNecessary(View convertView) {
 		if (convertView == null) {
-			convertView = m_inflater.inflate(android.R.layout.simple_list_item_2, null);
+			convertView = layoutInflater.inflate(android.R.layout.simple_list_item_2, null);
 			convertView.setTag(new ViewHolder(convertView));
 		}
 		return convertView;
