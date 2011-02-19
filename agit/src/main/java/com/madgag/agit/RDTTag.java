@@ -33,7 +33,7 @@ public class RDTTag extends RepoDomainType<TagSummary> {
 	@Override
 	String name() { return "tag"; }
 	
-	public Collection<TagSummary> getAll() {
+	public List<TagSummary> getAll() {
 		final RevWalk revWalk = new RevWalk(repository);
 		List<TagSummary> tagSummaries = newArrayList(transform(repository.getTags().values(), new Function<Ref, TagSummary>() {
 			public TagSummary apply(Ref tagRef) {
@@ -117,6 +117,10 @@ public class RDTTag extends RepoDomainType<TagSummary> {
 			name = shortenRefName(tagRef.getName());
 			this.tagObject = tagObject;
 			this.taggedObject = taggedObject;
+		}
+		
+		public CharSequence getName() {
+			return name;
 		}
 		
 		@Override

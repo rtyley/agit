@@ -3,6 +3,7 @@ package com.madgag.agit;
 import static android.text.Html.fromHtml;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.jgit.lib.Repository;
 
@@ -18,7 +19,7 @@ public abstract class RepoDomainType<E> {
 	
 	abstract String name();
 	
-	abstract Collection<E> getAll();
+	abstract List<E> getAll();
 	
 	abstract CharSequence conciseSummaryTitle();
 	

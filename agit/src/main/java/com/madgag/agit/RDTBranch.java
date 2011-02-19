@@ -32,7 +32,7 @@ public class RDTBranch extends RepoDomainType<BranchSummary> {
 	@Override
 	String name() { return "branch"; }
 	
-	public Collection<BranchSummary> getAll() {
+	public List<BranchSummary> getAll() {
 		RefDatabase refDatabase = repository.getRefDatabase();
 		try {
 			Map<String, Ref> remoteBranchRefs = refDatabase.getRefs(Constants.R_REMOTES);

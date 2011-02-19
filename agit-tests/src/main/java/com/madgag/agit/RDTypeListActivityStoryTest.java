@@ -9,6 +9,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.eclipse.jgit.lib.Repository;
@@ -43,20 +44,16 @@ public class RDTypeListActivityStoryTest extends ActivityInstrumentationTestCase
 		
 		ListView listView = (ListView) activity.getListView();
 
-		Log.i(TAG, "Should be "+tagDomainType.getAll().size()+" elements in the list.. there are "+listView.getChildCount());
-		for (TagSummary tagSummary : tagDomainType.getAll()) {
-			Log.i(TAG, "TagSummary : "+tagSummary);
+		List<TagSummary> summaries = tagDomainType.getAll();
+		Log.i(TAG, "Should be "+summaries.size()+" elements in the list.. there are "+listView.getCount());
+		assertThat(listView.getCount(), is(summaries.size()));
+		for (int index=0; index<summaries.size(); ++index) {
+			TagSummary summary = summaries.get(index);
+			View itemView=getItemViewFrom(activity, index);
+			Log.d(TAG, "summary="+summary+" view="+itemView);
+			TextView itemTitleTextView = (TextView) itemView.findViewById(android.R.id.text1);
+			assertThat(itemTitleTextView.getText(), is(summary.getName()));
 		}
-		for (int i=0; i<listView.getCount();++i) {
-			View v=getItemViewFrom(activity, i);
-			Log.i(TAG, "Tag List item v : "+v);
-			TextView tv1 = (TextView) v.findViewById(android.R.id.text1);
-			Log.i(TAG, "Tag List item : "+tv1.getText());
-		}
-		assertThat(listView.getCount(), is(tagDomainType.getAll().size()));
-		// assertThat(tagDomainType.getAll().size(), is(4));
-		TextView tv1 = (TextView) listView.getChildAt(0).findViewById(android.R.id.text1);
-		assertThat(tv1.getText(), is((CharSequence)"Stuff"));
 	}
 
 	private View getItemViewFrom(final ListActivity activity, final int index) {

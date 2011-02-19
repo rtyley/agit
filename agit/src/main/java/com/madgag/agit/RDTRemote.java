@@ -3,9 +3,8 @@ package com.madgag.agit;
 import static org.eclipse.jgit.transport.RemoteConfig.getAllRemoteConfigs;
 
 import java.net.URISyntaxException;
-import java.util.Collection;
+import java.util.List;
 
-import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.RemoteConfig;
 
@@ -16,7 +15,7 @@ public class RDTRemote extends RepoDomainType<RemoteConfig> {
 	}
 	@Override
 	String name() { return "remote"; }
-	public Collection<RemoteConfig> getAll() {
+	public List<RemoteConfig> getAll() {
 		try {
 			return getAllRemoteConfigs(repository.getConfig());
 		} catch (URISyntaxException e) {
