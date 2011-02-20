@@ -2,8 +2,11 @@ package com.madgag.agit;
 
 
 import static com.madgag.agit.GitOperationsServiceTest.newFolder;
+import static com.madgag.agit.RDTypeListActivity.listIntent;
+import static com.madgag.agit.TextViewMatcher.textView;
 import static com.madgag.compress.CompressUtil.unzip;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
@@ -14,6 +17,7 @@ import java.util.List;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
+import org.hamcrest.CoreMatchers;
 
 import android.app.ListActivity;
 import android.content.res.AssetManager;
@@ -36,29 +40,43 @@ public class RDTypeListActivityStoryTest extends ActivityInstrumentationTestCase
 	public void testShouldShowAllTags() throws Exception {
 		Repository repoWithTags = unpackRepo("small-repo.with-tags.zip");
 		
-		RDTTag tagDomainType= new RDTTag(repoWithTags);
-		
-		setActivityIntent(tagDomainType.listIntent());
+		setActivityIntent(listIntent(repoWithTags, "tag"));
 		
 		final RDTypeListActivity activity = getActivity();
 		
-		ListView listView = (ListView) activity.getListView();
+		ListView listView = activity.getListView();
 
+		checkCanSelectEveryItemInNonEmpty(listView);
+
+		RDTTag tagDomainType= new RDTTag(repoWithTags);
 		List<TagSummary> summaries = tagDomainType.getAll();
 		Log.i(TAG, "Should be "+summaries.size()+" elements in the list.. there are "+listView.getCount());
 		assertThat(listView.getCount(), is(summaries.size()));
 		for (int index=0; index<summaries.size(); ++index) {
 			TagSummary summary = summaries.get(index);
-			View itemView=getItemViewFrom(activity, index);
+			View itemView=getItemViewBySelecting(listView, index);
 			Log.d(TAG, "summary="+summary+" view="+itemView);
 			TextView itemTitleTextView = (TextView) itemView.findViewById(android.R.id.text1);
 			assertThat(itemTitleTextView.getText(), is(summary.getName()));
+			
+			if (summary.getName().equals("annotated-tag-of-2nd-commit")) {
+				TextView detailText = (TextView) itemView.findViewById(android.R.id.text2);
+				Log.i(TAG, "Looking... "+ detailText.getText());
+				assertThat(detailText, textView(startsWith("Commit")));
+			}
 		}
 	}
 
-	private View getItemViewFrom(final ListActivity activity, final int index) {
-		final ListView listView = activity.getListView();
-		activity.runOnUiThread(new Runnable() {
+	private void checkCanSelectEveryItemInNonEmpty(ListView listView) {
+		assertThat(listView.getCount()>0, is(true));
+		for (int index=0; index<listView.getCount(); ++index) {
+			View itemView=getItemViewBySelecting(listView, index);
+			Log.d(TAG, "view="+itemView);
+		}
+	}
+
+	private View getItemViewBySelecting(final ListView listView, final int index) {
+		getActivity().runOnUiThread(new Runnable() {
 		    public void run() {
 				listView.setSelection(index);
 		    }
