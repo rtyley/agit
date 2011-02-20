@@ -1,6 +1,9 @@
 package com.madgag.agit;
 
+import org.eclipse.jgit.lib.Repository;
+
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
@@ -8,6 +11,10 @@ import android.widget.ListView;
 import com.markupartist.android.widget.ActionBar;
 
 public class RDTypeListActivity<E> extends ListActivity {
+	
+	public static Intent listIntent(Repository repository, String typeName) {
+		return new GitIntentBuilder("git."+typeName+".LIST").repository(repository).toIntent();
+	}
 	
 	private static final String TAG = "RDTL";
 	private RepositoryContext rc;
