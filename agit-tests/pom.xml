@@ -89,7 +89,6 @@
 					</container>
 					<configuration>
 						<properties>
-							<cargo.logging>high</cargo.logging>
 							<cargo.servlet.port>18181</cargo.servlet.port>
 						</properties>
 						<deployables>
@@ -97,10 +96,6 @@
 								<groupId>com.google.gerrit</groupId>
 							    <artifactId>gerrit-war</artifactId>
 							    <type>war</type>
-								<!--  
-								<location>/home/roberto/.m2/repository/com/google/gerrit/gerrit-war/2.1-SNAPSHOT/gerrit-war-2.1-SNAPSHOT.war</location>
-								<pingURL>http://localhost:port/mycontext/index.html</pingURL>
-								-->
 							</deployable>
 						</deployables>
 					</configuration>					
