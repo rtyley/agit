@@ -48,6 +48,12 @@
 			<artifactId>hamcrest-core</artifactId>
 			<version>1.3.RC2</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.gerrit</groupId>
+		    <artifactId>gerrit-war</artifactId>
+		    <version>2.1-SNAPSHOT</version>
+		    <type>war</type>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -55,8 +61,6 @@
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>maven-android-plugin</artifactId>
 			</plugin>
-
-
 
 			<plugin>
 				<groupId>org.codehaus.cargo</groupId>
@@ -80,9 +84,26 @@
 				<configuration>
 					<wait>false</wait>
 					<container>
-						<containerId>jetty6x</containerId>
+						<containerId>jetty7x</containerId>
 						<type>embedded</type>
 					</container>
+					<configuration>
+						<properties>
+							<cargo.logging>high</cargo.logging>
+							<cargo.servlet.port>18181</cargo.servlet.port>
+						</properties>
+						<deployables>
+							<deployable>
+								<groupId>com.google.gerrit</groupId>
+							    <artifactId>gerrit-war</artifactId>
+							    <type>war</type>
+								<!--  
+								<location>/home/roberto/.m2/repository/com/google/gerrit/gerrit-war/2.1-SNAPSHOT/gerrit-war-2.1-SNAPSHOT.war</location>
+								<pingURL>http://localhost:port/mycontext/index.html</pingURL>
+								-->
+							</deployable>
+						</deployables>
+					</configuration>					
 				</configuration>
 			</plugin>
 		</plugins>
