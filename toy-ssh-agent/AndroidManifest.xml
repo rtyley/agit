@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="com.madgag.ssh.toysshagent"
+	android:installLocation="preferExternal"
+	android:versionCode="1"
+	android:versionName="1.0">
+	<uses-sdk android:minSdkVersion="7" />
+	<application
+		android:name="com.madgag.ssh.toysshagent.ToySshAgentApplication"
+		android:icon="@drawable/icon"
+		android:label="@string/app_name"
+		android:debuggable="true">
+		<service android:name="com.madgag.ssh.toysshagent.ToyAuthAgentService"
+			android:description="@string/auth_agent_service_description">
+			<intent-filter>
+				<action android:name="org.openintents.ssh.BIND_SSH_AGENT_SERVICE" />
+			</intent-filter>
+		</service>
+	</application>
+</manifest> 
