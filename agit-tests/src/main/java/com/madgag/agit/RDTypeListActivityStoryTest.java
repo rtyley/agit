@@ -8,6 +8,7 @@ import static com.madgag.compress.CompressUtil.unzip;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,9 +18,8 @@ import java.util.List;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
-import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matchers;
 
-import android.app.ListActivity;
 import android.content.res.AssetManager;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
@@ -63,6 +63,7 @@ public class RDTypeListActivityStoryTest extends ActivityInstrumentationTestCase
 				TextView detailText = (TextView) itemView.findViewById(android.R.id.text2);
 				Log.i(TAG, "Looking... "+ detailText.getText());
 				assertThat(detailText, textView(startsWith("Commit")));
+				assertThat(detailText, textView(containsString("Adding my happy folder with it's tags")));
 			}
 		}
 	}
