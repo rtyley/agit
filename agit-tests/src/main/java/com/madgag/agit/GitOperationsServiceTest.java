@@ -8,6 +8,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.Properties;
 
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
@@ -28,6 +33,16 @@ public class GitOperationsServiceTest extends ServiceTestCase<GitOperationsServi
 	
 	public GitOperationsServiceTest() {
 		super(GitOperationsService.class);
+	}
+	
+	public void testCanHitStuff() throws FileNotFoundException, IOException {
+		File bang = new File(Environment.getExternalStorageDirectory(),"agit-integration-test.properties");
+		Properties properties = new Properties();
+		properties.load(new FileReader(bang));
+		String hostAddress = properties.getProperty("gitserver.host.address", "10.0.2.2");
+		InetAddress address = InetAddress.getByName(hostAddress);
+		boolean reachableHost=address.isReachable( 1000);
+		assertThat("Test gitserver host "+hostAddress+" is reachable", reachableHost, is(true));
 	}
 	
 	public void testCanPerformSimpleReadOnlyCloneFromGitHub() throws Exception {
