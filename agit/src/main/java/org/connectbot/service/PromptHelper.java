@@ -22,6 +22,7 @@ import java.util.concurrent.Semaphore;
 import android.os.Handler;
 import android.os.Message;
 
+import com.madgag.agit.ResponseInterface;
 import com.madgag.agit.operations.OpNotification;
 import com.madgag.agit.operations.OpPrompt;
 
@@ -31,7 +32,7 @@ import com.madgag.agit.operations.OpPrompt;
  *
  * @author jsharkey, rtyley
  */
-public class PromptHelper {
+public class PromptHelper implements ResponseInterface {
 	private final Object tag;
 
 	private Handler handler = null;

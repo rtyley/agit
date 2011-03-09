@@ -211,7 +211,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 		return new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				repositoryOperationContext.clearPromptNotificationFromStatusBar();
-				repositoryOperationContext.getPromptHelper().setResponse(bool);
+				repositoryOperationContext.getResponseInterface().setResponse(bool);
 			}
 		};
 	}
@@ -230,7 +230,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 			});
 		case YES_NO_DIALOG:
 			AlertDialog alertDialog=(AlertDialog) dialog;
-			String msg = repositoryOperationContext.getPromptHelper().getOpPrompt().getOpNotification().getEventDetail();
+			String msg = repositoryOperationContext.getResponseInterface().getOpPrompt().getOpNotification().getEventDetail();
 			Log.i(TAG, "Going to yes/no "+msg);
 			alertDialog.setMessage(msg);
 		default:
@@ -285,8 +285,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 			return;
 		}
 
-		PromptHelper prompt=repositoryOperationContext.getPromptHelper();
-		OpPrompt<?> opPrompt = prompt.getOpPrompt();
+		OpPrompt<?> opPrompt = repositoryOperationContext.getResponseInterface().getOpPrompt();
 		if (opPrompt!=null) {
 			Class<?> requiredResponseType = opPrompt.getRequiredResponseType();
 			if (String.class.equals(requiredResponseType)) {

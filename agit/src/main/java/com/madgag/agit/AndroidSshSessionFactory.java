@@ -4,13 +4,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.connectbot.service.PromptHelper;
-import org.eclipse.jgit.transport.SshConfigSessionFactory;
 import org.eclipse.jgit.transport.OpenSshConfig.Host;
+import org.eclipse.jgit.transport.SshConfigSessionFactory;
 import org.eclipse.jgit.util.FS;
 
 import android.os.RemoteException;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.jcraft.jsch.Identity;
 import com.jcraft.jsch.JSch;

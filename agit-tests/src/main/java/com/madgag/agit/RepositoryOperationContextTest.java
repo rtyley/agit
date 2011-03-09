@@ -22,7 +22,7 @@ public class RepositoryOperationContextTest  extends ServiceTestCase<GitOperatio
 		super(GitOperationsService.class);
 	}
 	
-	public void testShouldHavaeDifferentCompletionNotificationIds() throws Exception {
+	public void testShouldHaveDifferentCompletionNotificationIds() throws Exception {
 		File gitdir=new File(newFolder(),DOT_GIT);
 		Intent cloneIntent = cloneOperationIntentFor(new URIish("git://github.com/agittest/small-project.git"), gitdir);
         Log.i(TAG, "About to start service with "+cloneIntent+" gitdir="+gitdir);

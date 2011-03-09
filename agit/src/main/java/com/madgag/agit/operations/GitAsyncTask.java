@@ -15,7 +15,6 @@ import android.widget.RemoteViews;
 import com.madgag.agit.Progress;
 import com.madgag.agit.ProgressListener;
 import com.madgag.agit.R;
-import com.madgag.agit.Repos;
 import com.madgag.agit.RepositoryOperationContext;
 
 public class GitAsyncTask extends AsyncTask<Void, Progress, OpNotification> implements ProgressListener<Progress> {
@@ -97,6 +96,10 @@ public class GitAsyncTask extends AsyncTask<Void, Progress, OpNotification> impl
 	// Called on background thread
 	public void publish(Progress... values) {
 		publishProgress(values);
+	}
+	
+	public GitOperation getOperation() {
+		return operation;
 	}
 	
 	// Called on UI thread

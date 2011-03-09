@@ -1,6 +1,7 @@
 package com.madgag.agit;
 
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
+import static java.lang.Boolean.TRUE;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.Thread.sleep;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -15,8 +16,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
@@ -29,6 +28,7 @@ import android.test.ServiceTestCase;
 import android.util.Log;
 
 import com.madgag.agit.operations.GitAsyncTask;
+import com.madgag.agit.operations.GitOperation;
 import com.madgag.agit.operations.OpNotification;
 
 public class GitOperationsServiceTest extends
@@ -36,48 +36,60 @@ public class GitOperationsServiceTest extends
 
 	private static final String TAG = "GitOperationsServiceTest";
 
+	private final ResponseProvider responseProvider = new ResponseProvider() {
+		public void accept(ResponseInterface responseInterface) {
+			Log.i("GOST.RP","Saying yes to "+responseInterface.getOpPrompt());
+			responseInterface.setResponse(TRUE);
+		}
+	};
+	
 	public GitOperationsServiceTest() {
 		super(GitOperationsService.class);
 	}
 
-	public void testCanTrulyHitStuff() throws Exception {
-		String hostAddress = gitServerHostAddress();
-
-		System.out.println(hostAddress);
-		File gitdir = new File(newFolder(), DOT_GIT);
-		startServiceCloning(new URIish("ssh://" + hostAddress + ":29418/path/to/repo.git"), gitdir);
-
-		Repository repository = resultingRepoAt(gitdir);
-		assertTrue(repository.hasObject(ObjectId
-				.fromString("9e0b5e42b3e1c59bc83b55142a8c50dfae36b144")));
+	public void testCanHitCloneRepoFromLocalTestServer() throws Exception {
+		RepositoryOperationContext repositoryOperationContext = newRepoContext();
+		
+		Repository repository = clone(new URIish("ssh://" + gitServerHostAddress() + ":29418/path/to/repo.git"),repositoryOperationContext);
+		assertTrue(repository.hasObject(ObjectId.fromString("9e0b5e42b3e1c59bc83b55142a8c50dfae36b144")));
 	}
 
 	public void testCanPerformSimpleReadOnlyCloneFromGitHub() throws Exception {
-		File gitdir = new File(newFolder(), DOT_GIT);
-		startServiceCloning(new URIish(
-				"git://github.com/agittest/small-project.git"), gitdir);
-
-		Repository repository = resultingRepoAt(gitdir);
+		RepositoryOperationContext repositoryOperationContext = newRepoContext();
+		
+		Repository repository = clone(new URIish("git://github.com/agittest/small-project.git"),repositoryOperationContext);
 		File readme = new File(repository.getWorkTree(), "README");
-		assertThat(readme, is(File.class));
 		assertTrue(readme.exists());
-		assertTrue(repository.hasObject(ObjectId
-				.fromString("9e0b5e42b3e1c59bc83b55142a8c50dfae36b144")));
-		assertFalse(repository.hasObject(ObjectId
-				.fromString("111111111111111111111111111111111111cafe")));
+		assertTrue(repository.hasObject(ObjectId.fromString("9e0b5e42b3e1c59bc83b55142a8c50dfae36b144")));
+		assertFalse(repository.hasObject(ObjectId.fromString("111111111111111111111111111111111111cafe")));
 	}
 
-	private Repository resultingRepoAt(File gitdir) throws Exception {
-		RepositoryOperationContext repositoryOperationContext = getService()
-				.getOrCreateRepositoryOperationContextFor(gitdir);
-		GitAsyncTask gitOperation = waitForOperationIn(repositoryOperationContext);
-		OpNotification opResult = gitOperation.get(20, SECONDS);
-		Log.i(TAG, "got  opResult=" + opResult);
+	private RepositoryOperationContext newRepoContext() {
+		File gitdir = new File(newFolder(), DOT_GIT);
+		GitOperationsService service = getService();
+		Log.d(TAG, "newRepoContext() : service="+service); 
+		return service.setRepositoryOperationContextFor(gitdir, responseProvider);
+	}
+
+	private Repository waitForPopulatedRepoIn(RepositoryOperationContext repositoryOperationContext) throws Exception {
+		
+		GitAsyncTask gitAsyncTask = waitForOperationIn(repositoryOperationContext);
+		GitOperation operation = gitAsyncTask.getOperation();
+		Log.i(TAG, "resultingRepoAt - operation=" + operation);
+		
+		//assertThat(repoInCurrentOp.getDirectory(), equalTo(gitdir));
+		OpNotification opResult = gitAsyncTask.get(20, SECONDS);
+		Log.i(TAG, "got opResult=" + opResult);
 		assertNotNull(opResult);
-		Repository repository = new FileRepository(gitdir);
+		Repository repository = new FileRepository(repositoryOperationContext.getGitDir());
 		Log.i(TAG, "After clone: repo directory=" + repository.getDirectory()
 				+ " workTree=" + repository.getWorkTree());
 		return repository;
+	}
+	
+	private Repository clone(URIish sourceUri, RepositoryOperationContext repositoryOperationContext) throws Exception {
+		startServiceCloning(sourceUri, repositoryOperationContext.getGitDir());
+		return waitForPopulatedRepoIn(repositoryOperationContext);
 	}
 
 	private void startServiceCloning(URIish uri, File gitdir) {
@@ -86,7 +98,7 @@ public class GitOperationsServiceTest extends
 				+ gitdir);
 		startService(cloneIntent);
 	}
-
+	
 	// public void testCanShowAPromptToTheUser() throws Exception {
 	// File gitdir=new File(newFolder(),DOT_GIT);
 	// startService(new Intent());
@@ -144,8 +156,7 @@ public class GitOperationsServiceTest extends
 	private static long unique_number = currentTimeMillis();
 
 	public static File newFolder() {
-		File path = new File(Environment.getExternalStorageDirectory(),
-				"agit-test-repos");
+		File path = new File(Environment.getExternalStorageDirectory(), "agit-test-repos");
 		return new File(path, "" + (unique_number++));
 	}
 }

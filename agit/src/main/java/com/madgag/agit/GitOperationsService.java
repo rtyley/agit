@@ -139,9 +139,15 @@ public class GitOperationsService extends Service implements AndroidAuthAgentPro
 
 	public RepositoryOperationContext getOrCreateRepositoryOperationContextFor(File gitdir) {
     	if (!map.containsKey(gitdir)) {
-				map.put(gitdir, new RepositoryOperationContext(gitdir,this));
+			map.put(gitdir, new RepositoryOperationContext(gitdir,this));
     	}
     	return map.get(gitdir);
+    }
+	
+	public RepositoryOperationContext setRepositoryOperationContextFor(File gitdir, ResponseProvider responseProvider) {
+    	RepositoryOperationContext roc = new RepositoryOperationContext(gitdir,this, responseProvider);
+		map.put(gitdir, roc);
+    	return roc;
     }
 
 	public RepositoryOperationContext registerManagementActivity(RepositoryManagementActivity repositoryManagementActivity) {
