@@ -13,8 +13,8 @@ import java.util.Map;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.transport.URIish;
 
+import roboguice.service.RoboService;
 import android.app.NotificationManager;
-import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -24,11 +24,12 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.inject.Provider;
 import com.madgag.agit.operations.Clone;
 import com.madgag.agit.operations.Fetch;
 import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 
-public class GitOperationsService extends Service implements AndroidAuthAgentProvider {
+public class GitOperationsService extends RoboService implements Provider<AndroidAuthAgent> {
 
 	public static final String TAG = "GitIntentService";
 	private Map<File,RepositoryOperationContext> map=new HashMap<File,RepositoryOperationContext>();
@@ -109,13 +110,12 @@ public class GitOperationsService extends Service implements AndroidAuthAgentPro
 		return START_STICKY;
 	}
 
-
     private AndroidAuthAgent authAgent;
 
-	public AndroidAuthAgent getAuthAgent() {
+	public AndroidAuthAgent get() {
 		return authAgent;
 	}
-	
+
 	private void bindSshAgent() {
 		bindService(new Intent("org.openintents.ssh.BIND_SSH_AGENT_SERVICE"), new ServiceConnection() {
 			public void onServiceDisconnected(ComponentName name) {
@@ -155,6 +155,4 @@ public class GitOperationsService extends Service implements AndroidAuthAgentPro
 		operationContext.setManagementActivity(repositoryManagementActivity);
 		return operationContext;
 	}
-
-
 }

@@ -22,30 +22,29 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.URIish;
 
+import roboguice.test.RoboServiceTestCase;
 import android.content.Intent;
 import android.os.Environment;
-import android.test.ServiceTestCase;
 import android.util.Log;
 
 import com.madgag.agit.operations.GitAsyncTask;
 import com.madgag.agit.operations.GitOperation;
 import com.madgag.agit.operations.OpNotification;
 
-public class GitOperationsServiceTest extends
-		ServiceTestCase<GitOperationsService> {
+public class GitOperationsServiceTest extends RoboServiceTestCase<GitOperationsService, AgitApplication> {
 
 	private static final String TAG = "GitOperationsServiceTest";
 
+	public GitOperationsServiceTest() {
+		super(GitOperationsService.class);
+	}
+	
 	private final ResponseProvider responseProvider = new ResponseProvider() {
 		public void accept(ResponseInterface responseInterface) {
 			Log.i("GOST.RP","Saying yes to "+responseInterface.getOpPrompt());
 			responseInterface.setResponse(TRUE);
 		}
 	};
-	
-	public GitOperationsServiceTest() {
-		super(GitOperationsService.class);
-	}
 
 	public void testCanHitCloneRepoFromLocalTestServer() throws Exception {
 		RepositoryOperationContext repositoryOperationContext = newRepoContext();

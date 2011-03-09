@@ -11,6 +11,7 @@ import org.eclipse.jgit.util.FS;
 import android.os.RemoteException;
 import android.util.Log;
 
+import com.google.inject.Provider;
 import com.jcraft.jsch.Identity;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -21,10 +22,10 @@ import com.madgag.ssh.authagent.client.jsch.SSHAgentIdentity;
 public class AndroidSshSessionFactory extends SshConfigSessionFactory {
 
 	private static final String TAG = "ASSF";
-	private final AndroidAuthAgentProvider androidAuthAgentProvider;
+	private final Provider<AndroidAuthAgent> androidAuthAgentProvider;
 	private final PromptHelper promptHelper;
 	
-	public AndroidSshSessionFactory(AndroidAuthAgentProvider androidAuthAgentProvider, PromptHelper promptHelper) {
+	public AndroidSshSessionFactory(Provider<AndroidAuthAgent> androidAuthAgentProvider, PromptHelper promptHelper) {
 		this.androidAuthAgentProvider = androidAuthAgentProvider;
 		this.promptHelper = promptHelper;
 	}
@@ -44,7 +45,7 @@ public class AndroidSshSessionFactory extends SshConfigSessionFactory {
 	}
 
 	private void addSshAgentTo(final JSch jsch) throws JSchException {
-		AndroidAuthAgent authAgent=androidAuthAgentProvider.getAuthAgent();
+		AndroidAuthAgent authAgent=androidAuthAgentProvider.get();
 		if (authAgent==null) {
 			Log.w(TAG, "NO SSH-AGENT AVAILABLE");
 		} else {

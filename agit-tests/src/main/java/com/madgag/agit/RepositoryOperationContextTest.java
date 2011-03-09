@@ -10,11 +10,13 @@ import java.io.File;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.URIish;
 
+import roboguice.test.RoboServiceTestCase;
+
 import android.content.Intent;
 import android.test.ServiceTestCase;
 import android.util.Log;
 
-public class RepositoryOperationContextTest  extends ServiceTestCase<GitOperationsService> {
+public class RepositoryOperationContextTest extends RoboServiceTestCase<GitOperationsService, AgitApplication> {
 	
 	private static final String TAG="RepositoryOperationContextTest";
 	
