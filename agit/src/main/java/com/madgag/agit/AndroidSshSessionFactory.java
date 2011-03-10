@@ -14,6 +14,7 @@ import com.google.inject.Provider;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.UserInfo;
 import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 import com.madgag.ssh.authagent.client.jsch.SSHAgentIdentity;
 
@@ -21,16 +22,17 @@ public class AndroidSshSessionFactory extends SshConfigSessionFactory {
 
 	private static final String TAG = "ASSF";
 	private final Provider<AndroidAuthAgent> androidAuthAgentProvider;
-	private final BlockingPromptService blockingPromptService;
+	// private final BlockingPromptService blockingPromptService;
+	private final UserInfo userInfo;
 	
-	public AndroidSshSessionFactory(Provider<AndroidAuthAgent> androidAuthAgentProvider, BlockingPromptService blockingPromptService) {
+	public AndroidSshSessionFactory(Provider<AndroidAuthAgent> androidAuthAgentProvider, UserInfo userInfo) {
 		this.androidAuthAgentProvider = androidAuthAgentProvider;
-		this.blockingPromptService = blockingPromptService;
+		this.userInfo = userInfo;
 	}
 	
 	@Override
 	protected void configure(Host host, Session session) {
-		session.setUserInfo(new AndroidUserInfo(blockingPromptService));
+		session.setUserInfo(userInfo);
 	}
 
 	@Override

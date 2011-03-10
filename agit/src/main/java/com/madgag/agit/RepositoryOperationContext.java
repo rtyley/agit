@@ -104,22 +104,11 @@ public class RepositoryOperationContext implements ResponseProvider {
 		service.getNotificationManager().notify(ongoingOpNotificationId,
 				notification);
 	}
+	
+	TransportFactory transportFactory;
 
 	public Transport transportFor(Repository repo, RemoteConfig remoteConfig) {
-		Transport tn;
-		try {
-			Log.i(TAG, "Creating transport for repo with "
-					+ identityHashCode(repo));
-			tn = Transport.open(repo, remoteConfig);
-		} catch (NotSupportedException e) {
-			throw new RuntimeException(e);
-		}
-		if (tn instanceof SshTransport) {
-			((SshTransport) tn)
-					.setSshSessionFactory(new AndroidSshSessionFactory(service,
-							promptHelper));
-		}
-		return tn;
+		return transportFactory.transportFor(this, repo, remoteConfig);
 	}
 
 	private void showOngoingNotificationFor(GitAsyncTask gitOperation) {
@@ -166,6 +155,10 @@ public class RepositoryOperationContext implements ResponseProvider {
 	}
 
 	public ResponseInterface getResponseInterface() {
+		return promptHelper;
+	}
+	
+	public BlockingPromptService getBlockingPromptService() {
 		return promptHelper;
 	}
 
