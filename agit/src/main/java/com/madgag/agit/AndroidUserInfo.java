@@ -10,8 +10,8 @@ public class AndroidUserInfo implements UserInfo {
 	private final static String TAG="AndroidUserInfo";
 	private final BlockingPromptService blockingPromptService;
 
-	public AndroidUserInfo(BlockingPromptService uiThreadConduit) {
-		this.blockingPromptService = uiThreadConduit;
+	public AndroidUserInfo(BlockingPromptService blockingPromptService) {
+		this.blockingPromptService = blockingPromptService;
 	}
 	
 	private String password, passphrase;

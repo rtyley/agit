@@ -3,7 +3,6 @@ package com.madgag.agit;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.connectbot.service.PromptHelper;
 import org.eclipse.jgit.transport.OpenSshConfig.Host;
 import org.eclipse.jgit.transport.SshConfigSessionFactory;
 import org.eclipse.jgit.util.FS;
@@ -12,7 +11,6 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import com.google.inject.Provider;
-import com.jcraft.jsch.Identity;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -23,23 +21,22 @@ public class AndroidSshSessionFactory extends SshConfigSessionFactory {
 
 	private static final String TAG = "ASSF";
 	private final Provider<AndroidAuthAgent> androidAuthAgentProvider;
-	private final PromptHelper promptHelper;
+	private final BlockingPromptService blockingPromptService;
 	
-	public AndroidSshSessionFactory(Provider<AndroidAuthAgent> androidAuthAgentProvider, PromptHelper promptHelper) {
+	public AndroidSshSessionFactory(Provider<AndroidAuthAgent> androidAuthAgentProvider, BlockingPromptService blockingPromptService) {
 		this.androidAuthAgentProvider = androidAuthAgentProvider;
-		this.promptHelper = promptHelper;
+		this.blockingPromptService = blockingPromptService;
 	}
 	
 	@Override
 	protected void configure(Host host, Session session) {
-		session.setUserInfo(new AndroidUserInfo(promptHelper));
+		session.setUserInfo(new AndroidUserInfo(blockingPromptService));
 	}
 
 	@Override
 	protected JSch createDefaultJSch(FS fs) throws JSchException {
 		final JSch jsch = new JSch();
 		// knownHosts(jsch, fs);
-		
 		addSshAgentTo(jsch);
 		return jsch;
 	}
@@ -53,19 +50,22 @@ public class AndroidSshSessionFactory extends SshConfigSessionFactory {
 		}
 	}
 
-	private void updateJschWithAvailableIdentities(final JSch jsch,
-			AndroidAuthAgent authAgent) throws JSchException {
+	@SuppressWarnings("unchecked")
+	private void updateJschWithAvailableIdentities(final JSch jsch,	AndroidAuthAgent authAgent) throws JSchException {
 		Map<String, byte[]> identities;
 		try {
 			identities = authAgent.getIdentities();
 		} catch (RemoteException e) {
 			throw new JSchException("Couldn't get identities from Auth Agent "+authAgent, e);
 		}
+		updateJschWith(jsch, identities);
+	}
+
+	private void updateJschWith(final JSch jsch, Map<String, byte[]> identities) throws JSchException {
 		for (Entry<String,byte[]> i : identities.entrySet()) {			
 			byte[] publicKey = i.getValue();
 			String name = i.getKey();
-			Identity identity = new SSHAgentIdentity(androidAuthAgentProvider, publicKey, name);
-			jsch.addIdentity(identity , null);
+			jsch.addIdentity(new SSHAgentIdentity(androidAuthAgentProvider, publicKey, name) , null);
 		}
 	}
 }
