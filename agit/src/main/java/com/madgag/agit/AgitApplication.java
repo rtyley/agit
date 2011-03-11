@@ -1,9 +1,10 @@
 package com.madgag.agit;
 
+import static java.util.Arrays.asList;
+
 import java.util.List;
 
 import roboguice.application.RoboApplication;
-
 import android.content.Context;
 import android.util.Log;
 
@@ -18,7 +19,7 @@ public class AgitApplication extends RoboApplication {
 	}
 	
 	protected void addApplicationModules(List<Module> modules) {
-		Log.i("AA", "HELLO");
-        modules.add(new AgitModule());
+		Log.i("AA", "Adding application modules...");
+        modules.addAll(asList(new AgitModule(), new GUISshUserInfoModule()));
     }
 }

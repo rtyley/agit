@@ -33,7 +33,6 @@ public class AgitModule extends AbstractAndroidModule {
     	bind(ImageSession.class).toProvider(ImageSessionProvider.class);
     	bind(Repository.class).toProvider(RepositoryProvider.class);
     	bind(Ref.class).annotatedWith(Names.named("branch")).toProvider(BranchRefProvider.class);
-    	bind(UserInfoFactory.class).to(AndroidGUIUserInfoFactory.class);
     	bind(AndroidAuthAgent.class).toProvider(AndroidAuthAgentProvider.class);
     }
 	
