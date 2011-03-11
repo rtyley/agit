@@ -210,7 +210,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 	private android.content.DialogInterface.OnClickListener sendDialogResponseOf(final boolean bool) {
 		return new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				repositoryOperationContext.clearPromptNotificationFromStatusBar();
+				repositoryOperationContext.getRepoNotifications().clearPromptNotification();
 				repositoryOperationContext.getResponseInterface().setResponse(bool);
 			}
 		};

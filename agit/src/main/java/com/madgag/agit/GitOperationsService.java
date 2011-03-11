@@ -29,7 +29,7 @@ import com.madgag.agit.operations.Clone;
 import com.madgag.agit.operations.Fetch;
 import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 
-public class GitOperationsService extends RoboService implements Provider<AndroidAuthAgent> {
+public class GitOperationsService extends RoboService {
 
 	public static final String TAG = "GitIntentService";
 	private Map<File,RepositoryOperationContext> map=new HashMap<File,RepositoryOperationContext>();
@@ -74,8 +74,6 @@ public class GitOperationsService extends RoboService implements Provider<Androi
 	private int handleMethod(Intent intent) {
 		Log.i(TAG, "onStartCommand "+intent);
 		
-        bindSshAgent();
-		
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     	if (intent==null) {
     		return START_NOT_STICKY;
@@ -110,32 +108,7 @@ public class GitOperationsService extends RoboService implements Provider<Androi
 		return START_STICKY;
 	}
 
-    private AndroidAuthAgent authAgent;
 
-	public AndroidAuthAgent get() {
-		return authAgent;
-	}
-
-	private void bindSshAgent() {
-		bindService(new Intent("org.openintents.ssh.BIND_SSH_AGENT_SERVICE"), new ServiceConnection() {
-			public void onServiceDisconnected(ComponentName name) {
-				Log.i(TAG, "onServiceDisconnected - losing "+authAgent);
-				authAgent=null;
-			}
-			
-			public void onServiceConnected(ComponentName name, IBinder binder) {
-				Log.i(TAG, "onServiceConnected... got "+binder);
-				authAgent=AndroidAuthAgent.Stub.asInterface(binder);
-				Log.i(TAG, "bound "+authAgent);
-				try {
-					Log.d(TAG, "here are identities "+authAgent.getIdentities());
-				} catch (RemoteException e) {
-					e.printStackTrace();
-				}
-			}
-		}, BIND_AUTO_CREATE);
-        Log.i(TAG, "Asked for my SSH_AGENT_SERVICE ");
-	}
 
 	public RepositoryOperationContext getOrCreateRepositoryOperationContextFor(File gitdir) {
     	if (!map.containsKey(gitdir)) {

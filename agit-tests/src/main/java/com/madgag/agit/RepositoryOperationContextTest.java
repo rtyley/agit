@@ -13,6 +13,8 @@ import roboguice.test.RoboServiceTestCase;
 import android.content.Intent;
 import android.util.Log;
 
+import com.madgag.agit.operation.lifecycle.RepoNotifications;
+
 public class RepositoryOperationContextTest extends RoboServiceTestCase<GitOperationsService, AgitApplication> {
 	
 	private static final String TAG="RepositoryOperationContextTest";
@@ -21,17 +23,17 @@ public class RepositoryOperationContextTest extends RoboServiceTestCase<GitOpera
 		super(GitOperationsService.class);
 	}
 	
-	public void testShouldHaveDifferentCompletionNotificationIds() throws Exception {
+	public void testShouldHaveDifferentOngoingNotificationIds() throws Exception {
 		File gitdir=new File(newFolder(),DOT_GIT);
 		Intent cloneIntent = cloneOperationIntentFor(new URIish("git://github.com/agittest/small-project.git"), gitdir);
         Log.i(TAG, "About to start service with "+cloneIntent+" gitdir="+gitdir);
         startService(cloneIntent);
 
         File repo1 = new File("/tmp/poo1");
-		RepositoryOperationContext roc1a = new RepositoryOperationContext(repo1, getService());
-        RepositoryOperationContext roc1b = new RepositoryOperationContext(repo1, getService());
-		RepositoryOperationContext roc2 = new RepositoryOperationContext(new File("/tmp/poo2"), getService());
-		assertTrue(roc1a.opCompletionNotificationId==roc1b.opCompletionNotificationId);
-		assertFalse(roc1a.opCompletionNotificationId==roc2.opCompletionNotificationId);
+		RepoNotifications roc1a = new RepositoryOperationContext(repo1, getService()).getRepoNotifications();
+		RepoNotifications roc1b = new RepositoryOperationContext(repo1, getService()).getRepoNotifications();
+		RepoNotifications roc2 = new RepositoryOperationContext(new File("/tmp/poo2"), getService()).getRepoNotifications();
+		assertTrue(roc1a.getOngoingNotificationId()==roc1b.getOngoingNotificationId());
+		assertFalse(roc1a.getOngoingNotificationId()==roc2.getOngoingNotificationId());
 	}
 }

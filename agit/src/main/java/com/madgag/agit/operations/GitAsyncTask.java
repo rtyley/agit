@@ -7,35 +7,34 @@ import static java.lang.System.currentTimeMillis;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 
-import android.app.Notification;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.RemoteViews;
 
 import com.madgag.agit.Progress;
 import com.madgag.agit.ProgressListener;
-import com.madgag.agit.R;
 import com.madgag.agit.RepositoryOperationContext;
+import com.madgag.agit.operation.lifecycle.OperationLifecycleSupport;
 
 public class GitAsyncTask extends AsyncTask<Void, Progress, OpNotification> implements ProgressListener<Progress> {
 	
-	public final String TAG = getClass().getSimpleName();
+	public final static String TAG = "GAT";
 	
 	protected final RepositoryOperationContext repositoryOperationContext;
 	private final GitOperation operation;
+	private final OperationLifecycleSupport lifecycleSupport;
 	
 	private long startTime;
-	protected final Notification ongoingNotification;
 	
-	public GitAsyncTask(RepositoryOperationContext repositoryOperationContext, GitOperation operation) {
+	public GitAsyncTask(RepositoryOperationContext repositoryOperationContext, GitOperation operation, OperationLifecycleSupport lifecycleSupport) {
 		this.repositoryOperationContext = repositoryOperationContext;
 		this.operation = operation;
-		ongoingNotification=createOngoingNotification();
+		this.lifecycleSupport = lifecycleSupport;
 	}
 	
     @Override
     protected void onPreExecute() {
     	Log.i(TAG, "Starting onPreExecute "+repositoryOperationContext);
+    	lifecycleSupport.startedWith(new OpNotification(operation.getOngoingIcon(), operation.getTickerText(), "Event title", "Event detail"));
     	startTime = currentTimeMillis();
     }
 
@@ -58,8 +57,7 @@ public class GitAsyncTask extends AsyncTask<Void, Progress, OpNotification> impl
 		
 		closeRepoIfUsed();
 		
-		Notification notification=repositoryOperationContext.createNotificationWith(opResult);
-		repositoryOperationContext.notifyCompletion(notification);
+		lifecycleSupport.completed(opResult);
 	}
 
 	private void closeRepoIfUsed() {
@@ -68,29 +66,6 @@ public class GitAsyncTask extends AsyncTask<Void, Progress, OpNotification> impl
 		if (repository!=null) {
 			RepositoryCache.close(repository);
 		}
-	}
-	
-	private Notification createOngoingNotification() {
-		Notification n = repositoryOperationContext.createNotificationWith(new OpNotification(operation.getOngoingIcon(), operation.getTickerText(), "Event title", "Event detail"));
-		n.contentView = notificationView();
-		return n;
-	}
-	
-	private RemoteViews notificationView() {
-		RemoteViews v=remoteViewWithLayout(R.layout.fetch_progress);
-		v.setTextViewText(R.id.operation_description, operation.getShortDescription()); // TO-DO more suitable text?
-		v.setTextViewText(R.id.operation_long_url, operation.getUrl());
-		v.setTextViewText(R.id.status_text, "Please wait...");
-		v.setProgressBar(R.id.status_progress,1,0,true);
-		return v;
-	}
-	
-	private RemoteViews remoteViewWithLayout(int layoutId) {
-		return new RemoteViews(repositoryOperationContext.getService().getApplicationContext().getPackageName(), layoutId);
-	}
-
-	public Notification getOngoingNotification() {
-		return ongoingNotification;
 	}
 	
 	// Called on background thread
@@ -105,12 +80,9 @@ public class GitAsyncTask extends AsyncTask<Void, Progress, OpNotification> impl
 	// Called on UI thread
 	@Override
 	protected void onProgressUpdate(Progress... values) {
-		Progress p=values[values.length-1];
-		Log.i(TAG, "Got prog "+p);
-		RemoteViews view = ongoingNotification.contentView;
-		view.setProgressBar(R.id.status_progress,p.totalWork,p.totalCompleted,p.isIndeterminate());
-		view.setTextViewText(R.id.status_text, p.msg);
-		repositoryOperationContext.notifyOngoing(ongoingNotification);
+		Progress latestProgress=values[values.length-1];
+		Log.i(TAG, "Got progress "+latestProgress);
+		lifecycleSupport.publish(latestProgress);
 	}
 
 }
