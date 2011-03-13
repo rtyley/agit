@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">toy ssh-agent</string>
-    <string name="auth_agent_service_description">toy ssh-agent service</string>
-</resources>

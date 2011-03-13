@@ -10,7 +10,6 @@
 	<modules>
 		<module>agit</module>
 		<module>agit-tests</module>
-		<module>toy-ssh-agent</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
