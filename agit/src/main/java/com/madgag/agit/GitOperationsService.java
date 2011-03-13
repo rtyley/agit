@@ -116,12 +116,6 @@ public class GitOperationsService extends RoboService {
     	}
     	return map.get(gitdir);
     }
-	
-	public RepositoryOperationContext setRepositoryOperationContextFor(File gitdir, ResponseProvider responseProvider) {
-    	RepositoryOperationContext roc = new RepositoryOperationContext(gitdir,this, responseProvider);
-		map.put(gitdir, roc);
-    	return roc;
-    }
 
 	public RepositoryOperationContext registerManagementActivity(RepositoryManagementActivity repositoryManagementActivity) {
 		RepositoryOperationContext operationContext = getOrCreateRepositoryOperationContextFor(repositoryManagementActivity.gitdir());

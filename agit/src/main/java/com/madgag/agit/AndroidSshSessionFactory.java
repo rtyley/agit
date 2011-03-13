@@ -45,6 +45,7 @@ public class AndroidSshSessionFactory extends SshConfigSessionFactory {
 
 	private void addSshAgentTo(final JSch jsch) throws JSchException {
 		AndroidAuthAgent authAgent=androidAuthAgentProvider.get();
+		Log.w(TAG, "authAgent="+authAgent);
 		if (authAgent==null) {
 			Log.w(TAG, "NO SSH-AGENT AVAILABLE");
 		} else {

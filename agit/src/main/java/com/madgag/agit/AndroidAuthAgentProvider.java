@@ -1,6 +1,12 @@
 package com.madgag.agit;
 
 import static android.content.Context.BIND_AUTO_CREATE;
+import static java.util.concurrent.TimeUnit.SECONDS;
+
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +23,8 @@ public class AndroidAuthAgentProvider implements Provider<AndroidAuthAgent> {
 
     protected static final String TAG = "AAAP";
     
+    private final Lock lock = new ReentrantLock();
+    private final Condition authAgentBound = lock.newCondition();
 	private AndroidAuthAgent authAgent;
 
 	@Inject
@@ -25,27 +33,53 @@ public class AndroidAuthAgentProvider implements Provider<AndroidAuthAgent> {
 	}
 	
 	public AndroidAuthAgent get() {
+		waitForAuthAgentBind();
 		return authAgent;
 	}
 
 	private void bindSshAgentTo(Context context) {
 		context.bindService(new Intent("org.openintents.ssh.BIND_SSH_AGENT_SERVICE"), new ServiceConnection() {
 			public void onServiceDisconnected(ComponentName name) {
-				Log.i(TAG, "onServiceDisconnected - losing "+authAgent);
+				Log.i(TAG, "onServiceDisconnected() : Lost "+authAgent);
 				authAgent=null;
 			}
 			
 			public void onServiceConnected(ComponentName name, IBinder binder) {
-				Log.i(TAG, "onServiceConnected... got "+binder);
+				Log.i(TAG, "onServiceConnected() : binder="+binder);
 				authAgent=AndroidAuthAgent.Stub.asInterface(binder);
-				Log.i(TAG, "bound "+authAgent);
-				try {
-					Log.d(TAG, "here are identities "+authAgent.getIdentities());
-				} catch (RemoteException e) {
-					e.printStackTrace();
-				}
+				showDebugInfoForAuthAgent();
+				signalAuthAgentBound();
 			}
 		}, BIND_AUTO_CREATE);
-        Log.i(TAG, "made context request to bind to the SSH_AGENT_SERVICE");
+        Log.i(TAG, "made request using context "+context+" to bind to the SSH_AGENT_SERVICE");
+	}
+
+	private void waitForAuthAgentBind() {
+		lock.lock();
+		try {
+			authAgentBound.await(1,SECONDS);
+		} catch (InterruptedException e) {
+			Log.e(TAG, "Interrupted waiting for AndroidAuthAgent",e);
+		} finally {
+			lock.unlock();
+		}
+	}
+	
+	private void signalAuthAgentBound() {
+		lock.lock();
+		try {
+			authAgentBound.signal();
+		} finally {
+			lock.unlock();
+		}
+	}
+	
+	private void showDebugInfoForAuthAgent() {
+		Log.d(TAG, "authAgent="+authAgent);
+		try {
+			Log.d(TAG, "authAgent.getIdentities()="+authAgent.getIdentities());
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 	}
 }

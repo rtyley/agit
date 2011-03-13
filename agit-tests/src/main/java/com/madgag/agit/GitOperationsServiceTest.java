@@ -97,40 +97,29 @@ public class GitOperationsServiceTest extends RoboServiceTestCase<GitOperationsS
 	public GitOperationsServiceTest() {
 		super(GitOperationsService.class);
 	}
-	
-	private final ResponseProvider responseProvider = new ResponseProvider() {
-		public void accept(ResponseInterface responseInterface) {
-			Log.i("GOST.RP","Saying yes to "+responseInterface.getOpPrompt());
-			responseInterface.setResponse(TRUE);
-		}
-	};
 
 	public void testCanHitCloneRepoFromLocalTestServer() throws Exception {
-		RepositoryOperationContext repositoryOperationContext = newRepoContext();
-		
-		Repository repository = clone(new URIish("ssh://" + gitServerHostAddress() + ":29418/path/to/repo.git"),repositoryOperationContext);
-		assertTrue(repository.hasObject(ObjectId.fromString("9e0b5e42b3e1c59bc83b55142a8c50dfae36b144")));
+		Repository repository = clone(new URIish("ssh://" + gitServerHostAddress() + ":29418/path/to/repo.git"));
+		assertTrue(repository.hasObject(ObjectId.fromString("155f7cca95943fab32ace9f056ce18089e160ec8")));
 	}
 
 	public void testCanPerformSimpleReadOnlyCloneFromGitHub() throws Exception {
-		RepositoryOperationContext repositoryOperationContext = newRepoContext();
-		
-		Repository repository = clone(new URIish("git://github.com/agittest/small-project.git"),repositoryOperationContext);
+		Repository repository = clone(new URIish("git://github.com/agittest/small-project.git"));
 		File readme = new File(repository.getWorkTree(), "README");
 		assertTrue(readme.exists());
 		assertTrue(repository.hasObject(ObjectId.fromString("9e0b5e42b3e1c59bc83b55142a8c50dfae36b144")));
 		assertFalse(repository.hasObject(ObjectId.fromString("111111111111111111111111111111111111cafe")));
 	}
 
-	private RepositoryOperationContext newRepoContext() {
+	private Repository clone(URIish sourceUri) throws Exception {
 		File gitdir = new File(newFolder(), DOT_GIT);
-		GitOperationsService service = getService();
-		Log.d(TAG, "newRepoContext() : service="+service); 
-		return service.setRepositoryOperationContextFor(gitdir, responseProvider);
+		startServiceCloning(sourceUri, gitdir);
+		RepositoryOperationContext roc = getService().getOrCreateRepositoryOperationContextFor(gitdir);
+		return waitForPopulatedRepoIn(roc);
 	}
-
+	
 	private Repository waitForPopulatedRepoIn(RepositoryOperationContext repositoryOperationContext) throws Exception {
-		
+		Log.i(TAG, "waitForPopulatedRepoIn=" + repositoryOperationContext);
 		GitAsyncTask gitAsyncTask = waitForOperationIn(repositoryOperationContext);
 		GitOperation operation = gitAsyncTask.getOperation();
 		Log.i(TAG, "resultingRepoAt - operation=" + operation);
@@ -144,16 +133,10 @@ public class GitOperationsServiceTest extends RoboServiceTestCase<GitOperationsS
 				+ " workTree=" + repository.getWorkTree());
 		return repository;
 	}
-	
-	private Repository clone(URIish sourceUri, RepositoryOperationContext repositoryOperationContext) throws Exception {
-		startServiceCloning(sourceUri, repositoryOperationContext.getGitDir());
-		return waitForPopulatedRepoIn(repositoryOperationContext);
-	}
 
 	private void startServiceCloning(URIish uri, File gitdir) {
+		Log.i(TAG, "startServiceCloning( uri="+uri+", gitdir="+gitdir+")");
 		Intent cloneIntent = cloneOperationIntentFor(uri, gitdir);
-		Log.i(TAG, "About to start service with " + cloneIntent + " gitdir="
-				+ gitdir);
 		startService(cloneIntent);
 	}
 	
