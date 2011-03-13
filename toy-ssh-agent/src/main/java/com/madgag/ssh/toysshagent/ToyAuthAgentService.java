@@ -28,12 +28,12 @@ public class ToyAuthAgentService extends Service {
 	
 	private static final String TAG = "ToyAgentService";
 
-	private SshUtil sshUtil = new SshUtil();
 	static {
 		Security.addProvider(new BouncyCastleProvider());
 	}
 	
-	KeyPair keyPair;
+	private SshUtil sshUtil = new SshUtil();
+	private KeyPair keyPair;
 	
 	@Override
 	public void onCreate() {
