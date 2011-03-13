@@ -24,7 +24,7 @@ public class AndroidAuthAgentProvider implements Provider<AndroidAuthAgent> {
     protected static final String TAG = "AAAP";
     
     private final Lock lock = new ReentrantLock();
-    private final Condition authAgentBound = lock.newCondition();
+    private final Condition authAgentBound = lock.newCondition(); // TODO CountDownLatch or AbstractQueuedSynchronizer varient?
 	private AndroidAuthAgent authAgent;
 
 	@Inject
