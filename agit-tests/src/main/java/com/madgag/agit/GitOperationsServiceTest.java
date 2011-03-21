@@ -1,7 +1,6 @@
 package com.madgag.agit;
 
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
-import static java.lang.Boolean.TRUE;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.Thread.sleep;
 import static java.util.Arrays.asList;
@@ -24,17 +23,13 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.URIish;
 
-import roboguice.config.AbstractAndroidModule;
 import roboguice.test.RoboServiceTestCase;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
 import android.util.Log;
 
-import com.google.inject.Binder;
 import com.google.inject.Module;
-import com.google.inject.util.Modules;
-import com.jcraft.jsch.UserInfo;
 import com.madgag.agit.GitOperationsServiceTest.AgitTestApplication;
 import com.madgag.agit.operations.GitAsyncTask;
 import com.madgag.agit.operations.GitOperation;
@@ -51,48 +46,9 @@ public class GitOperationsServiceTest extends RoboServiceTestCase<GitOperationsS
 		}
 		
 		protected void addApplicationModules(List<Module> modules) {
-			modules.addAll(asList(new AgitModule(), new YesToEverythingSshUserInfoModule()));
+			modules.addAll(asList(new AgitModule(), YesToEverythingUserInfo.module()));
 		}
 	}
-	
-	public static class YesToEverythingSshUserInfoModule extends AbstractAndroidModule {
-
-		@Override
-	    protected void configure() {
-	    	bind(UserInfoFactory.class).toInstance(new UserInfoFactory() {
-				public UserInfo createUserInfoAssociatedWith(RepositoryOperationContext repositoryOperationContext) {
-					return new UserInfo() {
-						
-						public void showMessage(String msg) {
-							Log.i(TAG, msg);
-						}
-						
-						public boolean promptYesNo(String msg) {
-							Log.i(TAG, msg);
-							return true;
-						}
-						
-						public boolean promptPassword(String arg0) {
-							return false;
-						}
-						
-						public boolean promptPassphrase(String arg0) {
-							return false;
-						}
-						
-						public String getPassword() {
-							return null;
-						}
-						
-						public String getPassphrase() {
-							return null;
-						}
-					};
-				}
-			});
-	    }
-	}
-
 	
 	public GitOperationsServiceTest() {
 		super(GitOperationsService.class);
