@@ -39,7 +39,7 @@
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>maven-android-plugin</artifactId>
                     <!-- change to explicit version for standalone project or remove if version inherited from company pom -->
-                    <version>2.9.0-beta-1</version>
+                    <version>2.9.0-beta-2</version>
                     <configuration>
                         <sdk>
 		             <path>${user.home}/android-sdk/</path> 
