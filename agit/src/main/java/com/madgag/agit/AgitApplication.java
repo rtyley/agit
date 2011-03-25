@@ -9,6 +9,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.inject.Module;
+import com.madgag.agit.ssh.GUISshUserInfoModule;
 
 public class AgitApplication extends RoboApplication {
 	

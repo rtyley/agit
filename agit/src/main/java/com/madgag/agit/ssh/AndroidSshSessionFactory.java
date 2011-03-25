@@ -1,4 +1,4 @@
-package com.madgag.agit;
+package com.madgag.agit.ssh;
 
 import java.util.Map;
 import java.util.Map.Entry;

@@ -1,4 +1,5 @@
-package com.madgag.agit;
+package com.madgag.agit.ssh;
+
 
 import roboguice.config.AbstractAndroidModule;
 

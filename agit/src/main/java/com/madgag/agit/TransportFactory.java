@@ -10,6 +10,7 @@ import org.eclipse.jgit.transport.SshTransport;
 import org.eclipse.jgit.transport.Transport;
 
 import com.google.inject.Inject;
+import com.madgag.agit.ssh.AndroidSshSessionFactoryFactory;
 
 import android.util.Log;
 

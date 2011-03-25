@@ -1,7 +1,8 @@
-package com.madgag.agit;
+package com.madgag.agit.ssh;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.madgag.agit.RepositoryOperationContext;
 import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 
 public class AndroidSshSessionFactoryFactory {
@@ -15,7 +16,7 @@ public class AndroidSshSessionFactoryFactory {
 		this.androidAuthAgentProvider = androidAuthAgentProvider;
 	}
 	
-	AndroidSshSessionFactory createSshSessionFactoryFor(RepositoryOperationContext repositoryOperationContext) {
+	public AndroidSshSessionFactory createSshSessionFactoryFor(RepositoryOperationContext repositoryOperationContext) {
 		return new AndroidSshSessionFactory(androidAuthAgentProvider, userInfoFactory.createUserInfoAssociatedWith(repositoryOperationContext));
 	}
 }

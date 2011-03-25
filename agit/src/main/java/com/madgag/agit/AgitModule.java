@@ -17,6 +17,7 @@ import android.util.Log;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Names;
+import com.madgag.agit.ssh.AndroidAuthAgentProvider;
 import com.madgag.android.lazydrawables.BitmapFileStore;
 import com.madgag.android.lazydrawables.ImageProcessor;
 import com.madgag.android.lazydrawables.ImageResourceDownloader;

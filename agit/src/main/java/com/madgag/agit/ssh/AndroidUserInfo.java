@@ -1,9 +1,10 @@
-package com.madgag.agit;
+package com.madgag.agit.ssh;
 
 import static android.R.drawable.stat_sys_warning;
 import android.util.Log;
 
 import com.jcraft.jsch.UserInfo;
+import com.madgag.agit.BlockingPromptService;
 import com.madgag.agit.operations.OpNotification;
 
 public class AndroidUserInfo implements UserInfo {

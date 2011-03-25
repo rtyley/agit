@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.inject.Module;
 import com.jcraft.jsch.UserInfo;
+import com.madgag.agit.ssh.UserInfoFactory;
 
 public final class YesToEverythingUserInfo implements UserInfo {
 
@@ -21,7 +22,7 @@ public final class YesToEverythingUserInfo implements UserInfo {
 		};
 	}
 
-	private String TAG = "YUI";
+	private String TAG = "YTEUI";
 
 	public void showMessage(String msg) {
 		Log.i(TAG, msg);

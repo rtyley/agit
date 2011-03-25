@@ -1,4 +1,4 @@
-package com.madgag.agit;
+package com.madgag.agit.ssh;
 
 import static android.content.Context.BIND_AUTO_CREATE;
 import static java.util.concurrent.TimeUnit.SECONDS;

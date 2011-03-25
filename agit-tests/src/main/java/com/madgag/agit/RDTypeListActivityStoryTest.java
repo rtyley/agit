@@ -18,7 +18,6 @@ import java.util.List;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
-import org.hamcrest.Matchers;
 
 import android.content.res.AssetManager;
 import android.test.ActivityInstrumentationTestCase2;
