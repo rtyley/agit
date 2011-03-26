@@ -45,10 +45,15 @@ public class RDTTag extends RepoDomainType<TagSummary> {
 				RevObject taggedObject;
 				if (objectPointedToByRef instanceof RevTag) {
 					tagObject = (RevTag) objectPointedToByRef;
-					taggedObject = tagObject.getObject();
+					try {
+						taggedObject = revWalk.parseAny(tagObject.getId());
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
 				} else {
 					taggedObject = objectPointedToByRef;
 				}
+				
 				return new TagSummary(tagRef, tagObject, taggedObject);
 			}
 		}));
