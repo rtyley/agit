@@ -87,12 +87,17 @@ public class RDTypeListActivityStoryTest extends ActivityInstrumentationTestCase
 
 	private Repository unpackRepo(String fileName) throws IOException, ArchiveException {
 		AssetManager am = getInstrumentation().getContext().getAssets();
-		File startRepo = newFolder();
+		File repoParentFolder = newFolder();
 		InputStream rawZipFileInputStream = am.open(fileName);
-		unzip(rawZipFileInputStream, startRepo);
+		return unzipRepoFromStreamToFolder(rawZipFileInputStream, repoParentFolder);
+	}
+
+	private Repository unzipRepoFromStreamToFolder(
+			InputStream rawZipFileInputStream, File destinationFolder)
+			throws IOException, ArchiveException {
+		unzip(rawZipFileInputStream, destinationFolder);
 		rawZipFileInputStream.close();
-		File gitdir = new File(startRepo,".git");
-		return new FileRepository(gitdir);
+		return new FileRepository(new File(destinationFolder,".git"));
 	}
 	
 }

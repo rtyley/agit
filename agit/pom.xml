@@ -33,12 +33,34 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>1.4</version>
+			<version>2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.collections</groupId>
 			<artifactId>google-collections</artifactId>
 			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.madgag</groupId>
+			<artifactId>util-compress</artifactId>
+			<version>1.27</version>
+			<scope>test</scope>
+		</dependency>
+		
+		
+		
+		
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-library</artifactId>
+			<version>1.3.RC2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.roboguice</groupId>
@@ -56,6 +78,7 @@
 			<version>1.27</version>
 		</dependency>
 
+
 	</dependencies>
 	<build>
 		<plugins>
@@ -63,69 +86,27 @@
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>maven-android-plugin</artifactId>
 			</plugin>
-			<!--
-			<plugin>
-				<groupId>com.pyx4me</groupId>
-				<artifactId>proguard-maven-plugin</artifactId>
-				<version>2.0.4</version>
-				<executions>
-					<execution>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>proguard</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<injar>android-classes</injar>
-					<libs>
-						<lib>${java.home}/lib/rt.jar</lib>
-					</libs>
-					<obfuscate>false</obfuscate>
-					<options>
-
-						<option>-keepclassmembers enum * {
-							public static **[] values();
-							public static ** valueOf(java.lang.String);
-							}</option>
-
-						<option>-keep public class * extends android.app.Activity</option>
-						<option>-keep public class * extends android.app.Application</option>
-						<option>-keep public class * extends android.app.Service</option>
-						<option>-keep public class * extends
-							android.content.BroadcastReceiver</option>
-						<option>-keep public class * extends
-							android.content.ContentProvider</option>
-
-						<option>-keep public class * extends android.view.View {
-							public &lt;init&gt;(android.content.Context);
-							public &lt;init&gt;(android.content.Context,
-							android.util.AttributeSet);
-							public &lt;init&gt;(android.content.Context, android.util.AttributeSet,
-							int);
-							public void set*(...);
-							}</option>
-
-						<option>-keep public class roboguice.**</option>
-						<option>-keep class com.google.inject.Binder</option>
-						<option>-keepclassmembers class * { @com.google.inject.Inject
-							&lt;init&gt;(...); }</option>
-
-						<option>-keep class com.jcraft.jsch.jce.*</option>
-						<option>-keep class com.jcraft.jsch.DHG1</option>
-
-
-
-
-						<option>-dontskipnonpubliclibraryclasses</option>
-						<option>-dontoptimize</option>
-						<option>-printmapping map.txt</option>
-						<option>-printseeds seed.txt</option>
-						<option>-ignorewarnings</option>
-					</options>
-				</configuration>
-			</plugin>
-			-->
+			<!-- <plugin> <groupId>com.pyx4me</groupId> <artifactId>proguard-maven-plugin</artifactId> 
+				<version>2.0.4</version> <executions> <execution> <phase>process-classes</phase> 
+				<goals> <goal>proguard</goal> </goals> </execution> </executions> <configuration> 
+				<injar>android-classes</injar> <libs> <lib>${java.home}/lib/rt.jar</lib> 
+				</libs> <obfuscate>false</obfuscate> <options> <option>-keepclassmembers 
+				enum * { public static **[] values(); public static ** valueOf(java.lang.String); 
+				}</option> <option>-keep public class * extends android.app.Activity</option> 
+				<option>-keep public class * extends android.app.Application</option> <option>-keep 
+				public class * extends android.app.Service</option> <option>-keep public 
+				class * extends android.content.BroadcastReceiver</option> <option>-keep 
+				public class * extends android.content.ContentProvider</option> <option>-keep 
+				public class * extends android.view.View { public &lt;init&gt;(android.content.Context); 
+				public &lt;init&gt;(android.content.Context, android.util.AttributeSet); 
+				public &lt;init&gt;(android.content.Context, android.util.AttributeSet, int); 
+				public void set*(...); }</option> <option>-keep public class roboguice.**</option> 
+				<option>-keep class com.google.inject.Binder</option> <option>-keepclassmembers 
+				class * { @com.google.inject.Inject &lt;init&gt;(...); }</option> <option>-keep 
+				class com.jcraft.jsch.jce.*</option> <option>-keep class com.jcraft.jsch.DHG1</option> 
+				<option>-dontskipnonpubliclibraryclasses</option> <option>-dontoptimize</option> 
+				<option>-printmapping map.txt</option> <option>-printseeds seed.txt</option> 
+				<option>-ignorewarnings</option> </options> </configuration> </plugin> -->
 		</plugins>
 	</build>
 </project>

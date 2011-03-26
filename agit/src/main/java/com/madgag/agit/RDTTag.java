@@ -6,12 +6,10 @@ import static com.madgag.agit.GitObjects.evaluate;
 import static com.madgag.agit.RDTTag.TagSummary.SORT_BY_TIME_AND_NAME;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevBlob;
@@ -83,17 +81,7 @@ public class RDTTag extends RepoDomainType<TagSummary> {
 	CharSequence shortDescriptionOf(TagSummary tagSummary) {
 		//ObjectId peeledObjectId = repository.peel(tagSummary.getRef()).getPeeledObjectId();
 		//ObjectId taggedId = peeledObjectId==null?ref.getObjectId():peeledObjectId;
-		
-		RevObject taggedObject = tagSummary.getTaggedObject();
-		switch (taggedObject.getType()) {
-			case Constants.OBJ_COMMIT:
-				RevCommit revCommit = (RevCommit) taggedObject;
-				return "Commit: "+revCommit.abbreviate(4).name()+" "+revCommit.getShortMessage();
-			case Constants.OBJ_TREE:
-				RevTree revTree = (RevTree) taggedObject;
-				return "Tree: "+revTree.abbreviate(4).name()+" "+revTree;
-		}
-		return "...";
+		return evaluate(tagSummary.getTaggedObject(), GIT_OBJECT_SHORT_DESCRIPTION);
 	}
 
 	public static class TagSummary {
@@ -163,4 +151,16 @@ public class RDTTag extends RepoDomainType<TagSummary> {
 				}
 		};
 	}
+	
+	private static GitObjectFunction.Base<String> GIT_OBJECT_SHORT_DESCRIPTION = new GitObjectFunction.Base<String>() {
+		public String apply(RevCommit commit) {
+			return "Commit: "+commit.abbreviate(4).name()+" "+commit.getShortMessage();
+		}
+		public String apply(RevTree tree) {
+			return "Tree: "+tree.abbreviate(4).name()+" "+tree;
+		}
+		public String applyDefault(RevObject revObject) {
+			return "...";
+		}
+	};
 }
