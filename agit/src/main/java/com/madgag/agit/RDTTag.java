@@ -157,7 +157,7 @@ public class RDTTag extends RepoDomainType<TagSummary> {
 		};
 	}
 	
-	private static GitObjectFunction.Base<String> GIT_OBJECT_SHORT_DESCRIPTION = new GitObjectFunction.Base<String>() {
+	static GitObjectFunction.Base<String> GIT_OBJECT_SHORT_DESCRIPTION = new GitObjectFunction.Base<String>() {
 		public String apply(RevCommit commit) {
 			return "Commit: "+commit.abbreviate(4).name()+" "+commit.getShortMessage();
 		}

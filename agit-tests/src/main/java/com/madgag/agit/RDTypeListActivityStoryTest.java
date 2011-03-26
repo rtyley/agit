@@ -3,7 +3,7 @@ package com.madgag.agit;
 
 import static com.madgag.agit.GitOperationsServiceTest.newFolder;
 import static com.madgag.agit.RDTypeListActivity.listIntent;
-import static com.madgag.agit.TextViewMatcher.textView;
+import static com.madgag.agit.CharSequenceMatcher.charSequence;
 import static com.madgag.compress.CompressUtil.unzip;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
@@ -59,10 +59,10 @@ public class RDTypeListActivityStoryTest extends ActivityInstrumentationTestCase
 			assertThat(itemTitleTextView.getText(), is(summary.getName()));
 			
 			if (summary.getName().equals("annotated-tag-of-2nd-commit")) {
-				TextView detailText = (TextView) itemView.findViewById(android.R.id.text2);
-				Log.i(TAG, "Looking... "+ detailText.getText());
-				assertThat(detailText, textView(startsWith("Commit")));
-				assertThat(detailText, textView(containsString("Adding my happy folder with it's tags")));
+				CharSequence dt = ((TextView) itemView.findViewById(android.R.id.text2)).getText();
+				Log.i(TAG, "Looking... "+ dt);
+				assertThat(dt, charSequence(startsWith("Commit")));
+				assertThat(dt, charSequence(containsString("Adding my happy folder with it's tags")));
 			}
 		}
 	}
