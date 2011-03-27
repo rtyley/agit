@@ -18,5 +18,5 @@
     <instrumentation android:name="android.test.InstrumentationTestRunner"
                      android:targetPackage="com.madgag.agit"
                      android:label="Tests for Agit"/>
-
+    <uses-sdk android:minSdkVersion="7" />
 </manifest>
