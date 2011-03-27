@@ -5,9 +5,7 @@ import static com.madgag.compress.CompressUtil.unzip;
 import static java.lang.System.currentTimeMillis;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +15,9 @@ import java.util.List;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepository;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import com.google.common.base.Predicate;
@@ -32,7 +32,17 @@ public class RDTTagTest {
 		TagSummary loneTag = listOfTagsInRepo.get(0);
 		assertThat(rdtTag.shortDescriptionOf(loneTag).toString(), notNullValue());
 	}
-	
+
+
+	@Test
+	public void shouldHaveTaggedObjectFieldCorrectlySetForAnAnnotatedTag() throws Exception {
+		RDTTag rdtTag = new RDTTag(unpackRepo("small-repo.with-tags.zip"));
+		List<TagSummary> tags = rdtTag.getAll();
+
+		TagSummary tag = find(tags, tagNamed("annotated-tag-of-2nd-commit"));
+		assertThat(tag.getTaggedObject(), instanceOf(RevCommit.class));
+	}
+
 	@Test
 	public void shouldDescribeThingsProperly() throws Exception {
 		RDTTag rdtTag = new RDTTag(unpackRepo("small-repo.with-tags.zip"));
