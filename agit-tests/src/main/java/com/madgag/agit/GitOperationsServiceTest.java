@@ -55,7 +55,7 @@ public class GitOperationsServiceTest extends RoboServiceTestCase<GitOperationsS
 	}
 
 	public void testCanHitCloneRepoFromLocalTestServer() throws Exception {
-		Repository repository = clone(new URIish("ssh://" + gitServerHostAddress() + ":29418/path/to/repo.git"));
+		Repository repository = clone(new URIish("ssh://" + gitServerHostAddress() + ":29418/sample-repo.git"));
 		assertTrue(repository.hasObject(ObjectId.fromString("155f7cca95943fab32ace9f056ce18089e160ec8")));
 	}
 
@@ -142,11 +142,12 @@ public class GitOperationsServiceTest extends RoboServiceTestCase<GitOperationsS
 			FileNotFoundException, UnknownHostException {
 		File bang = new File(Environment.getExternalStorageDirectory(),"agit-integration-test.properties");
 		Properties properties = new Properties();
-		properties.load(new FileReader(bang));
+		if (bang.exists()) {
+			properties.load(new FileReader(bang));
+		}
 		String hostAddress = properties.getProperty("gitserver.host.address", "10.0.2.2");
 		InetAddress address = InetAddress.getByName(hostAddress);
-		boolean reachableHost = address.isReachable(1000);
-		assertThat("Test gitserver host " + hostAddress + " is reachable", reachableHost, is(true));
+		assertThat("Test gitserver host " + hostAddress + " is reachable", address.isReachable(1000), is(true));
 		return hostAddress;
 	}
 
