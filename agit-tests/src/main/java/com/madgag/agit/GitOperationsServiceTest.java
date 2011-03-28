@@ -1,12 +1,14 @@
 package com.madgag.agit;
 
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
+import static com.madgag.agit.HasGitObjectMatcher.hasGitObject;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.Thread.sleep;
 import static java.util.Arrays.asList;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.Is.is;
 
 import java.io.File;
@@ -22,6 +24,7 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.URIish;
+import org.hamcrest.Matchers;
 
 import roboguice.test.RoboServiceTestCase;
 import android.content.Context;
@@ -56,15 +59,15 @@ public class GitOperationsServiceTest extends RoboServiceTestCase<GitOperationsS
 
 	public void testCanHitCloneRepoFromLocalTestServer() throws Exception {
 		Repository repository = clone(new URIish("ssh://" + gitServerHostAddress() + ":29418/sample-repo.git"));
-		assertTrue(repository.hasObject(ObjectId.fromString("155f7cca95943fab32ace9f056ce18089e160ec8")));
+		assertThat(repository, hasGitObject("155f7cca95943fab32ace9f056ce18089e160ec8"));
 	}
 
 	public void testCanPerformSimpleReadOnlyCloneFromGitHub() throws Exception {
 		Repository repository = clone(new URIish("git://github.com/agittest/small-project.git"));
 		File readme = new File(repository.getWorkTree(), "README");
 		assertTrue(readme.exists());
-		assertTrue(repository.hasObject(ObjectId.fromString("9e0b5e42b3e1c59bc83b55142a8c50dfae36b144")));
-		assertFalse(repository.hasObject(ObjectId.fromString("111111111111111111111111111111111111cafe")));
+		assertThat(repository, hasGitObject("9e0b5e42b3e1c59bc83b55142a8c50dfae36b144"));
+		assertThat(repository, not(hasGitObject("111111111111111111111111111111111111cafe")));
 	}
 
 	private Repository clone(URIish sourceUri) throws Exception {
