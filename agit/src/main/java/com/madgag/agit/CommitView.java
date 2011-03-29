@@ -132,10 +132,10 @@ public class CommitView extends LinearLayout {
 //		}
 		TextView textView = (TextView) findViewById(R.id.commit_message_text);
 		textView.setText(commit.getFullMessage());
-		
-		int width=textView.getBackground().getIntrinsicWidth();
-		Log.d("CV", "M Width = "+width);
-		textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, width/80);
+//		
+//		int width=textView.getBackground().getIntrinsicWidth(); // textView.getBackground is null at somepoint?
+//		Log.d("CV", "M Width = "+width);
+//		textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, width/80);
 	}
 
 	private void addPerson(String title, PersonIdent commiter, ViewGroup vg) {
