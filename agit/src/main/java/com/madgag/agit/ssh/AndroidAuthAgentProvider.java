@@ -58,6 +58,10 @@ public class AndroidAuthAgentProvider implements Provider<AndroidAuthAgent> {
 		lock.lock();
 		Log.d(TAG, "waitForAuthAgentBind() entered: agent="+authAgent);
 		try {
+			if (authAgent!=null) {
+				Log.d(TAG, "Already got non-null agent="+authAgent+" -no need to wait.");
+				return;
+			}
 			boolean gotAgentBeforeTimeOut=authAgentBound.await(5,SECONDS);
 			Log.d(TAG, "gotAgentBeforeTimeOut="+gotAgentBeforeTimeOut+" agent="+authAgent);
 		} catch (InterruptedException e) {
