@@ -56,6 +56,7 @@ public class AndroidAuthAgentProvider implements Provider<AndroidAuthAgent> {
 
 	private void waitForAuthAgentBind() {
 		lock.lock();
+		Log.d(TAG, "waitForAuthAgentBind() entered: agent="+authAgent);
 		try {
 			boolean gotAgentBeforeTimeOut=authAgentBound.await(5,SECONDS);
 			Log.d(TAG, "gotAgentBeforeTimeOut="+gotAgentBeforeTimeOut+" agent="+authAgent);
