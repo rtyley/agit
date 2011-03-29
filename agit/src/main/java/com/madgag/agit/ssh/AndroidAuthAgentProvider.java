@@ -47,7 +47,7 @@ public class AndroidAuthAgentProvider implements Provider<AndroidAuthAgent> {
 			public void onServiceConnected(ComponentName name, IBinder binder) {
 				Log.i(TAG, "onServiceConnected() : binder="+binder);
 				authAgent=AndroidAuthAgent.Stub.asInterface(binder);
-				showDebugInfoForAuthAgent();
+				// showDebugInfoForAuthAgent(); Showing this info is actually a bit confusing
 				signalAuthAgentBound();
 			}
 		}, BIND_AUTO_CREATE);
@@ -57,7 +57,8 @@ public class AndroidAuthAgentProvider implements Provider<AndroidAuthAgent> {
 	private void waitForAuthAgentBind() {
 		lock.lock();
 		try {
-			authAgentBound.await(1,SECONDS);
+			boolean timeElapsed=authAgentBound.await(1,SECONDS);
+			Log.d(TAG, "time-out waiting for AndroidAuthAgent: "+timeElapsed+" agent="+authAgent);
 		} catch (InterruptedException e) {
 			Log.e(TAG, "Interrupted waiting for AndroidAuthAgent",e);
 		} finally {
