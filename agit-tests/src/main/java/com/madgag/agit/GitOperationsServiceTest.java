@@ -20,11 +20,9 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Properties;
 
-import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.URIish;
-import org.hamcrest.Matchers;
 
 import roboguice.test.RoboServiceTestCase;
 import android.content.Context;
@@ -45,7 +43,7 @@ public class GitOperationsServiceTest extends RoboServiceTestCase<GitOperationsS
 	public static class AgitTestApplication extends AgitApplication {
 		public AgitTestApplication(Context context) {
 			super(context);
-			Log.i("GOST","REALLY GETTING CALLED!!");
+			Log.i(TAG,"REALLY GETTING CALLED!!");
 		}
 		
 		protected void addApplicationModules(List<Module> modules) {
