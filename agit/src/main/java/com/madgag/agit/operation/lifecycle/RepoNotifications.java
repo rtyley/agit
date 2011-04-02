@@ -2,6 +2,7 @@ package com.madgag.agit.operation.lifecycle;
 
 import static android.app.Notification.FLAG_AUTO_CANCEL;
 import static android.content.Context.NOTIFICATION_SERVICE;
+import static com.madgag.agit.RepositoryManagementActivity.manageRepoPendingIntent;
 import static java.lang.System.currentTimeMillis;
 
 import java.io.File;
@@ -12,8 +13,12 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import com.madgag.agit.RepoOpScoped;
 import com.madgag.agit.operations.OpNotification;
 
+@RepoOpScoped
 public class RepoNotifications {
 
 	private static final String TAG="RN";
@@ -23,9 +28,10 @@ public class RepoNotifications {
 	private final int ongoingOpNotificationId, promptNotificationId, completionNotificationId;
 	private final PendingIntent manageGitRepo;
 	
-	public RepoNotifications(Context context, File gitdir, PendingIntent manageGitRepo) {
+	@Inject
+	public RepoNotifications(Context context, @Named("gitdir") File gitdir) {
 		this.context = context;
-		this.manageGitRepo = manageGitRepo;
+		this.manageGitRepo = manageRepoPendingIntent(gitdir,context);
 		this.ongoingOpNotificationId = gitdir.hashCode();
 		this.completionNotificationId = ongoingOpNotificationId + 1;
 		this.promptNotificationId = completionNotificationId + 1;

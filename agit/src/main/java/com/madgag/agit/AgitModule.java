@@ -5,6 +5,7 @@ import static com.google.inject.assistedinject.FactoryProvider.newFactory;
 import java.io.File;
 import java.io.IOException;
 
+import org.connectbot.service.PromptHelper;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.SshSessionFactory;
@@ -45,6 +46,7 @@ public class AgitModule extends AbstractAndroidModule {
     	bind(GitAsyncTaskFactory.class).toProvider(newFactory(GitAsyncTaskFactory.class, GitAsyncTask.class));
     	bind(SshSessionFactory.class).to(AndroidSshSessionFactory.class);
     	bind(TransportFactory.class);
+    	bind(PromptHelper.class).in(RepoOpScoped.class);
     }
 	
  	@ContextScoped

@@ -7,7 +7,6 @@ import static com.madgag.agit.RepoDeleter.REPO_DELETE_COMPLETED;
 
 import java.io.File;
 
-import org.connectbot.service.PromptHelper;
 import org.eclipse.jgit.lib.Repository;
 
 import android.app.AlertDialog;

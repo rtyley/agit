@@ -34,28 +34,15 @@ import com.madgag.agit.operations.OpPrompt;
  * @author jsharkey, rtyley
  */
 public class PromptHelper implements ResponseInterface, BlockingPromptService {
-	private final Object tag;
 
 	private Handler handler = null;
 
-	private Semaphore promptToken;
-	private Semaphore promptResponse;
+	private Semaphore promptToken = new Semaphore(1);
+	private Semaphore promptResponse = new Semaphore(0);
 
 	private OpPrompt<?> opPrompt;
 
 	private Object response = null;
-
-
-
-	public PromptHelper(Object tag) {
-		this.tag = tag;
-
-		// Threads must acquire this before they can send a prompt.
-		promptToken = new Semaphore(1);
-
-		// Responses will release this semaphore.
-		promptResponse = new Semaphore(0);
-	}
 
 
 	/**
@@ -101,7 +88,7 @@ public class PromptHelper implements ResponseInterface, BlockingPromptService {
 
 			// notify any parent watching for live events
 			if (handler != null)
-				Message.obtain(handler, -1, tag).sendToTarget();
+				Message.obtain(handler).sendToTarget();
 
 			// acquire lock until user passes back value
 			promptResponse.acquire();

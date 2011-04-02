@@ -47,8 +47,9 @@ public class GitOperationsServiceTest extends RoboServiceTestCase<GitOperationsS
 	private Repository clone(URIish sourceUri) throws Exception {
 		File gitdir = new File(newFolder(), DOT_GIT);
 		startServiceCloning(sourceUri, gitdir);
-		RepositoryOperationContext roc = getService().getOrCreateRepositoryOperationContextFor(gitdir);
-		return waitForPopulatedRepoIn(roc);
+//		RepositoryOperationContext roc = getService().getOrCreateRepositoryOperationContextFor(gitdir);
+//		return waitForPopulatedRepoIn(roc);
+		return new FileRepository(gitdir);
 	}
 	
 	private Repository waitForPopulatedRepoIn(RepositoryOperationContext repositoryOperationContext) throws Exception {

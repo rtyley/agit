@@ -1,21 +1,38 @@
-package com.madgag.agit.ssh;
+package com.madgag.agit.ssh.jsch;
 
 import static android.R.drawable.stat_sys_warning;
+import static com.google.inject.name.Names.named;
+
+import java.io.File;
+
 import android.util.Log;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
+import com.google.inject.Key;
+import com.google.inject.Module;
 import com.jcraft.jsch.UserInfo;
 import com.madgag.agit.BlockingPromptService;
+import com.madgag.agit.RepoOpScope;
 import com.madgag.agit.RepoOpScoped;
 import com.madgag.agit.operations.OpNotification;
 
 @RepoOpScoped
-public class AndroidUserInfo implements UserInfo {
-	private final static String TAG="AndroidUserInfo";
+public class GUIUserInfo implements UserInfo {
+	private final static String TAG="GUIUI";
+	
+	public static Module module() {
+		return new AbstractModule() {
+			public void configure() {
+				bind(UserInfo.class).to(GUIUserInfo.class);
+			}
+		};
+	}
+	
 	private final BlockingPromptService blockingPromptService;
 
 	@Inject
-	public AndroidUserInfo(BlockingPromptService blockingPromptService) {
+	public GUIUserInfo(BlockingPromptService blockingPromptService) {
 		this.blockingPromptService = blockingPromptService;
 	}
 	

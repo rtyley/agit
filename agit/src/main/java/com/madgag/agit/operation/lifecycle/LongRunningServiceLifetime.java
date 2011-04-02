@@ -8,7 +8,6 @@ import android.widget.RemoteViews;
 
 import com.madgag.agit.Progress;
 import com.madgag.agit.R;
-import com.madgag.agit.operations.GitOperation;
 import com.madgag.agit.operations.OpNotification;
 
 // Stateful? Relates to a specific operation?
@@ -18,20 +17,18 @@ public class LongRunningServiceLifetime implements OperationLifecycleSupport {
 
 	private final RepoNotifications repoNotifications;
 	private final Service service;
-	private final GitOperation gitOperation;
 
 	private Notification ongoingNotification;
 
-	public LongRunningServiceLifetime(RepoNotifications repoNotifications, Service service, GitOperation gitOperation) {
+	public LongRunningServiceLifetime(RepoNotifications repoNotifications, Service service) {
 		this.repoNotifications = repoNotifications;
 		this.service = service;
-		this.gitOperation = gitOperation;
 	}
 
 	public void startedWith(OpNotification startNotification) {
 		ongoingNotification = repoNotifications.createNotificationWith(startNotification);
 		ongoingNotification.flags = ongoingNotification.flags | FLAG_ONGOING_EVENT;
-		ongoingNotification.contentView = notificationView();
+		ongoingNotification.contentView = notificationView(startNotification);
 		foregroundServiceWith(ongoingNotification); //definitely the job of this class, right?!
 	}
 
@@ -47,10 +44,10 @@ public class LongRunningServiceLifetime implements OperationLifecycleSupport {
 		repoNotifications.notifyCompletionWith(completionNotification);
 	}
 
-	private RemoteViews notificationView() {
+	private RemoteViews notificationView(OpNotification startNotification) {
 		RemoteViews v=remoteViewWithLayout(R.layout.fetch_progress);
-		v.setTextViewText(R.id.operation_description, gitOperation.getShortDescription()); // TO-DO more suitable text?
-		v.setTextViewText(R.id.operation_long_url, gitOperation.getUrl());
+		v.setTextViewText(R.id.operation_description, startNotification.getEventTitle()); // TO-DO more suitable text?
+		v.setTextViewText(R.id.operation_long_url, startNotification.getEventDetail());
 		v.setTextViewText(R.id.status_text, "Please wait...");
 		v.setProgressBar(R.id.status_progress,1,0,true);
 		return v;
