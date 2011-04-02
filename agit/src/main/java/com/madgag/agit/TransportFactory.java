@@ -9,22 +9,25 @@ import org.eclipse.jgit.transport.SshSessionFactory;
 import org.eclipse.jgit.transport.SshTransport;
 import org.eclipse.jgit.transport.Transport;
 
-import com.google.inject.Inject;
-import com.madgag.agit.ssh.AndroidSshSessionFactoryFactory;
-
 import android.util.Log;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+
+@RepoOpScoped
 public class TransportFactory {
 	
-	private final AndroidSshSessionFactoryFactory sessionFactorySquare;
-	private String TAG = "TF";
-
+	private final static String TAG = "TF";
+	private final Repository repo;
+	private final Provider<SshSessionFactory> sshSessionFactoryProvider;
+	
 	@Inject
-	public TransportFactory(AndroidSshSessionFactoryFactory androidSshSessionFactoryFactory) {
-		this.sessionFactorySquare = androidSshSessionFactoryFactory;
+	public TransportFactory( Repository repo, Provider<SshSessionFactory> sshSessionFactoryProvider) {
+		this.repo = repo;
+		this.sshSessionFactoryProvider = sshSessionFactoryProvider;
 	}
 	
-	public Transport transportFor(RepositoryOperationContext repositoryOperationContext, Repository repo, RemoteConfig remoteConfig) {
+	public Transport transportFor(RemoteConfig remoteConfig) {
 		Transport tn;
 		try {
 			Log.i(TAG , "Creating transport for repo with " + identityHashCode(repo));
@@ -33,8 +36,7 @@ public class TransportFactory {
 			throw new RuntimeException(e);
 		}
 		if (tn instanceof SshTransport) {
-			SshSessionFactory sshSessionFactory = sessionFactorySquare.createSshSessionFactoryFor(repositoryOperationContext);
-			((SshTransport) tn).setSshSessionFactory(sshSessionFactory);
+			((SshTransport) tn).setSshSessionFactory(sshSessionFactoryProvider.get());
 		}
 		return tn;
 	}

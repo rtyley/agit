@@ -3,10 +3,12 @@ package com.madgag.agit.ssh;
 
 import roboguice.config.AbstractAndroidModule;
 
+import com.jcraft.jsch.UserInfo;
+
 public class GUISshUserInfoModule extends AbstractAndroidModule {
 
 	@Override
     protected void configure() {
-    	bind(UserInfoFactory.class).to(AndroidGUIUserInfoFactory.class);
+    	bind(UserInfo.class).to(AndroidUserInfo.class);
     }
 }

@@ -10,6 +10,7 @@ import org.eclipse.jgit.util.FS;
 import android.os.RemoteException;
 import android.util.Log;
 
+import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -21,10 +22,12 @@ import com.madgag.ssh.authagent.client.jsch.SSHAgentIdentity;
 public class AndroidSshSessionFactory extends SshConfigSessionFactory {
 
 	private static final String TAG = "ASSF";
-	private final Provider<AndroidAuthAgent> androidAuthAgentProvider;
-	// private final BlockingPromptService blockingPromptService;
-	private final UserInfo userInfo;
 	
+	private final Provider<AndroidAuthAgent> androidAuthAgentProvider;
+	private final UserInfo userInfo;
+	// private final BlockingPromptService blockingPromptService;
+	
+	@Inject
 	public AndroidSshSessionFactory(Provider<AndroidAuthAgent> androidAuthAgentProvider, UserInfo userInfo) {
 		this.androidAuthAgentProvider = androidAuthAgentProvider;
 		this.userInfo = userInfo;

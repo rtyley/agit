@@ -5,6 +5,7 @@ import static java.util.Arrays.asList;
 import java.util.List;
 
 import roboguice.application.RoboApplication;
+import android.app.Instrumentation;
 import android.content.Context;
 import android.util.Log;
 
@@ -19,6 +20,10 @@ public class AgitApplication extends RoboApplication {
 		attachBaseContext(context);
 	}
 	
+	public AgitApplication(Instrumentation instrumentation) {
+		attachBaseContext(instrumentation.getTargetContext());
+	}
+
 	protected void addApplicationModules(List<Module> modules) {
 		Log.i("AA", "Adding application modules...");
         modules.addAll(asList(new AgitModule(), new GUISshUserInfoModule()));

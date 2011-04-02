@@ -1,20 +1,17 @@
 package com.madgag.agit.operations;
 
-import org.eclipse.jgit.lib.Repository;
+import java.io.File;
 
 import com.madgag.agit.Progress;
 import com.madgag.agit.ProgressListener;
-import com.madgag.agit.RepositoryOperationContext;
 
 public interface GitOperation {
-	
-	Repository getRepository();
 	
 	String getTickerText();
 	
 	int getOngoingIcon(); 
 	
-	OpNotification execute(RepositoryOperationContext repositoryOperationContext, ProgressListener<Progress> progressListener);
+	OpNotification execute(ProgressListener<Progress> progressListener);
 
 	String getName();
 
@@ -23,4 +20,6 @@ public interface GitOperation {
 	String getDescription();
 
 	CharSequence getUrl();
+
+	File getGitDir();
 }

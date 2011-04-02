@@ -1,7 +1,5 @@
 package com.madgag.agit;
-
-import static com.madgag.agit.GitOperationsServiceTest.newFolder;
-
+import static com.madgag.agit.GitTestUtils.*;
 import java.io.File;
 import java.io.IOException;
 

@@ -4,6 +4,7 @@ import static android.widget.Toast.LENGTH_LONG;
 import static com.madgag.agit.GitIntents.addGitDirTo;
 import static com.madgag.agit.GitIntents.gitDirFrom;
 import static com.madgag.agit.Repos.openRepoFor;
+import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -15,19 +16,15 @@ import org.eclipse.jgit.transport.URIish;
 
 import roboguice.service.RoboService;
 import android.app.NotificationManager;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Binder;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.inject.Provider;
 import com.madgag.agit.operations.Clone;
 import com.madgag.agit.operations.Fetch;
-import com.madgag.ssh.android.authagent.AndroidAuthAgent;
+import com.madgag.agit.operations.GitOperation;
 
 public class GitOperationsService extends RoboService {
 
@@ -85,26 +82,23 @@ public class GitOperationsService extends RoboService {
 		File gitdir = GitIntents.gitDirFrom(intent);
 		
 		RepositoryOperationContext repositoryOperationContext=getOrCreateRepositoryOperationContextFor(gitDirFrom(intent));
+		GitOperation operation = null;
 		if (action.equals("git.CLONE")) {
 			String sourceUriString = intent.getStringExtra("source-uri");
 			try {
-				URIish sourceUri=new URIish(sourceUriString);
-				repositoryOperationContext.enqueue(new Clone(sourceUri, gitdir));
+				operation = new Clone(false, new URIish(sourceUriString), gitdir);
 			} catch (URISyntaxException e) {
-				Toast.makeText(this, "Invalid uri "+sourceUriString, LENGTH_LONG);
+				Toast.makeText(this, "Invalid uri "+sourceUriString, LENGTH_LONG).show();
+				return START_NOT_STICKY;
 			}
 		} else if (action.equals("git.FETCH")) {
-			String remote=Constants.DEFAULT_REMOTE_NAME;
-			try {
-				repositoryOperationContext.enqueue(new Fetch(openRepoFor(gitdir), remote));
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
-				Toast.makeText(this, "Bad config "+e, LENGTH_LONG).show();
-			}
+			//operation = new Fetch(openRepoFor(gitdir), DEFAULT_REMOTE_NAME);
 		} else {
-			Log.e(TAG, "Why not is");
+			Log.e(TAG, "What is "+action);
+			return START_NOT_STICKY;
 		}
-
+		repositoryOperationContext.enqueue(operation);
+		
 		return START_STICKY;
 	}
 

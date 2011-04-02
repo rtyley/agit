@@ -3,14 +3,18 @@ package com.madgag.agit.ssh;
 import static android.R.drawable.stat_sys_warning;
 import android.util.Log;
 
+import com.google.inject.Inject;
 import com.jcraft.jsch.UserInfo;
 import com.madgag.agit.BlockingPromptService;
+import com.madgag.agit.RepoOpScoped;
 import com.madgag.agit.operations.OpNotification;
 
+@RepoOpScoped
 public class AndroidUserInfo implements UserInfo {
 	private final static String TAG="AndroidUserInfo";
 	private final BlockingPromptService blockingPromptService;
 
+	@Inject
 	public AndroidUserInfo(BlockingPromptService blockingPromptService) {
 		this.blockingPromptService = blockingPromptService;
 	}

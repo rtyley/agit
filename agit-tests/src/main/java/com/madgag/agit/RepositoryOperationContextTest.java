@@ -1,8 +1,7 @@
 package com.madgag.agit;
 
-
+import static com.madgag.agit.GitTestUtils.*;
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
-import static com.madgag.agit.GitOperationsServiceTest.newFolder;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT;
 
 import java.io.File;

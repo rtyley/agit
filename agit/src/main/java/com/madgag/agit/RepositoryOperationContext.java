@@ -38,8 +38,7 @@ public class RepositoryOperationContext implements ResponseProvider {
 
 	private final PromptHelper promptHelper;
 	private ResponseProvider responseProvider;
-	private TransportFactory transportFactory;
-
+	
 	private Handler promptHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -56,7 +55,6 @@ public class RepositoryOperationContext implements ResponseProvider {
 		promptHelper = new PromptHelper(TAG);
 		this.responseProvider = responseProvider;
 		promptHelper.setHandler(promptHandler);
-		transportFactory = service.getInjector().getInstance(TransportFactory.class);
 	}
 
 	public RepositoryOperationContext(File gitdir, GitOperationsService service) {
@@ -70,13 +68,12 @@ public class RepositoryOperationContext implements ResponseProvider {
 
 	// grandiose name
 	public void enqueue(GitOperation operation) {
-		GitAsyncTask asyncTask = new GitAsyncTask(this, operation, new LongRunningServiceLifetime(repoNotifications, service, operation));
+		
+		GitAsyncTask asyncTask = new GitAsyncTask(operation, new LongRunningServiceLifetime(repoNotifications, service, operation));
 		currentOperation = asyncTask;
+		Log.d(TAG, "About to invoke "+asyncTask+" on "+gitdir+" ...");
 		asyncTask.execute();
-	}
-
-	public Transport transportFor(Repository repo, RemoteConfig remoteConfig) {
-		return transportFactory.transportFor(this, repo, remoteConfig);
+		Log.d(TAG, "...called execute!");
 	}
 
 	public Intent getRMAIntent() {
@@ -97,27 +94,6 @@ public class RepositoryOperationContext implements ResponseProvider {
 
 	public void setManagementActivity(RepositoryManagementActivity repositoryManagementActivity) {
 		this.repositoryManagementActivity = repositoryManagementActivity;
-	}
-
-	public FetchResult fetch(Repository repository, RemoteConfig remote,
-			ProgressListener<Progress> progressListener) {
-		Transport transport = transportFor(repository, remote);
-		try {
-			return transport.fetch(new MessagingProgressMonitor(
-					progressListener), null);
-		} catch (NotSupportedException e) {
-			throw new RuntimeException(e);
-		} catch (TransportException e) {
-			Log.e(TAG, "TransportException ", e);
-			String message = e.getMessage();
-			Throwable cause = e.getCause();
-			if (cause != null && cause instanceof JSchException) {
-				message = "SSH: " + ((JSchException) cause).getMessage();
-			}
-			throw new RuntimeException(message, e);
-		} finally {
-			transport.close();
-		}
 	}
 
 	@Override

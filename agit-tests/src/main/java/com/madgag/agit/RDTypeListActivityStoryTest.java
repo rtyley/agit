@@ -1,7 +1,6 @@
 package com.madgag.agit;
 
-
-import static com.madgag.agit.GitOperationsServiceTest.newFolder;
+import static com.madgag.agit.GitTestUtils.*;
 import static com.madgag.agit.RDTypeListActivity.listIntent;
 import static com.madgag.agit.CharSequenceMatcher.charSequence;
 import static com.madgag.compress.CompressUtil.unzip;

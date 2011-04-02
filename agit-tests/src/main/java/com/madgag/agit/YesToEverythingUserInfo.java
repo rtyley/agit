@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.google.inject.Module;
 import com.jcraft.jsch.UserInfo;
-import com.madgag.agit.ssh.UserInfoFactory;
 
 public final class YesToEverythingUserInfo implements UserInfo {
 
@@ -13,11 +12,7 @@ public final class YesToEverythingUserInfo implements UserInfo {
 		return new AbstractAndroidModule() {
 			@Override
 			protected void configure() {
-				bind(UserInfoFactory.class).toInstance(new UserInfoFactory() {
-				public UserInfo createUserInfoAssociatedWith(RepositoryOperationContext repositoryOperationContext) {
-					return new YesToEverythingUserInfo();
-				}
-			});
+				bind(UserInfo.class).toInstance(new YesToEverythingUserInfo());
 			}
 		};
 	}
