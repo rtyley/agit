@@ -1,6 +1,6 @@
 package com.madgag.agit;
 
-import static com.madgag.agit.GitTestUtils.gitServerHostAddress;
+import static com.madgag.agit.GitTestUtils.integrationGitServerURIFor;
 import static com.madgag.agit.GitTestUtils.newFolder;
 import static com.madgag.agit.HasGitObjectMatcher.hasGitObject;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -12,7 +12,6 @@ import java.util.concurrent.CountDownLatch;
 
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
-import org.eclipse.jgit.transport.URIish;
 
 import roboguice.test.RoboUnitTestCase;
 import roboguice.util.RoboLooperThread;
@@ -30,24 +29,21 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
 	
 	@MediumTest
 	public void testCanHitCloneRepoFromLocalTestServer() throws Exception {
-		URIish sourceUri = new URIish("ssh://" + gitServerHostAddress() + ":29418/small-repo.early.git");
-		final Clone cloneOp = new Clone(false, sourceUri, newFolder());
+		Clone cloneOp = new Clone(false, integrationGitServerURIFor("small-repo.early.git"), newFolder());
+		
 		executeAndWaitFor(cloneOp);
+		
         Repository repo = new FileRepository(cloneOp.getGitDir());
 		assertThat(repo, hasGitObject("ba1f63e4430bff267d112b1e8afc1d6294db0ccc"));
 		assertThat(new File(repo.getDirectory(),"README").length(), is(12L));
 	}
-
-	
-	
-	
 	
 	private void executeAndWaitFor(final GitOperation gitOperation)
 			throws InterruptedException {
 		final CountDownLatch latch = new CountDownLatch(1);
 		new RoboLooperThread() {            
             public void run() {
-            	GitAsyncTask task = injector.getInstance(GitAsyncTaskFactory.class).createTaskFor(repo, new OperationLifecycleSupport() {
+            	GitAsyncTask task = injector.getInstance(GitAsyncTaskFactory.class).createTaskFor(gitOperation, new OperationLifecycleSupport() {
 					public void startedWith(OpNotification ongoingNotification) {}
 					public void publish(Progress progress) {}
 					public void completed(OpNotification completionNotification) {
