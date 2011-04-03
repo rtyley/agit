@@ -14,6 +14,11 @@ public class GitIntents {
 
 	private static final String TAG="GitIntents";
 	
+	public static File directoryFrom(Intent intent) {
+		String directory = intent.getStringExtra("directory");
+		return new File(directory);
+	}
+	
 	public static File gitDirFrom(Intent intent) {
 		String gitdirString = intent.getStringExtra("gitdir");
 		Log.i(TAG, "gitdirString = "+gitdirString);

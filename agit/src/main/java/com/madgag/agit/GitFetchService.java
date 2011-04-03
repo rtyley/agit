@@ -25,7 +25,7 @@ public class GitFetchService {
 	}
 
 	public FetchResult fetch(RemoteConfig remote, ProgressListener<Progress> progressListener) {
-		Log.d(TAG, "About to run fetch : " + remote);
+		Log.d(TAG, "About to run fetch : " + remote.getName()+" "+remote.getURIs());
 		
 		Transport transport = transportFactory.transportFor(remote);
 		try {

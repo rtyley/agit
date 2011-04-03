@@ -2,13 +2,19 @@ package com.madgag.agit;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static com.madgag.agit.GitIntents.addDirectoryTo;
-import static com.madgag.agit.GitIntents.addGitDirTo;
+import static com.madgag.agit.GitIntents.directoryFrom;
+import static com.madgag.agit.GitIntents.gitDirFrom;
+import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.storage.file.FileRepository;
+import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
 
 import roboguice.service.RoboService;
@@ -21,7 +27,10 @@ import android.widget.Toast;
 
 import com.google.inject.Inject;
 import com.madgag.agit.operation.lifecycle.LongRunningServiceLifetime;
+import com.madgag.agit.operation.lifecycle.RepoNotifications;
 import com.madgag.agit.operations.Clone;
+import com.madgag.agit.operations.Fetch;
+import com.madgag.agit.operations.GitAsyncTask;
 import com.madgag.agit.operations.GitOperation;
 
 public class GitOperationsService extends RoboService {
@@ -79,27 +88,41 @@ public class GitOperationsService extends RoboService {
 		String action = intent.getAction();
 		Log.i(TAG, "Got action "+action);
 		
-		File gitdir = GitIntents.gitDirFrom(intent);
+		
 		
 		GitOperation operation = null;
 		if (action.equals("git.CLONE")) {
 			String sourceUriString = intent.getStringExtra("source-uri");
 			try {
-				operation = new Clone(false, new URIish(sourceUriString), gitdir);
+				operation = new Clone(false, new URIish(sourceUriString), directoryFrom(intent));
 			} catch (URISyntaxException e) {
 				Toast.makeText(this, "Invalid uri "+sourceUriString, LENGTH_LONG).show();
 				return START_NOT_STICKY;
 			}
 		} else if (action.equals("git.FETCH")) {
-			//operation = new Fetch(openRepoFor(gitdir), DEFAULT_REMOTE_NAME);
+			File gitdir = gitDirFrom(intent);
+			
+			String remoteName = DEFAULT_REMOTE_NAME;
+			RemoteConfig remoteConfig = remoteConfigFor(gitdir, remoteName);
+			operation = new Fetch(gitDirFrom(intent), remoteConfig);
 		} else {
 			Log.e(TAG, "What is "+action);
 			return START_NOT_STICKY;
 		}
-		asyncTaskFactory.createTaskFor(operation, new LongRunningServiceLifetime(null, this));
+		GitAsyncTask task = asyncTaskFactory.createTaskFor(operation, new LongRunningServiceLifetime(new RepoNotifications(this,operation.getGitDir()), this));
 		// repositoryOperationContext.enqueue(operation);
-		
+		task.execute();
 		return START_STICKY;
+	}
+
+	private RemoteConfig remoteConfigFor(File gitdir, String remoteName) {
+		try {
+			Repository repository = new FileRepository(gitdir);
+			return new RemoteConfig(repository.getConfig(), remoteName);
+		} catch (Exception e) {
+			Log.e(TAG, "Couldn't parse config", e);
+			throw new RuntimeException(e);
+		}
 	}
 
 	public RepositoryOperationContext registerManagementActivity(RepositoryManagementActivity repositoryManagementActivity) {

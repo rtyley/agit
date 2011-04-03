@@ -8,6 +8,8 @@ import java.io.File;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RemoteConfig;
 
+import android.util.Log;
+
 import com.google.inject.Inject;
 import com.madgag.agit.GitFetchService;
 import com.madgag.agit.Progress;
@@ -36,6 +38,7 @@ public class Fetch implements GitOperation {
 	}
 	
 	public OpNotification execute(ProgressListener<Progress> progressListener) {
+		Log.d(TAG, "start execute() : gitdir=" + gitdir+" remote="+remote.getName());
 		FetchResult r = fetchService.fetch(remote, progressListener);
 		return new OpNotification(stat_sys_download_done,"Fetch complete", "Fetched "+remote.getName(), fetchUrl());
     }
