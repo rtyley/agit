@@ -7,6 +7,7 @@ import static org.eclipse.jgit.lib.Constants.DOT_GIT;
 import static org.eclipse.jgit.lib.Constants.HEAD;
 import static org.eclipse.jgit.lib.Constants.R_HEADS;
 import static org.eclipse.jgit.lib.Constants.R_REMOTES;
+import static org.eclipse.jgit.lib.Repository.shortenRefName;
 import static org.eclipse.jgit.lib.RepositoryCache.close;
 
 import java.io.File;
@@ -78,8 +79,7 @@ public class Clone implements GitOperation {
 			Repository repository = new FileRepository(gitdir);
 			RemoteConfig remote = addRemote(remoteName, repository);
 
-			FetchResult fetchResult = fetchService.fetch(remote,
-					progressListener);
+			FetchResult fetchResult = fetchService.fetch(remote, progressListener);
 
 			if (!bare) {
 				checkoutHeadFrom(fetchResult, repository, progressListener);
@@ -114,8 +114,7 @@ public class Clone implements GitOperation {
 		Ref branch = guessHEAD(fetchResult);
 		String branchName = branch.getName();
 		Log.d(TAG, "Guessed head branchName=" + branchName);
-		progressListener.publish(new Progress("Performing checkout of "
-				+ branchName));
+		progressListener.publish(new Progress("Performing checkout of "+  shortenRefName(branchName)));
 
 		if (!Constants.HEAD.equals(branch.getName())) {
 			RefUpdate u = db.updateRef(HEAD);
