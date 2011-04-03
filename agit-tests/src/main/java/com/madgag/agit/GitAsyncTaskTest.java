@@ -4,8 +4,8 @@ import static com.madgag.agit.GitTestUtils.gitServerHostAddress;
 import static com.madgag.agit.GitTestUtils.newFolder;
 import static com.madgag.agit.HasGitObjectMatcher.hasGitObject;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.eclipse.jgit.lib.Constants.DOT_GIT;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 import java.io.File;
 import java.util.concurrent.CountDownLatch;
@@ -47,6 +47,7 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
         latch.await(20, SECONDS);
         Repository repo = new FileRepository(cloneOp.getGitDir());
 		assertThat(repo, hasGitObject("ba1f63e4430bff267d112b1e8afc1d6294db0ccc"));
+		assertThat(new File(repo.getDirectory(),"README").length(), is(12L));
 	}
 
 }
