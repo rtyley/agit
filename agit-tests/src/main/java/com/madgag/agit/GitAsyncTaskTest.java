@@ -21,6 +21,7 @@ import android.test.suitebuilder.annotation.MediumTest;
 import com.madgag.agit.operation.lifecycle.OperationLifecycleSupport;
 import com.madgag.agit.operations.Clone;
 import com.madgag.agit.operations.GitAsyncTask;
+import com.madgag.agit.operations.GitOperation;
 import com.madgag.agit.operations.OpNotification;
 
 public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
@@ -31,10 +32,22 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
 	public void testCanHitCloneRepoFromLocalTestServer() throws Exception {
 		URIish sourceUri = new URIish("ssh://" + gitServerHostAddress() + ":29418/small-repo.early.git");
 		final Clone cloneOp = new Clone(false, sourceUri, newFolder());
+		executeAndWaitFor(cloneOp);
+        Repository repo = new FileRepository(cloneOp.getGitDir());
+		assertThat(repo, hasGitObject("ba1f63e4430bff267d112b1e8afc1d6294db0ccc"));
+		assertThat(new File(repo.getDirectory(),"README").length(), is(12L));
+	}
+
+	
+	
+	
+	
+	private void executeAndWaitFor(final GitOperation gitOperation)
+			throws InterruptedException {
 		final CountDownLatch latch = new CountDownLatch(1);
 		new RoboLooperThread() {            
             public void run() {
-            	GitAsyncTask task = injector.getInstance(GitAsyncTaskFactory.class).createTaskFor(cloneOp, new OperationLifecycleSupport() {
+            	GitAsyncTask task = injector.getInstance(GitAsyncTaskFactory.class).createTaskFor(repo, new OperationLifecycleSupport() {
 					public void startedWith(OpNotification ongoingNotification) {}
 					public void publish(Progress progress) {}
 					public void completed(OpNotification completionNotification) {
@@ -45,9 +58,6 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
             }
         }.start();
         latch.await(20, SECONDS);
-        Repository repo = new FileRepository(cloneOp.getGitDir());
-		assertThat(repo, hasGitObject("ba1f63e4430bff267d112b1e8afc1d6294db0ccc"));
-		assertThat(new File(repo.getDirectory(),"README").length(), is(12L));
 	}
 
 }
