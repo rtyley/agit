@@ -9,7 +9,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.File;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
@@ -19,7 +18,6 @@ import roboguice.test.RoboUnitTestCase;
 import roboguice.util.RoboLooperThread;
 import android.test.suitebuilder.annotation.MediumTest;
 
-import com.madgag.agit.operation.lifecycle.CasualShortTermLifetime;
 import com.madgag.agit.operation.lifecycle.OperationLifecycleSupport;
 import com.madgag.agit.operations.Clone;
 import com.madgag.agit.operations.GitAsyncTask;
@@ -31,9 +29,8 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
 	
 	@MediumTest
 	public void testCanHitCloneRepoFromLocalTestServer() throws Exception {
-		File gitdir = new File(newFolder(), DOT_GIT);
-		URIish sourceUri = new URIish("ssh://" + gitServerHostAddress() + ":29418/sample-repo.git");
-		final Clone cloneOp = new Clone(false, sourceUri, gitdir);
+		URIish sourceUri = new URIish("ssh://" + gitServerHostAddress() + ":29418/small-repo.early.git");
+		final Clone cloneOp = new Clone(false, sourceUri, newFolder());
 		final CountDownLatch latch = new CountDownLatch(1);
 		new RoboLooperThread() {            
             public void run() {
@@ -48,8 +45,8 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
             }
         }.start();
         latch.await(20, SECONDS);
-        Repository repo = new FileRepository(gitdir);
-		assertThat(repo, hasGitObject("155f7cca95943fab32ace9f056ce18089e160ec8"));
+        Repository repo = new FileRepository(cloneOp.getGitDir());
+		assertThat(repo, hasGitObject("ba1f63e4430bff267d112b1e8afc1d6294db0ccc"));
 	}
 
 }

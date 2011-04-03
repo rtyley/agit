@@ -1,6 +1,7 @@
 package com.madgag.agit;
 
 import static android.widget.Toast.LENGTH_LONG;
+import static com.madgag.agit.GitIntents.addDirectoryTo;
 import static com.madgag.agit.GitIntents.addGitDirTo;
 
 import java.io.File;
@@ -30,10 +31,10 @@ public class GitOperationsService extends RoboService {
 	@Inject GitAsyncTaskFactory asyncTaskFactory;
 	private Map<File,RepositoryOperationContext> map=new HashMap<File,RepositoryOperationContext>();
 
-	public static Intent cloneOperationIntentFor(URIish uri, File gitdir) {
+	public static Intent cloneOperationIntentFor(URIish uri, File directory) {
 		Intent intent = new Intent("git.CLONE");
 		intent.putExtra("source-uri", uri.toPrivateString());
-		addGitDirTo(intent, gitdir);
+		addDirectoryTo(intent, directory);
 		return intent;
 	}
 	

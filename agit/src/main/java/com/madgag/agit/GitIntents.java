@@ -29,6 +29,10 @@ public class GitIntents {
 	public static String tagNameFrom(Intent intent) {
 		return intent.getStringExtra("tag");
 	}
+
+	public static void addDirectoryTo(Intent intent, File directory) {
+		intent.putExtra("directory", directory.getAbsolutePath());
+	}	
 	
 	public static void addGitDirTo(Intent intent, File gitdir) {
 		intent.putExtra("gitdir", gitdir.getAbsolutePath());

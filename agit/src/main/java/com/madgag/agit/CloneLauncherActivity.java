@@ -167,9 +167,8 @@ public class CloneLauncherActivity extends Activity {
 				Toast.makeText(CloneLauncherActivity.this, message, LENGTH_LONG).show();
 				throw new IOException(message);
 			}
-    		File gitdir = new File(repoDir, Constants.DOT_GIT);
     		
-    		startService(cloneOperationIntentFor(uri, gitdir));
+    		startService(cloneOperationIntentFor(uri, repoDir));
 		}
 
 

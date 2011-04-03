@@ -2,8 +2,8 @@ package com.madgag.agit.operations;
 
 import static android.R.drawable.stat_sys_download;
 import static android.R.drawable.stat_sys_download_done;
-import static com.madgag.agit.Repos.openRepoFor;
 import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
+import static org.eclipse.jgit.lib.Constants.DOT_GIT;
 import static org.eclipse.jgit.lib.Constants.R_HEADS;
 import static org.eclipse.jgit.lib.Constants.R_REMOTES;
 import static org.eclipse.jgit.lib.RepositoryCache.close;
@@ -24,6 +24,7 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefComparator;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
+import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
@@ -42,27 +43,28 @@ public class Clone implements GitOperation {
 
 	private final boolean bare;
 	private final URIish sourceUri;
-	private final File gitdir;
+	private final File directory, gitdir;
 
 	@Inject GitFetchService fetchService;
 
-	public Clone(boolean bare, URIish sourceUri, File gitdir) {
+	public Clone(boolean bare, URIish sourceUri, File directory) {
 		this.bare = bare;
 		this.sourceUri = sourceUri;
-		this.gitdir = gitdir;
-		Log.i(TAG, "Constructed with " + sourceUri + " gitdir=" + gitdir);
+		this.directory = directory;
+		gitdir=bare?directory:new File(directory, DOT_GIT);
+		
+		Log.d(TAG, "Constructed with " + sourceUri + " directory=" + directory+" gitdir="+gitdir);
 	}
 
 	public OpNotification execute(ProgressListener<Progress> progressListener) {
-		File gitDirParentFolder = gitdir.getParentFile();
-		Log.i(TAG, "Starting execute... will ensure parent of gitdir exists. gitdir=" + gitdir);
-		ensureFolderExists(gitDirParentFolder);
+		Log.d(TAG, "Starting execute... directory=" + directory);
+		ensureFolderExists(directory.getParentFile());
 
 		String remoteName = DEFAULT_REMOTE_NAME;
 
 		try {
-			Git.init().setBare(bare).setDirectory(gitdir).call();
-			Repository repository = openRepoFor(gitdir);
+			Git.init().setBare(bare).setDirectory(directory).call();
+			Repository repository = new FileRepository(gitdir);
 			RemoteConfig remote = addRemote(remoteName, repository);
 			
 			FetchResult fetchResult = fetchService.fetch(remote, progressListener);
@@ -97,7 +99,7 @@ public class Clone implements GitOperation {
 		
 		Ref branch = guessHEAD(fetchResult);
 		String branchName = branch.getName();
-		
+		Log.d(TAG, "Guessed head branchName="+branchName);
 		progressListener.publish(new Progress("Performing checkout of "+branchName));
 		git.checkout().setName(branchName).call();
 	}
