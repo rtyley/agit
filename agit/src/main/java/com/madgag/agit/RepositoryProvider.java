@@ -8,9 +8,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
 
-@RepoOpScoped
 public class RepositoryProvider implements Provider<Repository> {
-	@Inject @Named("file") File gitdir;
+	@Inject @Named("gitdir") File gitdir;
 	
 	public Repository get() {
 		return Repos.openRepoFor(gitdir);

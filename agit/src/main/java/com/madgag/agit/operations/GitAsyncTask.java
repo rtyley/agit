@@ -54,7 +54,7 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
 	public OpNotification call() {
 		scope.enter();
 		try {			
-			scope.seed(Key.get(File.class, named("gitdir")), operation.getGitDir());
+			scope.seed(Key.get(File.class, named("gitdir-from-operation")), operation.getGitDir());
 			injector.injectMembers(operation);
 			// create and access scoped objects
 			try {

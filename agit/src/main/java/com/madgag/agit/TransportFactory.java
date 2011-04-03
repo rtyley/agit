@@ -22,7 +22,7 @@ public class TransportFactory {
 	private final Provider<SshSessionFactory> sshSessionFactoryProvider;
 	
 	@Inject
-	public TransportFactory( Repository repo, Provider<SshSessionFactory> sshSessionFactoryProvider) {
+	public TransportFactory(Repository repo, Provider<SshSessionFactory> sshSessionFactoryProvider) {
 		this.repo = repo;
 		this.sshSessionFactoryProvider = sshSessionFactoryProvider;
 	}

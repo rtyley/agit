@@ -62,7 +62,7 @@ public class RepoOpScope implements Scope {
 
 				bind(RepoOpScope.class).annotatedWith(named("repoOpScope")).toInstance(scope);
 				
-				bind(Key.get(File.class, named("gitdir"))).toProvider(RepoOpScope.<File>seededKeyProvider()).in(RepoOpScoped.class);
+				bind(Key.get(File.class, named("gitdir-from-operation"))).toProvider(RepoOpScope.<File>seededKeyProvider()).in(RepoOpScoped.class);
 			}
 		};
 	}

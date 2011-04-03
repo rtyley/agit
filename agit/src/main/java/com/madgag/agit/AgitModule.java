@@ -1,6 +1,7 @@
 package com.madgag.agit;
 
 import static com.google.inject.assistedinject.FactoryProvider.newFactory;
+import static com.google.inject.name.Names.named;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,27 +39,17 @@ public class AgitModule extends AbstractAndroidModule {
 	@Override
     protected void configure() {
 		install(RepoOpScope.module());
+		bind(File.class).annotatedWith(Names.named("gitdir")).toProvider(RepoGitDirProvider.class);
     	bind(ImageSession.class).toProvider(ImageSessionProvider.class);
-    	bind(Repository.class).toProvider(RepositoryProvider.class).in(ContextScoped.class);
-    	bind(Ref.class).annotatedWith(Names.named("branch")).toProvider(BranchRefProvider.class);
+    	bind(Repository.class).toProvider(RepositoryProvider.class);
+    	bind(Ref.class).annotatedWith(named("branch")).toProvider(BranchRefProvider.class);
     	bind(AndroidAuthAgent.class).toProvider(AndroidAuthAgentProvider.class);
-    	
     	bind(GitAsyncTaskFactory.class).toProvider(newFactory(GitAsyncTaskFactory.class, GitAsyncTask.class));
     	bind(SshSessionFactory.class).to(AndroidSshSessionFactory.class);
     	bind(TransportFactory.class);
+    	bind(BlockingPromptService.class).to(PromptHelper.class).in(RepoOpScoped.class);
     	bind(PromptHelper.class).in(RepoOpScoped.class);
     }
-	
- 	@ContextScoped
-    public static class RepositoryProvider implements Provider<Repository> {
-		@InjectExtra("gitdir") String gitdir;
-		
-		public Repository get() {
-			return Repos.openRepoFor(new File(gitdir));
-		}
-	}
- 		
- 		
 	
 	@ContextScoped
     public static class BranchRefProvider implements Provider<Ref> {
