@@ -37,7 +37,7 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
         Repository repo = new FileRepository(cloneOp.getGitDir());
 		assertThat(repo, hasGitObject("ba1f63e4430bff267d112b1e8afc1d6294db0ccc"));
         
-        File readmeFile= new File(repo.getDirectory(), "README");
+        File readmeFile= new File(repo.getWorkTree(), "README");
         assertThat("File "+readmeFile+" exists", readmeFile.exists(), is(true));
         assertThat("File "+readmeFile+" length", readmeFile.length(), is(12L));
 	}
