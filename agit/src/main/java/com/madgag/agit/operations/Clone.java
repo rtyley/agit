@@ -1,37 +1,20 @@
 package com.madgag.agit.operations;
 
-import static android.R.drawable.stat_sys_download;
-import static android.R.drawable.stat_sys_download_done;
-import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
-import static org.eclipse.jgit.lib.Constants.DOT_GIT;
-import static org.eclipse.jgit.lib.Constants.HEAD;
-import static org.eclipse.jgit.lib.Constants.R_HEADS;
-import static org.eclipse.jgit.lib.Constants.R_REMOTES;
-import static org.eclipse.jgit.lib.Repository.shortenRefName;
-import static org.eclipse.jgit.lib.RepositoryCache.close;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import android.util.Log;
+import com.google.inject.Inject;
+import com.madgag.agit.GitFetchService;
+import com.madgag.agit.Progress;
+import com.madgag.agit.ProgressListener;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
+import org.eclipse.jgit.dircache.DirCache;
+import org.eclipse.jgit.dircache.DirCacheCheckout;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
-import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.GitIndex;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.RefComparator;
-import org.eclipse.jgit.lib.RefUpdate;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.lib.StoredConfig;
-import org.eclipse.jgit.lib.Tree;
-import org.eclipse.jgit.lib.WorkDirCheckout;
+import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepository;
@@ -40,12 +23,18 @@ import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
 
-import android.util.Log;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import com.google.inject.Inject;
-import com.madgag.agit.GitFetchService;
-import com.madgag.agit.Progress;
-import com.madgag.agit.ProgressListener;
+import static android.R.drawable.stat_sys_download;
+import static android.R.drawable.stat_sys_download_done;
+import static org.eclipse.jgit.lib.Constants.*;
+import static org.eclipse.jgit.lib.Repository.shortenRefName;
+import static org.eclipse.jgit.lib.RepositoryCache.close;
 
 public class Clone implements GitOperation {
 
@@ -54,6 +43,7 @@ public class Clone implements GitOperation {
 	private final boolean bare;
 	private final URIish sourceUri;
 	private final File directory, gitdir;
+    private String branch = Constants.HEAD;
 
 	@Inject
 	GitFetchService fetchService;
@@ -116,25 +106,37 @@ public class Clone implements GitOperation {
 		Log.d(TAG, "Guessed head branchName=" + branchName);
 		progressListener.publish(new Progress("Performing checkout of "+  shortenRefName(branchName)));
 
-		if (!Constants.HEAD.equals(branch.getName())) {
-			RefUpdate u = db.updateRef(HEAD);
-			u.disableRefLog();
-			u.link(branch.getName());
+
+        checkout(db, fetchResult);
+	}
+
+    private void checkout(Repository repo, FetchResult result)
+			throws JGitInternalException,
+			MissingObjectException, IncorrectObjectTypeException, IOException {
+
+		if (branch.startsWith(Constants.R_HEADS)) {
+			final RefUpdate head = repo.updateRef(Constants.HEAD);
+			head.disableRefLog();
+			head.link(branch);
 		}
 
-		final RevCommit commit = parseCommit(db, branch);
-		final RefUpdate u = db.updateRef(HEAD);
-		u.setNewObjectId(commit);
+		final Ref head = result.getAdvertisedRef(branch);
+		if (head == null || head.getObjectId() == null)
+			return; // throw exception?
+
+		final RevCommit commit = parseCommit(repo, head);
+
+		boolean detached = !head.getName().startsWith(Constants.R_HEADS);
+		RefUpdate u = repo.updateRef(Constants.HEAD, detached);
+		u.setNewObjectId(commit.getId());
 		u.forceUpdate();
 
-		final GitIndex index = new GitIndex(db);
-		final Tree tree = db.mapTree(commit.getTree());
-		final WorkDirCheckout co;
-
-		co = new WorkDirCheckout(db, db.getWorkTree(), index, tree);
-		co.checkout();
-		index.write();
-
+		if (!bare) {
+			DirCache dc = repo.lockDirCache();
+			DirCacheCheckout co = new DirCacheCheckout(repo, dc,
+					commit.getTree());
+			co.checkout();
+		}
 	}
 
 	private RevCommit parseCommit(Repository db, Ref branch)
