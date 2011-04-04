@@ -5,6 +5,7 @@ import static android.R.drawable.stat_sys_download_done;
 
 import java.io.File;
 
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RemoteConfig;
 
@@ -18,15 +19,16 @@ import com.madgag.agit.ProgressListener;
 public class Fetch implements GitOperation {
 		
 	public static final String TAG = "Fetch";
-	
-	private final File gitdir;
-	private final RemoteConfig remote;
+
+
+    private final Repository repository;
+    private final RemoteConfig remote;
 
 	@Inject GitFetchService fetchService;
 	
-	public Fetch(File gitdir, RemoteConfig remote) {
-		this.gitdir = gitdir;
-		this.remote = remote;
+	public Fetch(Repository repository, RemoteConfig remote) {
+        this.repository = repository;
+        this.remote = remote;
     }
 	
 	public int getOngoingIcon() {
@@ -38,7 +40,7 @@ public class Fetch implements GitOperation {
 	}
 	
 	public OpNotification execute(ProgressListener<Progress> progressListener) {
-		Log.d(TAG, "start execute() : gitdir=" + gitdir+" remote="+remote.getName());
+		Log.d(TAG, "start execute() : repository=" + repository+" remote="+remote.getName());
 		FetchResult r = fetchService.fetch(remote, progressListener);
 		return new OpNotification(stat_sys_download_done,"Fetch complete", "Fetched "+remote.getName(), fetchUrl());
     }
@@ -64,6 +66,6 @@ public class Fetch implements GitOperation {
 	}
 
 	public File getGitDir() {
-		return gitdir;
+		return repository.getDirectory();
 	}
 }

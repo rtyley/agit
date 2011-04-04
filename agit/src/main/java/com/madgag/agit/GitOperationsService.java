@@ -4,6 +4,8 @@ import static android.widget.Toast.LENGTH_LONG;
 import static com.madgag.agit.GitIntents.addDirectoryTo;
 import static com.madgag.agit.GitIntents.directoryFrom;
 import static com.madgag.agit.GitIntents.gitDirFrom;
+import static com.madgag.agit.Repos.openRepoFor;
+import static com.madgag.agit.Repos.remoteConfigFor;
 import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 
 import java.io.File;
@@ -95,9 +97,10 @@ public class GitOperationsService extends RoboService {
 			}
 		} else if (action.equals("git.FETCH")) {
 			File gitdir = gitDirFrom(intent);
-			
-			String remoteName = DEFAULT_REMOTE_NAME;
-            operation = new Fetch(gitDirFrom(intent), remoteConfigFor(gitdir, remoteName));
+
+            Repository repository = openRepoFor(gitdir);
+            String remoteName = DEFAULT_REMOTE_NAME;
+            operation = new Fetch(repository, remoteConfigFor(repository, remoteName));
 		} else {
 			Log.e(TAG, "What is "+action);
 			return START_NOT_STICKY;
@@ -110,15 +113,6 @@ public class GitOperationsService extends RoboService {
 		return START_STICKY;
 	}
 
-	private RemoteConfig remoteConfigFor(File gitdir, String remoteName) {
-		try {
-			Repository repository = new FileRepository(gitdir);
-			return new RemoteConfig(repository.getConfig(), remoteName);
-		} catch (Exception e) {
-			Log.e(TAG, "Couldn't parse config", e);
-			throw new RuntimeException(e);
-		}
-	}
 
 	public RepositoryOperationContext registerManagementActivity(RepositoryManagementActivity repositoryManagementActivity) {
 //		RepositoryOperationContext operationContext = getOrCreateRepositoryOperationContextFor(repositoryManagementActivity.gitdir());

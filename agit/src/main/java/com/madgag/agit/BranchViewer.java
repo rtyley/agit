@@ -48,7 +48,7 @@ public class BranchViewer extends RepositoryActivity {
 		setContentView(R.layout.branch_view);
 		
 		actionBar.setTitle(branch.getName());
-		revCommitListView.setCommits(commitViewerIntentCreatorFor(repository.getDirectory(), branch), commitListForRepo());
+		revCommitListView.setCommits(commitViewerIntentCreatorFor(repository.getDirectory(), branch),repository, commitListForRepo());
 	}
 
 	private List<RevCommit> commitListForRepo() {
