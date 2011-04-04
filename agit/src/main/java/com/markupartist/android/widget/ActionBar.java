@@ -29,6 +29,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,11 +41,13 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     private LayoutInflater mInflater;
     private RelativeLayout mBarView;
     private ImageView mLogoView;
+    private View mBackIndicator;
     //private View mHomeView;
     private TextView mTitleView;
     private LinearLayout mActionsView;
     private ImageButton mHomeBtn;
     private RelativeLayout mHomeLayout;
+    private ProgressBar mProgress;
 
     public ActionBar(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -57,9 +60,12 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         mLogoView = (ImageView) mBarView.findViewById(R.id.actionbar_home_logo);
         mHomeLayout = (RelativeLayout) mBarView.findViewById(R.id.actionbar_home_bg);
         mHomeBtn = (ImageButton) mBarView.findViewById(R.id.actionbar_home_btn);
+        mBackIndicator = mBarView.findViewById(R.id.actionbar_home_is_back);
 
         mTitleView = (TextView) mBarView.findViewById(R.id.actionbar_title);
         mActionsView = (LinearLayout) mBarView.findViewById(R.id.actionbar_actions);
+        
+        mProgress = (ProgressBar) mBarView.findViewById(R.id.actionbar_progress);
 
         TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.ActionBar);
@@ -77,6 +83,10 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         mHomeLayout.setVisibility(View.VISIBLE);
     }
 
+    public void clearHomeAction() {
+        mHomeLayout.setVisibility(View.GONE);
+    }
+
     /**
      * Shows the provided logo to the left in the action bar.
      * 
@@ -92,6 +102,14 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         mHomeLayout.setVisibility(View.GONE);
     }
 
+    /* Emulating Honeycomb, setdisplayHomeAsUpEnabled takes a boolean
+     * and toggles whether the "home" view should have a little triangle
+     * indicating "up" */
+    public void setDisplayHomeAsUpEnabled(boolean show) {
+        mBackIndicator.setVisibility(show? View.VISIBLE : View.GONE);
+    }
+
+
     public void setTitle(CharSequence title) {
         mTitleView.setText(title);
     }
@@ -100,11 +118,41 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         mTitleView.setText(resid);
     }
 
+    /**
+     * Set the enabled state of the progress bar.
+     * 
+     * @param One of {@link View#VISIBLE}, {@link View#INVISIBLE},
+     *   or {@link View#GONE}.
+     */
+    public void setProgressBarVisibility(int visibility) {
+        mProgress.setVisibility(visibility);
+    }
+
+    /**
+     * Returns the visibility status for the progress bar.
+     * 
+     * @param One of {@link View#VISIBLE}, {@link View#INVISIBLE},
+     *   or {@link View#GONE}.
+     */
+    public int getProgressBarVisibility() {
+        return mProgress.getVisibility();
+    }
+
+    /**
+     * Function to set a click listener for Title TextView
+     * 
+     * @param listener the onClickListener
+     */
+    public void setOnTitleClickListener(OnClickListener listener) {
+        mTitleView.setOnClickListener(listener);
+    }
+
+    @Override
     public void onClick(View view) {
         final Object tag = view.getTag();
         if (tag instanceof Action) {
             final Action action = (Action) tag;
-            action.performAction();
+            action.performAction(view);
         }
     }
 
@@ -138,6 +186,46 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     }
 
     /**
+     * Removes all action views from this action bar
+     */
+    public void removeAllActions() {
+        mActionsView.removeAllViews();
+    }
+
+    /**
+     * Remove a action from the action bar.
+     * @param index position of action to remove
+     */
+    public void removeActionAt(int index) {
+        mActionsView.removeViewAt(index);
+    }
+
+    /**
+     * Remove a action from the action bar.
+     * @param action The action to remove
+     */
+    public void removeAction(Action action) {
+        int childCount = mActionsView.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View view = mActionsView.getChildAt(i);
+            if (view != null) {
+                final Object tag = view.getTag();
+                if (tag instanceof Action && tag.equals(action)) {
+                    mActionsView.removeView(view);
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns the number of actions currently registered with the action bar.
+     * @return action count
+     */
+    public int getActionCount() {
+        return mActionsView.getChildCount();
+    }
+
+    /**
      * Inflates a {@link View} with the given {@link Action}.
      * @param action the action to inflate
      * @return a view
@@ -166,7 +254,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
      */
     public interface Action {
         public int getDrawable();
-        public void performAction();
+        public void performAction(View view);
     }
 
     public static abstract class AbstractAction implements Action {
@@ -191,7 +279,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
             mIntent = intent;
         }
 
-        public void performAction() {
+        public void performAction(View view) {
             try {
                mContext.startActivity(mIntent); 
             } catch (ActivityNotFoundException e) {
