@@ -68,7 +68,7 @@
 
                     <configuration>
 			<jvmArguments>
-			    <jvmArgument>-Xmx1024m</jvmArgument>
+			    <jvmArgument>-Xmx512m</jvmArgument>
 			</jvmArguments>
                         <sdk>
 		             <path>${user.home}/android-sdk/</path> 
