@@ -10,6 +10,7 @@ import static org.hamcrest.Matchers.is;
 import java.io.File;
 import java.util.concurrent.CountDownLatch;
 
+import android.util.Log;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
 
@@ -35,7 +36,10 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
 		
         Repository repo = new FileRepository(cloneOp.getGitDir());
 		assertThat(repo, hasGitObject("ba1f63e4430bff267d112b1e8afc1d6294db0ccc"));
-		assertThat(new File(repo.getDirectory(),"README").length(), is(12L));
+        
+        File readmeFile= new File(repo.getDirectory(), "README");
+        assertThat("File "+readmeFile+" exists", readmeFile.exists(), is(true));
+        assertThat("File "+readmeFile+" length", readmeFile.length(), is(12L));
 	}
 	
 	private void executeAndWaitFor(final GitOperation gitOperation)
@@ -47,6 +51,7 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
 					public void startedWith(OpNotification ongoingNotification) {}
 					public void publish(Progress progress) {}
 					public void completed(OpNotification completionNotification) {
+                        Log.i(TAG,"Completed "+gitOperation+" with "+completionNotification);
 						latch.countDown();
 					}
             	});

@@ -40,9 +40,11 @@ public class AgitModule extends AbstractAndroidModule {
 	@Override
     protected void configure() {
 		install(RepoOpScope.module());
-		bind(File.class).annotatedWith(Names.named("gitdir")).toProvider(RepoGitDirProvider.class);
+		bind(File.class).annotatedWith(named("gitdir")).toProvider(RepoGitDirProvider.class);
     	bind(ImageSession.class).toProvider(ImageSessionProvider.class);
+
     	bind(Repository.class).toProvider(RepositoryProvider.class);
+
     	bind(Ref.class).annotatedWith(named("branch")).toProvider(BranchRefProvider.class);
     	bind(AndroidAuthAgent.class).toProvider(AndroidAuthAgentProvider.class);
     	bind(GitAsyncTaskFactory.class).toProvider(newFactory(GitAsyncTaskFactory.class, GitAsyncTask.class));
@@ -54,7 +56,7 @@ public class AgitModule extends AbstractAndroidModule {
 	
 	@ContextScoped
     public static class BranchRefProvider implements Provider<Ref> {
-		@Inject @Named("repository-from-context") Repository repository;
+		@Inject Repository repository;
 		@InjectExtra(value="branch",optional=true) String branchName;
 		
 		public Ref get() {

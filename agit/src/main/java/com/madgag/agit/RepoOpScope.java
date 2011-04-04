@@ -108,6 +108,10 @@ public class RepoOpScope implements Scope {
 			public T get() {
 				Map<Key<?>, Object> scopedObjects = getScopedObjectMap(key);
 
+                if (scopedObjects==null) {
+                    return null;
+                }
+
 				@SuppressWarnings("unchecked")
 				T current = (T) scopedObjects.get(key);
 				if (current == null && !scopedObjects.containsKey(key)) {
@@ -122,8 +126,9 @@ public class RepoOpScope implements Scope {
 	private <T> Map<Key<?>, Object> getScopedObjectMap(Key<T> key) {
 		Map<Key<?>, Object> scopedObjects = values.get();
 		if (scopedObjects == null) {
-			throw new OutOfScopeException("Cannot access " + key
-					+ " outside of a scoping block");
+            return null;
+//			throw new OutOfScopeException("Cannot access " + key
+//					+ " outside of a scoping block");
 		}
 		return scopedObjects;
 	}
