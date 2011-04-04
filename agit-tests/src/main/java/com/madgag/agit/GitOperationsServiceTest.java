@@ -36,14 +36,6 @@ public class GitOperationsServiceTest extends RoboServiceTestCase<GitOperationsS
 		assertThat(repository, hasGitObject("155f7cca95943fab32ace9f056ce18089e160ec8"));
 	}
 
-	public void testCanPerformSimpleReadOnlyCloneFromGitHub() throws Exception {
-		Repository repository = clone(new URIish("git://github.com/agittest/small-project.git"));
-		File readme = new File(repository.getWorkTree(), "README");
-		assertTrue(readme.exists());
-		assertThat(repository, hasGitObject("9e0b5e42b3e1c59bc83b55142a8c50dfae36b144"));
-		assertThat(repository, not(hasGitObject("111111111111111111111111111111111111cafe")));
-	}
-
 	private Repository clone(URIish sourceUri) throws Exception {
 		File gitdir = new File(newFolder(), DOT_GIT);
 		startServiceCloning(sourceUri, gitdir);

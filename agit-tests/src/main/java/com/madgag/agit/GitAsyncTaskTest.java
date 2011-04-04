@@ -6,14 +6,17 @@ import static com.madgag.agit.HasGitObjectMatcher.hasGitObject;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
 import android.util.Log;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
 
+import org.eclipse.jgit.transport.URIish;
 import roboguice.test.RoboUnitTestCase;
 import roboguice.util.RoboLooperThread;
 import android.test.suitebuilder.annotation.MediumTest;
@@ -32,18 +35,31 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
 	public void testCloneRepoFromLocalTestServer() throws Exception {
 		Clone cloneOp = new Clone(false, integrationGitServerURIFor("small-repo.early.git"), newFolder());
 		
-		executeAndWaitFor(cloneOp);
+		Repository repo = executeAndWaitFor(cloneOp);
 		
-        Repository repo = new FileRepository(cloneOp.getGitDir());
 		assertThat(repo, hasGitObject("ba1f63e4430bff267d112b1e8afc1d6294db0ccc"));
         
         File readmeFile= new File(repo.getWorkTree(), "README");
         assertThat(readmeFile+" exists", readmeFile.exists(), is(true));
         assertThat(readmeFile+" length", readmeFile.length(), is(12L));
 	}
-	
-	private void executeAndWaitFor(final GitOperation gitOperation)
-			throws InterruptedException {
+
+    @MediumTest
+    public void testSimpleReadOnlyCloneFromGitHub() throws Exception {
+        Clone cloneOp = new Clone(false, new URIish("git://github.com/agittest/small-project.git"), newFolder());
+		Repository repo = executeAndWaitFor(cloneOp);
+
+        assertThat(repo, hasGitObject("9e0b5e42b3e1c59bc83b55142a8c50dfae36b144"));
+		assertThat(repo, not(hasGitObject("111111111111111111111111111111111111cafe")));
+
+        File readmeFile= new File(repo.getWorkTree(), "README");
+        assertThat(readmeFile + " exists", readmeFile.exists(), is(true));
+	}
+
+
+    
+	private Repository executeAndWaitFor(final GitOperation gitOperation)
+			throws InterruptedException, IOException {
 		final CountDownLatch latch = new CountDownLatch(1);
 		new RoboLooperThread() {            
             public void run() {
@@ -59,6 +75,7 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
             }
         }.start();
         latch.await(20, SECONDS);
+        return new FileRepository(gitOperation.getGitDir());
 	}
 
 }
