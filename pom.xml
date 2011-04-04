@@ -28,7 +28,7 @@
 		<dependency>
 			<groupId>com.madgag</groupId>
 			<artifactId>org.eclipse.jgit</artifactId>
-			<version>0.10.99.7-UNOFFICIAL-ROBERTO-RELEASE</version>
+			<version>0.11.99.4-UNOFFICIAL-ROBERTO-RELEASE</version>
 		</dependency>
 		    <dependency>
 		        <groupId>com.google.android</groupId>

@@ -3,8 +3,9 @@ package com.madgag.agit.ssh;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.OpenSshConfig.Host;
-import org.eclipse.jgit.transport.SshConfigSessionFactory;
+import org.eclipse.jgit.transport.SshSessionFactory;
 import org.eclipse.jgit.util.FS;
 
 import android.os.RemoteException;
@@ -19,7 +20,7 @@ import com.jcraft.jsch.UserInfo;
 import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 import com.madgag.ssh.authagent.client.jsch.SSHAgentIdentity;
 
-public class AndroidSshSessionFactory extends SshConfigSessionFactory {
+public class AndroidSshSessionFactory extends SshSessionFactory {
 
 	private static final String TAG = "ASSF";
 	
@@ -34,17 +35,24 @@ public class AndroidSshSessionFactory extends SshConfigSessionFactory {
 	}
 	
 	@Override
-	protected void configure(Host host, Session session) {
-		session.setUserInfo(userInfo);
+	public Session getSession(String user, String pass, String host, int port, CredentialsProvider credentialsProvider, FS fs)
+			throws JSchException {
+		// TODO Auto-generated method stub
+		return null;
 	}
-
-	@Override
-	protected JSch createDefaultJSch(FS fs) throws JSchException {
-		final JSch jsch = new JSch();
-		// knownHosts(jsch, fs);
-		addSshAgentTo(jsch);
-		return jsch;
-	}
+	
+//	@Override
+//	protected void configure(Host host, Session session) {
+//		session.setUserInfo(userInfo);
+//	}
+//
+//	@Override
+//	protected JSch createDefaultJSch(FS fs) throws JSchException {
+//		final JSch jsch = new JSch();
+//		// knownHosts(jsch, fs);
+//		addSshAgentTo(jsch);
+//		return jsch;
+//	}
 
 	private void addSshAgentTo(final JSch jsch) throws JSchException {
 		AndroidAuthAgent authAgent=androidAuthAgentProvider.get();
@@ -74,4 +82,8 @@ public class AndroidSshSessionFactory extends SshConfigSessionFactory {
 			jsch.addIdentity(new SSHAgentIdentity(androidAuthAgentProvider, publicKey, name) , null);
 		}
 	}
+
+
+
+
 }
