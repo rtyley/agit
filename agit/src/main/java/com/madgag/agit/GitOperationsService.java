@@ -61,11 +61,6 @@ public class GitOperationsService extends RoboService {
         return mBinder;
     }
     
-    public NotificationManager getNotificationManager() {
-		return notificationManager;
-	}
-	
-    
     @Override
     public void onStart(Intent intent, int startId) {
     	handleMethod(intent);
@@ -77,7 +72,7 @@ public class GitOperationsService extends RoboService {
     }
 
 	private int handleMethod(Intent intent) {
-		Log.i(TAG, "onStartCommand "+intent);
+		Log.i(TAG, "handleMethod "+intent);
 		
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     	if (intent==null) {
@@ -102,8 +97,7 @@ public class GitOperationsService extends RoboService {
 			File gitdir = gitDirFrom(intent);
 			
 			String remoteName = DEFAULT_REMOTE_NAME;
-			RemoteConfig remoteConfig = remoteConfigFor(gitdir, remoteName);
-			operation = new Fetch(gitDirFrom(intent), remoteConfig);
+            operation = new Fetch(gitDirFrom(intent), remoteConfigFor(gitdir, remoteName));
 		} else {
 			Log.e(TAG, "What is "+action);
 			return START_NOT_STICKY;
