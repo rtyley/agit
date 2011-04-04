@@ -21,6 +21,7 @@ import android.util.Log;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import com.madgag.agit.operations.GitAsyncTask;
 import com.madgag.agit.ssh.AndroidAuthAgentProvider;
@@ -53,7 +54,7 @@ public class AgitModule extends AbstractAndroidModule {
 	
 	@ContextScoped
     public static class BranchRefProvider implements Provider<Ref> {
-		@Inject Repository repository;
+		@Inject @Named("repository-from-context") Repository repository;
 		@InjectExtra(value="branch",optional=true) String branchName;
 		
 		public Ref get() {

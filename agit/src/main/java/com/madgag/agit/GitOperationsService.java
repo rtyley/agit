@@ -7,7 +7,6 @@ import static com.madgag.agit.GitIntents.gitDirFrom;
 import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
@@ -109,7 +108,9 @@ public class GitOperationsService extends RoboService {
 			Log.e(TAG, "What is "+action);
 			return START_NOT_STICKY;
 		}
-		GitAsyncTask task = asyncTaskFactory.createTaskFor(operation, new LongRunningServiceLifetime(new RepoNotifications(this,operation.getGitDir()), this));
+		
+		LongRunningServiceLifetime lifecycleSupport = new LongRunningServiceLifetime(new RepoNotifications(this,operation.getGitDir()), this);
+		GitAsyncTask task = asyncTaskFactory.createTaskFor(operation, lifecycleSupport);
 		// repositoryOperationContext.enqueue(operation);
 		task.execute();
 		return START_STICKY;
