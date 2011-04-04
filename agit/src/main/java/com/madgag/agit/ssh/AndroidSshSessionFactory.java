@@ -1,16 +1,7 @@
 package com.madgag.agit.ssh;
 
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.eclipse.jgit.transport.CredentialsProvider;
-import org.eclipse.jgit.transport.OpenSshConfig.Host;
-import org.eclipse.jgit.transport.SshSessionFactory;
-import org.eclipse.jgit.util.FS;
-
 import android.os.RemoteException;
 import android.util.Log;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.jcraft.jsch.JSch;
@@ -19,8 +10,14 @@ import com.jcraft.jsch.Session;
 import com.jcraft.jsch.UserInfo;
 import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 import com.madgag.ssh.authagent.client.jsch.SSHAgentIdentity;
+import org.eclipse.jgit.transport.JschConfigSessionFactory;
+import org.eclipse.jgit.transport.OpenSshConfig;
+import org.eclipse.jgit.util.FS;
 
-public class AndroidSshSessionFactory extends SshSessionFactory {
+import java.util.Map;
+import java.util.Map.Entry;
+
+public class AndroidSshSessionFactory extends JschConfigSessionFactory {
 
 	private static final String TAG = "ASSF";
 	
@@ -35,24 +32,17 @@ public class AndroidSshSessionFactory extends SshSessionFactory {
 	}
 	
 	@Override
-	public Session getSession(String user, String pass, String host, int port, CredentialsProvider credentialsProvider, FS fs)
-			throws JSchException {
-		// TODO Auto-generated method stub
-		return null;
+	protected void configure(OpenSshConfig.Host host, Session session) {
+		session.setUserInfo(userInfo);
 	}
-	
-//	@Override
-//	protected void configure(Host host, Session session) {
-//		session.setUserInfo(userInfo);
-//	}
-//
-//	@Override
-//	protected JSch createDefaultJSch(FS fs) throws JSchException {
-//		final JSch jsch = new JSch();
-//		// knownHosts(jsch, fs);
-//		addSshAgentTo(jsch);
-//		return jsch;
-//	}
+
+	@Override
+	protected JSch createDefaultJSch(FS fs) throws JSchException {
+		final JSch jsch = new JSch();
+		// knownHosts(jsch, fs);
+		addSshAgentTo(jsch);
+		return jsch;
+	}
 
 	private void addSshAgentTo(final JSch jsch) throws JSchException {
 		AndroidAuthAgent authAgent=androidAuthAgentProvider.get();

@@ -3,6 +3,7 @@ package com.madgag.agit;
 import static java.lang.System.identityHashCode;
 
 import org.eclipse.jgit.errors.NotSupportedException;
+import org.eclipse.jgit.errors.TransportException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.SshSessionFactory;
@@ -32,7 +33,7 @@ public class TransportFactory {
 		try {
 			Log.i(TAG , "Creating transport for repo with " + identityHashCode(repo));
 			tn = Transport.open(repo, remoteConfig);
-		} catch (NotSupportedException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 		if (tn instanceof SshTransport) {
