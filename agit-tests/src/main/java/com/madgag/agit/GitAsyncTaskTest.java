@@ -29,7 +29,7 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
 	private static final String TAG = "GitAsyncTaskTest";
 	
 	@MediumTest
-	public void testCanHitCloneRepoFromLocalTestServer() throws Exception {
+	public void testCloneRepoFromLocalTestServer() throws Exception {
 		Clone cloneOp = new Clone(false, integrationGitServerURIFor("small-repo.early.git"), newFolder());
 		
 		executeAndWaitFor(cloneOp);
@@ -38,8 +38,8 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
 		assertThat(repo, hasGitObject("ba1f63e4430bff267d112b1e8afc1d6294db0ccc"));
         
         File readmeFile= new File(repo.getWorkTree(), "README");
-        assertThat("File "+readmeFile+" exists", readmeFile.exists(), is(true));
-        assertThat("File "+readmeFile+" length", readmeFile.length(), is(12L));
+        assertThat(readmeFile+" exists", readmeFile.exists(), is(true));
+        assertThat(readmeFile+" length", readmeFile.length(), is(12L));
 	}
 	
 	private void executeAndWaitFor(final GitOperation gitOperation)
