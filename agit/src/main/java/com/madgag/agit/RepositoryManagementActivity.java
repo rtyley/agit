@@ -71,14 +71,14 @@ public class RepositoryManagementActivity extends RepositoryActivity {
         Log.d(TAG, "workTree="+workTree);
 		actionBar.setTitle(workTree.getName());
         actionBar.addAction(new Action() {
-			public void performAction() {
-				startService(new GitIntentBuilder("git.FETCH").repository(repo()).toIntent());
-			}
+            public void performAction(View view) {
+                startService(new GitIntentBuilder("git.FETCH").repository(repo()).toIntent());
+            }
 			
 			public int getDrawable() {
 				return R.drawable.ic_title_fetch;
 			}
-		});
+        });
         
 		branchList = (ListView) findViewById(R.id.BranchList);
 		branchList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_2));

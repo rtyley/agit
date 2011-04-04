@@ -147,7 +147,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
         mTitleView.setOnClickListener(listener);
     }
 
-    @Override
+
     public void onClick(View view) {
         final Object tag = view.getTag();
         if (tag instanceof Action) {
