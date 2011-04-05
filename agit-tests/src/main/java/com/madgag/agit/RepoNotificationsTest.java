@@ -5,6 +5,7 @@ import static org.eclipse.jgit.lib.Constants.DOT_GIT;
 
 import java.io.File;
 
+import android.content.Context;
 import roboguice.test.RoboUnitTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
@@ -17,10 +18,11 @@ public class RepoNotificationsTest extends RoboUnitTestCase<AgitTestApplication>
 	@SmallTest
 	public void testShouldHaveDifferentOngoingNotificationIds() throws Exception {
 		File gitdir=new File(newFolder(), DOT_GIT);
-		
-		RepoNotifications roc1a = new RepoNotifications(null, gitdir);
-		RepoNotifications roc1b = new RepoNotifications(null, gitdir);
-		RepoNotifications roc2 = new RepoNotifications(null, gitdir);
+
+        Context c = getInstrumentation().getContext();
+        RepoNotifications roc1a = new RepoNotifications(c, gitdir);
+		RepoNotifications roc1b = new RepoNotifications(c, gitdir);
+		RepoNotifications roc2 = new RepoNotifications(c, gitdir);
 		assertTrue(roc1a.getOngoingNotificationId()==roc1b.getOngoingNotificationId());
 		assertFalse(roc1a.getOngoingNotificationId()==roc2.getOngoingNotificationId());
 	}
