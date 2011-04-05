@@ -1,9 +1,11 @@
 package com.madgag.agit;
 
 import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
+import static com.madgag.agit.RepositoryManagementActivity.manageRepoPendingIntent;
 
 import java.io.File;
 
+import android.media.RingtoneManager;
 import org.connectbot.service.PromptHelper;
 
 import android.app.Service;
@@ -41,7 +43,7 @@ public class RepositoryOperationContext {
 	public RepositoryOperationContext(File gitdir, GitOperationsService service, ResponseProvider responseProvider) {
 		this.gitdir = gitdir.getAbsoluteFile();
 		this.service = service;
-		repoNotifications = new RepoNotifications(service, this.gitdir);
+		repoNotifications = new RepoNotifications(service, this.gitdir, manageRepoPendingIntent(gitdir, service));
 		promptHelper = new PromptHelper();
 		this.responseProvider = responseProvider;
 		promptHelper.setHandler(promptHandler);

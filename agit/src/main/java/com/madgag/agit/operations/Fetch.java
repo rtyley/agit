@@ -4,9 +4,11 @@ import static android.R.drawable.stat_sys_download;
 import static android.R.drawable.stat_sys_download_done;
 
 import java.io.File;
+import java.util.Collection;
 
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.FetchResult;
+import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
 
 import android.util.Log;
@@ -22,12 +24,18 @@ public class Fetch implements GitOperation {
 
     private final Repository repository;
     private final RemoteConfig remote;
+    private final Collection<RefSpec> toFetch;
 
 	@Inject GitFetchService fetchService;
-	
-	public Fetch(Repository repository, RemoteConfig remote) {
+
+    public Fetch(Repository repository, RemoteConfig remote) {
+        this(repository, remote, null);
+    }
+
+	public Fetch(Repository repository, RemoteConfig remote, Collection<RefSpec> toFetch) {
         this.repository = repository;
         this.remote = remote;
+        this.toFetch = toFetch;
     }
 	
 	public int getOngoingIcon() {
@@ -40,7 +48,7 @@ public class Fetch implements GitOperation {
 	
 	public OpNotification execute(ProgressListener<Progress> progressListener) {
 		Log.d(TAG, "start execute() : repository=" + repository+" remote="+remote.getName());
-		FetchResult r = fetchService.fetch(remote, progressListener);
+		FetchResult r = fetchService.fetch(remote, toFetch, progressListener);
 		return new OpNotification(stat_sys_download_done,"Fetch complete", "Fetched "+remote.getName(), fetchUrl());
     }
 	

@@ -2,10 +2,14 @@ package com.madgag.agit;
 
 import static com.google.inject.assistedinject.FactoryProvider.newFactory;
 import static com.google.inject.name.Names.named;
+import static com.madgag.agit.RepositoryManagementActivity.manageRepoPendingIntent;
 
 import java.io.File;
 import java.io.IOException;
 
+import android.app.PendingIntent;
+import android.content.Context;
+import com.google.inject.Provides;
 import org.connectbot.service.PromptHelper;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
@@ -52,6 +56,11 @@ public class AgitModule extends AbstractAndroidModule {
     	bind(TransportFactory.class);
     	bind(BlockingPromptService.class).to(PromptHelper.class).in(RepoOpScoped.class);
     	bind(PromptHelper.class).in(RepoOpScoped.class);
+    }
+
+    @RepoOpScoped @Provides
+    public PendingIntent createRepoManagementPendingIntent(Context context, @Named("gitdir") File gitdir) {
+        return manageRepoPendingIntent(gitdir, context);
     }
 	
 	@ContextScoped

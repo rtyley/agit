@@ -4,6 +4,7 @@ import org.eclipse.jgit.errors.NotSupportedException;
 import org.eclipse.jgit.errors.TransportException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.FetchResult;
+import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.Transport;
 
@@ -11,6 +12,8 @@ import android.util.Log;
 
 import com.google.inject.Inject;
 import com.jcraft.jsch.JSchException;
+
+import java.util.Collection;
 
 @RepoOpScoped
 public class GitFetchService {
@@ -24,12 +27,12 @@ public class GitFetchService {
 		this.transportFactory = transportFactory;
 	}
 
-	public FetchResult fetch(RemoteConfig remote, ProgressListener<Progress> progressListener) {
+	public FetchResult fetch(RemoteConfig remote, Collection<RefSpec> toFetch, ProgressListener<Progress> progressListener) {
 		Log.d(TAG, "About to run fetch : " + remote.getName()+" "+remote.getURIs());
 		
 		Transport transport = transportFactory.transportFor(remote);
 		try {
-			FetchResult fetchResult = transport.fetch(new MessagingProgressMonitor(progressListener), null);
+			FetchResult fetchResult = transport.fetch(new MessagingProgressMonitor(progressListener), toFetch);
 			Log.d(TAG, "Fetch complete with result : " + fetchResult);
 			return fetchResult;
 		} catch (NotSupportedException e) {

@@ -6,6 +6,7 @@ import static com.madgag.agit.GitIntents.directoryFrom;
 import static com.madgag.agit.GitIntents.gitDirFrom;
 import static com.madgag.agit.Repos.openRepoFor;
 import static com.madgag.agit.Repos.remoteConfigFor;
+import static com.madgag.agit.RepositoryManagementActivity.manageRepoPendingIntent;
 import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 
 import java.io.File;
@@ -103,7 +104,7 @@ public class GitOperationsService extends RoboService {
 			return START_NOT_STICKY;
 		}
 		
-		LongRunningServiceLifetime lifecycleSupport = new LongRunningServiceLifetime(new RepoNotifications(this,operation.getGitDir()), this);
+		LongRunningServiceLifetime lifecycleSupport = new LongRunningServiceLifetime(new RepoNotifications(this,operation.getGitDir(), manageRepoPendingIntent(operation.getGitDir(), this)), this);
 		GitAsyncTask task = asyncTaskFactory.createTaskFor(operation, lifecycleSupport);
 		// repositoryOperationContext.enqueue(operation);
 		task.execute();

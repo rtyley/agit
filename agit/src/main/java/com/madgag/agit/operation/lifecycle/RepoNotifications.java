@@ -29,9 +29,9 @@ public class RepoNotifications {
 	private final PendingIntent manageGitRepo;
 	
 	@Inject
-	public RepoNotifications(Context context, @Named("gitdir") File gitdir) {
+	public RepoNotifications(Context context, @Named("gitdir") File gitdir, PendingIntent manageGitRepo) {
 		this.context = context;
-		this.manageGitRepo = manageRepoPendingIntent(gitdir,context);
+		this.manageGitRepo = manageGitRepo;
 		this.ongoingOpNotificationId = gitdir.hashCode();
 		this.completionNotificationId = ongoingOpNotificationId + 1;
 		this.promptNotificationId = completionNotificationId + 1;

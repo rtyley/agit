@@ -69,7 +69,7 @@ public class Clone implements GitOperation {
 			Repository repository = new FileRepository(gitdir);
 			RemoteConfig remote = addRemote(remoteName, repository);
 
-			FetchResult fetchResult = fetchService.fetch(remote, progressListener);
+			FetchResult fetchResult = fetchService.fetch(remote, null, progressListener);
 
 			if (!bare) {
 				checkoutHeadFrom(fetchResult, repository, progressListener);

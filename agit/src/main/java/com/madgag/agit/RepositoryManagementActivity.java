@@ -305,9 +305,6 @@ public class RepositoryManagementActivity extends RepositoryActivity {
     	unregisterRecieverForServicePromptRequests();
     }
 	
-	public static PendingIntent manageRepoPendingIntent(Repository repository, Context context) {
-		return manageRepoPendingIntent(repository.getDirectory(), context);
-	}
 	public static PendingIntent manageRepoPendingIntent(File gitdir,Context context) {
 		Log.i(TAG, "manageRepoPendingIntent yeah - creating with "+gitdir);
 		Intent intentForNotification = manageRepoIntent(gitdir);
