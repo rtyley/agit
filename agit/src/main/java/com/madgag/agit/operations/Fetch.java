@@ -20,7 +20,6 @@ public class Fetch implements GitOperation {
 		
 	public static final String TAG = "Fetch";
 
-
     private final Repository repository;
     private final RemoteConfig remote;
 

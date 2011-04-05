@@ -56,8 +56,6 @@ public class GitOperationsService extends RoboService {
   
     private final IBinder mBinder = new GitOperationsBinder();
     
-	private NotificationManager notificationManager;
-    
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
@@ -76,7 +74,6 @@ public class GitOperationsService extends RoboService {
 	private int handleMethod(Intent intent) {
 		Log.i(TAG, "handleMethod "+intent);
 		
-		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     	if (intent==null) {
     		return START_NOT_STICKY;
     	}
