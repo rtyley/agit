@@ -17,4 +17,8 @@ public class OpPrompt<T> {
 	public Class<T> getRequiredResponseType() {
 		return requiredResponseType;
 	}
+
+    public static <T> OpPrompt<T> prompt(Class<T> requiredResponseType, OpNotification opNotification) {
+        return new OpPrompt<T>(opNotification, requiredResponseType);
+    }
 }

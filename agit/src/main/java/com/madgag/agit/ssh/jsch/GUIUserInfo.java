@@ -1,19 +1,15 @@
 package com.madgag.agit.ssh.jsch;
 
 import static android.R.drawable.stat_sys_warning;
-import static com.google.inject.name.Names.named;
-
-import java.io.File;
+import static com.madgag.agit.operations.OpPrompt.prompt;
 
 import android.util.Log;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
-import com.google.inject.Key;
 import com.google.inject.Module;
 import com.jcraft.jsch.UserInfo;
 import com.madgag.agit.BlockingPromptService;
-import com.madgag.agit.RepoOpScope;
 import com.madgag.agit.RepoOpScoped;
 import com.madgag.agit.operations.OpNotification;
 
@@ -29,11 +25,11 @@ public class GUIUserInfo implements UserInfo {
 		};
 	}
 	
-	private final BlockingPromptService blockingPromptService;
+	private final BlockingPromptService blockingPrompt;
 
 	@Inject
-	public GUIUserInfo(BlockingPromptService blockingPromptService) {
-		this.blockingPromptService = blockingPromptService;
+	public GUIUserInfo(BlockingPromptService blockingPrompt) {
+		this.blockingPrompt = blockingPrompt;
 	}
 	
 	private String password, passphrase;
@@ -47,25 +43,30 @@ public class GUIUserInfo implements UserInfo {
 	}
 
 	public boolean promptPassphrase(String msg) {
-		Log.i(TAG, "promptPassphrase : "+msg);
-		passphrase = blockingPromptService.requestStringPrompt(new OpNotification(stat_sys_warning, "Passphrase required", "Please enter your passphrase", msg));
+		Log.d(TAG, "promptPassphrase : "+msg);
+		passphrase = blockingPrompt.request(prompt(String.class, note("Passphrase required", "Please enter your passphrase", msg)));
 		return passphrase!=null;
 	}
 
-	public boolean promptPassword(String msg) {
-		Log.i(TAG, "promptPassword : "+msg);
-		password = blockingPromptService.requestStringPrompt(new OpNotification(stat_sys_warning, "Password required", "Please enter your password", msg));
-		return password!=null;
+
+    public boolean promptPassword(String msg) {
+		Log.d(TAG, "promptPassword : "+msg);
+		password = blockingPrompt.request(prompt(String.class, note("Password required", "Please enter your password", msg)));
+        return password!=null;
 	}
 
 	public boolean promptYesNo(String msg) {
-		Log.i(TAG, "promptYesNo : "+msg);
-		Boolean bool = blockingPromptService.requestBooleanPrompt(new OpNotification(stat_sys_warning, msg, "SSH", msg));
+		Log.d(TAG, "promptYesNo : "+msg);
+		Boolean bool = blockingPrompt.request(prompt(Boolean.class, note(msg, "SSH", msg)));
 		return bool!=null?bool:false;
 	}
 	
 	public void showMessage(String msg) {
 		Log.i(TAG, "Should show this: "+msg);
 	}
+
+    private OpNotification note(String tickerText, String eventTitle, String eventDetail) {
+        return new OpNotification(stat_sys_warning, tickerText, eventTitle, eventDetail);
+    }
 
 }

@@ -5,7 +5,6 @@ import static com.madgag.agit.RepositoryManagementActivity.manageRepoPendingInte
 
 import java.io.File;
 
-import android.media.RingtoneManager;
 import org.connectbot.service.PromptHelper;
 
 import android.app.Service;
@@ -28,25 +27,15 @@ public class RepositoryOperationContext {
 	private final RepoNotifications repoNotifications;
 	private GitAsyncTask currentOperation;
 
-	private final PromptHelper promptHelper;
-	private ResponseProvider responseProvider;
-	
-	private Handler promptHandler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			responseProvider.accept(promptHelper);
-		}
-	};
+	private PromptUIProvider promptUIProvider;
 
 	private RepositoryManagementActivity repositoryManagementActivity;
 
-	public RepositoryOperationContext(File gitdir, GitOperationsService service, ResponseProvider responseProvider) {
+	public RepositoryOperationContext(File gitdir, GitOperationsService service, PromptUIProvider promptUIProvider) {
 		this.gitdir = gitdir.getAbsoluteFile();
 		this.service = service;
 		repoNotifications = new RepoNotifications(service, this.gitdir, manageRepoPendingIntent(gitdir, service));
-		promptHelper = new PromptHelper();
-		this.responseProvider = responseProvider;
-		promptHelper.setHandler(promptHandler);
+		this.promptUIProvider = promptUIProvider;
 	}
 
 	public Service getService() {
@@ -71,14 +60,6 @@ public class RepositoryOperationContext {
 		return currentOperation;
 	}
 
-	public ResponseInterface getResponseInterface() {
-		return promptHelper;
-	}
-	
-	public BlockingPromptService getBlockingPromptService() {
-		return promptHelper;
-	}
-
 	public void setManagementActivity(RepositoryManagementActivity repositoryManagementActivity) {
 		this.repositoryManagementActivity = repositoryManagementActivity;
 	}
@@ -87,8 +68,6 @@ public class RepositoryOperationContext {
 	public String toString() {
 		return getClass().getSimpleName() + "[" + gitdir + "]";
 	}
-
-
 
 	public File getGitDir() {
 		return gitdir;

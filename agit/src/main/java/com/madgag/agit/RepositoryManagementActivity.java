@@ -44,7 +44,7 @@ import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
 
 
-public class RepositoryManagementActivity extends RepositoryActivity {
+public class RepositoryManagementActivity extends RepositoryActivity implements PromptUIProvider {
 
 	private ProgressDialog progressDialog;
 	private AlertDialog stringEntryDialog,yesNoDialog;
@@ -54,7 +54,9 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 	final int PROGRESS_DIALOG=0,STRING_ENTRY_DIALOG=1, YES_NO_DIALOG=2;
 	private final int DELETION_DIALOG=3;
 	public static final String TAG = "RMA";
-	@Override String TAG() { return TAG; }
+    private ResponseInterface responseInterface;
+
+    @Override String TAG() { return TAG; }
 	
 	private RepositoryOperationContext repositoryOperationContext;
 	
@@ -209,8 +211,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 	private android.content.DialogInterface.OnClickListener sendDialogResponseOf(final boolean bool) {
 		return new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				repositoryOperationContext.getRepoNotifications().clearPromptNotification();
-				repositoryOperationContext.getResponseInterface().setResponse(bool);
+                responseInterface.setResponse(bool);
 			}
 		};
 	}
@@ -229,8 +230,9 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 			});
 		case YES_NO_DIALOG:
 			AlertDialog alertDialog=(AlertDialog) dialog;
-			String msg = repositoryOperationContext.getResponseInterface().getOpPrompt().getOpNotification().getEventDetail();
-			Log.i(TAG, "Going to yes/no "+msg);
+
+			String msg = responseInterface.getOpPrompt().getOpNotification().getEventDetail();
+			Log.d(TAG, "Going to yes/no " + msg);
 			alertDialog.setMessage(msg);
 		default:
 		}
@@ -284,9 +286,8 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 			return;
 		}
 
-		OpPrompt<?> opPrompt = repositoryOperationContext.getResponseInterface().getOpPrompt();
-		if (opPrompt!=null) {
-			Class<?> requiredResponseType = opPrompt.getRequiredResponseType();
+		if (responseInterface!=null) {
+			Class<?> requiredResponseType = responseInterface.getOpPrompt().getRequiredResponseType();
 			if (String.class.equals(requiredResponseType)) {
 				showDialog(STRING_ENTRY_DIALOG);
 			} else if(Boolean.class.equals(requiredResponseType)) {
@@ -315,8 +316,13 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 	public static Intent manageRepoIntent(File gitdir) {
 		return new GitIntentBuilder("git.repo.MANAGE").gitdir(gitdir).toIntent();
 	}
-	
-	public Repository getRepository() {
-		return repo();
-	}
+
+    public void acceptPrompt(ResponseInterface responseInterface) {
+        this.responseInterface = responseInterface;
+    }
+
+    public void clearPrompt() {
+        // TODO clear any actual prompt that's going on...
+        this.responseInterface = null;
+    }
 }

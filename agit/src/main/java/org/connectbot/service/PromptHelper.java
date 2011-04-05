@@ -22,6 +22,7 @@ import java.util.concurrent.Semaphore;
 import android.os.Handler;
 import android.os.Message;
 
+import android.util.Log;
 import com.madgag.agit.BlockingPromptService;
 import com.madgag.agit.ResponseInterface;
 import com.madgag.agit.operations.OpNotification;
@@ -35,22 +36,21 @@ import com.madgag.agit.operations.OpPrompt;
  */
 public class PromptHelper implements ResponseInterface, BlockingPromptService {
 
-	private Handler handler = null;
+	private final Handler handler;
+    private final Runnable promptBroadcast;
 
-	private Semaphore promptToken = new Semaphore(1);
+    private Semaphore promptToken = new Semaphore(1);
 	private Semaphore promptResponse = new Semaphore(0);
 
 	private OpPrompt<?> opPrompt;
 
 	private Object response = null;
+    private static final String TAG = "PH";
 
-
-	/**
-	 * Register a user interface handler, if available.
-	 */
-	public void setHandler(Handler handler) {
-		this.handler = handler;
-	}
+    public PromptHelper(Handler handler, Runnable promptBroadcast) {
+        this.handler = handler;
+        this.promptBroadcast = promptBroadcast;
+    }
 
 	/**
 	 * Set an incoming value from an above user interface. Will automatically
@@ -78,58 +78,58 @@ public class PromptHelper implements ResponseInterface, BlockingPromptService {
 	 * Only one thread can call this at a time. cancelPrompt() will force this to
 	 * immediately return.
 	 */
-	private <T> T requestPrompt(OpPrompt<T> opPrompt) throws InterruptedException {
+	public <T> T request(OpPrompt<T> opPrompt) {
 		Object response = null;
-
-		promptToken.acquire();
-
+        Log.d(TAG, "request for " + opPrompt);
 		try {
+            promptToken.acquire();
 			this.opPrompt = opPrompt;
 
+            Log.d(TAG, "handler=" + handler);
 			// notify any parent watching for live events
-			if (handler != null)
-				Message.obtain(handler).sendToTarget();
+            handler.post(promptBroadcast);
+			// Message.obtain(handler).sendToTarget();
 
 			// acquire lock until user passes back value
 			promptResponse.acquire();
 
 			response = popResponse();
-		} finally {
+		} catch (InterruptedException e) {
+            Log.e(TAG, "InterruptedException while waiting for "+opPrompt, e);
+        } finally {
 			promptToken.release();
 		}
 
 		return (T) response;
 	}
 
-	/**
-	 * Request a string response from parent. This is a blocking call until user
-	 * interface returns a value.
-	 * @param hint prompt hint for user to answer
-	 * @return string user has entered
-	 */
-	public String requestStringPrompt(OpNotification opNotification) {
-		String value = null;
-		try {
-			value = this.requestPrompt(new OpPrompt<String>(opNotification, String.class));
-		} catch(Exception e) {
-		}
-		return value;
-	}
-
-	/**
-	 * Request a boolean response from parent. This is a blocking call until user
-	 * interface returns a value.
-	 * @param hint prompt hint for user to answer
-	 * @return choice user has made (yes/no)
-	 */
-	public Boolean requestBooleanPrompt(OpNotification opNotification) {
-		Boolean value = null;
-		try {
-			value = this.requestPrompt(new OpPrompt<Boolean>(opNotification, Boolean.class));
-		} catch(Exception e) {
-		}
-		return value;
-	}
+//	/**
+//	 * Request a string response from parent. This is a blocking call until user
+//	 * interface returns a value.
+//	 * @return string user has entered
+//	 */
+//	public String requestStringPrompt(OpNotification opNotification) {
+//		String value = null;
+//		try {
+//			value = this.request(new OpPrompt<String>(opNotification, String.class));
+//		} catch(Exception e) {
+//		}
+//		return value;
+//	}
+//
+//	/**
+//	 * Request a boolean response from parent. This is a blocking call until user
+//	 * interface returns a value.
+//	 * @return choice user has made (yes/no)
+//	 */
+//	public Boolean requestBooleanPrompt(OpNotification opNotification) {
+//		Boolean value = null;
+//		try {
+//			value = this.request(new OpPrompt<Boolean>(opNotification, Boolean.class));
+//		} catch(Exception e) {
+//		}
+//		return value;
+//	}
 
 	/**
 	 * Cancel an in-progress prompt.
@@ -149,4 +149,8 @@ public class PromptHelper implements ResponseInterface, BlockingPromptService {
 	public OpPrompt<?> getOpPrompt() {
 		return opPrompt;
 	}
+
+    public boolean hasPrompt() {
+        return opPrompt!=null;
+    }
 }

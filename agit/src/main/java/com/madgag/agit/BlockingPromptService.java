@@ -1,11 +1,9 @@
 package com.madgag.agit;
 
-import com.madgag.agit.operations.OpNotification;
+import com.madgag.agit.operations.OpPrompt;
 
 public interface BlockingPromptService {
 
-	String requestStringPrompt(OpNotification opNotification);
-
-	Boolean requestBooleanPrompt(OpNotification opNotification);
-
+	<T> T request(OpPrompt<T> opPrompt);
+    
 }

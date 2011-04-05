@@ -34,6 +34,10 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
 	private long startTime;
 
 	private Progress latestProgress;
+
+    private final Runnable publishOnUIThreadRunnable = new Runnable() {
+        public void run() { publishLatestProgress(); }
+    };
 	
 	@Inject
 	public GitAsyncTask(
@@ -83,11 +87,7 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
 	public void publish(Progress... values) {
 		latestProgress = values[values.length-1];
 		Log.d(TAG, "Got progress to post : "+latestProgress);
-		handler.post(new Runnable() {
-			public void run() {
-				publishLatestProgress();
-			}
-		});
+        handler.post(publishOnUIThreadRunnable);
 		Log.d(TAG, "...posted progress");
 	}
 	
