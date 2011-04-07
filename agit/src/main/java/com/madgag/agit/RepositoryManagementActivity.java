@@ -232,7 +232,7 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
         registerReceiver(operationProgressBroadcastReceiver, new IntentFilter("git.operation.progress.update"));
 
 		registerReceiver(deletionBroadcastReceiver, new IntentFilter(REPO_DELETE_COMPLETED));
-		registerRecieverForServicePromptRequests();
+		registerReceiverForServicePromptRequests();
 		
 		//repositoryOperationContext.getCurrentOperation().getPromptHelper().;
 		updateUI();
@@ -243,7 +243,8 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
 		rdtTypeList.setAdapter(new RDTypesListAdapter(this, repo()));
 	}
     
-    private void registerRecieverForServicePromptRequests() {
+    private void registerReceiverForServicePromptRequests() {
+        Log.d(TAG, "Registering as prompt UI provider with "+promptHumper);
     	promptHumper.setActivityUIProvider(this);
 	}
 
@@ -252,18 +253,6 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
 	}
 	
 	void updateUIToReflectServicePromptRequests() {
-		Log.i(TAG, "repositoryOperationContext="+repositoryOperationContext);
-		if (repositoryOperationContext==null) {
-			//guess there's not been a running service yet...
-			return;
-		}
-		GitAsyncTask currentOperation = repositoryOperationContext.getCurrentOperation();
-		Log.i(TAG, "updateUIToReflectServicePromptRequests currentOperation="+currentOperation);
-		if (currentOperation==null) {
-			// wipe dialogs?
-			return;
-		}
-
 		if (responseInterface!=null) {
 			Class<?> requiredResponseType = responseInterface.getOpPrompt().getRequiredResponseType();
 			if (String.class.equals(requiredResponseType)) {
@@ -297,6 +286,7 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
 
     public void acceptPrompt(ResponseInterface responseInterface) {
         this.responseInterface = responseInterface;
+        updateUIToReflectServicePromptRequests();
     }
 
     public void clearPrompt() {
