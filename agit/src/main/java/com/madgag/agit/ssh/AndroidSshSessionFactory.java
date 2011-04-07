@@ -39,6 +39,7 @@ public class AndroidSshSessionFactory extends JschConfigSessionFactory {
 	@Override
 	protected JSch createDefaultJSch(FS fs) throws JSchException {
 		final JSch jsch = new JSch();
+        // jsch.setHostKeyRepository();
 		// knownHosts(jsch, fs);
 		addSshAgentTo(jsch);
 		return jsch;
