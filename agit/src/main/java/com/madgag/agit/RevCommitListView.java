@@ -51,7 +51,7 @@ public class RevCommitListView extends PullToRefreshListView {
                 Fetch fetch = new Fetch(repository, remoteConfigFor(repository, DEFAULT_REMOTE_NAME));
                 gitAsyncTaskFactory.createTaskFor(fetch, new CasualShortTermLifetime() {
                     public void completed(OpNotification completionNotification) {
-                        RevCommitListView.this.onRefreshComplete(completionNotification.getTickerText());
+                        onRefreshComplete(completionNotification.getTickerText());
                     }
                 }).execute();
             }

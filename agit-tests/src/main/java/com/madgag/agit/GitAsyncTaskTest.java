@@ -64,7 +64,9 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
 		new RoboLooperThread() {            
             public void run() {
             	GitAsyncTask task = injector.getInstance(GitAsyncTaskFactory.class).createTaskFor(gitOperation, new OperationLifecycleSupport() {
-					public void startedWith(OpNotification ongoingNotification) {}
+					public void startedWith(OpNotification ongoingNotification) {
+                        Log.i(TAG,"Started "+gitOperation+" with "+ongoingNotification);
+                    }
 					public void publish(Progress progress) {}
 					public void completed(OpNotification completionNotification) {
                         Log.i(TAG,"Completed "+gitOperation+" with "+completionNotification);

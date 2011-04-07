@@ -61,12 +61,13 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
 				return operation.execute(this);
 			} catch (RuntimeException e) {
 				String eventTitle = "Error " + operation.getDescription();
-				Log.e(TAG, eventTitle, e);
+				Log.e(TAG, "Banged out of call with : " + eventTitle, e);
 				String detail = e.getMessage() == null ? e.toString() : e.getMessage();
 				return new OpNotification(stat_notify_error, operation.getName() + " failed", eventTitle, detail);
 			}
 
 		} finally {
+            Log.d(TAG, "Exiting call()");
 			scope.exit();
 		}
 	}
