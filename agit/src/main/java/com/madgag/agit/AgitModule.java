@@ -9,7 +9,9 @@ import java.io.IOException;
 
 import android.app.PendingIntent;
 import android.content.Context;
+import android.os.Handler;
 import com.google.inject.Provides;
+import com.google.inject.Singleton;
 import org.connectbot.service.PromptHelper;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
@@ -43,11 +45,10 @@ public class AgitModule extends AbstractAndroidModule {
 	@Override
     protected void configure() {
 		install(RepositoryScope.module());
-		bind(File.class).annotatedWith(named("gitdir-from-context")).toProvider(RepoGitDirProvider.class);
     	bind(ImageSession.class).toProvider(ImageSessionProvider.class);
 
     	bind(Repository.class).toProvider(RepositoryProvider.class);
-
+        bind(Handler.class).toProvider(HandlerProvider.class).asEagerSingleton();
     	bind(Ref.class).annotatedWith(named("branch")).toProvider(BranchRefProvider.class);
     	bind(AndroidAuthAgent.class).toProvider(AndroidAuthAgentProvider.class);
     	bind(GitAsyncTaskFactory.class).toProvider(newFactory(GitAsyncTaskFactory.class, GitAsyncTask.class));
@@ -59,6 +60,13 @@ public class AgitModule extends AbstractAndroidModule {
         bind(RepoDomainType.class).annotatedWith(named("branch")).to(RDTBranch.class);
         bind(RepoDomainType.class).annotatedWith(named("remote")).to(RDTRemote.class);
         bind(RepoDomainType.class).annotatedWith(named("tag")).to(RDTTag.class);
+    }
+
+
+    public static class HandlerProvider implements Provider<Handler> {
+        public Handler get() {
+			return new Handler();
+		}
     }
 
     @Provides @RepositoryScoped PendingIntent createRepoManagementPendingIntent(Context context, @Named("gitdir") File gitdir) {

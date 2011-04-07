@@ -40,13 +40,14 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
             Handler handler,
 			@Assisted GitOperation operation,
 			@Assisted OperationLifecycleSupport lifecycleSupport) {
+        handler(handler);
 		this.operation = operation;
 		this.lifecycleSupport = lifecycleSupport;
 	}
 	
     @Override
     protected void onPreExecute() {
-    	Log.i(TAG, "Starting onPreExecute "+operation);
+    	Log.d(TAG, "Starting onPreExecute "+operation+" handler="+handler);
     	lifecycleSupport.startedWith(new OpNotification(operation.getOngoingIcon(), operation.getTickerText(), "Event title", "Event detail"));
     	startTime = currentTimeMillis();
     }
@@ -81,7 +82,7 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
 	public void publish(Progress... values) {
 		latestProgress = values[values.length-1];
 		Log.d(TAG, "Got progress to post : "+latestProgress);
-        handler.post(publishOnUIThreadRunnable);
+        handler().post(publishOnUIThreadRunnable);
 		Log.d(TAG, "...posted progress");
 	}
 	

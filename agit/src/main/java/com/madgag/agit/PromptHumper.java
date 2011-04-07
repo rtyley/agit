@@ -1,6 +1,8 @@
 package com.madgag.agit;
 
+import android.nfc.Tag;
 import android.os.Handler;
+import android.util.Log;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import org.connectbot.service.PromptHelper;
@@ -17,9 +19,11 @@ public class PromptHumper {
     private final PromptHelper promptHelper;
     private final PromptUIProvider statusBarUIProvider;
     private PromptUIProvider activityUIProvider;
+    private String TAG = "PromptHumper";
 
     @Inject
     public PromptHumper(Handler uiThreadHandler, @Named("status-bar") PromptUIProvider statusBarUIProvider) {
+        Log.d(TAG,"uiThreadHandler="+uiThreadHandler);
         this.statusBarUIProvider = statusBarUIProvider;
         promptHelper = new PromptHelper(uiThreadHandler, new Runnable() {
             public void run() {
