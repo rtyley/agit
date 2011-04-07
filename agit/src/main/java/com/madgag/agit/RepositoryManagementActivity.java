@@ -1,26 +1,11 @@
 package com.madgag.agit;
 
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
-import static com.madgag.agit.GitIntents.gitDirFrom;
-import static com.madgag.agit.MessagingProgressMonitor.GIT_OPERATION_PROGRESS_UPDATE;
-import static com.madgag.agit.RepoDeleter.REPO_DELETE_COMPLETED;
-
-import java.io.File;
-
-import org.eclipse.jgit.lib.Repository;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
+import android.content.*;
 import android.content.DialogInterface.OnCancelListener;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -29,19 +14,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
-
+import com.google.inject.Inject;
 import com.madgag.agit.GitOperationsService.GitOperationsBinder;
 import com.madgag.agit.operations.GitAsyncTask;
-import com.madgag.agit.operations.OpPrompt;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
+
+import java.io.File;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.madgag.agit.GitIntents.gitDirFrom;
+import static com.madgag.agit.RepoDeleter.REPO_DELETE_COMPLETED;
 
 
 public class RepositoryManagementActivity extends RepositoryActivity implements PromptUIProvider {
@@ -56,7 +41,8 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
 	public static final String TAG = "RMA";
     private ResponseInterface responseInterface;
 
-    @Override String TAG() { return TAG; }
+    @Inject PromptHumper promptHumper;
+
 	
 	private RepositoryOperationContext repositoryOperationContext;
 	
@@ -82,9 +68,9 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
 			}
         });
         
-		branchList = (ListView) findViewById(R.id.BranchList);
-		branchList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_2));
-		branchList.setOnItemClickListener(new OnItemClickListener(){
+		rdtTypeList = (ListView) findViewById(R.id.BranchList);
+		rdtTypeList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_2));
+		rdtTypeList.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				RepoDomainType<?> rdt = (RepoDomainType<?>) parent.getAdapter().getItem(position);
 				startActivity(rdt.listIntent());
@@ -135,11 +121,7 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
 			Log.d(TAG, "Got broadcast : "+action);
-			if (action.equals(GIT_OPERATION_PROGRESS_UPDATE)){
-				// updateOperationProgressDisplay();
-			} else if (action.equals("git.user.interation.request")) {
-				Log.d(TAG, "I should probably do something helpful");
-			} else if (action.equals(REPO_DELETE_COMPLETED)) {
+			if (action.equals(REPO_DELETE_COMPLETED)) {
 				if (intent.getData().equals(Uri.fromFile(gitdir()))) {
 					finish();
 				}
@@ -156,7 +138,7 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
 			}
 		}
 	};
-	private ListView branchList;
+	private ListView rdtTypeList;
 	private ListView tagList;
 	
 //	private void updateOperationProgressDisplay() {
@@ -247,8 +229,8 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
     protected void onResume() {
     	super.onResume();
 		((TextView) findViewById(R.id.RepositoryFileLocation)).setText(repo().getDirectory().getAbsolutePath());
-		registerReceiver(operationProgressBroadcastReceiver, new IntentFilter("git.operation.progress.update"));
-		
+        registerReceiver(operationProgressBroadcastReceiver, new IntentFilter("git.operation.progress.update"));
+
 		registerReceiver(deletionBroadcastReceiver, new IntentFilter(REPO_DELETE_COMPLETED));
 		registerRecieverForServicePromptRequests();
 		
@@ -258,19 +240,15 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
     }
 
 	void updateUI() {
-		branchList.setAdapter(new RDTypesListAdapter(this, repo()));
+		rdtTypeList.setAdapter(new RDTypesListAdapter(this, repo()));
 	}
     
     private void registerRecieverForServicePromptRequests() {
-    	if (repositoryOperationContext!=null) {
-			repositoryOperationContext.setManagementActivity(this);
-		}
+    	promptHumper.setActivityUIProvider(this);
 	}
 
 	private void unregisterRecieverForServicePromptRequests() {
-		if (repositoryOperationContext!=null) {
-			repositoryOperationContext.setManagementActivity(null);
-		}
+		promptHumper.clearActivityUIProvider();
 	}
 	
 	void updateUIToReflectServicePromptRequests() {

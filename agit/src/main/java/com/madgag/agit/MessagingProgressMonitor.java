@@ -5,8 +5,6 @@ import org.eclipse.jgit.lib.ProgressMonitor;
 import android.util.Log;
 
 public class MessagingProgressMonitor implements ProgressMonitor, CancellationSignaller {
-	
-	public static final String GIT_OPERATION_PROGRESS_UPDATE = "git.operation.progress.update";
 
 	public static final String TAG = "MessagingProgressMonitor";
 	

@@ -206,7 +206,4 @@ public class CommitViewerActivity extends RepositoryActivity {
         return null;
     }
 
-	@Override
-	String TAG() { return TAG; }
-
 }

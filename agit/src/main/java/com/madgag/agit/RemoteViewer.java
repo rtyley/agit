@@ -15,7 +15,6 @@ public class RemoteViewer extends RepositoryActivity {
 	}
 
 	private static final String TAG = "RemoteViewer";
-	@Override String TAG() { return TAG; }
 	
 	private RemoteConfig remote;
 	

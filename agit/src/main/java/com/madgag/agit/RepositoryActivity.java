@@ -1,25 +1,44 @@
 package com.madgag.agit;
 
-import java.io.File;
+import android.app.Activity;
+import android.content.Intent;
+import com.google.inject.Inject;
 
+import com.google.inject.Injector;
+import com.google.inject.Provider;
+import com.google.inject.name.Named;
 import org.eclipse.jgit.lib.Repository;
-
 import roboguice.activity.RoboActivity;
 import android.os.Bundle;
+import roboguice.inject.InjectorProvider;
 
-public abstract class RepositoryActivity extends RoboActivity {
-	
-    private RepositoryContext rc;
-	
-	abstract String TAG();
+import java.io.File;
+
+import static com.madgag.agit.GitIntents.gitDirFrom;
+
+public class RepositoryActivity extends RoboActivity {
+
+    private @Inject @Named("gitdir") File gitdir;
+    private @Inject RepositoryContext rc;
+    private @Inject Repository repository;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		rc = new RepositoryContext(this, TAG());
+        RepositoryScope repositoryScope = enterRepositoryScopeFor(this,getIntent());
+		try {
+            super.onCreate(savedInstanceState);
+        } finally {
+            repositoryScope.exit();
+        }
 	}
-	
-	@Override
+
+    static RepositoryScope enterRepositoryScopeFor(InjectorProvider injectorProvider, Intent intent) {
+        RepositoryScope repositoryScope = injectorProvider.getInjector().getInstance(RepositoryScope.class);
+        repositoryScope.enterWithRepoGitdir(gitDirFrom(intent));
+        return repositoryScope;
+    }
+
+    @Override
 	protected void onResume() {
 		super.onResume();
 		rc.onResume();
@@ -36,12 +55,21 @@ public abstract class RepositoryActivity extends RoboActivity {
 		super.onDestroy();
 		rc.onDestroy();
 	}
-	
-	public Repository repo() {
-		return rc.repo();
-	}
-	
-	public File gitdir() {
-		return rc.gitdir();
-	}
+
+    protected Repository repo() {
+        return repository;
+    }
+
+    protected File gitdir() {
+        return gitdir;
+    }
+
+
+    public void onRepoScopedResume() {
+    }
+
+    public void onRepoScopedPause() {
+    }
+
+    public void onRepoScopedDestroy() {}
 }

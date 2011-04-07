@@ -2,7 +2,6 @@ package com.madgag.agit;
 
 import org.eclipse.jgit.errors.NotSupportedException;
 import org.eclipse.jgit.errors.TransportException;
-import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
@@ -15,7 +14,7 @@ import com.jcraft.jsch.JSchException;
 
 import java.util.Collection;
 
-@RepoOpScoped
+@RepositoryScoped
 public class GitFetchService {
 	
 	private static String TAG = "GFS";

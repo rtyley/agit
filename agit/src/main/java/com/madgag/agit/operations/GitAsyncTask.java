@@ -1,31 +1,27 @@
 package com.madgag.agit.operations;
 
 import static android.R.drawable.stat_notify_error;
-import static com.google.inject.name.Names.named;
 import static java.lang.System.currentTimeMillis;
 
-import java.io.File;
 import java.util.concurrent.Future;
 
+import com.madgag.agit.RepositoryScope;
 import roboguice.util.RoboAsyncTask;
 import android.os.Handler;
 import android.util.Log;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.google.inject.Key;
 import com.google.inject.assistedinject.Assisted;
-import com.google.inject.name.Named;
 import com.madgag.agit.Progress;
 import com.madgag.agit.ProgressListener;
-import com.madgag.agit.RepoOpScope;
 import com.madgag.agit.operation.lifecycle.OperationLifecycleSupport;
 
 public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements ProgressListener<Progress> {
 
 	public final static String TAG = "GAT";
 	
-	@Inject @Named("repoOpScope") RepoOpScope scope;
+	@Inject RepositoryScope scope;
 	@Inject Injector injector;
 	
 	private final GitOperation operation;
@@ -56,9 +52,8 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
     }
 
 	public OpNotification call() {
-		scope.enter();
-		try {			
-			scope.seed(Key.get(File.class, named("gitdir-from-operation")), operation.getGitDir());
+		scope.enterWithRepoGitdir(operation.getGitDir());
+		try {
 			injector.injectMembers(operation);
 			// create and access scoped objects
 			try {
@@ -73,7 +68,6 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
 		} finally {
 			scope.exit();
 		}
-
 	}
 	
 	@Override

@@ -2,8 +2,6 @@ package com.madgag.agit;
 
 import static java.lang.System.identityHashCode;
 
-import org.eclipse.jgit.errors.NotSupportedException;
-import org.eclipse.jgit.errors.TransportException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.SshSessionFactory;
@@ -15,7 +13,7 @@ import android.util.Log;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-@RepoOpScoped
+@RepositoryScoped
 public class TransportFactory {
 	
 	private final static String TAG = "TF";

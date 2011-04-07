@@ -5,14 +5,18 @@ import static org.eclipse.jgit.transport.RemoteConfig.getAllRemoteConfigs;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.RemoteConfig;
 
-public class RDTRemote extends RepoDomainType<RemoteConfig> {
 
+public class RDTRemote extends RepoDomainType<RemoteConfig> {
+    @Inject
 	public RDTRemote(Repository repository) {
 		super(repository);
 	}
+    
 	@Override
 	String name() { return "remote"; }
 	public List<RemoteConfig> getAll() {

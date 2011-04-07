@@ -31,13 +31,10 @@ public class TagViewer extends RepositoryActivity {
 	}
 
 	private static final String TAG = "TV";
-	
-	@Override String TAG() { return TAG; }
 
 	private final static int DELETE_ID=Menu.FIRST;
 	
-	@Inject
-	private ImageSession avatarSession;
+	@Inject	private ImageSession avatarSession;
 	
 	@InjectView(R.id.actionbar)
 	private ActionBar actionBar;
@@ -89,7 +86,8 @@ public class TagViewer extends RepositoryActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    
+
+
     @Override
     public void onContentChanged() {
     	Log.d(TAG, "updateUI called");

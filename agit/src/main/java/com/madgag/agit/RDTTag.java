@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.google.inject.Inject;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevBlob;
@@ -24,6 +25,7 @@ import com.madgag.agit.RDTTag.TagSummary;
 
 public class RDTTag extends RepoDomainType<TagSummary> {
 
+    @Inject
 	public RDTTag(Repository repository) {
 		super(repository);
 	}

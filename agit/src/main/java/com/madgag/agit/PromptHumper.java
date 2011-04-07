@@ -1,6 +1,8 @@
 package com.madgag.agit;
 
 import android.os.Handler;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import org.connectbot.service.PromptHelper;
 
 
@@ -10,12 +12,14 @@ import org.connectbot.service.PromptHelper;
 - When an RMA starts, it needs to be able to get a reference to the current data required by the BlockingPromptService, e.g. the ResponseInterface
 - When an RMA ends, it needs to be able to tell someone that it's died. (because the handler thing needs to be able to route display requests properly)
 */
+@RepositoryScoped
 public class PromptHumper {
     private final PromptHelper promptHelper;
     private final PromptUIProvider statusBarUIProvider;
     private PromptUIProvider activityUIProvider;
 
-    public PromptHumper(Handler uiThreadHandler, PromptUIProvider statusBarUIProvider) {
+    @Inject
+    public PromptHumper(Handler uiThreadHandler, @Named("status-bar") PromptUIProvider statusBarUIProvider) {
         this.statusBarUIProvider = statusBarUIProvider;
         promptHelper = new PromptHelper(uiThreadHandler, new Runnable() {
             public void run() {

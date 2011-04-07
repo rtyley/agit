@@ -13,6 +13,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import com.google.inject.Inject;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefDatabase;
@@ -25,6 +26,7 @@ import com.madgag.agit.RDTBranch.BranchSummary;
 
 public class RDTBranch extends RepoDomainType<BranchSummary> {
 
+    @Inject
 	public RDTBranch(Repository repository) {
 		super(repository);
 	}

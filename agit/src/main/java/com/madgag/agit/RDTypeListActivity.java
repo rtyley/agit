@@ -1,5 +1,8 @@
 package com.madgag.agit;
 
+import com.google.inject.Inject;
+import com.google.inject.Key;
+import com.google.inject.name.Names;
 import org.eclipse.jgit.lib.Repository;
 
 import android.app.ListActivity;
@@ -9,21 +12,31 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.markupartist.android.widget.ActionBar;
+import roboguice.activity.RoboListActivity;
 
-public class RDTypeListActivity<E> extends ListActivity {
+import static com.google.inject.name.Names.named;
+import static com.madgag.agit.RepositoryActivity.enterRepositoryScopeFor;
+
+public class RDTypeListActivity<E> extends RoboListActivity {
 	
 	public static Intent listIntent(Repository repository, String typeName) {
 		return new GitIntentBuilder("git."+typeName+".LIST").repository(repository).toIntent();
 	}
 	
 	private static final String TAG = "RDTL";
-	private RepositoryContext rc;
+	private @Inject RepositoryContext rc;
+    private @Inject Repository repository;
 	private RepoDomainType<E> rdt;	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		rc = new RepositoryContext(this, TAG);
-		rdt = extractRDTFromIntent();
+        RepositoryScope repositoryScope = enterRepositoryScopeFor(this,getIntent());
+		try {
+            super.onCreate(savedInstanceState);
+            rdt = extractRDTFromIntent();
+        } finally {
+            repositoryScope.exit();
+        }
+
 		setContentView(R.layout.rdt_type_list);
 		ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
 		actionBar.setTitle(rdt.conciseSummaryTitle());
@@ -39,12 +52,13 @@ public class RDTypeListActivity<E> extends ListActivity {
 	
 	private RepoDomainType<E> extractRDTFromIntent() {
 		String rdtName = getIntent().getAction().split("\\.")[1];
-		if (rdtName.equals("remote")) {
-			return (RepoDomainType<E>) new RDTRemote(rc.repo());
-		} else if (rdtName.equals("branch")) {
-			return (RepoDomainType<E>) new RDTBranch(rc.repo());
-		}
-		return (RepoDomainType<E>) new RDTTag(rc.repo());
+        return getInjector().getInstance(Key.get(RepoDomainType.class, named(rdtName)));
+//		if (rdtName.equals("remote")) {
+//			return (RepoDomainType<E>) new RDTRemote(repository);
+//		} else if (rdtName.equals("branch")) {
+//			return (RepoDomainType<E>) new RDTBranch(repository);
+//		}
+//		return (RepoDomainType<E>) new RDTTag(repository);
 	}
 
 	@Override

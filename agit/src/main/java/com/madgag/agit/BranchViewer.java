@@ -28,7 +28,6 @@ public class BranchViewer extends RepositoryActivity {
 	}
 
 	private static final String TAG = "BranchViewer";
-	@Override String TAG() { return TAG; }
 	
 	@InjectView(R.id.actionbar)
 	ActionBar actionBar;

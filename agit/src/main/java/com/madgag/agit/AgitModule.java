@@ -26,7 +26,6 @@ import android.util.Log;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
-import com.google.inject.name.Names;
 import com.madgag.agit.operations.GitAsyncTask;
 import com.madgag.agit.ssh.AndroidAuthAgentProvider;
 import com.madgag.agit.ssh.AndroidSshSessionFactory;
@@ -43,8 +42,8 @@ public class AgitModule extends AbstractAndroidModule {
 
 	@Override
     protected void configure() {
-		install(RepoOpScope.module());
-		bind(File.class).annotatedWith(named("gitdir")).toProvider(RepoGitDirProvider.class);
+		install(RepositoryScope.module());
+		bind(File.class).annotatedWith(named("gitdir-from-context")).toProvider(RepoGitDirProvider.class);
     	bind(ImageSession.class).toProvider(ImageSessionProvider.class);
 
     	bind(Repository.class).toProvider(RepositoryProvider.class);
@@ -54,15 +53,22 @@ public class AgitModule extends AbstractAndroidModule {
     	bind(GitAsyncTaskFactory.class).toProvider(newFactory(GitAsyncTaskFactory.class, GitAsyncTask.class));
     	bind(SshSessionFactory.class).to(AndroidSshSessionFactory.class);
     	bind(TransportFactory.class);
-    	bind(BlockingPromptService.class).to(PromptHelper.class).in(RepoOpScoped.class);
-    	bind(PromptHelper.class).in(RepoOpScoped.class);
+    	bind(PromptHumper.class);
+        bind(PromptUIProvider.class).annotatedWith(named("status-bar")).to(StatusBarPromptProvider.class);
+
+        bind(RepoDomainType.class).annotatedWith(named("branch")).to(RDTBranch.class);
+        bind(RepoDomainType.class).annotatedWith(named("remote")).to(RDTRemote.class);
+        bind(RepoDomainType.class).annotatedWith(named("tag")).to(RDTTag.class);
     }
 
-    @RepoOpScoped @Provides
-    public PendingIntent createRepoManagementPendingIntent(Context context, @Named("gitdir") File gitdir) {
+    @Provides @RepositoryScoped PendingIntent createRepoManagementPendingIntent(Context context, @Named("gitdir") File gitdir) {
         return manageRepoPendingIntent(gitdir, context);
     }
-	
+
+    @Provides @RepositoryScoped BlockingPromptService createBlockingPromptService(PromptHumper promptHumper) {
+        return promptHumper.getBlockingPromptService();
+    }
+
 	@ContextScoped
     public static class BranchRefProvider implements Provider<Ref> {
 		@Inject Repository repository;

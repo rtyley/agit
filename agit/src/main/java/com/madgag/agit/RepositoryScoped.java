@@ -10,4 +10,4 @@ import java.lang.annotation.Target;
 import com.google.inject.ScopeAnnotation;
 
 @Target({ TYPE, METHOD }) @Retention(RUNTIME) @ScopeAnnotation
-public @interface RepoOpScoped {}
+public @interface RepositoryScoped {}

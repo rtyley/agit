@@ -10,10 +10,10 @@ import com.google.inject.Inject;
 import com.google.inject.Module;
 import com.jcraft.jsch.UserInfo;
 import com.madgag.agit.BlockingPromptService;
-import com.madgag.agit.RepoOpScoped;
+import com.madgag.agit.RepositoryScoped;
 import com.madgag.agit.operations.OpNotification;
 
-@RepoOpScoped
+@RepositoryScoped
 public class GUIUserInfo implements UserInfo {
 	private final static String TAG="GUIUI";
 	
