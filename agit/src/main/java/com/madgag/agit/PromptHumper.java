@@ -33,12 +33,16 @@ public class PromptHumper {
     }
 
     private void uiThreadBroadcastOfPrompt() {
-        if (activityUIProvider==null) {
-            statusBarUIProvider.acceptPrompt(promptHelper);
-        } else {
-            activityUIProvider.acceptPrompt(promptHelper);
+        PromptUIProvider activeUI = activeUI();
+        Log.d(TAG, "Broadcasting to activeUI="+activeUI);
+        if (activeUI!=statusBarUIProvider) {
             statusBarUIProvider.clearPrompt();
         }
+        activeUI.acceptPrompt(promptHelper);
+    }
+
+    private PromptUIProvider activeUI() {
+        return activityUIProvider==null?statusBarUIProvider:activityUIProvider;
     }
 
     void setActivityUIProvider(PromptUIProvider activityUIProvider) {
