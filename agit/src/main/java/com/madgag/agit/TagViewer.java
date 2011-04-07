@@ -53,8 +53,12 @@ public class TagViewer extends RepositoryActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.tag_view);
-			
+        repositoryScope.doWith(repo(), new Runnable() {
+            public void run() {
+                setContentView(R.layout.tag_view);
+            }
+        });
+
 		Log.d(TAG, "Roboguice THINGO "+actionBar+" "+taggerIdentView+" "+objectSummaryView);
 	}
 

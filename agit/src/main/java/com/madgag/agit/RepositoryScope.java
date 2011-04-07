@@ -15,6 +15,7 @@ import com.google.inject.Module;
 import com.google.inject.OutOfScopeException;
 import com.google.inject.Provider;
 import com.google.inject.Scope;
+import org.eclipse.jgit.lib.Repository;
 
 
 public class RepositoryScope implements Scope {
@@ -45,9 +46,14 @@ public class RepositoryScope implements Scope {
         }
     });
 
-    /*
-
-     */
+    public void doWith(Repository repository, Runnable runnable) {
+        enterWithRepoGitdir(repository.getDirectory());
+		try {
+            runnable.run();
+        } finally {
+            exit();
+        }
+    }
 
 	public void enterWithRepoGitdir(File gitdir) {
 		checkState(currentRepoGitdir.get() == null, "A scoping block is already in progress");
