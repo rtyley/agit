@@ -37,11 +37,11 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
 	
 	@Inject
 	public GitAsyncTask(
+            Handler handler,
 			@Assisted GitOperation operation,
 			@Assisted OperationLifecycleSupport lifecycleSupport) {
 		this.operation = operation;
 		this.lifecycleSupport = lifecycleSupport;
-		handler = new Handler();
 	}
 	
     @Override

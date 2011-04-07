@@ -42,16 +42,6 @@ public class RepositoryOperationContext {
 		return service;
 	}
 
-	// grandiose name
-	public void enqueue(GitOperation operation) {
-		
-		GitAsyncTask asyncTask = new GitAsyncTask(operation, new LongRunningServiceLifetime(repoNotifications, service));
-		currentOperation = asyncTask;
-		Log.d(TAG, "About to invoke "+asyncTask+" on "+gitdir+" ...");
-		asyncTask.execute();
-		Log.d(TAG, "...called execute!");
-	}
-
 	public Intent getRMAIntent() {
 		return manageRepoIntent(gitdir);
 	}
