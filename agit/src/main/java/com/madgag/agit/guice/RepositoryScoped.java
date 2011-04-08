@@ -1,4 +1,4 @@
-package com.madgag.agit;
+package com.madgag.agit.guice;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;

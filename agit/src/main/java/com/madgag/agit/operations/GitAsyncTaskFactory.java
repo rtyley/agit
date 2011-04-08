@@ -1,4 +1,4 @@
-package com.madgag.agit;
+package com.madgag.agit.operations;
 
 import com.madgag.agit.operation.lifecycle.OperationLifecycleSupport;
 import com.madgag.agit.operations.GitAsyncTask;

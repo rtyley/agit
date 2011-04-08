@@ -4,17 +4,18 @@ import static com.google.common.collect.Lists.newArrayList;
 
 import java.io.File;
 
-import android.os.Bundle;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import android.app.Activity;
 import android.util.Log;
+import com.madgag.agit.guice.RepositoryScope;
 
 public class RepositoryContext
       //  implements IndexChangedListener, RefsChangedListener
 {
-    private @Inject RepositoryScope scope;
+    private @Inject
+    RepositoryScope scope;
     private @Inject @Named("gitdir") File gitdir;
     private final Activity activity;
 	private final String tag;

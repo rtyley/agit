@@ -5,7 +5,7 @@ import static java.lang.System.currentTimeMillis;
 
 import java.util.concurrent.Future;
 
-import com.madgag.agit.RepositoryScope;
+import com.madgag.agit.guice.RepositoryScope;
 import roboguice.util.RoboAsyncTask;
 import android.os.Handler;
 import android.util.Log;

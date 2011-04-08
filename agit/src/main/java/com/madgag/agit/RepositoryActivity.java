@@ -1,12 +1,10 @@
 package com.madgag.agit;
 
-import android.app.Activity;
 import android.content.Intent;
 import com.google.inject.Inject;
 
-import com.google.inject.Injector;
-import com.google.inject.Provider;
 import com.google.inject.name.Named;
+import com.madgag.agit.guice.RepositoryScope;
 import org.eclipse.jgit.lib.Repository;
 import roboguice.activity.RoboActivity;
 import android.os.Bundle;
@@ -21,7 +19,8 @@ public class RepositoryActivity extends RoboActivity {
     private @Inject @Named("gitdir") File gitdir;
     private @Inject RepositoryContext rc;
     private @Inject Repository repository;
-    protected @Inject RepositoryScope repositoryScope;
+    protected @Inject
+    RepositoryScope repositoryScope;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

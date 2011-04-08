@@ -1,7 +1,8 @@
-package com.madgag.agit;
+package com.madgag.agit.blockingprompt;
 
 import java.io.File;
 
+import com.madgag.agit.Repos;
 import org.eclipse.jgit.lib.Repository;
 
 import com.google.inject.Inject;

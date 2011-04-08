@@ -5,18 +5,13 @@ import static com.madgag.agit.RepositoryManagementActivity.manageRepoPendingInte
 
 import java.io.File;
 
-import org.connectbot.service.PromptHelper;
+import com.madgag.agit.blockingprompt.PromptUIProvider;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 
-import com.madgag.agit.operation.lifecycle.LongRunningServiceLifetime;
 import com.madgag.agit.operation.lifecycle.RepoNotifications;
 import com.madgag.agit.operations.GitAsyncTask;
-import com.madgag.agit.operations.GitOperation;
 
 public class RepositoryOperationContext {
 

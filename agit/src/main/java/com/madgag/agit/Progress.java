@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.madgag.agit;
 
 import static org.eclipse.jgit.lib.ProgressMonitor.UNKNOWN;

@@ -1,4 +1,4 @@
-package com.madgag.agit;
+package com.madgag.agit.guice;
 
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.inject.name.Names.named;

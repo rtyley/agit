@@ -1,10 +1,10 @@
-package com.madgag.agit;
+package com.madgag.agit.blockingprompt;
 
-import android.nfc.Tag;
 import android.os.Handler;
 import android.util.Log;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import com.madgag.agit.guice.RepositoryScoped;
 import org.connectbot.service.PromptHelper;
 
 
@@ -45,12 +45,12 @@ public class PromptHumper {
         return activityUIProvider==null?statusBarUIProvider:activityUIProvider;
     }
 
-    void setActivityUIProvider(PromptUIProvider activityUIProvider) {
+    public void setActivityUIProvider(PromptUIProvider activityUIProvider) {
         this.activityUIProvider = activityUIProvider;
         displayPromptIfNecessary();
     }
 
-    void clearActivityUIProvider() {
+    public void clearActivityUIProvider() {
         activityUIProvider = null;
         displayPromptIfNecessary();
     }

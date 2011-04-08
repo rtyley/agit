@@ -20,12 +20,10 @@ package org.connectbot.service;
 import java.util.concurrent.Semaphore;
 
 import android.os.Handler;
-import android.os.Message;
 
 import android.util.Log;
-import com.madgag.agit.BlockingPromptService;
-import com.madgag.agit.ResponseInterface;
-import com.madgag.agit.operations.OpNotification;
+import com.madgag.agit.blockingprompt.BlockingPromptService;
+import com.madgag.agit.blockingprompt.ResponseInterface;
 import com.madgag.agit.operations.OpPrompt;
 
 /**

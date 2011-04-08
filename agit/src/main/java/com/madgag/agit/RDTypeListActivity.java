@@ -2,10 +2,9 @@ package com.madgag.agit;
 
 import com.google.inject.Inject;
 import com.google.inject.Key;
-import com.google.inject.name.Names;
+import com.madgag.agit.guice.RepositoryScope;
 import org.eclipse.jgit.lib.Repository;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;

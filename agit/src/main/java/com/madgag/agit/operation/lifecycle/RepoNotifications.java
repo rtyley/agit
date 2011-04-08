@@ -14,7 +14,7 @@ import android.util.Log;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import com.madgag.agit.RepositoryScoped;
+import com.madgag.agit.guice.RepositoryScoped;
 import com.madgag.agit.operations.OpNotification;
 
 @RepositoryScoped

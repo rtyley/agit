@@ -1,6 +1,7 @@
-package com.madgag.agit;
+package com.madgag.agit.blockingprompt;
 
 import com.google.inject.Inject;
+import com.madgag.agit.guice.RepositoryScoped;
 import com.madgag.agit.operation.lifecycle.RepoNotifications;
 
 @RepositoryScoped

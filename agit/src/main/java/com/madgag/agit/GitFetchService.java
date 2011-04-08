@@ -1,5 +1,6 @@
 package com.madgag.agit;
 
+import com.madgag.agit.guice.RepositoryScoped;
 import org.eclipse.jgit.errors.NotSupportedException;
 import org.eclipse.jgit.errors.TransportException;
 import org.eclipse.jgit.transport.FetchResult;

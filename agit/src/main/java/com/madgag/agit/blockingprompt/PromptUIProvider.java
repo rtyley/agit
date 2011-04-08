@@ -1,4 +1,6 @@
-package com.madgag.agit;
+package com.madgag.agit.blockingprompt;
+
+import com.madgag.agit.blockingprompt.ResponseInterface;
 
 public interface PromptUIProvider {
 

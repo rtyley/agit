@@ -18,7 +18,9 @@ import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import com.google.inject.Inject;
 import com.madgag.agit.GitOperationsService.GitOperationsBinder;
-import com.madgag.agit.operations.GitAsyncTask;
+import com.madgag.agit.blockingprompt.PromptHumper;
+import com.madgag.agit.blockingprompt.PromptUIProvider;
+import com.madgag.agit.blockingprompt.ResponseInterface;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
 
@@ -41,7 +43,8 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
 	public static final String TAG = "RMA";
     private ResponseInterface responseInterface;
 
-    @Inject PromptHumper promptHumper;
+    @Inject
+    PromptHumper promptHumper;
 
 	
 	private RepositoryOperationContext repositoryOperationContext;

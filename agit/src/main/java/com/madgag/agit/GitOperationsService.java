@@ -14,13 +14,11 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.madgag.agit.operations.*;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepository;
-import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
 
 import roboguice.service.RoboService;
-import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
@@ -30,16 +28,13 @@ import android.widget.Toast;
 import com.google.inject.Inject;
 import com.madgag.agit.operation.lifecycle.LongRunningServiceLifetime;
 import com.madgag.agit.operation.lifecycle.RepoNotifications;
-import com.madgag.agit.operations.Clone;
-import com.madgag.agit.operations.Fetch;
-import com.madgag.agit.operations.GitAsyncTask;
-import com.madgag.agit.operations.GitOperation;
 
 public class GitOperationsService extends RoboService {
 
 	public static final String TAG = "GitIntentService";
 	
-	@Inject GitAsyncTaskFactory asyncTaskFactory;
+	@Inject
+    GitAsyncTaskFactory asyncTaskFactory;
 	private Map<File,RepositoryOperationContext> map=new HashMap<File,RepositoryOperationContext>();
 
 	public static Intent cloneOperationIntentFor(URIish uri, File directory) {

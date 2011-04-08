@@ -9,8 +9,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Module;
 import com.jcraft.jsch.UserInfo;
-import com.madgag.agit.BlockingPromptService;
-import com.madgag.agit.RepositoryScoped;
+import com.madgag.agit.blockingprompt.BlockingPromptService;
+import com.madgag.agit.guice.RepositoryScoped;
 import com.madgag.agit.operations.OpNotification;
 
 @RepositoryScoped

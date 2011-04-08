@@ -2,6 +2,7 @@ package com.madgag.agit;
 
 import static java.lang.System.identityHashCode;
 
+import com.madgag.agit.guice.RepositoryScoped;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.SshSessionFactory;

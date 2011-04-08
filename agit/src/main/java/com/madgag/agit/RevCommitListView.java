@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.inject.Inject;
 import com.madgag.agit.operation.lifecycle.CasualShortTermLifetime;
 import com.madgag.agit.operations.Fetch;
-import com.madgag.agit.operations.GitAsyncTask;
+import com.madgag.agit.operations.GitAsyncTaskFactory;
 import com.madgag.agit.operations.OpNotification;
 import com.markupartist.android.widget.PullToRefreshListView;
 import org.eclipse.jgit.lib.Repository;
@@ -16,7 +16,6 @@ import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.google.common.base.Function;
 import roboguice.inject.InjectorProvider;
@@ -26,7 +25,8 @@ import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 
 public class RevCommitListView extends PullToRefreshListView {
 
-    @Inject GitAsyncTaskFactory gitAsyncTaskFactory;
+    @Inject
+    GitAsyncTaskFactory gitAsyncTaskFactory;
 	private Function<RevCommit, Intent> commitViewerIntentCreator;
 	
 	public RevCommitListView(Context context, AttributeSet attrs) {

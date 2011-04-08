@@ -11,8 +11,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.os.Handler;
 import com.google.inject.Provides;
-import com.google.inject.Singleton;
-import org.connectbot.service.PromptHelper;
+import com.madgag.agit.blockingprompt.*;
+import com.madgag.agit.guice.RepositoryScope;
+import com.madgag.agit.guice.RepositoryScoped;
+import com.madgag.agit.operations.GitAsyncTaskFactory;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.SshSessionFactory;
@@ -69,11 +71,13 @@ public class AgitModule extends AbstractAndroidModule {
 		}
     }
 
-    @Provides @RepositoryScoped PendingIntent createRepoManagementPendingIntent(Context context, @Named("gitdir") File gitdir) {
+    @Provides @RepositoryScoped
+    PendingIntent createRepoManagementPendingIntent(Context context, @Named("gitdir") File gitdir) {
         return manageRepoPendingIntent(gitdir, context);
     }
 
-    @Provides @RepositoryScoped BlockingPromptService createBlockingPromptService(PromptHumper promptHumper) {
+    @Provides @RepositoryScoped
+    BlockingPromptService createBlockingPromptService(PromptHumper promptHumper) {
         return promptHumper.getBlockingPromptService();
     }
 

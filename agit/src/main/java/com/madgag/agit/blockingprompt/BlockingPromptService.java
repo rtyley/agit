@@ -1,4 +1,4 @@
-package com.madgag.agit;
+package com.madgag.agit.blockingprompt;
 
 import com.madgag.agit.operations.OpPrompt;
 
