@@ -18,4 +18,22 @@
 	<style name="Theme.App" parent="android:Theme.Light.NoTitleBar">
 	    <item name="android:fadeScrollbars">true</item>
 	 </style>
+
+
+    <style name="BigButton" parent="@android:style/Widget.Button">
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+        <item name="android:textColor">#FFFFFFFF</item>
+        <item name="android:shadowColor">#FF000000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">-1</item>
+        <item name="android:shadowRadius">0.2</item>
+        <item name="android:textSize">24dip</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/friendly_button</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+    </style>
 </resources>
