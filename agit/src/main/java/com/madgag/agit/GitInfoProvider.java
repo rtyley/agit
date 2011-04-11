@@ -30,6 +30,10 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
+import org.eclipse.jgit.lib.RepositoryCache;
+import org.eclipse.jgit.util.FS;
+
+import static org.eclipse.jgit.lib.RepositoryCache.FileKey.isGitRepository;
 
 public class GitInfoProvider extends ContentProvider {
 	public static final Uri CONTENT_URI  = Uri.parse("content://com.madgag.agit.gitinfoprovider/repos");
@@ -70,11 +74,9 @@ public class GitInfoProvider extends ContentProvider {
 			String[] selectionArgs, String sortOrder) {
 		MatrixCursor matrixCursor=new MatrixCursor(new String[]{"_id","gitdir"});
 		for (File repoDir : reposDir.listFiles()) {
-			File gitdir=new File(repoDir,Constants.DOT_GIT);
-			if (gitdir.exists() && gitdir.isDirectory()) {
-				String gitdirPath=gitdir.getAbsolutePath();
-				Log.d(TAG, "Found gitish : "+gitdirPath);
-				matrixCursor.newRow().add(gitdirPath.hashCode()).add(gitdirPath);
+            File gitdir = RepositoryCache.FileKey.resolve(repoDir, FS.detect());
+			if (gitdir!=null) {
+				matrixCursor.newRow().add(gitdir.hashCode()).add(gitdir);
 			}
 		}
 		return matrixCursor;
