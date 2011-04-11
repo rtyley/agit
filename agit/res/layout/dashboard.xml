@@ -4,10 +4,7 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 
-	<com.markupartist.android.widget.ActionBar
-	    android:id="@+id/actionbar"
-	    style="@style/ActionBar"
-        />
+	<com.markupartist.android.widget.ActionBar android:id="@+id/actionbar" style="@style/ActionBar" />
 	
     <Button android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:id="@+id/GoCloneButton"

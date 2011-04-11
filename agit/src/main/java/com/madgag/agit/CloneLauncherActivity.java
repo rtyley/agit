@@ -19,19 +19,23 @@
 
 package com.madgag.agit;
 
+import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_LONG;
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
+import static java.util.Arrays.asList;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 
-import org.eclipse.jgit.lib.Constants;
+import android.view.animation.*;
+import android.widget.*;
+import com.markupartist.android.widget.ActionBar;
 import org.eclipse.jgit.transport.URIish;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -40,34 +44,33 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectView;
 
-public class CloneLauncherActivity extends Activity {
+public class CloneLauncherActivity extends RoboActivity {
 	private final static String TAG="CloneLauncherActivity";
 
 	public static String EXTRA_TARGET_DIR="target-dir",EXTRA_SOURCE_URI="source-uri";
-	
-	private Button button;
-	private CheckBox useDefaultGitDirLocationButton;
-	private TextView warningTextView;
-	private EditText gitDirEditText, cloneUrlEditText;
-	
+
+    @InjectView(R.id.SuggestReposButton) Button suggestReposButton;
+	@InjectView(R.id.GoCloneButton) Button button;
+	@InjectView(R.id.UseDefaultGitDirLocation) CheckBox useDefaultGitDirLocationButton;
+	@InjectView(R.id.GitDirWarning) TextView warningTextView;
+	@InjectView(R.id.GitDirEditText) EditText gitDirEditText;
+    @InjectView(R.id.CloneUrlEditText) EditText cloneUrlEditText;
+    
+	@InjectView(R.id.actionbar) ActionBar actionBar;
+    @InjectView(android.R.id.list) ListView listView;
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.clone_launcher);
-        button = (Button) findViewById(R.id.GoCloneButton);
-        gitDirEditText = (EditText) findViewById(R.id.GitDirEditText);
-        warningTextView = (TextView) findViewById(R.id.GitDirWarning);
-        cloneUrlEditText = (EditText) findViewById(R.id.CloneUrlEditText);
-        useDefaultGitDirLocationButton = (CheckBox) findViewById(R.id.UseDefaultGitDirLocation);
+        actionBar.setHomeLogo(R.drawable.actionbar_agit_logo);
+
+
 		button.setOnClickListener(goCloneButtonListener);
 		useDefaultGitDirLocationButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) { updateUIWithValidation(); }
@@ -81,8 +84,46 @@ public class CloneLauncherActivity extends Activity {
 		};
 		cloneUrlEditText.addTextChangedListener(watcher);
 		gitDirEditText.addTextChangedListener(watcher);
+        // setUpListView();
     }
-    
+
+
+    public void setUpListView(View v) {
+
+        List<SuggestedRepo> voo = asList(
+                new SuggestedRepo("JQuery", "git://github.com/jquery/jquery.git"),
+                new SuggestedRepo("Scalatra", "git://github.com/scalatra/scalatra.git")
+        );
+        final SuggestedReposListAdapter adapter = new SuggestedReposListAdapter(this, voo);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SuggestedRepo suggestedRepo = (SuggestedRepo) adapter.getItem(position);
+                cloneUrlEditText.setText(suggestedRepo.getURI());
+                listView.setVisibility(GONE);
+            }
+        });
+
+        listView.setLayoutAnimation(new LayoutAnimationController(listFadeInAnimation(), 0.5f));
+        listView.setVisibility(View.VISIBLE);
+    }
+
+    private AnimationSet listFadeInAnimation() {
+        AnimationSet set = new AnimationSet(true);
+
+        Animation animation = new AlphaAnimation(0.0f, 1.0f);
+        animation.setDuration(50);
+        set.addAnimation(animation);
+
+        animation = new TranslateAnimation(
+            Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 0.0f,
+            Animation.RELATIVE_TO_SELF, -1.0f,Animation.RELATIVE_TO_SELF, 0.0f
+        );
+        animation.setDuration(100);
+        set.addAnimation(animation);
+        return set;
+    }
+
     protected void updateUIWithValidation() {
     	boolean enableClone=true;
     	
