@@ -4,40 +4,49 @@
 	android:layout_height="fill_parent">
 
     <com.markupartist.android.widget.ActionBar android:id="@+id/actionbar" style="@style/ActionBar" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
-    <Button android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:id="@+id/SuggestReposButton"
-		android:text="@string/suggest_repos_button"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:layout_margin="5dip"
-        style="@style/SmallButton"
-        android:onClick="setUpListView"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent" android:layout_height="match_parent">
+            <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/SuggestReposButton"
+                android:text="@string/suggest_repos_button"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_margin="5dip"
+                style="@style/SmallButton"
+                android:onClick="setUpListView"/>
 
-    <ListView android:id="@android:id/list"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"  android:cacheColorHint="#FFF"/>
+            <ListView android:id="@android:id/list"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"  android:cacheColorHint="#FFF"/>
 
-	<TextView android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:text="@string/enter_clone_url" />
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content" android:text="@string/enter_clone_url" />
 
-	<EditText 
-		android:id="@+id/CloneUrlEditText"
-		android:layout_height="wrap_content" 
-		android:layout_width="fill_parent"
-		android:inputType="textUri" />
-		
-	<CheckBox android:id="@+id/UseDefaultGitDirLocation"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:text="Use default location" android:checked="true" />
-	<EditText android:layout_height="wrap_content" android:id="@+id/GitDirEditText"
-		android:layout_width="fill_parent"></EditText>
-	<TextView android:id="@+id/GitDirWarning" android:visibility="invisible"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:text="Bad checkout location" />
-    <CheckBox android:id="@+id/BareRepo"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:text="Bare repo" android:checked="true" />
-	<Button android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:id="@+id/GoCloneButton"
-		android:text="Clone!"></Button>
+            <EditText
+                android:id="@+id/CloneUrlEditText"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:inputType="textUri" />
+
+            <CheckBox android:id="@+id/UseDefaultGitDirLocation"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Use default location" android:checked="true" />
+            <EditText android:layout_height="wrap_content" android:id="@+id/GitDirEditText"
+                android:layout_width="fill_parent"></EditText>
+            <TextView android:id="@+id/GitDirWarning" android:visibility="invisible"
+                android:layout_width="fill_parent" android:layout_height="wrap_content"
+                android:text="Bad checkout location" />
+            <CheckBox android:id="@+id/BareRepo"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Bare repo" android:checked="true" />
+            <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/GoCloneButton"
+                android:text="Clone!"></Button>
+            </LinearLayout>
+    </ScrollView>
 </LinearLayout>
