@@ -226,19 +226,21 @@ public class CloneLauncherActivity extends RoboActivity {
 			}
         }
 
-		private void wham(URIish uri, File repoDir, boolean bare) throws IOException, URISyntaxException {
+
+
+    };
+
+	private void wham(URIish uri, File repoDir, boolean bare) throws IOException, URISyntaxException {
 			if (!repoDir.mkdirs()) {
 				String message = "Couldn't create "+repoDir;
 				Toast.makeText(CloneLauncherActivity.this, message, LENGTH_LONG).show();
 				throw new IOException(message);
 			}
-    		
+
     		startService(cloneOperationIntentFor(uri, repoDir, bare));
+            Toast.makeText(getApplicationContext(), R.string.clone_launcher_farewell_due_to_clone_launched, Toast.LENGTH_SHORT).show();
+            finish();
 		}
-
-
-    };
-    
 	private File defaultRepoDirFor(URIish uri) {
 		File reposDir=new File(Environment.getExternalStorageDirectory(),"git-repos");
 		try {

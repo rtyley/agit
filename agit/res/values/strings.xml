@@ -12,4 +12,6 @@
     <string name="tag_name_label">Name:</string>
     <string name="tag_message_label">Message (optional):</string>
     <string name="tag_commit_menu_option">Tag...</string>
+
+    <string name="clone_launcher_farewell_due_to_clone_launched">Clone started..!</string>
 </resources>
