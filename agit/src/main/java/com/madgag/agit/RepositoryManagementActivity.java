@@ -42,14 +42,14 @@ import com.madgag.agit.blockingprompt.PromptUIProvider;
 import com.madgag.agit.blockingprompt.ResponseInterface;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
-import org.eclipse.jgit.lib.Repository;
+import roboguice.inject.InjectView;
 
 import java.io.File;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.madgag.agit.GitIntents.gitDirFrom;
-import static com.madgag.agit.GitIntents.repositoryFrom;
 import static com.madgag.agit.RepoDeleter.REPO_DELETE_COMPLETED;
+import static com.madgag.agit.Repos.niceNameFor;
 
 
 public class RepositoryManagementActivity extends RepositoryActivity implements PromptUIProvider {
@@ -64,6 +64,8 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
 	public static final String TAG = "RMA";
     private ResponseInterface responseInterface;
 
+    @InjectView(R.id.actionbar) ActionBar actionBar;
+    
     @Inject
     PromptHumper promptHumper;
 
@@ -75,11 +77,12 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.repo_management);
+        actionBar.setHomeLogo(R.drawable.actionbar_agit_logo);
         
         bindService(new Intent(this,GitOperationsService.class), serviceConnectionToRegisterThisAsManagementUI(), BIND_AUTO_CREATE);
         
         ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
-		actionBar.setTitle(niceNameFor());
+		actionBar.setTitle(niceNameFor(repo()));
         actionBar.addAction(new Action() {
             public void performAction(View view) {
                 startService(new GitIntentBuilder("git.FETCH").repository(repo()).toIntent());
@@ -98,12 +101,6 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
 				startActivity(rdt.listIntent());
 			}
 		});
-    }
-
-    private String niceNameFor() {
-        Repository repo = repo();
-        File directoryWithName = repo.isBare()? repo.getDirectory(): repo.getWorkTree();
-        return directoryWithName.getName();
     }
 
     @Override

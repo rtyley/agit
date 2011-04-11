@@ -20,9 +20,12 @@
 package com.madgag.agit;
 
 import static java.lang.System.identityHashCode;
+import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
 
 import java.io.File;
 
+import android.provider.SyncStateContract;
+import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.lib.RepositoryCache.FileKey;
@@ -45,7 +48,16 @@ public class Repos {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
+    public static String niceNameFor(Repository repo) {
+        File directoryWithName = repo.isBare()? repo.getDirectory(): repo.getWorkTree();
+        String name = directoryWithName.getName();
+        if (name.endsWith(DOT_GIT_EXT)) {
+            name.substring(0, name.length()-DOT_GIT_EXT.length());
+        }
+        return name;
+    }
+
 	public static String describe(Repository repository) {
 		return repository+" #"+identityHashCode(repository);
 	}
