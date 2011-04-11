@@ -19,27 +19,33 @@
 
 package com.madgag.agit;
 
-import static android.R.id.list;
-import static com.google.common.collect.Lists.newArrayList;
-import static com.madgag.agit.CommitViewerActivity.commitViewerIntentCreatorFor;
-import static org.eclipse.jgit.lib.Repository.shortenRefName;
-
-import java.io.File;
-import java.util.List;
-
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import com.google.inject.Inject;
+import com.madgag.agit.operation.lifecycle.CasualShortTermLifetime;
+import com.madgag.agit.operations.Fetch;
+import com.madgag.agit.operations.GitAsyncTaskFactory;
+import com.madgag.agit.operations.OpNotification;
+import com.markupartist.android.widget.ActionBar;
+import com.markupartist.android.widget.PullToRefreshListView;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-
+import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-import com.markupartist.android.widget.ActionBar;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+import static android.R.id.list;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.madgag.agit.CommitViewerActivity.commitViewerIntentCreatorFor;
+import static com.madgag.agit.Repos.remoteConfigFor;
+import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
+import static org.eclipse.jgit.lib.Repository.shortenRefName;
 
 public class BranchViewer extends RepositoryActivity {
     
@@ -51,27 +57,51 @@ public class BranchViewer extends RepositoryActivity {
 	
 	@InjectView(R.id.actionbar) ActionBar actionBar;
 	
-	@InjectView(list)
-	private RevCommitListView revCommitListView;
+	@InjectView(list) RevCommitListView revCommitListView;
+
+
+    @Inject GitAsyncTaskFactory gitAsyncTaskFactory;
+	@Inject Repository repository;
+    @InjectExtra(value="branch") String branchName;
 	
-	@Inject
-	Repository repository;
-	
-	@Inject @Named("branch")
-	Ref branch;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.branch_view);
 		
-		actionBar.setTitle(shortenRefName(branch.getName()));
-		revCommitListView.setCommits(commitViewerIntentCreatorFor(repository.getDirectory(), branch),repository, commitListForRepo());
+		actionBar.setTitle(shortenRefName(branch().getName()));
+        setCommits();
+        revCommitListView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
+            public void onRefresh() {
+                Fetch fetch = new Fetch(repository, remoteConfigFor(repository, DEFAULT_REMOTE_NAME));
+                gitAsyncTaskFactory.createTaskFor(fetch, new CasualShortTermLifetime() {
+                    public void completed(OpNotification completionNotification) {
+                        revCommitListView.onRefreshComplete(completionNotification.getTickerText());
+                        setCommits();
+                    }
+                }).execute();
+            }
+        });
 	}
 
-	private List<RevCommit> commitListForRepo() {
+    private Ref branch() {
+        try {
+            return repository.getRef(branchName);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void setCommits() {
+        revCommitListView.setCommits(commitViewerIntentCreatorFor(repository.getDirectory(), branch()), commitListForRepo());
+    }
+
+    private List<RevCommit> commitListForRepo() {
 		Git git = new Git(repository);
 		try {
+            Ref branch = branch();
+            Log.d(TAG,"Calculating commitListForRepo based on "+ branch +" branch.getObjectId()="+ branch.getObjectId());
 			Iterable<RevCommit> logWaa = git.log().add(branch.getObjectId()).call();
 			List<RevCommit> sampleRevCommits = newArrayList(logWaa);
 			

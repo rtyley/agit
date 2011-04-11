@@ -22,10 +22,7 @@ package com.madgag.agit;
 import com.madgag.agit.guice.RepositoryScoped;
 import org.eclipse.jgit.errors.NotSupportedException;
 import org.eclipse.jgit.errors.TransportException;
-import org.eclipse.jgit.transport.FetchResult;
-import org.eclipse.jgit.transport.RefSpec;
-import org.eclipse.jgit.transport.RemoteConfig;
-import org.eclipse.jgit.transport.Transport;
+import org.eclipse.jgit.transport.*;
 
 import android.util.Log;
 
@@ -52,7 +49,10 @@ public class GitFetchService {
 		Transport transport = transportFactory.transportFor(remote);
 		try {
 			FetchResult fetchResult = transport.fetch(new MessagingProgressMonitor(progressListener), toFetch);
-			Log.d(TAG, "Fetch complete with result : " + fetchResult);
+			Log.d(TAG, "Fetch complete with : " + fetchResult);
+            for (TrackingRefUpdate update : fetchResult.getTrackingRefUpdates()) {
+                Log.d(TAG, "TrackingRefUpdate : " + update.getLocalName()+" old="+update.getOldObjectId()+" new="+update.getNewObjectId());
+            }
 			return fetchResult;
 		} catch (NotSupportedException e) {
 			throw new RuntimeException(e);

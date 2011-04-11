@@ -21,6 +21,8 @@ package com.madgag.agit;
 
 import java.util.List;
 
+import android.nfc.Tag;
+import android.util.Log;
 import android.view.LayoutInflater;
 import com.google.inject.Inject;
 import com.madgag.agit.operation.lifecycle.CasualShortTermLifetime;
@@ -52,7 +54,8 @@ import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 
 public class RevCommitListView extends PullToRefreshListView {
 
-    @Inject GitAsyncTaskFactory gitAsyncTaskFactory;
+    private static String TAG="RCLV";
+
     @Inject ImageSession imageSession;
 	private Function<RevCommit, Intent> commitViewerIntentCreator;
 	
@@ -69,7 +72,8 @@ public class RevCommitListView extends PullToRefreshListView {
 	}
 
 
-	public void setCommits(Function<RevCommit, Intent> commitViewerIntentCreator, final Repository repository, List<RevCommit> commits) {
+	public void setCommits(Function<RevCommit, Intent> commitViewerIntentCreator, List<RevCommit> commits) {
+        Log.d(TAG, "Setting commits: "+commits.get(0).toObjectId()+" .. "+commits.get(commits.size()-1).toObjectId());
 		this.commitViewerIntentCreator = commitViewerIntentCreator;
 		setAdapter(new BigListAdapter<RevCommit>(commits, viewInflatorFor(getContext(), rev_commit_list_item), new ViewHolderFactory<RevCommit>() {
             public ViewHolder<RevCommit> createViewHolderFor(View view) {
@@ -77,16 +81,6 @@ public class RevCommitListView extends PullToRefreshListView {
             }
         }));
 
-        setOnRefreshListener(new OnRefreshListener() {
-            public void onRefresh() {
-                Fetch fetch = new Fetch(repository, remoteConfigFor(repository, DEFAULT_REMOTE_NAME));
-                gitAsyncTaskFactory.createTaskFor(fetch, new CasualShortTermLifetime() {
-                    public void completed(OpNotification completionNotification) {
-                        onRefreshComplete(completionNotification.getTickerText());
-                    }
-                }).execute();
-            }
-        });
         setFastScrollEnabled(true);
 	}
 }
