@@ -22,6 +22,7 @@ package com.madgag.agit;
 import static android.R.id.list;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.CommitViewerActivity.commitViewerIntentCreatorFor;
+import static org.eclipse.jgit.lib.Repository.shortenRefName;
 
 import java.io.File;
 import java.util.List;
@@ -48,8 +49,7 @@ public class BranchViewer extends RepositoryActivity {
 
 	private static final String TAG = "BranchViewer";
 	
-	@InjectView(R.id.actionbar)
-	ActionBar actionBar;
+	@InjectView(R.id.actionbar) ActionBar actionBar;
 	
 	@InjectView(list)
 	private RevCommitListView revCommitListView;
@@ -65,7 +65,7 @@ public class BranchViewer extends RepositoryActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.branch_view);
 		
-		actionBar.setTitle(branch.getName());
+		actionBar.setTitle(shortenRefName(branch.getName()));
 		revCommitListView.setCommits(commitViewerIntentCreatorFor(repository.getDirectory(), branch),repository, commitListForRepo());
 	}
 
