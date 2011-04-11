@@ -53,7 +53,7 @@ public class Repos {
         File directoryWithName = repo.isBare()? repo.getDirectory(): repo.getWorkTree();
         String name = directoryWithName.getName();
         if (name.endsWith(DOT_GIT_EXT)) {
-            name.substring(0, name.length()-DOT_GIT_EXT.length());
+            name=name.substring(0, name.length()-DOT_GIT_EXT.length());
         }
         return name;
     }
