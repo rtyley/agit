@@ -9,6 +9,7 @@
 		android:layout_height="wrap_content" android:id="@+id/SuggestReposButton"
 		android:text="@string/suggest_repos_button"
         android:gravity="center"
+        android:layout_gravity="center"
         android:layout_margin="5dip"
         style="@style/SmallButton"
         android:onClick="setUpListView"/>
