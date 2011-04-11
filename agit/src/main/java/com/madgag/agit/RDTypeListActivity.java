@@ -22,6 +22,9 @@ package com.madgag.agit;
 import com.google.inject.Inject;
 import com.google.inject.Key;
 import com.madgag.agit.guice.RepositoryScope;
+import com.madgag.android.listviews.BigListAdapter;
+import com.madgag.android.listviews.ViewHolder;
+import com.madgag.android.listviews.ViewHolderFactory;
 import org.eclipse.jgit.lib.Repository;
 
 import android.content.Intent;
@@ -32,8 +35,10 @@ import android.widget.ListView;
 import com.markupartist.android.widget.ActionBar;
 import roboguice.activity.RoboListActivity;
 
+import static android.R.layout.simple_list_item_2;
 import static com.google.inject.name.Names.named;
 import static com.madgag.agit.RepositoryActivity.enterRepositoryScopeFor;
+import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 
 public class RDTypeListActivity<E> extends RoboListActivity {
 	
@@ -58,7 +63,11 @@ public class RDTypeListActivity<E> extends RoboListActivity {
 		setContentView(R.layout.rdt_type_list);
 		ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
 		actionBar.setTitle(rdt.conciseSummaryTitle());
-		setListAdapter(new RDTypeListAdapter<E>(getLayoutInflater(), rdt));
+		setListAdapter(new BigListAdapter<E>(rdt.getAll(), viewInflatorFor(this, simple_list_item_2), new ViewHolderFactory<E>() {
+            public ViewHolder<E> createViewHolderFor(View view) {
+                return new RDTypeInstanceViewHolder(rdt,view);
+            }
+        }));
 		
         getListView().setEmptyView(findViewById(R.id.empty));
 	}

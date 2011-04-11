@@ -40,16 +40,24 @@ import com.madgag.agit.GitOperationsService.GitOperationsBinder;
 import com.madgag.agit.blockingprompt.PromptHumper;
 import com.madgag.agit.blockingprompt.PromptUIProvider;
 import com.madgag.agit.blockingprompt.ResponseInterface;
+import com.madgag.android.listviews.BigListAdapter;
+import com.madgag.android.listviews.ViewHolder;
+import com.madgag.android.listviews.ViewHolderFactory;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
 import roboguice.inject.InjectView;
 
 import java.io.File;
+import java.util.List;
 
+import static android.R.layout.simple_list_item_2;
+import static android.R.layout.two_line_list_item;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.GitIntents.gitDirFrom;
 import static com.madgag.agit.RepoDeleter.REPO_DELETE_COMPLETED;
 import static com.madgag.agit.Repos.niceNameFor;
+import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 
 
 public class RepositoryManagementActivity extends RepositoryActivity implements PromptUIProvider {
@@ -94,7 +102,7 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
         });
         
 		rdtTypeList = (ListView) findViewById(R.id.BranchList);
-		rdtTypeList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_2));
+		rdtTypeList.setAdapter(new ArrayAdapter<String>(this, simple_list_item_2));
 		rdtTypeList.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				RepoDomainType<?> rdt = (RepoDomainType<?>) parent.getAdapter().getItem(position);
@@ -265,7 +273,12 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
     }
 
 	void updateUI() {
-		rdtTypeList.setAdapter(new RDTypesListAdapter(this, repo()));
+        List<RepoDomainType<?>> rdtList = newArrayList(new RDTRemote(repo()), new RDTBranch(repo()), new RDTTag(repo()));
+		rdtTypeList.setAdapter(new BigListAdapter<RepoDomainType<?>>(rdtList, viewInflatorFor(this, simple_list_item_2), new ViewHolderFactory<RepoDomainType<?>>() {
+            public ViewHolder<RepoDomainType<?>> createViewHolderFor(View view) {
+                return new RDTypeViewHolder(view);
+            }
+        }));
 	}
     
     private void registerReceiverForServicePromptRequests() {
