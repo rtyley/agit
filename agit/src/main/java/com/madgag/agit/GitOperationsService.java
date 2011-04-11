@@ -20,9 +20,8 @@
 package com.madgag.agit;
 
 import static android.widget.Toast.LENGTH_LONG;
-import static com.madgag.agit.GitIntents.addDirectoryTo;
-import static com.madgag.agit.GitIntents.directoryFrom;
-import static com.madgag.agit.GitIntents.gitDirFrom;
+import static com.google.common.collect.Maps.newHashMap;
+import static com.madgag.agit.GitIntents.*;
 import static com.madgag.agit.Repos.openRepoFor;
 import static com.madgag.agit.Repos.remoteConfigFor;
 import static com.madgag.agit.RepositoryManagementActivity.manageRepoPendingIntent;
@@ -54,11 +53,12 @@ public class GitOperationsService extends RoboService {
 	
 	@Inject
     GitAsyncTaskFactory asyncTaskFactory;
-	private Map<File,RepositoryOperationContext> map=new HashMap<File,RepositoryOperationContext>();
+	private Map<File,RepositoryOperationContext> map=newHashMap();
 
-	public static Intent cloneOperationIntentFor(URIish uri, File directory) {
+	public static Intent cloneOperationIntentFor(URIish uri, File directory, boolean bare) {
 		Intent intent = new Intent("git.CLONE");
 		intent.putExtra("source-uri", uri.toPrivateString());
+        intent.putExtra(BARE, bare);
 		addDirectoryTo(intent, directory);
 		return intent;
 	}
@@ -101,8 +101,9 @@ public class GitOperationsService extends RoboService {
 		GitOperation operation = null;
 		if (action.equals("git.CLONE")) {
 			String sourceUriString = intent.getStringExtra("source-uri");
-			try {
-				operation = new Clone(false, new URIish(sourceUriString), directoryFrom(intent));
+            boolean bare = intent.getBooleanExtra(BARE, true);
+            try {
+                operation = new Clone(bare, new URIish(sourceUriString), directoryFrom(intent));
 			} catch (URISyntaxException e) {
 				Toast.makeText(this, "Invalid uri "+sourceUriString, LENGTH_LONG).show();
 				return START_NOT_STICKY;

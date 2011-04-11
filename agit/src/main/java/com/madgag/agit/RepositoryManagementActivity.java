@@ -42,11 +42,13 @@ import com.madgag.agit.blockingprompt.PromptUIProvider;
 import com.madgag.agit.blockingprompt.ResponseInterface;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
+import org.eclipse.jgit.lib.Repository;
 
 import java.io.File;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.madgag.agit.GitIntents.gitDirFrom;
+import static com.madgag.agit.GitIntents.repositoryFrom;
 import static com.madgag.agit.RepoDeleter.REPO_DELETE_COMPLETED;
 
 
@@ -77,9 +79,7 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
         bindService(new Intent(this,GitOperationsService.class), serviceConnectionToRegisterThisAsManagementUI(), BIND_AUTO_CREATE);
         
         ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
-        File workTree = repo().getWorkTree();
-        Log.d(TAG, "workTree="+workTree);
-		actionBar.setTitle(workTree.getName());
+		actionBar.setTitle(niceNameFor());
         actionBar.addAction(new Action() {
             public void performAction(View view) {
                 startService(new GitIntentBuilder("git.FETCH").repository(repo()).toIntent());
@@ -98,6 +98,12 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
 				startActivity(rdt.listIntent());
 			}
 		});
+    }
+
+    private String niceNameFor() {
+        Repository repo = repo();
+        File directoryWithName = repo.isBare()? repo.getDirectory(): repo.getWorkTree();
+        return directoryWithName.getName();
     }
 
     @Override

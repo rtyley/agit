@@ -32,7 +32,12 @@ import android.util.Log;
 public class GitIntents {
 
 	private static final String TAG="GitIntents";
-	
+
+    public static String
+            BARE="bare",
+            EXTRA_TARGET_DIR="target-dir",
+            EXTRA_SOURCE_URI="source-uri";
+
 	public static File directoryFrom(Intent intent) {
 		String directory = intent.getStringExtra("directory");
 		return new File(directory);

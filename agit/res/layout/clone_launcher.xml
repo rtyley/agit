@@ -5,7 +5,7 @@
 
     <com.markupartist.android.widget.ActionBar android:id="@+id/actionbar" style="@style/ActionBar" />
 
-    <Button android:layout_width="fill_parent"
+    <Button android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:id="@+id/SuggestReposButton"
 		android:text="@string/suggest_repos_button"
         android:gravity="center"
@@ -33,6 +33,9 @@
 	<TextView android:id="@+id/GitDirWarning" android:visibility="invisible"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:text="Bad checkout location" />
+    <CheckBox android:id="@+id/BareRepo"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:text="Bare repo" android:checked="true" />
 	<Button android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:id="@+id/GoCloneButton"
 		android:text="Clone!"></Button>

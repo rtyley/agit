@@ -23,6 +23,8 @@ import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_LONG;
+import static com.madgag.agit.GitIntents.EXTRA_SOURCE_URI;
+import static com.madgag.agit.GitIntents.EXTRA_TARGET_DIR;
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
 import static java.util.Arrays.asList;
 
@@ -51,10 +53,11 @@ import roboguice.inject.InjectView;
 public class CloneLauncherActivity extends RoboActivity {
 	private final static String TAG="CloneLauncherActivity";
 
-	public static String EXTRA_TARGET_DIR="target-dir",EXTRA_SOURCE_URI="source-uri";
+	
 
     @InjectView(R.id.SuggestReposButton) Button suggestReposButton;
-	@InjectView(R.id.GoCloneButton) Button button;
+    @InjectView(R.id.BareRepo) CheckBox bareRepoCheckbox;
+    @InjectView(R.id.GoCloneButton) Button button;
 	@InjectView(R.id.UseDefaultGitDirLocation) CheckBox useDefaultGitDirLocationButton;
 	@InjectView(R.id.GitDirWarning) TextView warningTextView;
 	@InjectView(R.id.GitDirEditText) EditText gitDirEditText;
@@ -92,7 +95,8 @@ public class CloneLauncherActivity extends RoboActivity {
 
         List<SuggestedRepo> voo = asList(
                 new SuggestedRepo("JQuery", "git://github.com/jquery/jquery.git"),
-                new SuggestedRepo("Scalatra", "git://github.com/scalatra/scalatra.git")
+                new SuggestedRepo("Scalatra", "git://github.com/scalatra/scalatra.git"),
+                new SuggestedRepo("JGit", "git://egit.eclipse.org/jgit.git")
         );
         final SuggestedReposListAdapter adapter = new SuggestedReposListAdapter(this, voo);
         listView.setAdapter(adapter);
@@ -212,8 +216,9 @@ public class CloneLauncherActivity extends RoboActivity {
 				return;
 			}
     		File checkoutLocation=getCheckoutLocation();
+            boolean bare=bareRepoCheckbox.isChecked();
     		try {
-				wham(uri,checkoutLocation);
+				wham(uri,checkoutLocation, bare);
 			} catch (Exception e) {
 				Toast.makeText(v.getContext(), "ARRG: "+e, 10).show();
 				// TODO Auto-generated catch block
@@ -221,14 +226,14 @@ public class CloneLauncherActivity extends RoboActivity {
 			}
         }
 
-		private void wham(URIish uri, File repoDir) throws IOException, URISyntaxException {
+		private void wham(URIish uri, File repoDir, boolean bare) throws IOException, URISyntaxException {
 			if (!repoDir.mkdirs()) {
 				String message = "Couldn't create "+repoDir;
 				Toast.makeText(CloneLauncherActivity.this, message, LENGTH_LONG).show();
 				throw new IOException(message);
 			}
     		
-    		startService(cloneOperationIntentFor(uri, repoDir));
+    		startService(cloneOperationIntentFor(uri, repoDir, bare));
 		}
 
 
