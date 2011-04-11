@@ -23,8 +23,8 @@ import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_LONG;
-import static com.madgag.agit.GitIntents.EXTRA_SOURCE_URI;
-import static com.madgag.agit.GitIntents.EXTRA_TARGET_DIR;
+import static android.widget.Toast.LENGTH_SHORT;
+import static com.madgag.agit.GitIntents.*;
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
 import static java.util.Arrays.asList;
 
@@ -53,7 +53,11 @@ import roboguice.inject.InjectView;
 public class CloneLauncherActivity extends RoboActivity {
 	private final static String TAG="CloneLauncherActivity";
 
-	
+    public static Intent cloneLauncherIntentFor(String sourceUri) {
+		Intent intent = new Intent("com.madgag.git.clone.prepare");
+		intent.putExtra(EXTRA_SOURCE_URI, sourceUri);
+		return intent;
+	}
 
     @InjectView(R.id.SuggestReposButton) Button suggestReposButton;
     @InjectView(R.id.BareRepo) CheckBox bareRepoCheckbox;
@@ -170,14 +174,9 @@ public class CloneLauncherActivity extends RoboActivity {
 
 	private void setSourceUriFrom(Intent intent) {
 		String sourceUri= intent.getStringExtra(EXTRA_SOURCE_URI);
-		if (sourceUri == null && intent.getData()!=null) { 
-			//https://github.com/rtyley/jgit
-			//git@github.com:rtyley/jgit.git RW
-			//git://github.com/spearce/jgit.git R
-			sourceUri = "git://github.com"+intent.getData().getPath()+".git";
-		}
 		if (sourceUri != null) {
 			cloneUrlEditText.setText(sourceUri);
+            cloneUrlEditText.setSelection(sourceUri.length());
 			Log.d(TAG, "Set cloneUrlEditText to "+sourceUri);
 		}
 	}
@@ -218,7 +217,7 @@ public class CloneLauncherActivity extends RoboActivity {
     		File checkoutLocation=getCheckoutLocation();
             boolean bare=bareRepoCheckbox.isChecked();
     		try {
-				wham(uri,checkoutLocation, bare);
+				launchClone(uri, checkoutLocation, bare);
 			} catch (Exception e) {
 				Toast.makeText(v.getContext(), "ARRG: "+e, 10).show();
 				// TODO Auto-generated catch block
@@ -230,17 +229,18 @@ public class CloneLauncherActivity extends RoboActivity {
 
     };
 
-	private void wham(URIish uri, File repoDir, boolean bare) throws IOException, URISyntaxException {
-			if (!repoDir.mkdirs()) {
-				String message = "Couldn't create "+repoDir;
-				Toast.makeText(CloneLauncherActivity.this, message, LENGTH_LONG).show();
-				throw new IOException(message);
-			}
+    private void launchClone(URIish uri, File repoDir, boolean bare) throws IOException, URISyntaxException {
+        if (!repoDir.mkdirs()) {
+            String message = "Couldn't create "+repoDir;
+            Toast.makeText(CloneLauncherActivity.this, message, LENGTH_LONG).show();
+            throw new IOException(message);
+        }
 
-    		startService(cloneOperationIntentFor(uri, repoDir, bare));
-            Toast.makeText(getApplicationContext(), R.string.clone_launcher_farewell_due_to_clone_launched, Toast.LENGTH_SHORT).show();
-            finish();
-		}
+        startService(cloneOperationIntentFor(uri, repoDir, bare));
+        Toast.makeText(getApplicationContext(), R.string.clone_launcher_farewell_due_to_clone_launched, LENGTH_SHORT).show();
+        finish();
+    }
+    
 	private File defaultRepoDirFor(URIish uri) {
 		File reposDir=new File(Environment.getExternalStorageDirectory(),"git-repos");
 		try {
