@@ -27,6 +27,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 import static com.madgag.agit.GitIntents.*;
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
 import static java.util.Arrays.asList;
+import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,6 +37,7 @@ import java.util.List;
 import android.view.animation.*;
 import android.widget.*;
 import com.markupartist.android.widget.ActionBar;
+import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.transport.URIish;
 
 import android.content.Intent;
@@ -244,7 +246,8 @@ public class CloneLauncherActivity extends RoboActivity {
 	private File defaultRepoDirFor(URIish uri) {
 		File reposDir=new File(Environment.getExternalStorageDirectory(),"git-repos");
 		try {
-			return new File(reposDir, uri.getHumanishName());
+            String suffix = bareRepoCheckbox.isChecked()?DOT_GIT_EXT:"";
+			return new File(reposDir, uri.getHumanishName()+suffix);
 		} catch (IllegalArgumentException e) {
 			return new File(reposDir, "repo");
 		}
