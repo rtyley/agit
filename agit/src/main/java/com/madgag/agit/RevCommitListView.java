@@ -51,7 +51,7 @@ public class RevCommitListView extends PullToRefreshListView {
 	public RevCommitListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
         ((InjectorProvider)context).getInjector().injectMembers(this);
-		setFastScrollEnabled(true);
+
 		setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				RevCommit commit = (RevCommit) getAdapter().getItem(position);
@@ -75,5 +75,6 @@ public class RevCommitListView extends PullToRefreshListView {
                 }).execute();
             }
         });
+        setFastScrollEnabled(true);
 	}
 }
