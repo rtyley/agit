@@ -278,7 +278,7 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
 	}
 	
 	void updateUIToReflectServicePromptRequests() {
-		if (responseInterface!=null) {
+		if (responseInterface!=null && responseInterface.getOpPrompt()!=null) {
 			Class<?> requiredResponseType = responseInterface.getOpPrompt().getRequiredResponseType();
 			if (String.class.equals(requiredResponseType)) {
 				showDialog(STRING_ENTRY_DIALOG);
