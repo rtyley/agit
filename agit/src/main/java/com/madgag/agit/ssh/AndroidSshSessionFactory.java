@@ -14,59 +14,33 @@ import org.eclipse.jgit.util.FS;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import static com.google.common.collect.Maps.newHashMap;
+
 public class AndroidSshSessionFactory extends JschConfigSessionFactory {
 
 	private static final String TAG = "ASSF";
 	
 	private final Provider<AndroidAuthAgent> androidAuthAgentProvider;
 	private final UserInfo userInfo;
-	// private final BlockingPromptService blockingPromptService;
-	
+    private final HostKeyRepository hostKeyRepository;
+    
 	@Inject
-	public AndroidSshSessionFactory(Provider<AndroidAuthAgent> androidAuthAgentProvider, UserInfo userInfo) {
+	public AndroidSshSessionFactory(Provider<AndroidAuthAgent> androidAuthAgentProvider, UserInfo userInfo, HostKeyRepository hostKeyRepository) {
 		this.androidAuthAgentProvider = androidAuthAgentProvider;
 		this.userInfo = userInfo;
-	}
+        this.hostKeyRepository = hostKeyRepository;
+    }
 	
 	@Override
 	protected void configure(OpenSshConfig.Host host, Session session) {
+        session.setConfig("StrictHostKeyChecking","yes"); // let the hostKeyRepository ask the questions
 		session.setUserInfo(userInfo);
 	}
 
 	@Override
 	protected JSch createDefaultJSch(FS fs) throws JSchException {
 		final JSch jsch = new JSch();
-        jsch.setHostKeyRepository(new HostKeyRepository() {
-
-            public int check(String host, byte[] key) {
-                return HostKeyRepository.OK;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void add(HostKey hostkey, UserInfo ui) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void remove(String host, String type) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void remove(String host, String type, byte[] key) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public String getKnownHostsRepositoryID() {
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public HostKey[] getHostKey() {
-                return new HostKey[0];  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public HostKey[] getHostKey(String host, String type) {
-                return new HostKey[0];  //To change body of implemented methods use File | Settings | File Templates.
-            }
-        });
-		// knownHosts(jsch, fs);
+        jsch.setHostKeyRepository(hostKeyRepository);
 		addSshAgentTo(jsch);
 		return jsch;
 	}
@@ -99,8 +73,6 @@ public class AndroidSshSessionFactory extends JschConfigSessionFactory {
 			jsch.addIdentity(new SSHAgentIdentity(androidAuthAgentProvider, publicKey, name) , null);
 		}
 	}
-
-
 
 
 }

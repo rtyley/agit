@@ -34,7 +34,7 @@ public class DigestUtils {
         }
     }
 	
-    protected static String encodeHex(byte[] data) {
+    public static String encodeHex(byte[] data) {
         int l = data.length;
         char[] out = new char[l << 1];
         for (int i = 0, j = 0; i < l; i++) {

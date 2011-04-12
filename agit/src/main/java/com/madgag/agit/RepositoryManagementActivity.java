@@ -123,7 +123,7 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
         switch (item.getItemId()) {
         case DELETE_ID:
         	showDialog(DELETION_DIALOG);
-			new RepoDeleter(gitdir(), RepositoryManagementActivity.this).execute();
+			new RepoDeleter(repo(), RepositoryManagementActivity.this).execute();
             return true;
         }
         return super.onOptionsItemSelected(item);

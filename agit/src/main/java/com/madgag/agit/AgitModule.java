@@ -30,10 +30,12 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.os.Handler;
 import com.google.inject.Provides;
+import com.jcraft.jsch.HostKeyRepository;
 import com.madgag.agit.blockingprompt.*;
 import com.madgag.agit.guice.RepositoryScope;
 import com.madgag.agit.guice.RepositoryScoped;
 import com.madgag.agit.operations.GitAsyncTaskFactory;
+import com.madgag.agit.ssh.CuriousHostKeyRepository;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.SshSessionFactory;
@@ -76,6 +78,8 @@ public class AgitModule extends AbstractAndroidModule {
     	bind(SshSessionFactory.class).to(AndroidSshSessionFactory.class);
     	bind(TransportFactory.class);
     	bind(PromptHumper.class);
+
+        bind(HostKeyRepository.class).to(CuriousHostKeyRepository.class);
         bind(PromptUIProvider.class).annotatedWith(named("status-bar")).to(StatusBarPromptProvider.class);
 
         bind(RepoDomainType.class).annotatedWith(named("branch")).to(RDTBranch.class);
