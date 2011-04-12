@@ -28,6 +28,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.storage.file.FileRepository;
 
 public class RepoDeleter extends AsyncTask<Void, Void, Void> {
 	
@@ -37,9 +39,11 @@ public class RepoDeleter extends AsyncTask<Void, Void, Void> {
 	
 	private final File gitdir;
 	private final Context context;
+    private final File topFolderToDelete;
 
-	RepoDeleter(File gitdir, Context context) {
-        this.gitdir = gitdir;
+    RepoDeleter(Repository repository, Context context) {
+        this.gitdir = repository.getDirectory();
+        this.topFolderToDelete = repository.isBare()?repository.getDirectory():repository.getWorkTree();
 		this.context = context;
     }
 	
@@ -51,11 +55,9 @@ public class RepoDeleter extends AsyncTask<Void, Void, Void> {
 	@Override
 	protected Void doInBackground(Void... args) {
     	try {
-    		File parent = gitdir.getParentFile();
-    		Log.d(TAG, "Deleting : "+parent);
-			deleteDirectory(parent);
-			Log.d(TAG, "Deleted : "+parent);
-			// broadcastCompletion();
+    		Log.d(TAG, "Deleting : "+topFolderToDelete);
+			deleteDirectory(topFolderToDelete);
+			Log.d(TAG, "Deleted : "+topFolderToDelete);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -65,17 +67,9 @@ public class RepoDeleter extends AsyncTask<Void, Void, Void> {
 	@Override
     protected void onPostExecute(Void result) {
         // finish the RMA, which should wipe the progress bar on it as well.
-		Intent deletionBroadcast = new Intent(REPO_DELETE_COMPLETED).putExtra("gitdir", gitdir.getAbsolutePath());
+		Intent deletionBroadcast = new GitIntentBuilder(REPO_DELETE_COMPLETED).gitdir(gitdir).toIntent();
 		context.sendBroadcast(deletionBroadcast);
 		Log.d(TAG, "Sent broadcast : "+deletionBroadcast);
     }
-
-//	private void broadcastCompletion() {
-//		Uri gitdirUri = Uri.fromFile(gitdir);
-//		Intent deletionBroadcast = new Intent(REPO_DELETE_COMPLETED, gitdirUri);
-//		context.sendBroadcast(deletionBroadcast);
-//		Log.d(TAG, "Sent broadcast : "+gitdirUri.getAuthority());
-//	}
-	
 
 }
