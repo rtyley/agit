@@ -50,9 +50,11 @@ public class PromptHumper {
         displayPromptIfNecessary();
     }
 
-    public void clearActivityUIProvider() {
-        activityUIProvider = null;
-        displayPromptIfNecessary();
+    public void clearActivityUIProvider(PromptUIProvider providerToClear) {
+        if (activityUIProvider==providerToClear) {
+            activityUIProvider = null;
+            displayPromptIfNecessary();
+        }
     }
 
     private void displayPromptIfNecessary() {

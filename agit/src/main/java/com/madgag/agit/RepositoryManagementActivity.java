@@ -24,7 +24,6 @@ import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.*;
-import android.content.DialogInterface.OnCancelListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -60,36 +59,25 @@ import static com.madgag.agit.Repos.niceNameFor;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 
 
-public class RepositoryManagementActivity extends RepositoryActivity implements PromptUIProvider {
+public class RepositoryManagementActivity extends RepositoryActivity {
+
+    public static final String TAG = "RMA";
 
 	private ProgressDialog progressDialog;
-	private AlertDialog stringEntryDialog,yesNoDialog;
-	
+
 	private final static int DELETE_ID=Menu.FIRST;
-	
-	final int PROGRESS_DIALOG=0,STRING_ENTRY_DIALOG=1, YES_NO_DIALOG=2;
-	private final int DELETION_DIALOG=3;
-	public static final String TAG = "RMA";
-    private ResponseInterface responseInterface;
+    final int PROGRESS_DIALOG=0,STRING_ENTRY_DIALOG=1, YES_NO_DIALOG=2;
+    private final int DELETION_DIALOG=3;
+    private DialogPromptMonkey dialogPromptMonkey;
 
     @InjectView(R.id.actionbar) ActionBar actionBar;
-    
-    @Inject
-    PromptHumper promptHumper;
 
-	
-	private RepositoryOperationContext repositoryOperationContext;
-	
-    /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.repo_management);
-        actionBar.setHomeLogo(R.drawable.actionbar_agit_logo);
-        
-        bindService(new Intent(this,GitOperationsService.class), serviceConnectionToRegisterThisAsManagementUI(), BIND_AUTO_CREATE);
-        
-        ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
+
+        //actionBar.setHomeLogo(R.drawable.actionbar_agit_logo);
 		actionBar.setTitle(niceNameFor(repo()));
         actionBar.addAction(new Action() {
             public void performAction(View view) {
@@ -128,27 +116,6 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
         }
         return super.onOptionsItemSelected(item);
     }
-    
-	private ServiceConnection serviceConnectionToRegisterThisAsManagementUI() {
-		return new ServiceConnection() {
-			public void onServiceDisconnected(ComponentName name) {
-				Log.i(TAG, "onServiceDisconnected - losing "+repositoryOperationContext);
-				repositoryOperationContext=null;
-			}
-			
-			public void onServiceConnected(ComponentName name, IBinder binder) {
-				GitOperationsService service = ((GitOperationsBinder) binder).getService();
-				repositoryOperationContext=service.registerManagementActivity(RepositoryManagementActivity.this);
-				Log.i(TAG, "bound opService="+repositoryOperationContext);
-				updateUIToReflectServicePromptRequests();
-			}
-		};
-	}
-    
-    private void buttonUp(int id, OnClickListener listener) {
-    	((Button) findViewById(id)).setOnClickListener(listener);
-    }
-    
     
 	BroadcastReceiver operationProgressBroadcastReceiver = new BroadcastReceiver() {
 		public void onReceive(Context context, Intent intent) {
@@ -201,35 +168,12 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
 			deletionDialog.setMessage("Deleting repo...");
 			deletionDialog.setIndeterminate(true);
 			return deletionDialog;
-		case YES_NO_DIALOG:
-			return new AlertDialog.Builder(this)
-				.setMessage("...")
-				.setPositiveButton("Yes", sendDialogResponseOf(true))
-				.setNegativeButton("No", sendDialogResponseOf(false))
-				.create();
-		case STRING_ENTRY_DIALOG:
-			AlertDialog.Builder stringDialogBuilder=new AlertDialog.Builder(this);
-			final EditText input = new EditText(this);  
-			stringDialogBuilder.setView(input);
-			stringDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					//repositoryOperationContext.getCurrentOperation().promptHelper.setResponse((CharSequence)input.getText());
-				}
-			});
-
-			return stringDialogBuilder.create();
 		default:
-			return null;
+			return dialogPromptMonkey.onCreateDialog(id);
 		}
 	}
 
-	private android.content.DialogInterface.OnClickListener sendDialogResponseOf(final boolean bool) {
-		return new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-                responseInterface.setResponse(bool);
-			}
-		};
-	}
+
 
 	@Override
 	protected void onPrepareDialog(int id, Dialog dialog) {
@@ -238,18 +182,13 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
 			ProgressDialog progressDialog = (ProgressDialog) dialog;
 			progressDialog.setMessage("Ghostbusters...");
 			progressDialog.setProgress(0);
-			progressDialog.setOnCancelListener(new OnCancelListener() {
+			progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 				public void onCancel(DialogInterface dialog) {
 					// repositoryOperationContext.getCurrentOperation().getCancellationSignaller().setCancelled();
 				}
 			});
-		case YES_NO_DIALOG:
-			AlertDialog alertDialog=(AlertDialog) dialog;
-
-			String msg = responseInterface.getOpPrompt().getOpNotification().getEventDetail();
-			Log.d(TAG, "Going to yes/no " + msg);
-			alertDialog.setMessage(msg);
 		default:
+            dialogPromptMonkey.onPrepareDialog(id, dialog);
 		}
 	}
 	
@@ -265,11 +204,10 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
         registerReceiver(operationProgressBroadcastReceiver, new IntentFilter("git.operation.progress.update"));
 
 		registerReceiver(deletionBroadcastReceiver, new IntentFilter(REPO_DELETE_COMPLETED));
-		registerReceiverForServicePromptRequests();
+		dialogPromptMonkey.registerReceiverForServicePromptRequests();
 		
-		//repositoryOperationContext.getCurrentOperation().getPromptHelper().;
 		updateUI();
-		updateUIToReflectServicePromptRequests();
+		dialogPromptMonkey.updateUIToReflectServicePromptRequests();
     }
 
 	void updateUI() {
@@ -280,35 +218,14 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
             }
         }));
 	}
-    
-    private void registerReceiverForServicePromptRequests() {
-        Log.d(TAG, "Registering as prompt UI provider with "+promptHumper);
-    	promptHumper.setActivityUIProvider(this);
-	}
 
-	private void unregisterRecieverForServicePromptRequests() {
-		promptHumper.clearActivityUIProvider();
-	}
-	
-	void updateUIToReflectServicePromptRequests() {
-		if (responseInterface!=null && responseInterface.getOpPrompt()!=null) {
-			Class<?> requiredResponseType = responseInterface.getOpPrompt().getRequiredResponseType();
-			if (String.class.equals(requiredResponseType)) {
-				showDialog(STRING_ENTRY_DIALOG);
-			} else if(Boolean.class.equals(requiredResponseType)) {
-				showDialog(YES_NO_DIALOG);
-			} else {
-	//			hideAllPrompts();
-	//			view.requestFocus();
-			}
-		}
-	}
+
 
 	@Override
     protected void onPause() {
     	super.onPause();
     	unregisterReceiver(operationProgressBroadcastReceiver);
-    	unregisterRecieverForServicePromptRequests();
+    	dialogPromptMonkey.unregisterRecieverForServicePromptRequests();
     }
 	
 	public static PendingIntent manageRepoPendingIntent(File gitdir,Context context) {
@@ -322,13 +239,4 @@ public class RepositoryManagementActivity extends RepositoryActivity implements 
 		return new GitIntentBuilder("git.repo.MANAGE").gitdir(gitdir).toIntent();
 	}
 
-    public void acceptPrompt(ResponseInterface responseInterface) {
-        this.responseInterface = responseInterface;
-        updateUIToReflectServicePromptRequests();
-    }
-
-    public void clearPrompt() {
-        // TODO clear any actual prompt that's going on...
-        this.responseInterface = null;
-    }
 }
