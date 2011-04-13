@@ -19,10 +19,9 @@
 
 package com.madgag.agit;
 
-import static com.madgag.agit.CloneLauncherActivity.EXTRA_SOURCE_URI;
-import static com.madgag.agit.CloneLauncherActivity.EXTRA_TARGET_DIR;
+import static com.madgag.agit.GitIntents.EXTRA_SOURCE_URI;
+import static com.madgag.agit.GitIntents.EXTRA_TARGET_DIR;
 import static java.lang.System.currentTimeMillis;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Checkable;
