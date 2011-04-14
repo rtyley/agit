@@ -105,7 +105,6 @@
                         </emulator>
                         <deleteConflictingFiles>true</deleteConflictingFiles>
                         <undeployBeforeDeploy>true</undeployBeforeDeploy>
-                        <extractDuplicates>true</extractDuplicates>
                     </configuration>
                     <extensions>true</extensions>
                 </plugin>
