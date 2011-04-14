@@ -27,7 +27,6 @@ import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
 import static com.madgag.agit.GitIntents.*;
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
-import static com.madgag.agit.R.layout.rev_commit_list_item;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 import static java.util.Arrays.asList;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
@@ -39,12 +38,10 @@ import java.util.List;
 
 import android.view.animation.*;
 import android.widget.*;
-import com.madgag.android.listviews.BigListAdapter;
+import com.madgag.android.listviews.ViewHoldingListAdapter;
 import com.madgag.android.listviews.ViewHolder;
 import com.madgag.android.listviews.ViewHolderFactory;
 import com.markupartist.android.widget.ActionBar;
-import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.URIish;
 
 import android.content.Intent;
@@ -111,7 +108,7 @@ public class CloneLauncherActivity extends RoboActivity {
                 new SuggestedRepo("Scalatra", "git://github.com/scalatra/scalatra.git"),
                 new SuggestedRepo("JGit", "git://egit.eclipse.org/jgit.git")
         );
-        final BigListAdapter<SuggestedRepo> adapter = new BigListAdapter<SuggestedRepo>(voo, viewInflatorFor(this, two_line_list_item), new ViewHolderFactory<SuggestedRepo>() {
+        final ViewHoldingListAdapter<SuggestedRepo> adapter = new ViewHoldingListAdapter<SuggestedRepo>(voo, viewInflatorFor(this, two_line_list_item), new ViewHolderFactory<SuggestedRepo>() {
             public ViewHolder<SuggestedRepo> createViewHolderFor(View view) {
                 return new SuggestedRepoViewHolder(view);
             }

@@ -21,21 +21,13 @@ package com.madgag.agit;
 
 import java.util.List;
 
-import android.nfc.Tag;
 import android.util.Log;
-import android.view.LayoutInflater;
 import com.google.inject.Inject;
-import com.madgag.agit.operation.lifecycle.CasualShortTermLifetime;
-import com.madgag.agit.operations.Fetch;
-import com.madgag.agit.operations.GitAsyncTaskFactory;
-import com.madgag.agit.operations.OpNotification;
 import com.madgag.android.lazydrawables.ImageSession;
-import com.madgag.android.listviews.BigListAdapter;
+import com.madgag.android.listviews.ViewHoldingListAdapter;
 import com.madgag.android.listviews.ViewHolder;
 import com.madgag.android.listviews.ViewHolderFactory;
-import com.madgag.android.listviews.ViewInflator;
 import com.markupartist.android.widget.PullToRefreshListView;
-import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import android.content.Context;
@@ -48,9 +40,7 @@ import com.google.common.base.Function;
 import roboguice.inject.InjectorProvider;
 
 import static com.madgag.agit.R.layout.rev_commit_list_item;
-import static com.madgag.agit.Repos.remoteConfigFor;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
-import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 
 public class RevCommitListView extends PullToRefreshListView {
 
@@ -75,7 +65,7 @@ public class RevCommitListView extends PullToRefreshListView {
 	public void setCommits(Function<RevCommit, Intent> commitViewerIntentCreator, List<RevCommit> commits) {
         Log.d(TAG, "Setting commits: "+commits.get(0).toObjectId()+" .. "+commits.get(commits.size()-1).toObjectId());
 		this.commitViewerIntentCreator = commitViewerIntentCreator;
-		setAdapter(new BigListAdapter<RevCommit>(commits, viewInflatorFor(getContext(), rev_commit_list_item), new ViewHolderFactory<RevCommit>() {
+		setAdapter(new ViewHoldingListAdapter<RevCommit>(commits, viewInflatorFor(getContext(), rev_commit_list_item), new ViewHolderFactory<RevCommit>() {
             public ViewHolder<RevCommit> createViewHolderFor(View view) {
                 return new CommitViewHolder(view, imageSession);
             }

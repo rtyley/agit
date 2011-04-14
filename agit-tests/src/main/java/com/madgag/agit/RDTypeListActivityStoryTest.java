@@ -21,7 +21,7 @@ package com.madgag.agit;
 
 import static com.madgag.agit.GitTestUtils.*;
 import static com.madgag.agit.RDTypeListActivity.listIntent;
-import static com.madgag.agit.CharSequenceMatcher.charSequence;
+import static com.madgag.agit.matchers.CharSequenceMatcher.charSequence;
 import static com.madgag.compress.CompressUtil.unzip;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;

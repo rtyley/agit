@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<version>1.0-SNAPSHOT</version>
+	<groupId>com.madgag</groupId>
+	<artifactId>agit-test-utils</artifactId>
+
+	<parent>
+		<version>1.0-SNAPSHOT</version>
+		<groupId>com.madgag</groupId>
+		<artifactId>agit-parent</artifactId>
+	</parent>
+
+	<packaging>jar</packaging>
+	<name>agit test utils</name>
+	<dependencies>
+		<dependency>
+			<groupId>com.madgag</groupId>
+			<artifactId>util-compress</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.madgag</groupId>
+			<artifactId>org.eclipse.jgit</artifactId>
+		</dependency>
+        	<dependency>
+			<groupId>com.madgag</groupId>
+			<artifactId>madgag-hamcrest-matchers</artifactId>
+            		<version>0.3</version>
+		</dependency>
+	</dependencies>
+</project>

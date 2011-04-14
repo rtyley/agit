@@ -35,7 +35,7 @@ import java.util.concurrent.CountDownLatch;
 
 import static com.madgag.agit.GitTestUtils.integrationGitServerURIFor;
 import static com.madgag.agit.GitTestUtils.newFolder;
-import static com.madgag.agit.HasGitObjectMatcher.hasGitObject;
+import static com.madgag.agit.matchers.HasGitObjectMatcher.hasGitObject;
 import static com.madgag.hamcrest.FileExistenceMatcher.exists;
 import static com.madgag.hamcrest.FileLengthMatcher.ofLength;
 import static java.util.concurrent.TimeUnit.SECONDS;

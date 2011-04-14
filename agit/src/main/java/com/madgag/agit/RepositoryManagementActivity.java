@@ -19,27 +19,20 @@
 
 package com.madgag.agit;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import com.google.inject.Inject;
-import com.madgag.agit.GitOperationsService.GitOperationsBinder;
-import com.madgag.agit.blockingprompt.PromptHumper;
-import com.madgag.agit.blockingprompt.PromptUIProvider;
-import com.madgag.agit.blockingprompt.ResponseInterface;
-import com.madgag.android.listviews.BigListAdapter;
+import com.madgag.android.listviews.ViewHoldingListAdapter;
 import com.madgag.android.listviews.ViewHolder;
 import com.madgag.android.listviews.ViewHolderFactory;
 import com.markupartist.android.widget.ActionBar;
@@ -50,7 +43,6 @@ import java.io.File;
 import java.util.List;
 
 import static android.R.layout.simple_list_item_2;
-import static android.R.layout.two_line_list_item;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.GitIntents.gitDirFrom;
@@ -68,7 +60,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 	private final static int DELETE_ID=Menu.FIRST;
     final int PROGRESS_DIALOG=0,STRING_ENTRY_DIALOG=1, YES_NO_DIALOG=2;
     private final int DELETION_DIALOG=3;
-    private DialogPromptMonkey dialogPromptMonkey;
+    @Inject DialogPromptMonkey dialogPromptMonkey;
 
     @InjectView(R.id.actionbar) ActionBar actionBar;
 
@@ -183,10 +175,10 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 			progressDialog.setMessage("Ghostbusters...");
 			progressDialog.setProgress(0);
 			progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-				public void onCancel(DialogInterface dialog) {
-					// repositoryOperationContext.getCurrentOperation().getCancellationSignaller().setCancelled();
-				}
-			});
+                public void onCancel(DialogInterface dialog) {
+                    // repositoryOperationContext.getCurrentOperation().getCancellationSignaller().setCancelled();
+                }
+            });
 		default:
             dialogPromptMonkey.onPrepareDialog(id, dialog);
 		}
@@ -212,7 +204,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 
 	void updateUI() {
         List<RepoDomainType<?>> rdtList = newArrayList(new RDTRemote(repo()), new RDTBranch(repo()), new RDTTag(repo()));
-		rdtTypeList.setAdapter(new BigListAdapter<RepoDomainType<?>>(rdtList, viewInflatorFor(this, simple_list_item_2), new ViewHolderFactory<RepoDomainType<?>>() {
+		rdtTypeList.setAdapter(new ViewHoldingListAdapter<RepoDomainType<?>>(rdtList, viewInflatorFor(this, simple_list_item_2), new ViewHolderFactory<RepoDomainType<?>>() {
             public ViewHolder<RepoDomainType<?>> createViewHolderFor(View view) {
                 return new RDTypeViewHolder(view);
             }

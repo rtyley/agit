@@ -27,6 +27,7 @@
 	<packaging>pom</packaging>
 	<name>Agit parent POM project</name>
 	<modules>
+		<module>agit-test-utils</module>
 		<module>agit</module>
 		<module>agit-tests</module>
 	</modules>
@@ -89,7 +90,7 @@
                 <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>maven-android-plugin</artifactId>
-                    <version>2.9.0-beta-3</version>
+                    <version>2.9.0-beta-4</version>
 
                     <configuration>
                         <jvmArguments>

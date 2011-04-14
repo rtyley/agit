@@ -22,7 +22,7 @@ package com.madgag.agit;
 import com.google.inject.Inject;
 import com.google.inject.Key;
 import com.madgag.agit.guice.RepositoryScope;
-import com.madgag.android.listviews.BigListAdapter;
+import com.madgag.android.listviews.ViewHoldingListAdapter;
 import com.madgag.android.listviews.ViewHolder;
 import com.madgag.android.listviews.ViewHolderFactory;
 import org.eclipse.jgit.lib.Repository;
@@ -63,7 +63,7 @@ public class RDTypeListActivity<E> extends RoboListActivity {
 		setContentView(R.layout.rdt_type_list);
 		ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
 		actionBar.setTitle(rdt.conciseSummaryTitle());
-		setListAdapter(new BigListAdapter<E>(rdt.getAll(), viewInflatorFor(this, simple_list_item_2), new ViewHolderFactory<E>() {
+		setListAdapter(new ViewHoldingListAdapter<E>(rdt.getAll(), viewInflatorFor(this, simple_list_item_2), new ViewHolderFactory<E>() {
             public ViewHolder<E> createViewHolderFor(View view) {
                 return new RDTypeInstanceViewHolder(rdt,view);
             }

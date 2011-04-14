@@ -17,33 +17,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.madgag.agit;
+package com.madgag.agit.matchers;
 
+import org.eclipse.jgit.lib.AnyObjectId;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
 import org.hamcrest.Description;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
-public class CharSequenceMatcher extends TypeSafeMatcher<CharSequence> {
+public class HasGitObjectMatcher extends TypeSafeMatcher<Repository> {
 
-	private final Matcher<String> stringMatcher;
+	private final AnyObjectId objectId;
 
-	public CharSequenceMatcher(Matcher<String> stringMatcher) {
-		this.stringMatcher = stringMatcher;
+	public HasGitObjectMatcher(AnyObjectId objectId) {
+		this.objectId = objectId;
 	}
 
 	@Override
-	public boolean matchesSafely(CharSequence cs) {
-		return stringMatcher.matches(cs.toString());
+	public boolean matchesSafely(Repository repository) {
+		return repository.hasObject(objectId);
 	}
 
 	public void describeTo(Description description) {
-		description.appendText("charsequence with ").appendDescriptionOf(stringMatcher);
+		description.appendText("has git object with id ").appendValue(objectId);
 	}
 
 	@Factory
-	public static <T> Matcher<CharSequence> charSequence(Matcher<String> textMatcher) {
-		return new CharSequenceMatcher(textMatcher);
+	public static <T> Matcher<Repository> hasGitObject(String objectId) {
+		return new HasGitObjectMatcher(ObjectId.fromString(objectId));
 	}
 
 }
