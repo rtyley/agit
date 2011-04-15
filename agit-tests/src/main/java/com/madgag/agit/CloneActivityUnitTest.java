@@ -21,7 +21,12 @@ package com.madgag.agit;
 
 import static com.madgag.agit.GitIntents.EXTRA_SOURCE_URI;
 import static com.madgag.agit.GitIntents.EXTRA_TARGET_DIR;
+import static com.madgag.agit.R.id.CloneUrlEditText;
+import static com.madgag.agit.R.id.GitDirEditText;
+import static com.madgag.agit.R.id.UseDefaultGitDirLocation;
 import static java.lang.System.currentTimeMillis;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Checkable;
@@ -29,8 +34,12 @@ import android.widget.TextView;
 
 import com.github.calculon.CalculonUnitTest;
 import com.github.calculon.predicate.Predicate;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
+import roboguice.test.RoboActivityUnitTestCase;
 
-public class CloneActivityUnitTest extends CalculonUnitTest<CloneLauncherActivity> {
+public class CloneActivityUnitTest extends RoboActivityUnitTestCase<CloneLauncherActivity> {
 	
 	final String appleProjectSourceUri="/example/apple";
 	final String targetDir="/sdcard/tango";
@@ -42,59 +51,62 @@ public class CloneActivityUnitTest extends CalculonUnitTest<CloneLauncherActivit
 	public void testUsesDefaultGitDirLocationIfOnlySourceUriIsProvidedInIntent() {
 		Bundle bundle = new Bundle();
 		bundle.putString(EXTRA_SOURCE_URI, appleProjectSourceUri);
-		
-		startActivity(bundle);
+		startActivity(new GitIntentBuilder("").add(EXTRA_SOURCE_URI, appleProjectSourceUri).toIntent(), null, null);
 		getInstrumentation().callActivityOnStart(getActivity());
-		
-		assertThat(R.id.CloneUrlEditText).satisfies(hasText(appleProjectSourceUri));
-		assertThat(R.id.UseDefaultGitDirLocation).satisfies(isChecked(true));
+
+        assertThat(textView(CloneUrlEditText), hasText(appleProjectSourceUri));
+        assertThat(checkable(UseDefaultGitDirLocation), isChecked(true));
 	}
-	
-	public void testUsesSpecifiedRepoDirLocationFromIntentIfSupplied() {
+
+    private Checkable checkable(int checkableId) {
+        return (Checkable) view(checkableId);
+    }
+
+    private TextView textView(int textViewId) {
+        return (TextView) view(textViewId);
+    }
+
+    private View view(int viewId) {
+        return getActivity().findViewById(viewId);
+    }
+
+    public void testUsesSpecifiedRepoDirLocationFromIntentIfSupplied() {
 		Bundle bundle = new Bundle();
 		bundle.putString(EXTRA_SOURCE_URI, appleProjectSourceUri);
 		bundle.putString(EXTRA_TARGET_DIR, targetDir);
 		
-		startActivity(bundle);
+		startActivity(new GitIntentBuilder("").add(EXTRA_SOURCE_URI, appleProjectSourceUri)
+                .add(EXTRA_TARGET_DIR, targetDir)
+                .toIntent(), null, null);
 		getInstrumentation().callActivityOnStart(getActivity());
 		
-		assertThat(R.id.GitDirEditText).satisfies(hasText(targetDir));
-		assertThat(R.id.UseDefaultGitDirLocation).satisfies(isChecked(false));
-		assertThat(R.id.CloneUrlEditText).satisfies(hasText(appleProjectSourceUri));
-	}
-
-	public void testClickingCloneLaunchesTheGitOperationWithTheCorrectIntent() {
-		String littleTargetDir = targetDir+"/"+currentTimeMillis();
-
-		startActivity();
-		getInstrumentation().callActivityOnStart(getActivity());
-		
-		setUp(R.id.CloneUrlEditText).setText(appleProjectSourceUri);
-		setUp(R.id.UseDefaultGitDirLocation).setChecked(false);
-		setUp(R.id.GitDirEditText).setText(littleTargetDir);
-		
-		/*
-		 *  Unfortunately, assertions on the service-starting intent are not possible due to 
-		 *  http://code.google.com/p/android/issues/detail?id=12246
-
-		Intent intent = assertThat(R.id.GoCloneButton).click().starts(GitOperationsService.class);
-		assertEquals(intent.getStringExtra("gitdir"),littleTargetDir);
-		 */
+		assertThat(textView(GitDirEditText),hasText(targetDir));
+		assertThat(checkable(UseDefaultGitDirLocation),isChecked(false));
+		assertThat(textView(CloneUrlEditText),hasText(appleProjectSourceUri));
 	}
 	
-	private Predicate<View> isChecked(final boolean checked) {
-		return new Predicate<View>() {
-			public boolean check(View target) {
-				return ((Checkable) target).isChecked()==checked;
-			}
-		};
+	private Matcher<Checkable> isChecked(final boolean checked) {
+		return new TypeSafeMatcher<Checkable>() {
+            protected boolean matchesSafely(Checkable checkable) {
+                return checkable.isChecked()==checked;
+            }
+
+            public void describeTo(Description description) {
+                description.appendText(checked?"checked":"unchecked");
+            }
+        };
 	}
 	
-	private static Predicate<View> hasText(final String text) {
-		return new Predicate<View>() {
-			public boolean check(View target) {
-				return ((TextView) target).getText().toString().equals(text);
-			}
-		};
+	private static Matcher<TextView> hasText(final String text) {
+		return new TypeSafeMatcher<TextView>() {
+            @Override
+            protected boolean matchesSafely(TextView textView) {
+                return textView.getText().equals(text);
+            }
+
+            public void describeTo(Description description) {
+                description.appendText("has text ").appendValue(text);
+            }
+        };
 	}
 }
