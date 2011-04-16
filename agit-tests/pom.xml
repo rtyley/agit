@@ -13,7 +13,7 @@
 	</parent>
 
 	<packaging>apk</packaging>
-	<name>agit instrumentation tests</name>
+	<name>Agit integration tests</name>
 	<dependencies>
 		<dependency>
 			<groupId>com.madgag</groupId>

@@ -13,7 +13,7 @@
 	</parent>
 
 	<packaging>apk</packaging>
-	<name>agit - git client for Android</name>
+	<name>Agit - git client for Android</name>
 	<dependencies>
 		<dependency>
 			<groupId>com.madgag</groupId>
