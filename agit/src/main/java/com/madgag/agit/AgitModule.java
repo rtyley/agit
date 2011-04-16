@@ -22,6 +22,7 @@ package com.madgag.agit;
 import static com.google.inject.assistedinject.FactoryProvider.newFactory;
 import static com.google.inject.name.Names.named;
 import static com.madgag.agit.RepositoryManagementActivity.manageRepoPendingIntent;
+import static java.lang.Thread.currentThread;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +30,9 @@ import java.io.IOException;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import com.google.inject.Provides;
+import com.google.inject.Singleton;
 import com.jcraft.jsch.HostKeyRepository;
 import com.madgag.agit.blockingprompt.*;
 import com.madgag.agit.guice.RepositoryScope;
@@ -71,7 +74,7 @@ public class AgitModule extends AbstractAndroidModule {
     	bind(ImageSession.class).toProvider(ImageSessionProvider.class);
 
     	bind(Repository.class).toProvider(RepositoryProvider.class);
-        bind(Handler.class).toProvider(HandlerProvider.class).asEagerSingleton();
+        bind(Handler.class).toProvider(HandlerProvider.class).in(Singleton.class);
     	bind(Ref.class).annotatedWith(named("branch")).toProvider(BranchRefProvider.class);
     	bind(AndroidAuthAgent.class).toProvider(AndroidAuthAgentProvider.class);
     	bind(GitAsyncTaskFactory.class).toProvider(newFactory(GitAsyncTaskFactory.class, GitAsyncTask.class));
@@ -90,9 +93,13 @@ public class AgitModule extends AbstractAndroidModule {
 
     public static class HandlerProvider implements Provider<Handler> {
         public Handler get() {
-			return new Handler();
+            Looper mainLooper = Looper.getMainLooper();
+            Log.i(TAG,"About to create handler, my thread is "+ currentThread()+" - looper thread="+mainLooper.getThread());
+            return new Handler(mainLooper);
 		}
     }
+
+    private static final String TAG = "AgitMod";
 
     @Provides @RepositoryScoped
     PendingIntent createRepoManagementPendingIntent(Context context, @Named("gitdir") File gitdir) {

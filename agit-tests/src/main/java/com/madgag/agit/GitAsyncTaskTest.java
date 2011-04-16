@@ -19,6 +19,8 @@
 
 package com.madgag.agit;
 
+import android.os.Handler;
+import android.os.StrictMode;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.util.Log;
 import com.madgag.agit.operation.lifecycle.OperationLifecycleSupport;
@@ -38,6 +40,7 @@ import static com.madgag.agit.GitTestUtils.newFolder;
 import static com.madgag.agit.matchers.HasGitObjectMatcher.hasGitObject;
 import static com.madgag.hamcrest.FileExistenceMatcher.exists;
 import static com.madgag.hamcrest.FileLengthMatcher.ofLength;
+import static java.lang.Thread.currentThread;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
@@ -74,8 +77,11 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
 	private Repository executeAndWaitFor(final GitOperation gitOperation)
 			throws InterruptedException, IOException {
 		final CountDownLatch latch = new CountDownLatch(1);
+        Log.d(TAG,"About to start "+gitOperation);
 		new RoboLooperThread() {            
             public void run() {
+                Log.d(TAG,"In run method for "+gitOperation);
+                Handler handler;
             	GitAsyncTask task = injector.getInstance(GitAsyncTaskFactory.class).createTaskFor(gitOperation, new OperationLifecycleSupport() {
 					public void startedWith(OpNotification ongoingNotification) {
                         Log.i(TAG,"Started "+gitOperation+" with "+ongoingNotification);
@@ -87,8 +93,10 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
 					}
             	});
             	task.execute();
+                Log.d(TAG,"Called execute() on task for "+gitOperation);
             }
         }.start();
+        Log.i(TAG, "I'm going  to wait for shit to happen - currentThread=" + currentThread());
         latch.await(20, SECONDS);
         return new FileRepository(gitOperation.getGitDir());
 	}
