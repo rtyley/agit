@@ -19,33 +19,22 @@
 
 package com.madgag.agit;
 
-import static java.util.Arrays.asList;
+import android.content.ComponentName;
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+import com.google.inject.name.Named;
+import com.madgag.agit.ssh.jsch.GUIUserInfo;
+import roboguice.config.AbstractAndroidModule;
 
-import java.util.List;
+public class AgitIntegrationTestModule extends AbstractModule {
 
-import android.app.Instrumentation;
-import android.content.Context;
-import android.util.Log;
+	@Override
+    protected void configure() {
+		install(YesToEverythingUserInfo.module());
+    }
 
-import com.google.inject.Module;
-
-public class AgitTestApplication extends AgitApplication {
-	
-	private static final String TAG = "AgitTestApplication";
-	
-	public AgitTestApplication(Instrumentation instrumentation) {
-		super(instrumentation);
-		Log.i(TAG,"GETTING CALLED with instrumentation...");
-	}
-	
-	public AgitTestApplication(Context context) {
-		super(context);
-		Log.i(TAG,"REALLY GETTING CALLED!!");
-	}
-	
-	protected void addApplicationModules(List<Module> modules) {
-		modules.addAll(asList(
-                new AgitModule(),
-                new AgitIntegrationTestModule()));
-	}
+    @Provides @Named("authAgent")
+    ComponentName authAgentComponentName() {
+        return new ComponentName("com.madgag.ssh.toysshagent", "com.madgag.ssh.toysshagent.ToyAuthAgentService");
+    }
 }

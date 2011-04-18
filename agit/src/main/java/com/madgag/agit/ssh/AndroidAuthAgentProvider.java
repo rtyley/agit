@@ -17,6 +17,8 @@ import android.util.Log;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.internal.Nullable;
+import com.google.inject.name.Named;
 import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 
 public class AndroidAuthAgentProvider implements Provider<AndroidAuthAgent> {
@@ -26,10 +28,14 @@ public class AndroidAuthAgentProvider implements Provider<AndroidAuthAgent> {
     private final Lock lock = new ReentrantLock();
     private final Condition authAgentBound = lock.newCondition(); // TODO CountDownLatch or AbstractQueuedSynchronizer varient?
 	private AndroidAuthAgent authAgent;
+    private final Provider<ComponentName> preferredAuthAgentComponentNameProvider;
 
-	@Inject
-	public AndroidAuthAgentProvider(Context context) {
-		bindSshAgentTo(context);
+    @Inject
+	public AndroidAuthAgentProvider(
+            Context context,
+            @Named("authAgent") Provider<ComponentName> preferredAuthAgentComponentNameProvider) {
+        this.preferredAuthAgentComponentNameProvider = preferredAuthAgentComponentNameProvider;
+        bindSshAgentTo(context);
 	}
 	
 	public AndroidAuthAgent get() {
@@ -38,14 +44,16 @@ public class AndroidAuthAgentProvider implements Provider<AndroidAuthAgent> {
 	}
 
 	private void bindSshAgentTo(Context context) {
-		context.bindService(new Intent("org.openintents.ssh.BIND_SSH_AGENT_SERVICE"), new ServiceConnection() {
+        Intent intent = new Intent("org.openintents.ssh.BIND_SSH_AGENT_SERVICE");
+        intent.setComponent(preferredAuthAgentComponentNameProvider.get());
+        context.bindService(intent, new ServiceConnection() {
 			public void onServiceDisconnected(ComponentName name) {
 				Log.i(TAG, "onServiceDisconnected() : Lost "+authAgent);
 				authAgent=null;
 			}
 			
 			public void onServiceConnected(ComponentName name, IBinder binder) {
-				Log.i(TAG, "onServiceConnected() : binder="+binder);
+				Log.i(TAG, "onServiceConnected() : componentName="+name+" binder="+binder);
 				authAgent=AndroidAuthAgent.Stub.asInterface(binder);
 				// showDebugInfoForAuthAgent(); Showing this info is actually a bit confusing
 				signalAuthAgentBound();

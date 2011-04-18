@@ -45,6 +45,6 @@ public class AgitApplication extends RoboApplication {
 
 	protected void addApplicationModules(List<Module> modules) {
 		Log.i("AA", "Adding application modules...");
-        modules.addAll(asList(new AgitModule(), GUIUserInfo.module()));
+        modules.addAll(asList(new AgitModule(), new AgitProductionModule()));
     }
 }
