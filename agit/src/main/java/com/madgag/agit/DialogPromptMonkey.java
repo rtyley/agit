@@ -34,14 +34,16 @@ public class DialogPromptMonkey implements PromptUIProvider  {
 			builder.setMessage("...")
                 .setPositiveButton("Yes", sendDialogResponseOf(true))
                 .setNegativeButton("No", sendDialogResponseOf(false));
+            break;
 		case STRING_ENTRY_DIALOG:
 			final EditText input = new EditText(activity);
 			builder.setView(input);
 			builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
-					//repositoryOperationContext.getCurrentOperation().promptHelper.setResponse((CharSequence)input.getText());
+                    responseInterface.setResponse(input.getText().toString());
 				}
 			});
+            break;
 		}
         return builder.create();
 	}
