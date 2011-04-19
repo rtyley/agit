@@ -48,18 +48,32 @@ import static org.hamcrest.Matchers.not;
 public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
 
 	private static final String TAG = "GitAsyncTaskTest";
-	
+
 	@MediumTest
-	public void testCloneRepoFromLocalTestServer() throws Exception {
-		Clone cloneOp = new Clone(false, integrationGitServerURIFor("small-repo.early.git"), newFolder());
-		
+	public void testCloneNonBareRepoFromLocalTestServer() throws Exception {
+		Clone cloneOp = new Clone(false, integrationGitServerURIFor("rsa_user","small-repo.early.git"), newFolder());
+
 		Repository repo = executeAndWaitFor(cloneOp);
-		
+
 		assertThat(repo, hasGitObject("ba1f63e4430bff267d112b1e8afc1d6294db0ccc"));
-        
+
         File readmeFile= new File(repo.getWorkTree(), "README");
         assertThat(readmeFile, exists());
         assertThat(readmeFile, ofLength(12));
+	}
+
+	@MediumTest
+	public void testCloneRepoUsingRSA() throws Exception {
+		Clone cloneOp = new Clone(true, integrationGitServerURIFor("rsa_user","small-repo.early.git"), newFolder());
+
+        assertThat(executeAndWaitFor(cloneOp), hasGitObject("ba1f63e4430bff267d112b1e8afc1d6294db0ccc"));
+	}
+
+    @MediumTest
+	public void testCloneRepoUsingDSA() throws Exception {
+		Clone cloneOp = new Clone(true, integrationGitServerURIFor("dsa_user","small-repo.early.git"), newFolder());
+
+        assertThat(executeAndWaitFor(cloneOp), hasGitObject("ba1f63e4430bff267d112b1e8afc1d6294db0ccc"));
 	}
 
     @MediumTest

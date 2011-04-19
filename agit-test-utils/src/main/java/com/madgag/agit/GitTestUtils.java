@@ -67,11 +67,15 @@ public class GitTestUtils {
 		return new File(path, "" + (unique_number++));
 	}
 
-	public static URIish integrationGitServerURIFor(String repoPath)
+	public static URIish integrationGitServerURIFor(String username, String repoPath)
 			throws URISyntaxException, IOException, FileNotFoundException,
 			UnknownHostException {
-		return new URIish("ssh://" + gitServerHostAddress() + ":29418/"
-				+ repoPath);
+        return new URIish()
+                .setScheme("ssh")
+                .setUser(username)
+                .setHost(gitServerHostAddress())
+                .setPort(29418)
+                .setPath(repoPath);
 	}
 
 
