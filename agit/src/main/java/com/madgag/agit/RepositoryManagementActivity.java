@@ -58,8 +58,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 	private ProgressDialog progressDialog;
 
 	private final static int DELETE_ID=Menu.FIRST;
-    final int PROGRESS_DIALOG=0,STRING_ENTRY_DIALOG=1, YES_NO_DIALOG=2;
-    private final int DELETION_DIALOG=3;
+    private final int PROGRESS_DIALOG=0,DELETION_DIALOG=3;
     @Inject DialogPromptMonkey dialogPromptMonkey;
 
     @InjectView(R.id.actionbar) ActionBar actionBar;
