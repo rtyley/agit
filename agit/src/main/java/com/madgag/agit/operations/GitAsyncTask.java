@@ -5,6 +5,7 @@ import static java.lang.System.currentTimeMillis;
 
 import java.util.concurrent.Future;
 
+import com.google.inject.name.Named;
 import com.madgag.agit.guice.RepositoryScope;
 import roboguice.util.RoboAsyncTask;
 import android.os.Handler;
@@ -37,7 +38,7 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
 	
 	@Inject
 	public GitAsyncTask(
-            Handler handler,
+            @Named("uiThread") Handler handler,
 			@Assisted GitOperation operation,
 			@Assisted OperationLifecycleSupport lifecycleSupport) {
         handler(handler);

@@ -19,6 +19,7 @@
 
 package com.madgag.agit;
 
+import static android.os.Looper.getMainLooper;
 import static com.google.inject.assistedinject.FactoryProvider.newFactory;
 import static com.google.inject.name.Names.named;
 import static com.madgag.agit.RepositoryManagementActivity.manageRepoPendingIntent;
@@ -68,13 +69,14 @@ import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 
 public class AgitModule extends AbstractAndroidModule {
 
+    private static final String TAG = "AgitMod";
+
 	@Override
     protected void configure() {
 		install(RepositoryScope.module());
     	bind(ImageSession.class).toProvider(ImageSessionProvider.class);
 
     	bind(Repository.class).toProvider(RepositoryProvider.class);
-        bind(Handler.class).toProvider(HandlerProvider.class).in(Singleton.class);
     	bind(Ref.class).annotatedWith(named("branch")).toProvider(BranchRefProvider.class);
     	bind(AndroidAuthAgent.class).toProvider(AndroidAuthAgentProvider.class);
     	bind(GitAsyncTaskFactory.class).toProvider(newFactory(GitAsyncTaskFactory.class, GitAsyncTask.class));
@@ -90,16 +92,12 @@ public class AgitModule extends AbstractAndroidModule {
         bind(RepoDomainType.class).annotatedWith(named("tag")).to(RDTTag.class);
     }
 
-
-    public static class HandlerProvider implements Provider<Handler> {
-        public Handler get() {
-            Looper mainLooper = Looper.getMainLooper();
-            Log.i(TAG,"About to create handler, my thread is "+ currentThread()+" - looper thread="+mainLooper.getThread());
-            return new Handler(mainLooper);
-		}
+    @Provides @Singleton @Named("uiThread")
+    Handler createHandler() {
+        Looper mainLooper = getMainLooper();
+        Log.d(TAG,"About to create handler, my thread is "+ currentThread()+" - looper thread="+mainLooper.getThread());
+        return new Handler(mainLooper);
     }
-
-    private static final String TAG = "AgitMod";
 
     @Provides @RepositoryScoped
     PendingIntent createRepoManagementPendingIntent(Context context, @Named("gitdir") File gitdir) {

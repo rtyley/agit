@@ -22,7 +22,7 @@ public class PromptHumper {
     private String TAG = "PromptHumper";
 
     @Inject
-    public PromptHumper(Handler uiThreadHandler, @Named("status-bar") PromptUIProvider statusBarUIProvider) {
+    public PromptHumper(@Named("uiThread") Handler uiThreadHandler, @Named("status-bar") PromptUIProvider statusBarUIProvider) {
         Log.d(TAG,"uiThreadHandler="+uiThreadHandler);
         this.statusBarUIProvider = statusBarUIProvider;
         promptHelper = new PromptHelper(uiThreadHandler, new Runnable() {

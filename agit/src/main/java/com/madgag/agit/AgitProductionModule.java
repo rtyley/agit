@@ -19,47 +19,11 @@
 
 package com.madgag.agit;
 
-import android.app.PendingIntent;
 import android.content.ComponentName;
-import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Provides;
-import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import com.jcraft.jsch.HostKeyRepository;
-import com.madgag.agit.blockingprompt.*;
-import com.madgag.agit.guice.RepositoryScope;
-import com.madgag.agit.guice.RepositoryScoped;
-import com.madgag.agit.operations.GitAsyncTask;
-import com.madgag.agit.operations.GitAsyncTaskFactory;
-import com.madgag.agit.ssh.AndroidAuthAgentProvider;
-import com.madgag.agit.ssh.AndroidSshSessionFactory;
-import com.madgag.agit.ssh.CuriousHostKeyRepository;
 import com.madgag.agit.ssh.jsch.GUIUserInfo;
-import com.madgag.android.lazydrawables.*;
-import com.madgag.android.lazydrawables.gravatar.GravatarBitmapDownloader;
-import com.madgag.ssh.android.authagent.AndroidAuthAgent;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.transport.SshSessionFactory;
 import roboguice.config.AbstractAndroidModule;
-import roboguice.inject.ContextScoped;
-import roboguice.inject.InjectExtra;
-
-import java.io.File;
-import java.io.IOException;
-
-import static com.google.inject.assistedinject.FactoryProvider.newFactory;
-import static com.google.inject.name.Names.named;
-import static com.madgag.agit.RepositoryManagementActivity.manageRepoPendingIntent;
-import static java.lang.Thread.currentThread;
 
 public class AgitProductionModule extends AbstractAndroidModule {
 
