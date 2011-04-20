@@ -1,4 +1,4 @@
-package com.madgag.agit.blockingprompt;
+package com.madgag.agit;
 
 import java.io.File;
 
