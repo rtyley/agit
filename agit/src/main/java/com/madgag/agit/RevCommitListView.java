@@ -19,6 +19,7 @@
 
 package com.madgag.agit;
 
+import java.util.Collections;
 import java.util.List;
 
 import android.util.Log;
@@ -48,10 +49,19 @@ public class RevCommitListView extends PullToRefreshListView {
 
     @Inject ImageSession imageSession;
 	private Function<RevCommit, Intent> commitViewerIntentCreator;
-	
+
+    private final ViewHoldingListAdapter<RevCommit> adapter;
+
 	public RevCommitListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
         ((InjectorProvider)context).getInjector().injectMembers(this);
+
+        adapter = new ViewHoldingListAdapter<RevCommit>(Collections.<RevCommit>emptyList(), viewInflatorFor(getContext(), rev_commit_list_item), new ViewHolderFactory<RevCommit>() {
+            public ViewHolder<RevCommit> createViewHolderFor(View view) {
+                return new CommitViewHolder(view, imageSession);
+            }
+        });
+        setAdapter(adapter);
 
 		setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -65,12 +75,8 @@ public class RevCommitListView extends PullToRefreshListView {
 	public void setCommits(Function<RevCommit, Intent> commitViewerIntentCreator, List<RevCommit> commits) {
         Log.d(TAG, "Setting commits: "+commits.get(0).toObjectId()+" .. "+commits.get(commits.size()-1).toObjectId());
 		this.commitViewerIntentCreator = commitViewerIntentCreator;
-		setAdapter(new ViewHoldingListAdapter<RevCommit>(commits, viewInflatorFor(getContext(), rev_commit_list_item), new ViewHolderFactory<RevCommit>() {
-            public ViewHolder<RevCommit> createViewHolderFor(View view) {
-                return new CommitViewHolder(view, imageSession);
-            }
-        }));
 
+        adapter.setList(commits);
         setFastScrollEnabled(true);
 	}
 }
