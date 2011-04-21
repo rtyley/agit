@@ -154,7 +154,7 @@
                             <option>-keep class com.google.inject.Binder</option>
                             <option>-keepclassmembers class * { @com.google.inject.Inject &lt;init&gt;(...); }</option>
                             <option>-keep class com.jcraft.jsch.jce.*</option>
-                            <!-- <option>-keep class com.jcraft.jsch.DHG1</option> -->
+                            <option>-keep class * extends com.jcraft.jsch.KeyExchange</option>
                             <option>-dontskipnonpubliclibraryclasses</option>
                             <option>-dontoptimize</option>
                             <option>-printmapping map.txt</option>
