@@ -60,6 +60,7 @@ public class AndroidSshSessionFactory extends JschConfigSessionFactory {
 		Map<String, byte[]> identities;
 		try {
 			identities = authAgent.getIdentities();
+            Log.d(TAG,"updateJschWithAvailableIdentities() - identities="+identities);
 		} catch (RemoteException e) {
 			throw new JSchException("Couldn't get identities from Auth Agent "+authAgent, e);
 		}
