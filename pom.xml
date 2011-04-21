@@ -153,8 +153,12 @@
                             <option>-keep public class roboguice.**</option>
                             <option>-keep class com.google.inject.Binder</option>
                             <option>-keepclassmembers class * { @com.google.inject.Inject &lt;init&gt;(...); }</option>
+
+                            <!-- JSch -->
                             <option>-keep class com.jcraft.jsch.jce.*</option>
                             <option>-keep class * extends com.jcraft.jsch.KeyExchange</option>
+                            <option>-keep class com.jcraft.jsch.**</option> <!-- This is giving in - would rather rely on lines like the above -->
+                            
                             <option>-dontskipnonpubliclibraryclasses</option>
                             <option>-dontoptimize</option>
                             <option>-printmapping map.txt</option>
