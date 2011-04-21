@@ -42,6 +42,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 public class GitTestUtils {
+    public static final String RSA_USER = "rsa_user", DSA_USER = "dsa_user";
 
 	public static String gitServerHostAddress() throws IOException,
 			FileNotFoundException, UnknownHostException {
@@ -67,12 +68,12 @@ public class GitTestUtils {
 		return new File(path, "" + (unique_number++));
 	}
 
-	public static URIish integrationGitServerURIFor(String username, String repoPath)
+	public static URIish integrationGitServerURIFor(String repoPath)
 			throws URISyntaxException, IOException, FileNotFoundException,
 			UnknownHostException {
         return new URIish()
                 .setScheme("ssh")
-                .setUser(username)
+                .setUser(RSA_USER) // use RSA user by default - mini-git-server currently requires publickey auth
                 .setHost(gitServerHostAddress())
                 .setPort(29418)
                 .setPath(repoPath);

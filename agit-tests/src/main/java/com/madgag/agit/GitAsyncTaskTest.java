@@ -35,8 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
-import static com.madgag.agit.GitTestUtils.integrationGitServerURIFor;
-import static com.madgag.agit.GitTestUtils.newFolder;
+import static com.madgag.agit.GitTestUtils.*;
 import static com.madgag.agit.matchers.HasGitObjectMatcher.hasGitObject;
 import static com.madgag.hamcrest.FileExistenceMatcher.exists;
 import static com.madgag.hamcrest.FileLengthMatcher.ofLength;
@@ -48,10 +47,11 @@ import static org.hamcrest.Matchers.not;
 public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
 
 	private static final String TAG = "GitAsyncTaskTest";
+    
 
-	@MediumTest
+    @MediumTest
 	public void testCloneNonBareRepoFromLocalTestServer() throws Exception {
-		Clone cloneOp = new Clone(false, integrationGitServerURIFor("rsa_user","small-repo.early.git"), newFolder());
+		Clone cloneOp = new Clone(false, integrationGitServerURIFor("small-repo.early.git"), newFolder());
 
 		Repository repo = executeAndWaitFor(cloneOp);
 
@@ -64,14 +64,14 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
 
 	@MediumTest
 	public void testCloneRepoUsingRSA() throws Exception {
-		Clone cloneOp = new Clone(true, integrationGitServerURIFor("rsa_user","small-repo.early.git"), newFolder());
+		Clone cloneOp = new Clone(true, integrationGitServerURIFor("small-repo.early.git").setUser(RSA_USER), newFolder());
 
         assertThat(executeAndWaitFor(cloneOp), hasGitObject("ba1f63e4430bff267d112b1e8afc1d6294db0ccc"));
 	}
 
     @MediumTest
 	public void testCloneRepoUsingDSA() throws Exception {
-		Clone cloneOp = new Clone(true, integrationGitServerURIFor("dsa_user","small-repo.early.git"), newFolder());
+		Clone cloneOp = new Clone(true, integrationGitServerURIFor("small-repo.early.git").setUser(DSA_USER), newFolder());
 
         assertThat(executeAndWaitFor(cloneOp), hasGitObject("ba1f63e4430bff267d112b1e8afc1d6294db0ccc"));
 	}
