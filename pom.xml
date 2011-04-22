@@ -175,7 +175,10 @@
                                 void test*(...);
                                 }</option>
                             <option>-keepclassmembers class * extends roboguice.application.RoboApplication { *; }</option>
-                           
+                            <option>-keepclassmembers class * extends android.app.Activity {
+                                public void *(android.view.View);
+                            }</option>
+                                                                                  
                         </options>
                     </configuration>
                 </plugin>
