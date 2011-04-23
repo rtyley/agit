@@ -19,6 +19,7 @@ import static com.madgag.agit.GitIntents.EXTRA_TARGET_DIR;
 import static com.madgag.agit.R.id.CloneUrlEditText;
 import static com.madgag.agit.R.id.GitDirEditText;
 import static com.madgag.agit.R.id.UseDefaultGitDirLocation;
+import static com.xtremelabs.robolectric.matchers.TextViewHasTextMatcher.hasText;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -42,19 +43,8 @@ public class CloneLauncherActivityRobolectricTest {
         assertThat(checkable(UseDefaultGitDirLocation), isChecked(true));
 	}
 
-    private Checkable checkable(int checkableId) {
-        return (Checkable) view(checkableId);
-    }
-
-    private TextView textView(int textViewId) {
-        return (TextView) view(textViewId);
-    }
-
-    private View view(int viewId) {
-        return activity.findViewById(viewId);
-    }
-
-    public void testUsesSpecifiedRepoDirLocationFromIntentIfSupplied() {
+    @Test
+    public void shouldUseSpecifiedRepoDirLocationFromIntentIfSupplied() {
 		activity.onCreate(null);
         Intent intent = new GitIntentBuilder("").add(EXTRA_SOURCE_URI, appleProjectSourceUri)
                 .add(EXTRA_TARGET_DIR, targetDir)
@@ -66,6 +56,21 @@ public class CloneLauncherActivityRobolectricTest {
 		assertThat(checkable(UseDefaultGitDirLocation), isChecked(false));
 		assertThat(textView(CloneUrlEditText), hasText(appleProjectSourceUri));
 	}
+
+
+
+
+    private Checkable checkable(int checkableId) {
+        return (Checkable) view(checkableId);
+    }
+
+    private TextView textView(int textViewId) {
+        return (TextView) view(textViewId);
+    }
+
+    private View view(int viewId) {
+        return activity.findViewById(viewId);
+    }
 
 	private Matcher<Checkable> isChecked(final boolean checked) {
 		return new TypeSafeMatcher<Checkable>() {
@@ -79,16 +84,4 @@ public class CloneLauncherActivityRobolectricTest {
         };
 	}
 
-	private static Matcher<TextView> hasText(final String text) {
-		return new TypeSafeMatcher<TextView>() {
-            @Override
-            protected boolean matchesSafely(TextView textView) {
-                return textView.getText().equals(text);
-            }
-
-            public void describeTo(Description description) {
-                description.appendText("has text ").appendValue(text);
-            }
-        };
-	}
 }
