@@ -69,7 +69,7 @@ public class CloneLauncherActivity extends RoboActivity {
     @InjectView(R.id.BareRepo) CheckBox bareRepoCheckbox;
     @InjectView(R.id.GoCloneButton) Button button;
 	@InjectView(R.id.UseDefaultGitDirLocation) CheckBox useDefaultGitDirLocationButton;
-	@InjectView(R.id.GitDirWarning) TextView warningTextView;
+	@InjectView(R.id.CloneReadinessMessage) TextView warningTextView;
 	@InjectView(R.id.GitDirEditText) EditText gitDirEditText;
     @InjectView(R.id.CloneUrlEditText) EditText cloneUrlEditText;
     

@@ -6,4 +6,7 @@
 	<color name="gitHubBlue">#4183C4</color>
 	<color name="addedText">#DDFFDD</color>
 	<color name="removedText">#FFDDDD</color>
+
+    <color name="executionbar_background_start">#f3f3f3</color>
+    <color name="executionbar_background_end">#d7d7d7</color>
 </resources>

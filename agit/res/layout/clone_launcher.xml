@@ -7,17 +7,19 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none">
+        android:layout_weight="1.0">
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="match_parent" android:layout_height="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="14dip" android:paddingRight="14dip"
+            android:paddingTop="6dip" android:paddingBottom="6dip" >
             <Button android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/SuggestReposButton"
                 android:text="@string/suggest_repos_button"
                 android:gravity="center"
                 android:layout_gravity="center"
-                android:layout_margin="5dip"
                 style="@style/SmallButton"
                 android:onClick="setUpListView"/>
 
@@ -31,22 +33,32 @@
                 android:id="@+id/CloneUrlEditText"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
+                android:hint="@string/clone_url_hint"
                 android:inputType="textUri" />
 
             <CheckBox android:id="@+id/UseDefaultGitDirLocation"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="Use default location" android:checked="true" />
-            <EditText android:layout_height="wrap_content" android:id="@+id/GitDirEditText"
-                android:layout_width="fill_parent"></EditText>
-            <TextView android:id="@+id/GitDirWarning" android:visibility="invisible"
-                android:layout_width="fill_parent" android:layout_height="wrap_content"
-                android:text="Bad checkout location" />
+            <EditText
+                android:id="@+id/GitDirEditText"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:hint="@string/clone_directory_hint" />
+            
             <CheckBox android:id="@+id/BareRepo"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="Bare repo" android:checked="true" />
-            <Button android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/GoCloneButton"
-                android:text="Clone!"></Button>
-            </LinearLayout>
+        </LinearLayout>
     </ScrollView>
+    <LinearLayout style="@style/ExecutionBar" android:gravity="right">
+        <TextView android:id="@+id/CloneReadinessMessage"
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bad checkout location" />
+        <Button android:id="@+id/GoCloneButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/execute_clone_button_label"></Button>
+    </LinearLayout>
 </LinearLayout>
