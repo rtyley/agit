@@ -28,6 +28,9 @@ import org.eclipse.jgit.transport.RemoteConfig;
 
 import android.content.Intent;
 
+import static com.madgag.agit.GitIntents.EXTRA_SOURCE_URI;
+import static com.madgag.agit.GitIntents.EXTRA_TARGET_DIR;
+
 public class GitIntentBuilder {
 
 	private final Intent intent;
@@ -50,6 +53,14 @@ public class GitIntentBuilder {
 	
 	public GitIntentBuilder tag(String tagName) {
 		return add("tag", tagName);
+	}
+
+    public GitIntentBuilder sourceUri(String sourceUri) {
+		return add(EXTRA_SOURCE_URI, sourceUri);
+	}
+
+    public GitIntentBuilder targetDir(String targetDir) {
+	    return add(EXTRA_TARGET_DIR, targetDir);
 	}
 	
 	public Intent toIntent() {
