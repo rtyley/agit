@@ -85,9 +85,13 @@ public class CloneLauncherActivity extends RoboActivity {
 
 
 		button.setOnClickListener(goCloneButtonListener);
-		useDefaultGitDirLocationButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) { updateUIWithValidation(); }
-		});
+        OnCheckedChangeListener checkBoxChangeListener = new OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateUIWithValidation();
+            }
+        };
+        useDefaultGitDirLocationButton.setOnCheckedChangeListener( checkBoxChangeListener);
+        bareRepoCheckbox.setOnCheckedChangeListener( checkBoxChangeListener);
         TextWatcher watcher = new TextWatcher() {
 			public void onTextChanged(CharSequence text, int arg1, int arg2, int arg3) {}
 			
