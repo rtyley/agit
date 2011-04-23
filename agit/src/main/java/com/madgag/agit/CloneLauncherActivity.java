@@ -69,7 +69,7 @@ public class CloneLauncherActivity extends RoboActivity {
     @InjectView(R.id.BareRepo) CheckBox bareRepoCheckbox;
     @InjectView(R.id.GoCloneButton) Button button;
 	@InjectView(R.id.UseDefaultGitDirLocation) CheckBox useDefaultGitDirLocationButton;
-	@InjectView(R.id.CloneReadinessMessage) TextView warningTextView;
+	@InjectView(R.id.CloneReadinessMessage) TextView cloneReadinessMessageView;
 	@InjectView(R.id.GitDirEditText) EditText gitDirEditText;
     @InjectView(R.id.CloneUrlEditText) EditText cloneUrlEditText;
     
@@ -147,7 +147,13 @@ public class CloneLauncherActivity extends RoboActivity {
 
     protected void updateUIWithValidation() {
     	boolean enableClone=true;
-    	
+
+        String cloneUriText = getCloneUriText();
+        Log.d(TAG, "cloneUriText="+cloneUriText);
+        CharSequence message=null;
+        if (cloneUriText.length()<3) {
+            message = getString(R.string.clone_readiness_needs_user_to_enter_a_url);
+        }
     	URIish cloneUri=null;
     	try {
     		cloneUri=getCloneUri();
@@ -165,10 +171,13 @@ public class CloneLauncherActivity extends RoboActivity {
     	
 		File f=new File(gitDirEditText.getText().toString());
 		boolean goodGitDir=!f.exists();
-		warningTextView.setVisibility(goodGitDir?INVISIBLE:VISIBLE);
 		if (!goodGitDir) {
 			enableClone=false;
+            message=getString(R.string.clone_readiness_requires_fresh_checkout_folder);
 		}
+        cloneReadinessMessageView.setText(message);
+		cloneReadinessMessageView.setVisibility(message==null?INVISIBLE:VISIBLE);
+
 		
 		button.setEnabled(enableClone);
     }
@@ -210,9 +219,13 @@ public class CloneLauncherActivity extends RoboActivity {
     }
     
     public URIish getCloneUri() throws URISyntaxException {
-    	return new URIish(cloneUrlEditText.getText().toString());
+    	return new URIish(getCloneUriText());
     }
-    
+
+    private String getCloneUriText() {
+        return cloneUrlEditText.getText().toString();
+    }
+
     public File getCheckoutLocation() {
     	return new File(gitDirEditText.getText().toString());
     }

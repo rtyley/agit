@@ -50,15 +50,15 @@
                 android:text="Bare repo" android:checked="true" />
         </LinearLayout>
     </ScrollView>
-    <LinearLayout style="@style/ExecutionBar" android:gravity="right">
+    <LinearLayout style="@style/ExecutionBar">
         <TextView android:id="@+id/CloneReadinessMessage"
                 android:visibility="invisible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bad checkout location" />
+                android:layout_weight="1.0" />
         <Button android:id="@+id/GoCloneButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/execute_clone_button_label"></Button>
+                android:text="@string/execute_clone_button_label" />
     </LinearLayout>
 </LinearLayout>

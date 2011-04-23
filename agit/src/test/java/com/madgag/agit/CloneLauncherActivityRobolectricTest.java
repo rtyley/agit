@@ -10,14 +10,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static com.madgag.agit.R.id.CloneUrlEditText;
-import static com.madgag.agit.R.id.GitDirEditText;
-import static com.madgag.agit.R.id.UseDefaultGitDirLocation;
+import static com.madgag.agit.R.id.*;
 import static com.madgag.agit.matchers.CharSequenceMatcher.charSequence;
 import static com.xtremelabs.robolectric.matchers.TextViewHasTextMatcher.hasText;
-import static org.hamcrest.Matchers.endsWith;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 @RunWith(InjectedTestRunner.class)
@@ -59,19 +55,27 @@ public class CloneLauncherActivityRobolectricTest {
 		assertThat(textView(CloneUrlEditText), hasText(appleProjectSourceUri));
 	}
 
+    @Test
+    public void shouldShowHelpfulMessageIfSourceUriTextBoxIsBlank() {
+        startAndResumeActivityWith(clone.toIntent());
 
+        assertThat(textOfView(CloneReadinessMessage).toString(), containsString("Enter a url"));
+	}
 
     @Test
     public void shouldUpdateCheckoutFolderNameToReflectBareRepo() {
         startActivityWith(clone.sourceUri(appleProjectSourceUri).toIntent());
 
-        assertThat(defaultLocationCheckBox, isChecked(true));
-
         bareRepoCheckbox.setChecked(true);
-        assertThat(directoryEditText.getText(), charSequence(endsWith(".git")));
+        assertThat(textOfView(GitDirEditText), charSequence(endsWith(".git")));
         
         bareRepoCheckbox.setChecked(false);
-        assertThat(directoryEditText.getText(), not(charSequence(endsWith(".git"))));
+        assertThat(textOfView(GitDirEditText), not(charSequence(endsWith(".git"))));
+    }
+
+    private void startAndResumeActivityWith(Intent intent) {
+        startActivityWith(intent);
+        activity.onResume();
     }
 
     private void startActivityWith(Intent intent) {
@@ -82,6 +86,11 @@ public class CloneLauncherActivityRobolectricTest {
     private Checkable checkable(int checkableId) {
         return (Checkable) view(checkableId);
     }
+
+    private CharSequence textOfView(int textViewId) {
+        return textView(textViewId).getText();
+    }
+
 
     private TextView textView(int textViewId) {
         return (TextView) view(textViewId);
