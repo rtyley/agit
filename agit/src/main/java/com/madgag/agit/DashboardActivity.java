@@ -8,19 +8,26 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.*;
+import com.madgag.android.listviews.ViewHolder;
+import com.madgag.android.listviews.ViewHolderFactory;
+import com.madgag.android.listviews.ViewHoldingListAdapter;
 import com.markupartist.android.widget.ActionBar;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 
 import java.io.File;
 
+import static android.R.layout.two_line_list_item;
 import static android.graphics.PixelFormat.RGBA_8888;
+import static com.madgag.agit.Repos.knownRepos;
 import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
+import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 
 public class DashboardActivity extends RoboActivity {
     private static final String TAG = "DA";
 
     @InjectView(android.R.id.list) ListView listView;
+    ViewHoldingListAdapter<File> listAdapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -37,28 +44,25 @@ public class DashboardActivity extends RoboActivity {
     }
 
     private void setupRepoList() {
-        // Put a managed wrapper around the retrieved cursor so we don't have to worry about
-        // requerying or closing it as the activity changes state.
-        Cursor mCursor = managedQuery(GitInfoProvider.CONTENT_URI, null, null, null, null);
 
-        // Now create a new list adapter bound to the cursor.
-        // SimpleListAdapter is designed for binding to a Cursor.
-        ListAdapter adapter = new SimpleCursorAdapter(
-                this, // Context.
-                android.R.layout.simple_list_item_1,
-                mCursor,                                              // Pass in the cursor to bind to.
-                new String[] {"gitdir"},           // Array of cursor columns to bind to.
-                new int[] {android.R.id.text1});  // Parallel array of which template objects to bind to those columns.
+        listAdapter = new ViewHoldingListAdapter<File>(knownRepos(), viewInflatorFor(this, two_line_list_item), new ViewHolderFactory<File>() {
+            public ViewHolder<File> createViewHolderFor(View view) {
+                return new RepositoryViewHolder(view);
+            }
+        });
 
-        // Bind to our new adapter.
-        listView.setAdapter(adapter);
+        listView.setAdapter(listAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String gitdir=((TextView)view.findViewById(android.R.id.text1)).getText().toString();
-                startActivity(manageRepoIntent(new File(gitdir)));
+                startActivity(manageRepoIntent(listAdapter.getItem(position)));
             }
         });
+    }
+
+    protected void onResume() {
+        super.onResume();
+        listAdapter.setList(knownRepos());
     }
 
     // used by dashboard.xml

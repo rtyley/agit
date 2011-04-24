@@ -19,11 +19,18 @@
 
 package com.madgag.agit;
 
+import static android.os.Environment.getExternalStorageDirectory;
+import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.System.identityHashCode;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
 
 import java.io.File;
+import java.util.List;
 
+import android.database.Cursor;
+import android.database.MatrixCursor;
+import android.net.Uri;
+import android.os.Environment;
 import android.provider.SyncStateContract;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
@@ -38,7 +45,23 @@ import android.util.Log;
 public class Repos {
 
     private final static String TAG = "Repos";
-    
+
+
+	public static List<File> knownRepos() {
+		File reposDir = new File(getExternalStorageDirectory(),"git-repos");
+		if (!reposDir.exists() && !reposDir.mkdirs()) {
+			throw new IllegalStateException("Can't find or create the default it repos dir : "+reposDir);
+		}
+        List<File> repos = newArrayList();
+		for (File repoDir : reposDir.listFiles()) {
+            File gitdir = RepositoryCache.FileKey.resolve(repoDir, FS.detect());
+			if (gitdir!=null) {
+				repos.add(gitdir);
+			}
+		}
+		return repos;
+	}
+
 	public static Repository openRepoFor(File gitdir) {
 		try {
 			Repository repo = RepositoryCache.open(FileKey.lenient(gitdir, FS.DETECTED),false);
