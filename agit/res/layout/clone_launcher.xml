@@ -42,9 +42,6 @@
     </ScrollView>
     <LinearLayout style="@style/ExecutionBar">
         <TextView android:id="@+id/CloneReadinessMessage"
-                  android:clickable="true"
-                  android:focusable="true"
-                  android:linksClickable="true"
                 android:visibility="invisible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
