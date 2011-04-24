@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:startColor="@color/dashboard_background_start"
+        android:endColor="@color/dashboard_background_end"
+        android:gradientRadius="326"
+    android:type="radial" />
+</shape>

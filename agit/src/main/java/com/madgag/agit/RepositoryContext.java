@@ -55,7 +55,7 @@ public class RepositoryContext
         enterScope();
         try {
             //addListeners();
-		    //activity.onContentChanged();
+		    activity.onContentChanged();
 
             //rsa.onRepoScopedResume();
         } finally {

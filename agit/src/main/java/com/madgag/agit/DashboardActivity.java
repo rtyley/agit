@@ -3,8 +3,10 @@ package com.madgag.agit;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.*;
 import com.markupartist.android.widget.ActionBar;
 import roboguice.activity.RoboActivity;
@@ -12,21 +14,26 @@ import roboguice.inject.InjectView;
 
 import java.io.File;
 
+import static android.graphics.PixelFormat.RGBA_8888;
 import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
 
 public class DashboardActivity extends RoboActivity {
     private static final String TAG = "DA";
 
-    @InjectView(R.id.actionbar) ActionBar actionBar;
     @InjectView(android.R.id.list) ListView listView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dashboard);
-        actionBar.setHomeLogo(R.drawable.actionbar_agit_logo);
 
         setupRepoList();
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        getWindow().setFormat(RGBA_8888);
     }
 
     private void setupRepoList() {

@@ -9,4 +9,7 @@
 
     <color name="executionbar_background_start">#f3f3f3</color>
     <color name="executionbar_background_end">#d7d7d7</color>
+
+    <color name="dashboard_background_start">#666666</color>
+    <color name="dashboard_background_end">#393939</color>
 </resources>

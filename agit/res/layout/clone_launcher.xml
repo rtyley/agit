@@ -18,26 +18,27 @@
 
             <TextView android:layout_width="fill_parent"
                 android:layout_height="wrap_content" android:text="@string/enter_clone_url" />
-
             <EditText
                 android:id="@+id/CloneUrlEditText"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
                 android:hint="@string/clone_url_hint"
                 android:inputType="textUri" />
-
-            <CheckBox android:id="@+id/UseDefaultGitDirLocation"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="Use default location" android:checked="true" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/clone_target_folder_label" />
             <EditText
                 android:id="@+id/GitDirEditText"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
                 android:hint="@string/clone_directory_hint" />
-            
+            <CheckBox android:id="@+id/UseDefaultGitDirLocation"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/use_default_target_directory_checkbox_label" android:checked="true" />
             <CheckBox android:id="@+id/BareRepo"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="Bare repo" android:checked="true" />
+                android:text="@string/bare_repo_checkbox_label" android:checked="true" />
         </LinearLayout>
     </ScrollView>
     <LinearLayout style="@style/ExecutionBar">

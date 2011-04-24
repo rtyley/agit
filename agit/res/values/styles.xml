@@ -41,9 +41,6 @@
         <item name="android:background">@drawable/friendly_button</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
-
-        <item name="android:paddingLeft">15dp</item>
-        <item name="android:paddingRight">15dp</item>
     </style>
 
     <style name="SmallButton" parent="@android:style/Widget.Button.Small">

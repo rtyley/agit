@@ -6,6 +6,7 @@ import android.widget.ListView;
 import com.madgag.android.listviews.ViewHolder;
 import com.madgag.android.listviews.ViewHolderFactory;
 import com.madgag.android.listviews.ViewHoldingListAdapter;
+import com.markupartist.android.widget.ActionBar;
 import roboguice.activity.RoboListActivity;
 
 import java.util.List;
@@ -23,14 +24,17 @@ public class SuggestRepoActivity extends RoboListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.list_activity_layout);
 
+        ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
+		actionBar.setTitle("Some example repos...");
         // Bind to our new adapter.
-        List<SuggestedRepo> voo = asList(
+        List<SuggestedRepo> suggestedRepos = asList(
         new SuggestedRepo("JQuery", "git://github.com/jquery/jquery.git"),
         new SuggestedRepo("Scalatra", "git://github.com/scalatra/scalatra.git"),
         new SuggestedRepo("JGit", "git://egit.eclipse.org/jgit.git")
         );
-        adapter = new ViewHoldingListAdapter<SuggestedRepo>(voo, viewInflatorFor(this, two_line_list_item), new ViewHolderFactory<SuggestedRepo>() {
+        adapter = new ViewHoldingListAdapter<SuggestedRepo>(suggestedRepos, viewInflatorFor(this, two_line_list_item), new ViewHolderFactory<SuggestedRepo>() {
             public ViewHolder<SuggestedRepo> createViewHolderFor(View view) {
                 return new SuggestedRepoViewHolder(view);
             }
