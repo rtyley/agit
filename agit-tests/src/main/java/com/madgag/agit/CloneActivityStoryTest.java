@@ -44,11 +44,6 @@ public class CloneActivityStoryTest extends CalculonStoryTest<CloneLauncherActiv
         assertThat(R.id.CloneReadinessMessage).isVisible();
     }
     
-    public void testWarningNotShownIfGitDirDoesNotAlreadyExist() {
-    	setUp(R.id.UseDefaultGitDirLocation).setChecked(false).now();
-        assertThat(R.id.GitDirEditText).setText(newFolder().getAbsolutePath()).implies(R.id.CloneReadinessMessage).isInvisible();
-    }
-    
     public void testDoesNotCrashDueToStackOverflow() {
     	setUp(R.id.UseDefaultGitDirLocation).setChecked(false).now();
     	setUp(R.id.CloneUrlEditText).setText("/example/project").now();
