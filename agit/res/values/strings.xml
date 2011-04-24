@@ -4,9 +4,9 @@
     <string name="suggest_repos_button">Suggest repos...</string>
     <string name="clone_menu_option">Clone...</string>
     <string name="enter_clone_url">Url</string>
-    <string name="clone_url_hint">Git repository url</string>
+    <string name="clone_url_hint">Repository url</string>
     <string name="clone_directory_hint">Folder for checkout</string>
-    <string name="clone_readiness_needs_user_to_enter_a_url">Enter a url to clone from- or use a #suggest_repo[suggestion]?</string>
+    <string name="clone_readiness_needs_user_to_enter_a_url">Enter a url to clone from - or choose from some #suggest_repo[example repos].</string>
     <string name="clone_readiness_requires_fresh_checkout_folder">Folder already exists- #specify_target_dir[specify an alternative] location?</string>
 
     <string name="execute_clone_button_label">Clone!</string>
