@@ -1,13 +1,8 @@
 package com.madgag.agit;
 
-import android.database.Cursor;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
-import android.view.animation.LayoutAnimationController;
-import android.widget.AdapterView;
-import android.widget.ListAdapter;
-import android.widget.SimpleCursorAdapter;
+import android.widget.ListView;
 import com.madgag.android.listviews.ViewHolder;
 import com.madgag.android.listviews.ViewHolderFactory;
 import com.madgag.android.listviews.ViewHoldingListAdapter;
@@ -16,7 +11,7 @@ import roboguice.activity.RoboListActivity;
 import java.util.List;
 
 import static android.R.layout.two_line_list_item;
-import static android.view.View.GONE;
+import static com.madgag.agit.CloneLauncherActivity.cloneLauncherIntentFor;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 import static java.util.Arrays.asList;
 
@@ -43,8 +38,8 @@ public class SuggestRepoActivity extends RoboListActivity {
         setListAdapter(adapter);
     }
 
-    public void onListItemClick(android.widget.ListView l, android.view.View v, int position, long id) {
-        startActivity(CloneLauncherActivity.cloneLauncherIntentFor(adapter.getItem(position).getURI().toString()));
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        setResult(RESULT_OK, cloneLauncherIntentFor(adapter.getItem(position).getURI().toString()));
         finish();
     }
 }

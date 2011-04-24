@@ -140,31 +140,39 @@ public class CloneLauncherActivity extends RoboActivity {
                         gitDirEditText.requestFocus();
                         setCursorToEnd(gitDirEditText);
                     } else if (command.equals("suggest_repo")) {
-                        startActivity(new Intent("com.madgag.git.repo.suggest"));
+                        startActivityForResult(new Intent("com.madgag.git.repo.suggest"), 0);
                     }
                 }
             });
             cloneReadinessMessageView.setText(spana);
             cloneReadinessMessageView.setMovementMethod(LinkMovementMethod.getInstance());
         }
-
-
-		
+        
 		button.setEnabled(enableClone);
     }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+         if (resultCode == RESULT_OK) {
+            setUpUIFromIntent(data);
+         }
+     }
     
     @Override
     protected void onStart() {
     	super.onStart();
     	Intent intent = getIntent();
-    	Log.d(TAG, "Starting with da "+intent);
-    	if (intent!=null) {
-    		setSourceUriFrom(intent);
-    		setGitDirFrom(intent);
-    	}
+        setUpUIFromIntent(intent);
     }
 
-	private void setSourceUriFrom(Intent intent) {
+    private void setUpUIFromIntent(Intent intent) {
+        Log.d(TAG, "setUpUIFromIntent with " + intent);
+        if (intent!=null) {
+            setSourceUriFrom(intent);
+            setGitDirFrom(intent);
+        }
+    }
+
+    private void setSourceUriFrom(Intent intent) {
 		String sourceUri= intent.getStringExtra(EXTRA_SOURCE_URI);
 		if (sourceUri != null) {
 			cloneUrlEditText.setText(sourceUri);
