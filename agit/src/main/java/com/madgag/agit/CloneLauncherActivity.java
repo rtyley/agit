@@ -53,6 +53,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import org.eclipse.jgit.util.StringUtils;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 
@@ -116,11 +117,11 @@ public class CloneLauncherActivity extends RoboActivity {
     	}
     	
     	gitDirEditText.setEnabled(!useDefaultGitDirLocationButton.isChecked());
-    	if (useDefaultGitDirLocationButton.isChecked() && cloneUri!=null) {
-    		String currentGitDirText=gitDirEditText.getText().toString();
-    		String requiredText = defaultRepoDirFor(cloneUri).getAbsolutePath();
-    		if (!currentGitDirText.equals(requiredText))
-    			gitDirEditText.setText(requiredText);
+    	if (useDefaultGitDirLocationButton.isChecked()) {
+            String requiredText = (cloneUri==null)?"":defaultRepoDirFor(cloneUri).getAbsolutePath();
+            String currentGitDirText=gitDirEditText.getText().toString();
+            if (!currentGitDirText.equals(requiredText))
+                 gitDirEditText.setText(requiredText);
     	}
     	
 		File f=new File(gitDirEditText.getText().toString());
