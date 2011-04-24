@@ -45,6 +45,13 @@
 			</intent-filter>
 		</activity>
 
+        <activity android:name=".SuggestRepoActivity">
+			<intent-filter>
+				<action android:name="com.madgag.git.repo.suggest" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+
         <activity android:name=".weblaunchers.GitHubWebLaunchActivity" android:label="@string/app_name">
 			<intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />

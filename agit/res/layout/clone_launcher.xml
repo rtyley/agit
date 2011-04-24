@@ -15,16 +15,6 @@
             android:layout_height="match_parent"
             android:paddingLeft="14dip" android:paddingRight="14dip"
             android:paddingTop="6dip" android:paddingBottom="6dip" >
-            <Button android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/SuggestReposButton"
-                android:text="@string/suggest_repos_button"
-                android:gravity="center"
-                android:layout_gravity="center"
-                style="@android:style/Widget.Button.Small"
-                android:onClick="setUpListView"/>
-
-            <ListView android:id="@android:id/list"
-                android:layout_width="wrap_content" android:layout_height="match_parent"  android:cacheColorHint="#FFF"/>
 
             <TextView android:layout_width="fill_parent"
                 android:layout_height="wrap_content" android:text="@string/enter_clone_url" />
@@ -52,6 +42,9 @@
     </ScrollView>
     <LinearLayout style="@style/ExecutionBar">
         <TextView android:id="@+id/CloneReadinessMessage"
+                  android:clickable="true"
+                  android:focusable="true"
+                  android:linksClickable="true"
                 android:visibility="invisible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

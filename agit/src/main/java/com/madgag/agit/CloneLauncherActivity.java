@@ -36,6 +36,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import android.text.*;
+import android.text.method.LinkMovementMethod;
 import android.view.animation.*;
 import android.widget.*;
 import com.madgag.android.listviews.ViewHoldingListAdapter;
@@ -47,8 +49,6 @@ import org.eclipse.jgit.transport.URIish;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -60,12 +60,9 @@ public class CloneLauncherActivity extends RoboActivity {
 	private final static String TAG="CloneLauncherActivity";
 
     public static Intent cloneLauncherIntentFor(String sourceUri) {
-		Intent intent = new Intent("com.madgag.git.clone.prepare");
-		intent.putExtra(EXTRA_SOURCE_URI, sourceUri);
-		return intent;
+        return new GitIntentBuilder("com.madgag.git.clone.prepare").sourceUri(sourceUri).toIntent();
 	}
 
-    @InjectView(R.id.SuggestReposButton) Button suggestReposButton;
     @InjectView(R.id.BareRepo) CheckBox bareRepoCheckbox;
     @InjectView(R.id.GoCloneButton) Button button;
 	@InjectView(R.id.UseDefaultGitDirLocation) CheckBox useDefaultGitDirLocationButton;
@@ -74,7 +71,6 @@ public class CloneLauncherActivity extends RoboActivity {
     @InjectView(R.id.CloneUrlEditText) EditText cloneUrlEditText;
     
 	@InjectView(R.id.actionbar) ActionBar actionBar;
-    @InjectView(android.R.id.list) ListView listView;
 
     /** Called when the activity is first created. */
     @Override
@@ -101,48 +97,6 @@ public class CloneLauncherActivity extends RoboActivity {
 		};
 		cloneUrlEditText.addTextChangedListener(watcher);
 		gitDirEditText.addTextChangedListener(watcher);
-        // setUpListView();
-    }
-
-
-    public void setUpListView(View v) {
-
-        List<SuggestedRepo> voo = asList(
-                new SuggestedRepo("JQuery", "git://github.com/jquery/jquery.git"),
-                new SuggestedRepo("Scalatra", "git://github.com/scalatra/scalatra.git"),
-                new SuggestedRepo("JGit", "git://egit.eclipse.org/jgit.git")
-        );
-        final ViewHoldingListAdapter<SuggestedRepo> adapter = new ViewHoldingListAdapter<SuggestedRepo>(voo, viewInflatorFor(this, two_line_list_item), new ViewHolderFactory<SuggestedRepo>() {
-            public ViewHolder<SuggestedRepo> createViewHolderFor(View view) {
-                return new SuggestedRepoViewHolder(view);
-            }
-        });
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                cloneUrlEditText.setText(adapter.getItem(position).getURI());
-                listView.setVisibility(GONE);
-            }
-        });
-
-        listView.setLayoutAnimation(new LayoutAnimationController(listFadeInAnimation(), 0.5f));
-        listView.setVisibility(View.VISIBLE);
-    }
-
-    private AnimationSet listFadeInAnimation() {
-        AnimationSet set = new AnimationSet(true);
-
-        Animation animation = new AlphaAnimation(0.0f, 1.0f);
-        animation.setDuration(50);
-        set.addAnimation(animation);
-
-        animation = new TranslateAnimation(
-            Animation.RELATIVE_TO_SELF, 0.0f,Animation.RELATIVE_TO_SELF, 0.0f,
-            Animation.RELATIVE_TO_SELF, -1.0f,Animation.RELATIVE_TO_SELF, 0.0f
-        );
-        animation.setDuration(100);
-        set.addAnimation(animation);
-        return set;
     }
 
     protected void updateUIWithValidation() {
@@ -151,7 +105,7 @@ public class CloneLauncherActivity extends RoboActivity {
         String cloneUriText = getCloneUriText();
         Log.d(TAG, "cloneUriText="+cloneUriText);
         CharSequence message=null;
-        if (cloneUriText.length()<3) {
+        if (cloneUriText.length()<=3) {
             message = getString(R.string.clone_readiness_needs_user_to_enter_a_url);
         }
     	URIish cloneUri=null;
@@ -175,8 +129,24 @@ public class CloneLauncherActivity extends RoboActivity {
 			enableClone=false;
             message=getString(R.string.clone_readiness_requires_fresh_checkout_folder);
 		}
-        cloneReadinessMessageView.setText(message);
-		cloneReadinessMessageView.setVisibility(message==null?INVISIBLE:VISIBLE);
+        cloneReadinessMessageView.setVisibility(message==null?INVISIBLE:VISIBLE);
+        if (message!=null) {
+            Editable spana=new SpannableStringBuilder(message);
+            ClickableText.addLinks(spana, new ClickableText.Listener() {
+                public void onClick(String command, View widget) {
+                    if (command.equals("specify_target_dir")) {
+                        useDefaultGitDirLocationButton.setChecked(false);
+                        gitDirEditText.requestFocus();
+                        setCursorToEnd(gitDirEditText);
+                    } else if (command.equals("suggest_repo")) {
+                        startActivity(new Intent("com.madgag.git.repo.suggest"));
+                    }
+                }
+            });
+            cloneReadinessMessageView.setText(spana);
+            cloneReadinessMessageView.setMovementMethod(LinkMovementMethod.getInstance());
+        }
+
 
 		
 		button.setEnabled(enableClone);
@@ -197,10 +167,14 @@ public class CloneLauncherActivity extends RoboActivity {
 		String sourceUri= intent.getStringExtra(EXTRA_SOURCE_URI);
 		if (sourceUri != null) {
 			cloneUrlEditText.setText(sourceUri);
-            cloneUrlEditText.setSelection(sourceUri.length());
+            setCursorToEnd(cloneUrlEditText);
 			Log.d(TAG, "Set cloneUrlEditText to "+sourceUri);
 		}
 	}
+
+    private static void setCursorToEnd(EditText editText) {
+        editText.setSelection(editText.getText().length());
+    }
 
 	private void setGitDirFrom(Intent intent) {
 		String gitdir= intent.getStringExtra(EXTRA_TARGET_DIR);

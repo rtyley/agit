@@ -55,12 +55,12 @@ public class CloneLauncherActivityRobolectricTest {
 		assertThat(textView(CloneUrlEditText), hasText(appleProjectSourceUri));
 	}
 
-    @Test
-    public void shouldShowHelpfulMessageIfSourceUriTextBoxIsBlank() {
-        startAndResumeActivityWith(clone.toIntent());
-
-        assertThat(textOfView(CloneReadinessMessage).toString(), containsString("Enter a url"));
-	}
+//    @Test
+//    public void shouldShowHelpfulMessageIfSourceUriTextBoxIsBlank() {
+//        startAndResumeActivityWith(clone.toIntent());
+//
+//        assertThat(textOfView(CloneReadinessMessage).toString(), containsString("Enter a url"));
+//	}
 
     @Test
     public void shouldUpdateCheckoutFolderNameToReflectBareRepo() {
