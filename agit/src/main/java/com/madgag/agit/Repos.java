@@ -22,21 +22,15 @@ package com.madgag.agit;
 import static android.os.Environment.getExternalStorageDirectory;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.System.identityHashCode;
+import static org.eclipse.jgit.lib.Constants.DOT_GIT;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
 
 import java.io.File;
 import java.util.List;
 
-import android.database.Cursor;
-import android.database.MatrixCursor;
-import android.net.Uri;
-import android.os.Environment;
-import android.provider.SyncStateContract;
-import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.lib.RepositoryCache.FileKey;
-import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.util.FS;
 
@@ -72,8 +66,15 @@ public class Repos {
 		}
 	}
 
+    public static String niceNameFor(File gitdir) {
+        return niceNameFromNameDirectory(gitdir.getName().equals(DOT_GIT)?gitdir.getParentFile():gitdir);
+    }
+
     public static String niceNameFor(Repository repo) {
-        File directoryWithName = repo.isBare()? repo.getDirectory(): repo.getWorkTree();
+        return niceNameFromNameDirectory(repo.isBare()? repo.getDirectory(): repo.getWorkTree());
+    }
+
+    private static String niceNameFromNameDirectory(File directoryWithName) {
         String name = directoryWithName.getName();
         if (name.endsWith(DOT_GIT_EXT)) {
             name=name.substring(0, name.length()-DOT_GIT_EXT.length());
@@ -81,7 +82,7 @@ public class Repos {
         return name;
     }
 
-	public static String describe(Repository repository) {
+    public static String describe(Repository repository) {
 		return repository+" #"+identityHashCode(repository);
 	}
 
