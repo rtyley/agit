@@ -40,6 +40,8 @@ import android.widget.AdapterView;
 import com.google.common.base.Function;
 import roboguice.inject.InjectorProvider;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static com.madgag.agit.R.layout.rev_commit_list_item;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 
@@ -55,7 +57,6 @@ public class RevCommitListView extends PullToRefreshListView {
 	public RevCommitListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
         ((InjectorProvider)context).getInjector().injectMembers(this);
-
         adapter = new ViewHoldingListAdapter<RevCommit>(Collections.<RevCommit>emptyList(), viewInflatorFor(getContext(), rev_commit_list_item), new ViewHolderFactory<RevCommit>() {
             public ViewHolder<RevCommit> createViewHolderFor(View view) {
                 return new CommitViewHolder(view, imageSession);
@@ -71,12 +72,10 @@ public class RevCommitListView extends PullToRefreshListView {
 		});
 	}
 
-
 	public void setCommits(Function<RevCommit, Intent> commitViewerIntentCreator, List<RevCommit> commits) {
         Log.d(TAG, "Setting commits: "+commits.get(0).toObjectId()+" .. "+commits.get(commits.size()-1).toObjectId());
 		this.commitViewerIntentCreator = commitViewerIntentCreator;
 
         adapter.setList(commits);
-        setFastScrollEnabled(true);
 	}
 }
