@@ -19,31 +19,27 @@
 
 package com.madgag.agit;
 
-import static android.R.layout.two_line_list_item;
-import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
 import static com.madgag.agit.GitIntents.*;
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
-import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
-import static java.util.Arrays.asList;
+import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.List;
 
+import android.media.RingtoneManager;
 import android.text.*;
 import android.text.method.LinkMovementMethod;
-import android.view.animation.*;
 import android.widget.*;
-import com.madgag.android.listviews.ViewHoldingListAdapter;
-import com.madgag.android.listviews.ViewHolder;
-import com.madgag.android.listviews.ViewHolderFactory;
 import com.markupartist.android.widget.ActionBar;
+import com.sun.org.apache.bcel.internal.util.Repository;
+import org.eclipse.jgit.lib.RepositoryCache;
+import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.URIish;
 
 import android.content.Intent;
@@ -53,7 +49,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import org.eclipse.jgit.util.StringUtils;
+import org.eclipse.jgit.util.FS;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 
@@ -124,11 +120,15 @@ public class CloneLauncherActivity extends RoboActivity {
                  gitDirEditText.setText(requiredText);
     	}
     	
-		File f=new File(gitDirEditText.getText().toString());
-		boolean goodGitDir=!f.exists();
-		if (!goodGitDir) {
+		File f= getTargetFolder();
+		boolean folderAlreadyExists=f.exists();
+		if (folderAlreadyExists) {
 			enableClone=false;
-            message=getString(R.string.clone_readiness_requires_fresh_checkout_folder);
+            if (existingRepoGitDir() !=null) {
+                message=getString(R.string.clone_readiness_repository_folder_already_exists);
+            } else {
+                message=getString(R.string.clone_readiness_folder_already_exists);
+            }
 		}
         cloneReadinessMessageView.setVisibility(message==null?INVISIBLE:VISIBLE);
         if (message!=null) {
@@ -139,6 +139,8 @@ public class CloneLauncherActivity extends RoboActivity {
                         useDefaultGitDirLocationButton.setChecked(false);
                         gitDirEditText.requestFocus();
                         setCursorToEnd(gitDirEditText);
+                    } else if (command.equals("view_existing_repo")) {
+                        startActivity(manageRepoIntent(existingRepoGitDir()));
                     } else if (command.equals("suggest_repo")) {
                         startActivityForResult(new Intent("com.madgag.git.repo.suggest"), 0);
                     }
@@ -149,6 +151,10 @@ public class CloneLauncherActivity extends RoboActivity {
         }
         
 		button.setEnabled(enableClone);
+    }
+
+    private File existingRepoGitDir() {
+        return RepositoryCache.FileKey.resolve(getTargetFolder(), FS.detect());
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -209,7 +215,7 @@ public class CloneLauncherActivity extends RoboActivity {
         return cloneUrlEditText.getText().toString();
     }
 
-    public File getCheckoutLocation() {
+    public File getTargetFolder() {
     	return new File(gitDirEditText.getText().toString());
     }
     
@@ -222,7 +228,7 @@ public class CloneLauncherActivity extends RoboActivity {
 				Toast.makeText(v.getContext(), "bad dog", 10).show();
 				return;
 			}
-    		File checkoutLocation=getCheckoutLocation();
+    		File checkoutLocation= getTargetFolder();
             boolean bare=bareRepoCheckbox.isChecked();
     		try {
 				launchClone(uri, checkoutLocation, bare);

@@ -7,7 +7,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1.0">
+        android:layout_weight="1.0"
+        android:fadingEdgeLength="32dip">
 
         <LinearLayout
             android:orientation="vertical"
@@ -36,13 +37,15 @@
                 android:inputType="textUri" />
             <CheckBox android:id="@+id/UseDefaultGitDirLocation"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="@string/use_default_target_directory_checkbox_label" android:checked="true" />
+                android:text="@string/use_default_target_directory_checkbox_label"
+                android:checked="true" />
             <CheckBox android:id="@+id/BareRepo"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="@string/bare_repo_checkbox_label" android:checked="true" />
+                android:text="@string/bare_repo_checkbox_label"
+                android:checked="true" />
         </LinearLayout>
     </ScrollView>
-    <LinearLayout style="@style/ExecutionBar">
+    <LinearLayout style="@style/ExecutionBar" >
         <TextView android:id="@+id/CloneReadinessMessage"
                 android:visibility="invisible"
                 android:layout_width="wrap_content"
