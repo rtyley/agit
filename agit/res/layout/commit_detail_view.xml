@@ -23,6 +23,8 @@
 		android:layout_width="fill_parent"
 		android:layout_height="0px"
 		android:layout_weight="1"
+        android:fadingEdge="vertical|horizontal"
+        android:fadingEdgeLength="24dip"
 		android:autoLink="web|email|map" android:typeface="monospace"
 		android:textAppearance="?android:attr/textAppearanceSmall" />
 
