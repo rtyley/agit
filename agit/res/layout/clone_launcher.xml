@@ -32,7 +32,8 @@
                 android:id="@+id/GitDirEditText"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
-                android:hint="@string/clone_directory_hint" />
+                android:hint="@string/clone_directory_hint"
+                android:inputType="textUri" />
             <CheckBox android:id="@+id/UseDefaultGitDirLocation"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="@string/use_default_target_directory_checkbox_label" android:checked="true" />
