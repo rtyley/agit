@@ -8,31 +8,32 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/dashboard_background"
+            android:gravity="right"
             android:padding="8dip">
-        <ImageView
-            android:id="@+id/dashboard_logo_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:src="@drawable/actionbar_agit_logo" />
         <Button
             android:id="@+id/GoCloneButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Clone..."
             android:gravity="center"
-            android:layout_alignTop="@id/dashboard_logo_iv"
             android:layout_alignParentRight="true"
-            android:layout_toRightOf="@id/dashboard_logo_iv"
             style="@style/BigButton"
             android:drawableTop="@drawable/clone_picture"
             android:onClick="startCloneLaunchActivity"/>
+        <ImageView
+            android:id="@+id/dashboard_logo_iv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/GoCloneButton"
+            android:src="@drawable/actionbar_agit_logo" />
         <TextView
             android:id="@+id/agit_description"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/GoCloneButton"
             android:layout_alignParentLeft="true"
+            android:gravity="center"
             android:textColor="#FFF"
             android:shadowColor="#FF000000"
             android:shadowDx="0"
@@ -40,7 +41,7 @@
             android:shadowRadius="0.2"
             android:textSize="20dip"
             android:layout_alignBottom="@id/GoCloneButton"
-            android:text="Android Git client" />
+            android:text="@string/app_strap" />
     </RelativeLayout>
 
     <ListView

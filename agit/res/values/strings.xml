@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Agit</string>
+    <string name="app_strap">Android Git Client</string>
     <string name="suggest_repos_button">Suggest repos...</string>
     <string name="clone_menu_option">Clone...</string>
     <string name="enter_clone_url">Url</string>
