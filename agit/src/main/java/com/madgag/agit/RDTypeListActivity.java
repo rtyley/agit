@@ -69,8 +69,6 @@ public class RDTypeListActivity<E> extends RoboListActivity {
                 return new RDTypeInstanceViewHolder(rdt,view);
             }
         }));
-		
-        getListView().setEmptyView(findViewById(R.id.empty));
 	}
 	
 	@Override
@@ -81,12 +79,6 @@ public class RDTypeListActivity<E> extends RoboListActivity {
 	private RepoDomainType<E> extractRDTFromIntent() {
 		String rdtName = getIntent().getAction().split("\\.")[1];
         return getInjector().getInstance(Key.get(RepoDomainType.class, named(rdtName)));
-//		if (rdtName.equals("remote")) {
-//			return (RepoDomainType<E>) new RDTRemote(repository);
-//		} else if (rdtName.equals("branch")) {
-//			return (RepoDomainType<E>) new RDTBranch(repository);
-//		}
-//		return (RepoDomainType<E>) new RDTTag(repository);
 	}
 
 	@Override

@@ -1,33 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical"
-	
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
 
 	<com.markupartist.android.widget.ActionBar
 	    android:id="@+id/actionbar"
 	    style="@style/ActionBar"
         />
-	<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    
+    <ListView android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fastScrollEnabled="true"
+        android:cacheColorHint="#FFF" />
 
-	    <ListView android:id="@android:id/list"
-	        android:layout_width="match_parent"
-	        android:layout_height="match_parent"
-	        android:fastScrollEnabled="true"
-	        android:cacheColorHint="#FFF" />
-	
-	    <TextView android:id="@+id/empty"
-	        android:layout_width="match_parent"
-	        android:layout_height="match_parent"
-	        android:gravity="center"
-	        android:textSize="36sp"
-	        android:textColor="#999"
-	        android:visibility="gone"
-	        android:textStyle="italic"
-	        android:text="@string/empty_list" />
-	
-	</FrameLayout>
+    <TextView android:id="@android:id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="36sp"
+        android:textColor="#999"
+        android:visibility="gone"
+        android:textStyle="italic"
+        android:text="@string/empty_list" />
 </LinearLayout>

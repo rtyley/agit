@@ -17,7 +17,6 @@ import static org.junit.Assert.assertThat;
 @RunWith(InjectedTestRunner.class)
 public class DashboardActivityRobolectricTest {
 
-
     @Inject DashboardActivity dashboardActivity;
 
 	@Test
