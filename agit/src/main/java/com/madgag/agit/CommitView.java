@@ -19,11 +19,17 @@
 
 package com.madgag.agit;
 
+import static android.graphics.Typeface.MONOSPACE;
 import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
-
+import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import java.io.IOException;
 import java.util.Map;
 
+import android.graphics.Typeface;
+import android.text.SpannableStringBuilder;
+import android.text.style.CharacterStyle;
+import android.text.style.StyleSpan;
+import android.text.style.TypefaceSpan;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -54,8 +60,9 @@ import com.markupartist.android.widget.ActionBar;
 public class CommitView extends LinearLayout {
 	
 	private static final String TAG = "CommitView";
+    public static final CharacterStyle MONOSPACE_SPAN = new TypefaceSpan("monospace");
 
-	private final LayoutInflater layoutInflater;
+    private final LayoutInflater layoutInflater;
 	private final TabHost tabHost;
 	private final ActionBar actionBar;
 	private final TabWidget tabWidget;
@@ -85,47 +92,49 @@ public class CommitView extends LinearLayout {
 		this.repository = repository;
 		this.revWalk = revWalk;
 	}
-	
-	public void setCommit(final PlotCommit<PlotLane> c) throws MissingObjectException, IncorrectObjectTypeException, IOException {
-			//this.commit = (PlotCommit<PlotLane>) revWalk.parseCommit(c);
-			this.commit = c;
-			Log.d(TAG, "setCommit : "+commit);
-			Log.d(TAG, "actionBar : "+actionBar);
-			actionBar.setTitle(commit.name().substring(0, 4)+" "+commit.getShortMessage());
-			
-			tabHost.clearAllTabs();
-					
-		    tabHost.addTab(detailTabSpec());
-		    
-		    showCommitDetailsFor(commit);
-		    
-		    commitParents = newHashMapWithExpectedSize(commit.getParentCount());
-		    TabContentFactory contentFactory = new TabContentFactory() {
-				public View createTabContent(String tag) {
-					RevCommit parentCommit = commitParents.get(tag);
-					View v = layoutInflater.inflate(R.layout.rev_commit_view, tabWidget, false);
-					DiffSliderView diffSlider = (DiffSliderView) v.findViewById(R.id.RevCommitDiffSlider);
-					ExpandableListView expandableList = (ExpandableListView) v.findViewById(android.R.id.list);
-					expandableList.setAdapter(new CommitChangeListAdapter(repository, commit, parentCommit, diffSlider, expandableList, getContext()));
-					return v;
-				}
-			};
-			
-			
-		    for (RevCommit parentCommit : commit.getParents()) {
-		    	parentCommit = revWalk.parseCommit(parentCommit);
-		    	String parentId = parentCommit.getName();
-				commitParents.put(parentId, parentCommit);
-		    	TabSpec spec = tabHost.newTabSpec(parentId);
-		    	String text = "Δ "+parentId.substring(0, 4);
-		    	
-				spec.setIndicator(newTabIndicator(tabHost, text)).setContent(contentFactory);
-			    tabHost.addTab(spec);
-		    }
-		    
-		    commitNavigationView.setCommit(commit);
-		    
-	}
+
+    public void setCommit(final PlotCommit<PlotLane> c) throws MissingObjectException, IncorrectObjectTypeException, IOException {
+        //this.commit = (PlotCommit<PlotLane>) revWalk.parseCommit(c);
+        this.commit = c;
+        Log.d(TAG, "setCommit : "+commit);
+        Log.d(TAG, "actionBar : "+actionBar);
+        SpannableStringBuilder title = new SpannableStringBuilder(commit.name().substring(0, 4)+" "+commit.getShortMessage());
+        title.setSpan(MONOSPACE_SPAN,0,4,SPAN_EXCLUSIVE_EXCLUSIVE);
+        actionBar.setTitle(title);
+
+        tabHost.clearAllTabs();
+
+        tabHost.addTab(detailTabSpec());
+
+        showCommitDetailsFor(commit);
+
+        commitParents = newHashMapWithExpectedSize(commit.getParentCount());
+        TabContentFactory contentFactory = new TabContentFactory() {
+            public View createTabContent(String tag) {
+                RevCommit parentCommit = commitParents.get(tag);
+                View v = layoutInflater.inflate(R.layout.rev_commit_view, tabWidget, false);
+                DiffSliderView diffSlider = (DiffSliderView) v.findViewById(R.id.RevCommitDiffSlider);
+                ExpandableListView expandableList = (ExpandableListView) v.findViewById(android.R.id.list);
+                expandableList.setAdapter(new CommitChangeListAdapter(repository, commit, parentCommit, diffSlider, expandableList, getContext()));
+                return v;
+            }
+        };
+
+
+        for (RevCommit parentCommit : commit.getParents()) {
+            parentCommit = revWalk.parseCommit(parentCommit);
+            String parentId = parentCommit.getName();
+            commitParents.put(parentId, parentCommit);
+            TabSpec spec = tabHost.newTabSpec(parentId);
+            String text = "Δ "+parentId.substring(0, 4);
+
+            spec.setIndicator(newTabIndicator(tabHost, text)).setContent(contentFactory);
+            tabHost.addTab(spec);
+        }
+
+        commitNavigationView.setCommit(commit);
+
+    }
 
 	private void showCommitDetailsFor(final PlotCommit<PlotLane> commit) {
 		commitNavigationView = (CommitNavigationView) findViewById(R.id.commit_navigation);
