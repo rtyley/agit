@@ -40,8 +40,9 @@ import com.madgag.android.lazydrawables.ImageSession;
 public class PersonIdentView extends RelativeLayout {
 	
 	private static final String TAG = "PIV";
-	
-	private final ImageView avatarView;
+    public static final String ITALIC_CLIPPING_BUFFER = " ";
+
+    private final ImageView avatarView;
 	private final TextView nameView, titleView, whenView;
 	
 	@Inject ImageSession avatarSession;
@@ -62,7 +63,7 @@ public class PersonIdentView extends RelativeLayout {
 		titleView.setText(title);
 		Drawable avatar = avatarSession.get(gravatarIdFor(ident.getEmailAddress()));
 		avatarView.setImageDrawable(avatar);
-		nameView.setText(ident.getName());
+		nameView.setText(ident.getName()+ ITALIC_CLIPPING_BUFFER);
 		whenView.setText(timeSinceMS(ident.getWhen().getTime()));
 	}	
 }
