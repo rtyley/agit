@@ -14,7 +14,7 @@ import roboguice.inject.InjectView;
 
 import java.io.File;
 
-import static android.R.layout.two_line_list_item;
+import static android.R.layout.simple_list_item_2;
 import static android.graphics.PixelFormat.RGBA_8888;
 import static com.madgag.agit.Repos.knownRepos;
 import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
@@ -42,7 +42,7 @@ public class DashboardActivity extends RoboActivity {
 
     private void setupRepoList() {
 
-        listAdapter = new ViewHoldingListAdapter<File>(knownRepos(), viewInflatorFor(this, two_line_list_item), new ViewHolderFactory<File>() {
+        listAdapter = new ViewHoldingListAdapter<File>(knownRepos(), viewInflatorFor(this, simple_list_item_2), new ViewHolderFactory<File>() {
             public ViewHolder<File> createViewHolderFor(View view) {
                 return new RepositoryViewHolder(view);
             }

@@ -11,7 +11,7 @@ import roboguice.activity.RoboListActivity;
 
 import java.util.List;
 
-import static android.R.layout.two_line_list_item;
+import static android.R.layout.simple_list_item_2;
 import static com.madgag.agit.CloneLauncherActivity.cloneLauncherIntentFor;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 import static java.util.Arrays.asList;
@@ -34,7 +34,7 @@ public class SuggestRepoActivity extends RoboListActivity {
         new SuggestedRepo("Scalatra", "git://github.com/scalatra/scalatra.git"),
         new SuggestedRepo("JGit", "git://egit.eclipse.org/jgit.git")
         );
-        adapter = new ViewHoldingListAdapter<SuggestedRepo>(suggestedRepos, viewInflatorFor(this, two_line_list_item), new ViewHolderFactory<SuggestedRepo>() {
+        adapter = new ViewHoldingListAdapter<SuggestedRepo>(suggestedRepos, viewInflatorFor(this, simple_list_item_2), new ViewHolderFactory<SuggestedRepo>() {
             public ViewHolder<SuggestedRepo> createViewHolderFor(View view) {
                 return new SuggestedRepoViewHolder(view);
             }
