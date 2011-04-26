@@ -19,10 +19,16 @@
 
 package com.madgag.agit;
 
-import static com.madgag.agit.GitIntents.tagNameFrom;
-
-import java.io.IOException;
-
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
+import com.google.inject.Inject;
+import com.madgag.android.lazydrawables.ImageSession;
+import com.markupartist.android.widget.ActionBar;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefUpdate;
@@ -30,18 +36,12 @@ import org.eclipse.jgit.lib.RefUpdate.Result;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevWalk;
-
+import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.google.inject.Inject;
-import com.madgag.android.lazydrawables.ImageSession;
-import com.markupartist.android.widget.ActionBar;
+import java.io.IOException;
+
+import static com.madgag.agit.R.id.*;
 
 public class TagViewer extends RepositoryActivity {
 
@@ -55,19 +55,18 @@ public class TagViewer extends RepositoryActivity {
 	
 	@Inject	private ImageSession avatarSession;
 	
-	@InjectView(R.id.actionbar)
-	private ActionBar actionBar;
-	
-	@InjectView(R.id.tv_tag_tagger_ident)
-	private PersonIdentView taggerIdentView;
-	
-	@InjectView(R.id.tv_tag_tagged_object)
-	private ObjectSummaryView objectSummaryView;
+	@InjectView(actionbar) ActionBar actionBar;
+
+    @InjectView(tv_tag_tagger_ident) PersonIdentView taggerIdentView;
+
+    @InjectView(tv_tag_message) TextView tagMessage;
+
+	@InjectView(tv_tag_tagged_object) ObjectSummaryView objectSummaryView;
 	
 	private RevTag revTag;
 
 	private Ref tagRef;
-
+    @InjectExtra(value="tag") String tagName;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -77,8 +76,6 @@ public class TagViewer extends RepositoryActivity {
                 setContentView(R.layout.tag_view);
             }
         });
-
-		Log.d(TAG, "Roboguice THINGO "+actionBar+" "+taggerIdentView+" "+objectSummaryView);
 	}
 
     @Override
@@ -114,7 +111,7 @@ public class TagViewer extends RepositoryActivity {
     @Override
     public void onContentChanged() {
     	Log.d(TAG, "updateUI called");
-    	tagRef = repo().getTags().get(tagNameFrom(getIntent()));	
+    	tagRef = repo().getTags().get(tagName);
     	if (taggerIdentView==null) {
     		return;
     	}
@@ -131,6 +128,8 @@ public class TagViewer extends RepositoryActivity {
 				objectSummaryView.setObject(revWalk.parseAny(taggedId));
 				revTag = revWalk.parseTag(tagId);
 				actionBar.setTitle(revTag.getTagName());
+                tagMessage.setText(revTag.getFullMessage());
+                
 				taggerIdentView.setIdent("Tagger", revTag.getTaggerIdent());
 			} catch (IOException e) {
 				Log.e(TAG, "Couldn't get parse tag", e);

@@ -17,8 +17,7 @@
     <TextView android:id="@+id/tv_tag_message"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:autoLink="web|email|map" android:typeface="monospace"
-		android:textAppearance="?android:attr/textAppearanceSmall" />
+        style="@style/GitMessage" />
 
 	<com.madgag.agit.ObjectSummaryView
          android:id="@+id/tv_tag_tagged_object"

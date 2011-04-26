@@ -33,18 +33,19 @@ public class GitIntents {
 
 	private static final String TAG="GitIntents";
 
-    public static String
+    public static final String
             BARE="bare",
             EXTRA_TARGET_DIR="target-dir",
-            EXTRA_SOURCE_URI="source-uri";
+            EXTRA_SOURCE_URI="source-uri",
+            GITDIR = "gitdir";
 
-	public static File directoryFrom(Intent intent) {
+    public static File directoryFrom(Intent intent) {
 		String directory = intent.getStringExtra("directory");
 		return new File(directory);
 	}
 	
 	public static File gitDirFrom(Intent intent) {
-		String gitdirString = intent.getStringExtra("gitdir");
+		String gitdirString = intent.getStringExtra(GITDIR);
 		Log.i(TAG, "gitdirString = "+gitdirString);
 		File gitdir=new File(gitdirString);
 		Log.i(TAG, "gitdir for "+intent+" = "+gitdir.getAbsolutePath());
@@ -64,7 +65,7 @@ public class GitIntents {
 	}	
 	
 	public static void addGitDirTo(Intent intent, File gitdir) {
-		intent.putExtra("gitdir", gitdir.getAbsolutePath());
+		intent.putExtra(GITDIR, gitdir.getAbsolutePath());
 	}
 	
 	public static Repository repositoryFrom(Intent intent) {

@@ -37,7 +37,7 @@ public class DashboardActivity extends RoboActivity {
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        getWindow().setFormat(RGBA_8888);
+        // getWindow().setFormat(RGBA_8888);
     }
 
     private void setupRepoList() {

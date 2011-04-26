@@ -42,12 +42,14 @@ public class PersonIdentView extends RelativeLayout {
 	private static final String TAG = "PIV";
     public static final String ITALIC_CLIPPING_BUFFER = " ";
 
+
+    private PersonIdent ident;
     private final ImageView avatarView;
 	private final TextView nameView, titleView, whenView;
 	
 	@Inject ImageSession avatarSession;
-	
-	public PersonIdentView(Context context, AttributeSet attrs) {
+
+    public PersonIdentView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		((InjectorProvider)context).getInjector().injectMembers(this);
 		LayoutInflater.from(context).inflate(R.layout.person_ident_view, this);
@@ -60,10 +62,19 @@ public class PersonIdentView extends RelativeLayout {
 	
 	
 	public void setIdent(String title, PersonIdent ident) {
-		titleView.setText(title);
+        this.ident = ident;
+        titleView.setText(title);
 		Drawable avatar = avatarSession.get(gravatarIdFor(ident.getEmailAddress()));
 		avatarView.setImageDrawable(avatar);
 		nameView.setText(ident.getName()+ ITALIC_CLIPPING_BUFFER);
 		whenView.setText(timeSinceMS(ident.getWhen().getTime()));
-	}	
+    }
+
+    public PersonIdent getIdent() {
+        return ident;
+    }
+
+    public void setIdent(PersonIdent ident) {
+        this.ident = ident;
+    }
 }

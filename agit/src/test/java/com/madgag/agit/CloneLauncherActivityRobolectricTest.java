@@ -5,13 +5,14 @@ import android.view.View;
 import android.widget.Checkable;
 import android.widget.TextView;
 import com.google.inject.Inject;
-import org.hamcrest.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static com.madgag.agit.R.id.*;
 import static com.madgag.agit.matchers.CharSequenceMatcher.charSequence;
+import static com.madgag.agit.matchers.IsCheckedMatcher.checked;
+import static com.madgag.agit.matchers.IsCheckedMatcher.unchecked;
 import static com.xtremelabs.robolectric.matchers.TextViewHasTextMatcher.hasText;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
@@ -43,7 +44,7 @@ public class CloneLauncherActivityRobolectricTest {
         startActivityWith(clone.sourceUri(appleProjectSourceUri).toIntent());
 
         assertThat(textView(CloneUrlEditText), hasText(appleProjectSourceUri));
-        assertThat(defaultLocationCheckBox, isChecked(true));
+        assertThat(defaultLocationCheckBox, checked());
 	}
 
     @Test
@@ -51,7 +52,7 @@ public class CloneLauncherActivityRobolectricTest {
         startActivityWith(clone.sourceUri(appleProjectSourceUri).targetDir(targetDir).toIntent());
 
 		assertThat(textView(GitDirEditText), hasText(targetDir));
-		assertThat(defaultLocationCheckBox, isChecked(false));
+		assertThat(defaultLocationCheckBox, unchecked());
 		assertThat(textView(CloneUrlEditText), hasText(appleProjectSourceUri));
 	}
 
@@ -99,17 +100,5 @@ public class CloneLauncherActivityRobolectricTest {
     private View view(int viewId) {
         return activity.findViewById(viewId);
     }
-
-	private Matcher<Checkable> isChecked(final boolean checked) {
-		return new TypeSafeMatcher<Checkable>() {
-            protected boolean matchesSafely(Checkable checkable) {
-                return checkable.isChecked()==checked;
-            }
-
-            public void describeTo(Description description) {
-                description.appendText(checked?"checked":"unchecked");
-            }
-        };
-	}
 
 }

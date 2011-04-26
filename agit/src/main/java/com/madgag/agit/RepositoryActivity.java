@@ -38,8 +38,7 @@ public class RepositoryActivity extends RoboActivity {
     private @Inject @Named("gitdir") File gitdir;
     private @Inject RepositoryContext rc;
     private @Inject Repository repository;
-    protected @Inject
-    RepositoryScope repositoryScope;
+    protected @Inject RepositoryScope repositoryScope;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

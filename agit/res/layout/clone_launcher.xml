@@ -45,15 +45,21 @@
                 android:checked="true" />
         </LinearLayout>
     </ScrollView>
-    <LinearLayout style="@style/ExecutionBar" >
+    <RelativeLayout style="@style/ExecutionBar" android:gravity="right">
+        <Button android:id="@+id/GoCloneButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:textSize="20dip"
+                android:padding="8dip"
+                android:text="@string/execute_clone_button_label" />
         <TextView android:id="@+id/CloneReadinessMessage"
                 android:visibility="invisible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.0" />
-        <Button android:id="@+id/GoCloneButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/execute_clone_button_label" />
-    </LinearLayout>
+                android:layout_toLeftOf="@id/GoCloneButton"
+                android:layout_centerInParent="true"
+                android:layout_alignParentLeft="true"/>
+    </RelativeLayout>
 </LinearLayout>
