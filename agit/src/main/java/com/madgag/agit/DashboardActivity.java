@@ -3,9 +3,11 @@ package com.madgag.agit;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import com.madgag.android.listviews.ViewHolder;
 import com.madgag.android.listviews.ViewHolderFactory;
 import com.madgag.android.listviews.ViewHoldingListAdapter;
@@ -16,6 +18,7 @@ import java.io.File;
 
 import static android.R.layout.simple_list_item_2;
 import static android.graphics.PixelFormat.RGBA_8888;
+import static com.madgag.agit.R.layout.dashboard_repo_list_header;
 import static com.madgag.agit.Repos.knownRepos;
 import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
@@ -48,11 +51,18 @@ public class DashboardActivity extends RoboActivity {
             }
         });
 
+        TextView repoListHeader = (TextView) LayoutInflater.from(this).inflate(dashboard_repo_list_header, null);
+        repoListHeader.setCompoundDrawables(null, null, null, listView.getDivider());
+        listView.addHeaderView(repoListHeader, null, false);
+        //View dividerView = new View(this);
+        //dividerView.setBackgroundDrawable(listView.getDivider());
+        //listView.addHeaderView(dividerView , null, false);
         listView.setAdapter(listAdapter);
+        listView.setHeaderDividersEnabled(true);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(manageRepoIntent(listAdapter.getItem(position)));
+                startActivity(manageRepoIntent((File) listView.getAdapter().getItem(position)));
             }
         });
     }

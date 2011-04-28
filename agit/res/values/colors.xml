@@ -6,6 +6,7 @@
 	<color name="gitHubBlue">#4183C4</color>
 	<color name="addedText">#DDFFDD</color>
 	<color name="removedText">#FFDDDD</color>
+    <color name="repoListHeader">#FFFACD</color>
 
     <color name="executionbar_background_start">#f0f0f0</color>
     <color name="executionbar_background_end">#d0d0d0</color>
