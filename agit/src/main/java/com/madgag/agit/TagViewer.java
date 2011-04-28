@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.inject.Inject;
@@ -34,6 +35,7 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefUpdate;
 import org.eclipse.jgit.lib.RefUpdate.Result;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevObject;
 import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevWalk;
 import roboguice.inject.InjectExtra;
@@ -41,6 +43,8 @@ import roboguice.inject.InjectView;
 
 import java.io.IOException;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static com.madgag.agit.R.id.*;
 
 public class TagViewer extends RepositoryActivity {
@@ -126,11 +130,21 @@ public class TagViewer extends RepositoryActivity {
 			ObjectId tagId = tagRef.getObjectId();
 			try {
 				objectSummaryView.setObject(revWalk.parseAny(taggedId));
-				revTag = revWalk.parseTag(tagId);
-				actionBar.setTitle(revTag.getTagName());
-                tagMessage.setText(revTag.getFullMessage());
-                
-				taggerIdentView.setIdent("Tagger", revTag.getTaggerIdent());
+
+                RevObject immediateTagRefObject = revWalk.parseAny(tagId);
+                if (immediateTagRefObject instanceof RevTag) {
+                    revTag = revWalk.parseTag(tagId);
+
+				    taggerIdentView.setIdent("Tagger", revTag.getTaggerIdent());
+                    actionBar.setTitle(revTag.getTagName());
+                    tagMessage.setText(revTag.getFullMessage());
+                    tagMessage.setVisibility(VISIBLE);
+                    taggerIdentView.setVisibility(VISIBLE);
+                } else {
+                    tagMessage.setVisibility(GONE);
+                    taggerIdentView.setVisibility(GONE);
+                }
+
 			} catch (IOException e) {
 				Log.e(TAG, "Couldn't get parse tag", e);
 				Toast.makeText(this, "Couldn't get tag "+tagId, Toast.LENGTH_LONG).show();

@@ -43,4 +43,8 @@ public class VisibilityMatcher extends TypeSafeMatcher<View> {
 	public static Matcher<View> visible() {
 		return new VisibilityMatcher(VISIBLE);
 	}
+
+    public static Matcher<View> gone() {
+		return new VisibilityMatcher(GONE);
+	}
 }

@@ -47,8 +47,9 @@ public class ObjectSummaryView extends LinearLayout {
 	@Inject LayoutInflater layoutInflater;
 	
 	@Inject Repository repository;
+    private RevObject revObject;
 
-	public ObjectSummaryView(Context context, AttributeSet attrs) {
+    public ObjectSummaryView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		((InjectorProvider)context).getInjector().injectMembers(this);
 		setOrientation(VERTICAL);
@@ -56,7 +57,8 @@ public class ObjectSummaryView extends LinearLayout {
 	}
 	
 	public void setObject( final RevObject revObject) {
-		objectIdView.setText(revObject.getId().abbreviate(4).name());
+        this.revObject = revObject;
+        objectIdView.setText(revObject.getId().abbreviate(4).name());
 		setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				getContext().startActivity(revCommitViewIntentFor(repository.getDirectory(), revObject.getName()));
@@ -71,4 +73,8 @@ public class ObjectSummaryView extends LinearLayout {
 		PersonIdentView personIdentView = (PersonIdentView) typeSpecificView.findViewById(R.id.csv_commit_author_ident);
 		personIdentView.setIdent("Author", commit.getAuthorIdent());
 	}
+
+    public RevObject getObject() {
+        return revObject;
+    }
 }
