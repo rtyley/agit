@@ -19,39 +19,38 @@
 
 package com.madgag.agit;
 
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
-import static android.widget.Toast.LENGTH_LONG;
-import static android.widget.Toast.LENGTH_SHORT;
-import static com.madgag.agit.GitIntents.*;
-import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
-import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
-import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Environment;
+import android.text.Editable;
+import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.*;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import com.markupartist.android.widget.ActionBar;
+import org.eclipse.jgit.lib.RepositoryCache;
+import org.eclipse.jgit.transport.URIish;
+import org.eclipse.jgit.util.FS;
+import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectView;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import android.media.RingtoneManager;
-import android.text.*;
-import android.text.method.LinkMovementMethod;
-import android.widget.*;
-import com.markupartist.android.widget.ActionBar;
-import com.sun.org.apache.bcel.internal.util.Repository;
-import org.eclipse.jgit.lib.RepositoryCache;
-import org.eclipse.jgit.storage.file.FileRepository;
-import org.eclipse.jgit.transport.URIish;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import org.eclipse.jgit.util.FS;
-import roboguice.activity.RoboActivity;
-import roboguice.inject.InjectView;
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+import static android.widget.Toast.LENGTH_LONG;
+import static android.widget.Toast.LENGTH_SHORT;
+import static com.madgag.agit.GitIntents.EXTRA_SOURCE_URI;
+import static com.madgag.agit.GitIntents.EXTRA_TARGET_DIR;
+import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
+import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
+import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
 
 public class CloneLauncherActivity extends RoboActivity {
 	private final static String TAG="CloneLauncherActivity";

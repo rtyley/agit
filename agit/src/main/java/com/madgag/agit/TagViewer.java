@@ -24,10 +24,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.inject.Inject;
+import com.madgag.agit.views.ObjectSummaryView;
 import com.madgag.android.lazydrawables.ImageSession;
 import com.markupartist.android.widget.ActionBar;
 import org.eclipse.jgit.lib.ObjectId;
@@ -61,11 +61,8 @@ public class TagViewer extends RepositoryActivity {
 	
 	@InjectView(actionbar) ActionBar actionBar;
 
-    @InjectView(tv_tag_tagger_ident) PersonIdentView taggerIdentView;
-
-    @InjectView(tv_tag_message) TextView tagMessage;
-
-	@InjectView(tv_tag_tagged_object) ObjectSummaryView objectSummaryView;
+	@InjectView(tv_tag_ref_object)
+    ObjectSummaryView objectSummaryView;
 	
 	private RevTag revTag;
 
@@ -116,7 +113,7 @@ public class TagViewer extends RepositoryActivity {
     public void onContentChanged() {
     	Log.d(TAG, "updateUI called");
     	tagRef = repo().getTags().get(tagName);
-    	if (taggerIdentView==null) {
+    	if (objectSummaryView==null) {
     		return;
     	}
     	
@@ -129,20 +126,18 @@ public class TagViewer extends RepositoryActivity {
 			
 			ObjectId tagId = tagRef.getObjectId();
 			try {
-				objectSummaryView.setObject(revWalk.parseAny(taggedId));
+				// objectSummaryView.setObject(revWalk.parseAny(taggedId));
 
-                RevObject immediateTagRefObject = revWalk.parseAny(tagId);
+                final RevObject immediateTagRefObject = revWalk.parseAny(tagId);
+                repositoryScope.doWith(repo(), new Runnable() {
+                    public void run() {
+                        objectSummaryView.setObject(immediateTagRefObject);
+                    }
+                });
+
                 if (immediateTagRefObject instanceof RevTag) {
                     revTag = revWalk.parseTag(tagId);
-
-				    taggerIdentView.setIdent("Tagger", revTag.getTaggerIdent());
                     actionBar.setTitle(revTag.getTagName());
-                    tagMessage.setText(revTag.getFullMessage());
-                    tagMessage.setVisibility(VISIBLE);
-                    taggerIdentView.setVisibility(VISIBLE);
-                } else {
-                    tagMessage.setVisibility(GONE);
-                    taggerIdentView.setVisibility(GONE);
                 }
 
 			} catch (IOException e) {
