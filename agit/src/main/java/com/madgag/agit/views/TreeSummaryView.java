@@ -57,4 +57,9 @@ public class TreeSummaryView extends OSV<RevTree> {
     public int layoutId() {
         return R.layout.osv_tree_summary_view;
     }
+
+    @Override
+    public CharSequence getTypeName() {
+        return "Tree";
+    }
 }

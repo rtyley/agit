@@ -5,11 +5,13 @@
 		android:layout_width="24dip"
 		android:layout_height="24dip"
 		android:src="@drawable/commit_24" />
-	<TextView android:id="@+id/osv_object_id_text"
+    <TextView android:id="@+id/osv_object_type_text"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"/>
+	<com.madgag.agit.views.ObjectIdView android:id="@+id/osv_object_id_text"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:typeface="monospace"
-		android:textAppearance="?android:attr/textAppearanceSmall" />
+		android:typeface="monospace" />
 	<LinearLayout
 		android:id="@+id/osv_type_specific_data_frame"
         android:orientation="vertical"

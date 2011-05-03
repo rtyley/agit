@@ -38,4 +38,6 @@ public abstract class OSV<T extends RevObject> {
     public abstract int iconId();
 
     public abstract int layoutId();
+
+    public abstract CharSequence getTypeName();
 }

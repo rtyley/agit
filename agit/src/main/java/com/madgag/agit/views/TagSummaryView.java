@@ -62,4 +62,9 @@ public class TagSummaryView extends OSV<RevTag> {
     public int layoutId() {
         return osv_tag_summary_view;
     }
+
+    @Override
+    public CharSequence getTypeName() {
+        return "Annotated Tag";
+    }
 }

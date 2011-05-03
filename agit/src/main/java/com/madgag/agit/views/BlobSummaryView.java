@@ -38,7 +38,7 @@ public class BlobSummaryView extends OSV<RevBlob> {
             long size = repo.open(blob).getSize();
             ((TextView)view.findViewById(blob_size)).setText(size+" bytes");
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
     }
 
@@ -50,5 +50,10 @@ public class BlobSummaryView extends OSV<RevBlob> {
     @Override
     public int layoutId() {
         return osv_blob_summary_view;
+    }
+
+    @Override
+    public CharSequence getTypeName() {
+        return "Blob";
     }
 }

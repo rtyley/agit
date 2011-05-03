@@ -47,7 +47,8 @@ public class ObjectSummaryView extends LinearLayout {
 
     @Inject Repository repo;
     ImageView objectTypeIcon;
-    TextView objectIdTextView;
+    ObjectIdView objectIdView;
+    TextView objectTypeTextView;
     ViewGroup typeSpecificFrame;
 
     public ObjectSummaryView(Context context, AttributeSet attrs) {
@@ -57,7 +58,8 @@ public class ObjectSummaryView extends LinearLayout {
         ((InjectorProvider)context).getInjector().injectMembers(this);
 
         objectTypeIcon = (ImageView) findViewById(osv_object_type_icon);
-        objectIdTextView = (TextView) findViewById(osv_object_id_text);
+        objectIdView = (ObjectIdView) findViewById(osv_object_id_text);
+        objectTypeTextView = (TextView) findViewById(osv_object_type_text);
         typeSpecificFrame = (ViewGroup) findViewById(osv_type_specific_data_frame);
 	}
 
@@ -81,8 +83,10 @@ public class ObjectSummaryView extends LinearLayout {
             }
         });
         objectTypeIcon.setImageResource(osv.iconId());
-        objectIdTextView.setText(gitObject.name());
-        // typeSpecificFrame.removeAllViews();
+        objectTypeTextView.setText(osv.getTypeName());
+        objectIdView.setObjectId(gitObject);
+        
+        typeSpecificFrame.removeAllViews();
         LayoutInflater.from(getContext()).inflate(osv.layoutId(), typeSpecificFrame);
         Log.d(TAG, "About to set type-specific info for gitObject=" + gitObject);
         osv.setObject(gitObject, typeSpecificFrame, repo);

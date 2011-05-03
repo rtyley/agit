@@ -42,4 +42,9 @@ public class CommitSummaryView extends OSV<RevCommit> {
     public int layoutId() {
         return R.layout.osv_commit_summary_view;
     }
+
+    @Override
+    public CharSequence getTypeName() {
+        return "Commit";
+    }
 }
