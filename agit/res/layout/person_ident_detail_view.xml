@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_weight="1"
+	android:padding="10dip">
+
+	<ImageView
+		android:id="@+id/person_ident_avatar"
+		android:layout_width="72dip"
+		android:layout_height="72dip"
+		android:scaleType="center"
+        android:layout_centerHorizontal="true"
+		android:background="@drawable/gravatar_border" />
+	<TextView
+		android:id="@+id/person_ident_name"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/person_ident_avatar"
+		android:layout_alignParentLeft="true"
+        android:autoLink="email"
+		android:text="Someone" />
+	<TextView
+		android:id="@+id/person_ident_when"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/person_ident_name"
+		android:layout_alignLeft="@id/person_ident_name"
+		android:textStyle="italic"
+		android:text="Sometime" />
+</merge>
