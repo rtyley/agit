@@ -50,7 +50,7 @@ public class TreeSummaryView extends OSV<RevTree> {
 
     @Override
     public int iconId() {
-        return R.drawable.commit_24;
+        return R.drawable.tree_36;
     }
 
     @Override

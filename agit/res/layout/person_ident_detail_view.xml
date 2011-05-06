@@ -1,31 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:layout_weight="1"
-	android:padding="10dip">
-
-	<ImageView
-		android:id="@+id/person_ident_avatar"
-		android:layout_width="72dip"
-		android:layout_height="72dip"
-		android:scaleType="center"
-        android:layout_centerHorizontal="true"
-		android:background="@drawable/gravatar_border" />
-	<TextView
-		android:id="@+id/person_ident_name"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/person_ident_avatar"
-		android:layout_alignParentLeft="true"
-        android:autoLink="email"
-		android:text="Someone" />
-	<TextView
-		android:id="@+id/person_ident_when"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/person_ident_name"
-		android:layout_alignLeft="@id/person_ident_name"
-		android:textStyle="italic"
-		android:text="Sometime" />
+	android:layout_height="wrap_content">
+    <LinearLayout
+            style="@style/Theme.App"
+            android:theme="@style/Theme.App"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="15dip">
+        <ImageView
+            android:id="@+id/person_ident_avatar"
+            android:layout_width="100dip"
+            android:layout_height="100dip"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dip"
+            android:background="@drawable/gravatar_border" />
+        <TextView
+            android:id="@+id/person_ident_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/person_ident_avatar"
+            android:layout_marginBottom="10dip"
+            android:autoLink="email"
+            android:text="Someone" />
+        <TextView
+            android:id="@+id/person_ident_when"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sometime" />
+    </LinearLayout>
 </merge>

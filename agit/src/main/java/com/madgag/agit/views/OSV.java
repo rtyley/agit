@@ -19,17 +19,9 @@
 
 package com.madgag.agit.views;
 
-import android.content.Context;
-import android.util.AttributeSet;
 import android.view.View;
-import android.widget.TextView;
-import com.madgag.agit.PersonIdentView;
-import com.madgag.agit.R;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevObject;
-import org.eclipse.jgit.revwalk.RevTag;
-import roboguice.inject.InjectorProvider;
 
 public abstract class OSV<T extends RevObject> {
 

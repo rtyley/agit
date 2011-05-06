@@ -10,19 +10,21 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="48"
-   height="48"
+   width="36"
+   height="36"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.0 r9654"
-   sodipodi:docname="blob-icon.svg">
+   inkscape:version="0.48.1 r9760"
+   sodipodi:docname="blob-icon.svg"
+   inkscape:export-filename="/home/roberto/development/agit-parent/agit/res/drawable-mdpi/blob_36.png"
+   inkscape:export-xdpi="160"
+   inkscape:export-ydpi="160">
   <defs
      id="defs4">
     <linearGradient
-       inkscape:collect="always"
        id="linearGradient3759">
       <stop
-         style="stop-color:#000000;stop-opacity:1;"
+         style="stop-color:#0000ff;stop-opacity:1;"
          offset="0"
          id="stop3761" />
       <stop
@@ -39,7 +41,7 @@
        x2="24.320509"
        y2="1012.3622"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="translate(6.3047852,0)" />
+       gradientTransform="translate(6.1114258,1.6367535)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -49,7 +51,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="4"
-     inkscape:cx="4.5"
+     inkscape:cx="-26.875"
      inkscape:cy="1"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -58,18 +60,7 @@
      inkscape:window-height="723"
      inkscape:window-x="0"
      inkscape:window-y="24"
-     inkscape:window-maximized="1">
-    <inkscape:grid
-       type="axonomgrid"
-       id="grid2985"
-       units="px"
-       empspacing="5"
-       visible="true"
-       enabled="true"
-       snapvisiblegridlinesonly="true"
-       spacingy="10px"
-       originx="7px" />
-  </sodipodi:namedview>
+     inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -86,18 +77,18 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-1004.3622)">
+     transform="translate(0,-1016.3622)">
     <text
        xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient3765);fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-       x="4.6445312"
-       y="1043.3622"
+       style="font-size:28px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient3765);fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="4.4511719"
+       y="1044.9989"
        id="text2987"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan2989"
-         x="4.6445312"
-         y="1043.3622"
-         style="fill:url(#linearGradient3765);fill-opacity:1">Bl</tspan></text>
+         x="4.4511719"
+         y="1044.9989"
+         style="font-size:28px;fill:url(#linearGradient3765);fill-opacity:1">Bl</tspan></text>
   </g>
 </svg>

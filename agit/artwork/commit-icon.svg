@@ -10,12 +10,15 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="48"
-   height="48"
+   width="36"
+   height="36"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.0 r9654"
-   sodipodi:docname="New document 1">
+   inkscape:version="0.48.1 r9760"
+   sodipodi:docname="commit-icon.svg"
+   inkscape:export-filename="/home/roberto/development/agit-parent/agit/res/drawable-mdpi/commit_36.png"
+   inkscape:export-xdpi="160"
+   inkscape:export-ydpi="160">
   <defs
      id="defs4">
     <linearGradient
@@ -38,7 +41,8 @@
        y1="1042.3622"
        x2="24.320509"
        y2="1012.3622"
-       gradientUnits="userSpaceOnUse" />
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(1.285254,1.192435)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -48,7 +52,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="4"
-     inkscape:cx="36.25"
+     inkscape:cx="4.875"
      inkscape:cy="1"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -57,18 +61,7 @@
      inkscape:window-height="723"
      inkscape:window-x="0"
      inkscape:window-y="24"
-     inkscape:window-maximized="1">
-    <inkscape:grid
-       type="axonomgrid"
-       id="grid2985"
-       units="px"
-       empspacing="5"
-       visible="true"
-       enabled="true"
-       snapvisiblegridlinesonly="true"
-       spacingy="10px"
-       originx="7px" />
-  </sodipodi:namedview>
+     inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -85,18 +78,18 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-1004.3622)">
+     transform="translate(0,-1016.3622)">
     <text
        xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient3765);fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-       x="-1.660254"
-       y="1043.3622"
+       style="font-size:28px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient3765);fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="-0.375"
+       y="1044.5546"
        id="text2987"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan2989"
-         x="-1.660254"
-         y="1043.3622"
-         style="fill-opacity:1;fill:url(#linearGradient3765)">Co</tspan></text>
+         x="-0.375"
+         y="1044.5546"
+         style="font-size:28px;fill:url(#linearGradient3765);fill-opacity:1">Co</tspan></text>
   </g>
 </svg>

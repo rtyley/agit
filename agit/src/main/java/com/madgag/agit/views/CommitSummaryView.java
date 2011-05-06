@@ -19,23 +19,32 @@
 
 package com.madgag.agit.views;
 
+import android.content.DialogInterface;
 import android.view.View;
 import android.widget.TextView;
-import com.madgag.agit.PersonIdentView;
+import com.madgag.agit.CommitViewerActivity;
 import com.madgag.agit.R;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
+import static com.madgag.agit.CommitViewerActivity.revCommitViewIntentFor;
+import static com.madgag.agit.R.drawable.commit_36;
+
 public class CommitSummaryView extends OSV<RevCommit> {
 
-	public void setObject(RevCommit commit, View view, Repository repo) {
+	public void setObject(final RevCommit commit, View view, final Repository repo) {
         ((PersonIdentView) view.findViewById(R.id.author_ident)).setIdent("Author", commit.getAuthorIdent());
         ((TextView) view.findViewById(R.id.short_message_text)).setText(commit.getShortMessage());
+        view.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                view.getContext().startActivity(revCommitViewIntentFor(repo.getDirectory(), commit.name()));
+            }
+        });
     }
 
     @Override
     public int iconId() {
-        return R.drawable.commit_24;
+        return commit_36;
     }
 
     @Override

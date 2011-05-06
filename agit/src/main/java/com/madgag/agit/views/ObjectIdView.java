@@ -64,7 +64,7 @@ public class ObjectIdView extends TextView {
             public void onClick(View v) {
                 String idText = objectId.name();
                 clipboardManager.setText(idText);
-                String htmlMessage = "Object id <br /><small><small><b><tt>"+objectId.name()+"</tt></b></small></small><br /> copied to clipboard!";
+                String htmlMessage = "<small><small><b><tt>"+objectId.name()+"</tt></b></small><br />(copied to clipboard!)</small>";
                 SpannableString spannable= new SpannableString(fromHtml(htmlMessage));
                 spannable.setSpan(new AlignmentSpan.Standard(ALIGN_CENTER),0,spannable.length(),SpannableString.SPAN_INCLUSIVE_INCLUSIVE);
                 Toast.makeText(getContext(), spannable, LENGTH_SHORT).show();

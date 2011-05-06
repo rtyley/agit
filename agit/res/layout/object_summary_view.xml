@@ -9,7 +9,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"/>
 	<com.madgag.agit.views.ObjectIdView android:id="@+id/osv_object_id_text"
-		android:layout_width="match_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:typeface="monospace" />
 	<LinearLayout

@@ -17,57 +17,80 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.madgag.agit;
-
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.text.format.DateFormat;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import com.google.inject.Inject;
-import com.madgag.android.lazydrawables.ImageSession;
-import org.eclipse.jgit.lib.PersonIdent;
-import roboguice.inject.InjectorProvider;
-
-import java.text.SimpleDateFormat;
+package com.madgag.agit.views;
 
 import static com.madgag.agit.Time.timeSinceMS;
 import static com.madgag.android.lazydrawables.gravatar.Gravatars.gravatarIdFor;
 
-public class PersonIdentDetailView extends RelativeLayout {
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.view.View;
+import com.madgag.agit.R;
+import org.eclipse.jgit.lib.PersonIdent;
 
-	private static final String TAG = "PIDV";
+import roboguice.inject.InjectorProvider;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.google.inject.Inject;
+import com.madgag.android.lazydrawables.ImageSession;
+
+public class PersonIdentView extends RelativeLayout {
+	
+	private static final String TAG = "PIV";
     public static final String ITALIC_CLIPPING_BUFFER = " ";
 
     private PersonIdent ident;
     private final ImageView avatarView;
-	private final TextView nameView, whenView;
-
+	private final TextView nameView, titleView, whenView;
+	
 	@Inject ImageSession avatarSession;
 
-    public PersonIdentDetailView(Context context) {
-		super(context);
+    public PersonIdentView(Context context, AttributeSet attrs) {
+		super(context, attrs);
 		((InjectorProvider)context).getInjector().injectMembers(this);
-		LayoutInflater.from(context).inflate(R.layout.person_ident_detail_view, this);
+		LayoutInflater.from(context).inflate(com.madgag.agit.R.layout.person_ident_view, this);
 		
+		titleView = (TextView) findViewById(R.id.person_ident_title);
 		avatarView = (ImageView) findViewById(R.id.person_ident_avatar);
 		nameView = (TextView) findViewById(R.id.person_ident_name);
 		whenView = (TextView) findViewById(R.id.person_ident_when);
 	}
 	
 	
-	public void setIdent(String title, PersonIdent ident) {
+	public void setIdent(final String title, final PersonIdent ident) {
         this.ident = ident;
+        titleView.setText(title);
 		Drawable avatar = avatarSession.get(gravatarIdFor(ident.getEmailAddress()));
 		avatarView.setImageDrawable(avatar);
-		nameView.setText(ident.getName()+ " "+ident.getEmailAddress());
-        java.text.DateFormat dateFormat = java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.FULL,java.text.DateFormat.FULL);
+		nameView.setText(ident.getName()+ ITALIC_CLIPPING_BUFFER);
+		whenView.setText(timeSinceMS(ident.getWhen().getTime()));
+        setClickable(true);
+        setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                
+                Log.d(TAG,"Clicked "+v);
+                final PersonIdentDetailView view = new PersonIdentDetailView(getContext());
+                view.setIdent(title, ident);
+                Dialog dialog = new AlertDialog.Builder(getContext()).setView(view).show();
+                view.setClickable(true);
+                view.setOnClickListener(close(dialog));
+            }
+        });
+    }
 
-        String dateString= dateFormat.format(ident.getWhen());
-		whenView.setText(dateString);
+    private OnClickListener close(final Dialog dialog) {
+        return new OnClickListener() {
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        };
     }
 
     public PersonIdent getIdent() {

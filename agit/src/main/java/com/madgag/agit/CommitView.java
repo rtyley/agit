@@ -19,17 +19,16 @@
 
 package com.madgag.agit;
 
-import static android.graphics.Typeface.MONOSPACE;
 import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import java.io.IOException;
 import java.util.Map;
 
-import android.graphics.Typeface;
 import android.text.SpannableStringBuilder;
 import android.text.style.CharacterStyle;
-import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
+import com.madgag.agit.views.ObjectIdView;
+import com.madgag.agit.views.PersonIdentView;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -42,7 +41,6 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -140,8 +138,8 @@ public class CommitView extends LinearLayout {
 		commitNavigationView = (CommitNavigationView) findViewById(R.id.commit_navigation);
 		Log.d("CV", "Got commitNavigationView="+commitNavigationView+" commitSelectedListener="+commitSelectedListener);
 		commitNavigationView.setCommitSelectedListener(commitSelectedListener);
-		
-		text(R.id.commit_id_text,commit.getName());
+
+        ((ObjectIdView)findViewById(R.id.commit_id)).setObjectId(commit);
 
 		ViewGroup vg = (ViewGroup) findViewById(R.id.commit_people_group);
 		

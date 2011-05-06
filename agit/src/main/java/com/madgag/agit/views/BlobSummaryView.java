@@ -27,6 +27,7 @@ import org.eclipse.jgit.revwalk.RevBlob;
 
 import java.io.IOException;
 
+import static com.madgag.agit.R.drawable.blob_36;
 import static com.madgag.agit.R.drawable.commit_24;
 import static com.madgag.agit.R.id.blob_size;
 import static com.madgag.agit.R.layout.osv_blob_summary_view;
@@ -44,7 +45,7 @@ public class BlobSummaryView extends OSV<RevBlob> {
 
     @Override
     public int iconId() {
-        return commit_24;
+        return blob_36;
     }
 
     @Override
