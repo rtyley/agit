@@ -23,7 +23,7 @@ GNU General Public License for more details.
 Credits
 -------
 
-Agit makes use of many different libraries.
+Agit makes use of many different libraries:
 
 ### Runtime dependencies
 
@@ -85,11 +85,9 @@ In addition, the build process uses the following software:
 
 
 And of course the entire system runs on Android, which uses a VM originally
-based on Harmony:
+based on Harmony...
 
-https://issues.apache.org/jira/browse/HARMONY-6637
-
-http://code.google.com/p/android/issues/detail?id=11755
+The fix for [HARMONY-6637](https://issues.apache.org/jira/browse/HARMONY-6637) has now been accepted downstream in Android with issue #[11755](http://code.google.com/p/android/issues/detail?id=11755).
 
 
 
