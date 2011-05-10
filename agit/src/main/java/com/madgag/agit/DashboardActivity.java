@@ -4,6 +4,8 @@ package com.madgag.agit;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -26,6 +28,8 @@ import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 public class DashboardActivity extends RoboActivity {
     private static final String TAG = "DA";
 
+    private final static int MENU_ABOUT_ID= Menu.FIRST;
+    
     @InjectView(android.R.id.list) ListView listView;
     ViewHoldingListAdapter<File> listAdapter;
 
@@ -40,7 +44,7 @@ public class DashboardActivity extends RoboActivity {
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        // getWindow().setFormat(RGBA_8888);
+        getWindow().setFormat(RGBA_8888);
     }
 
     private void setupRepoList() {
@@ -66,6 +70,24 @@ public class DashboardActivity extends RoboActivity {
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	super.onCreateOptionsMenu(menu);
+        menu.add(0, MENU_ABOUT_ID, 0, R.string.about_app_menu_option).setShortcut('0', 'a');
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case MENU_ABOUT_ID:
+        	startActivity(new Intent(this, AboutActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     protected void onResume() {
         super.onResume();

@@ -98,6 +98,12 @@
 
 	</dependencies>
 	<build>
+        <resources>
+            <resource>
+                <directory>${basedir}/..</directory>
+                <includes><include>CREDITS.html</include></includes>
+            </resource>
+        </resources>
 		<plugins>
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
