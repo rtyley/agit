@@ -1,13 +1,14 @@
+
 Agit - Android Git Client
 -------------------------
 
 © 2011 Roberto Tyley
 
-This app can bought on the Android Market, doing so supports the author in creation of open-source software.
+This app can bought on the Android Market, doing so supports the author in the creation of open-source software.
 
 The source code is freely available:
 
-https://github.com/rtyley/agit
+[https://github.com/rtyley/agit](https://github.com/rtyley/agit)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the [GNU General Public License](http://www.gnu.org/licenses/gpl.html)
@@ -28,59 +29,68 @@ Agit makes use of many different libraries.
 
 The distributed Agit binary contains software from the following projects:
 
-#### JGit
+  * [JGit](http://www.eclipse.org/jgit/) - Pure Java library implementing Git.
 
-[link](http://www.eclipse.org/jgit/)
-[EDL](http://www.eclipse.org/org/documents/edl-v10.php) (new-style BSD)
+    License: [EDL v1.0](http://www.eclipse.org/org/documents/edl-v10.php) (new-style BSD)
 
-#### Guice
-[link](http://code.google.com/p/google-guice/)
-[Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+  * [Guice](http://code.google.com/p/google-guice/)
 
-#### RoboGuice
-[link](http://code.google.com/p/roboguice/)
-[Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+    License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
-#### Commons IO
-[link](http://commons.apache.org/io)
-[Apache License 2.0](http://commons.apache.org/io/license.html)
+  * [RoboGuice](http://code.google.com/p/roboguice/)
 
-#### Google Collections
-[link](http://code.google.com/p/google-collections/)
-[Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+    License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
-#### sshj - SSHv2 library for Java
-[link](https://github.com/shikhar/sshj)
-[Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+  * [Commons IO](http://commons.apache.org/io)
+
+    License: [Apache 2.0](http://commons.apache.org/io/license.html)
+
+  * [Google Collections](http://code.google.com/p/google-collections/)
+
+    License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+  * [sshj - SSHv2 library for Java](https://github.com/shikhar/sshj)
+
+    License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
 ### Test dependencies
 
-#### Robolectric
-[link](http://pivotal.github.com/robolectric/)
-[MIT License](http://www.opensource.org/licenses/mit-license.php)
+  * [Robolectric](http://pivotal.github.com/robolectric/)
 
-#### toy-android-ssh-agent
-[link](https://github.com/rtyley/toy-android-ssh-agent)
-[GPL v3](http://www.gnu.org/licenses/gpl-3.0.html)
+    License: [MIT License](http://www.opensource.org/licenses/mit-license.php)
 
-#### mini-git-server
-[link](https://github.com/rtyley/mini-git-server)
-[GPL v3](http://www.gnu.org/licenses/gpl-3.0.html)
+  * [toy-android-ssh-agent](https://github.com/rtyley/toy-android-ssh-agent)
 
-Pure-Java WAR capable of hosting git repos and serving them over git+ssh.
-Basically a stripped-down copy of <a href="http://code.google.com/p/gerrit/">Gerrit</a>.
+    License: [GPL v3](http://www.gnu.org/licenses/gpl-3.0.html)
+
+  * [mini-git-server](https://github.com/rtyley/mini-git-server)
+
+    Pure-Java WAR capable of hosting git repos and serving them over git+ssh.
+    Basically a stripped-down copy of [Gerrit](http://code.google.com/p/gerrit/).
+
+    License: [GPL v3](http://www.gnu.org/licenses/gpl-3.0.html)
 
 
 ### Build dependencies
 
 In addition, the build process uses the following software:
 
-#### Proguard
-[link](http://proguard.sourceforge.net/)
-[GPL v2](http://proguard.sourceforge.net/license.html)
+  * [Proguard](http://proguard.sourceforge.net/)
 
-#### Maven Android Plugin
-[link](http://code.google.com/p/maven-android-plugin/)
-[Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+    License: [GPL v2](http://proguard.sourceforge.net/license.html)
+
+  * [Maven Android Plugin](http://code.google.com/p/maven-android-plugin/)
+
+    License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+
+And of course the entire system runs on Android, which uses a VM originally
+based on Harmony:
+
+https://issues.apache.org/jira/browse/HARMONY-6637
+
+http://code.google.com/p/android/issues/detail?id=11755
+
+
 
 
