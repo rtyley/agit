@@ -36,11 +36,11 @@ import com.markupartist.android.widget.ActionBar;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.util.FS;
+import org.tautua.markdownpapers.Markdown;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
 
 import static android.view.View.INVISIBLE;
@@ -70,6 +70,17 @@ public class AboutActivity extends RoboActivity {
         setContentView(R.layout.about_launcher);
         actionBar.setHomeLogo(R.drawable.actionbar_agit_logo);
 
-        webView.loadUrl("file:///android_asset/CREDITS.html");
+        Reader in = null;
+        try {
+            in = new InputStreamReader(getAssets().open("CREDITS.markdown"));
+            Writer out = new StringWriter();
+
+            Markdown md = new Markdown();
+            md.transform(in, out);
+            webView.loadDataWithBaseURL(null, out.toString(),"text/html", "UTF-8", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -95,13 +95,18 @@
             <artifactId>slf4j-nop</artifactId>
             <version>1.6.1</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.tautua.markdownpapers</groupId>
+            <artifactId>markdownpapers-core</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 	</dependencies>
 	<build>
         <resources>
             <resource>
                 <directory>${basedir}/..</directory>
-                <includes><include>CREDITS.html</include></includes>
+                <targetPath>assets/</targetPath>
+                <includes><include>CREDITS.*</include></includes>
             </resource>
         </resources>
 		<plugins>
