@@ -23,6 +23,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static android.view.animation.AnimationUtils.loadAnimation;
 import static com.google.common.collect.Maps.newEnumMap;
+import static com.madgag.agit.R.anim.*;
 import static com.madgag.agit.Relation.CHILD;
 import static com.madgag.agit.Relation.PARENT;
 import static org.eclipse.jgit.lib.Constants.HEAD;
@@ -87,7 +88,7 @@ public class CommitViewerActivity extends RepositoryActivity {
 	
 	private PlotCommit<PlotLane> commit;
 	
-	private CommitView currentCommitView, nextCommitView;
+	CommitView currentCommitView, nextCommitView;
 	
 	private Map<Relation,RelationAnimations> relationAnimations = newEnumMap(Relation.class);
 	
@@ -110,8 +111,8 @@ public class CommitViewerActivity extends RepositoryActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.commit_navigation_animation_layout);
 
-		relationAnimations.put(PARENT, new RelationAnimations(R.anim.push_child_out, R.anim.pull_parent_in));
-		relationAnimations.put(CHILD, new RelationAnimations(R.anim.push_parent_out, R.anim.pull_child_in));
+		relationAnimations.put(PARENT, new RelationAnimations(push_child_out, pull_parent_in));
+		relationAnimations.put(CHILD, new RelationAnimations(push_parent_out, pull_child_in));
 		
 		currentCommitView = (CommitView) findViewById(R.id.commit_nav_current_commit);
 		nextCommitView = (CommitView) findViewById(R.id.commit_nav_next_commit);
@@ -125,11 +126,11 @@ public class CommitViewerActivity extends RepositoryActivity {
 
 			
 			ObjectId revisionId = GitIntents.commitIdFrom(getIntent()); // intent.getStringExtra("commit");
-			Log.i("RCCV", revisionId.getName());
+			Log.d("RCCV", revisionId.getName());
 			PlotWalk revWalk = generatePlotWalk();
-			
+
 			commit = (PlotCommit<PlotLane>) revWalk.parseCommit(revisionId);
-			
+
 			setup(currentCommitView, commitSelectedListener, revWalk);
 			setup(nextCommitView, commitSelectedListener, revWalk);
 			
@@ -171,7 +172,9 @@ public class CommitViewerActivity extends RepositoryActivity {
 	private PlotWalk generatePlotWalk() throws AmbiguousObjectException,
 			IOException, MissingObjectException, IncorrectObjectTypeException {
 		PlotWalk revWalk = new PlotWalk(repo());
-		ObjectId rootId = (branch==null)?repo().resolve(HEAD):branch.getObjectId();
+        ObjectId headObjectId = repo().resolve(HEAD);
+        Log.d(TAG,"headObjectId "+headObjectId+" for "+repo().getDirectory());
+        ObjectId rootId = (branch==null)? headObjectId :branch.getObjectId();
 		Log.d(TAG,"Using root "+rootId+" branch="+branch);
 		RevCommit root = revWalk.parseCommit(rootId);
 		revWalk.markStart(root);

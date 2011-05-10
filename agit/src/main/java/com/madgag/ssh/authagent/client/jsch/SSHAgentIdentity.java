@@ -8,7 +8,6 @@ import com.jcraft.jsch.Identity;
 import com.jcraft.jsch.JSchException;
 import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 import net.schmizz.sshj.common.Buffer;
-import net.schmizz.sshj.common.KeyType;
 
 public class SSHAgentIdentity implements Identity {
 	private final String TAG="SSHAgentIdentity";

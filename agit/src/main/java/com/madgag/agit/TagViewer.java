@@ -41,6 +41,7 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
+import java.io.File;
 import java.io.IOException;
 
 import static android.view.View.GONE;
@@ -48,6 +49,10 @@ import static android.view.View.VISIBLE;
 import static com.madgag.agit.R.id.*;
 
 public class TagViewer extends RepositoryActivity {
+
+    public static Intent tagViewerIntentFor(File gitdir, String tagName) {
+		return new GitIntentBuilder("git.tag.VIEW").gitdir(gitdir).tag(tagName).toIntent();
+	}
 
     public static Intent tagViewerIntentFor(Repository repository, String tagName) {
 		return new GitIntentBuilder("git.tag.VIEW").repository(repository).tag(tagName).toIntent();

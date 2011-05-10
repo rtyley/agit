@@ -91,5 +91,4 @@ public class ObjectSummaryView extends LinearLayout {
         Log.d(TAG, "About to set type-specific info for gitObject=" + gitObject);
         osv.setObject(gitObject, typeSpecificFrame, repo);
     }
-
 }

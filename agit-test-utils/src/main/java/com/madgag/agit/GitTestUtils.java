@@ -81,19 +81,25 @@ public class GitTestUtils {
 
 
 	public static Repository unpackRepo(String fileName) throws IOException, ArchiveException {
-		File repoParentFolder = new File(FileUtils.getTempDirectory(),"unpacked-"+fileName+"-"+currentTimeMillis());
-		InputStream rawZipFileInputStream = GitTestUtils.class.getResourceAsStream("/" + fileName);
-		assertThat(rawZipFileInputStream, CoreMatchers.notNullValue());
-		return unzipRepoFromStreamToFolder(rawZipFileInputStream, repoParentFolder);
-	}
+        return repoFor(unpackRepoAndGetGitDir(fileName));
+    }
 
-	private static Repository unzipRepoFromStreamToFolder(
-			InputStream rawZipFileInputStream, File destinationFolder)
-			throws IOException, ArchiveException {
-		unzip(rawZipFileInputStream, destinationFolder);
-		rawZipFileInputStream.close();
-        File resolvedGitDir = RepositoryCache.FileKey.resolve(destinationFolder, FS.detect());
-		assertThat("gitdir "+resolvedGitDir+" exists",resolvedGitDir, notNullValue());
-		return new FileRepository(resolvedGitDir);
-	}
+    public static File unpackRepoAndGetGitDir(String fileName) throws IOException, ArchiveException {
+        File repoParentFolder = new File(FileUtils.getTempDirectory(),"unpacked-"+fileName+"-"+currentTimeMillis());
+        InputStream rawZipFileInputStream = GitTestUtils.class.getResourceAsStream("/" + fileName);
+        assertThat(rawZipFileInputStream, notNullValue());
+        unzip(rawZipFileInputStream, repoParentFolder);
+        rawZipFileInputStream.close();
+        return repoParentFolder;
+    }
+
+    private static Repository repoFor(File folder) throws IOException {
+        File resolvedGitDir = resolveGitDirFor(folder);
+        assertThat("gitdir "+resolvedGitDir+" exists",resolvedGitDir, notNullValue());
+        return new FileRepository(resolvedGitDir);
+    }
+
+    private static File resolveGitDirFor(File folder) {
+        return RepositoryCache.FileKey.resolve(folder, FS.detect());
+    }
 }

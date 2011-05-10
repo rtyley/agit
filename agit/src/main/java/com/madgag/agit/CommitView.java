@@ -62,7 +62,7 @@ public class CommitView extends LinearLayout {
 
     private final LayoutInflater layoutInflater;
 	private final TabHost tabHost;
-	private final ActionBar actionBar;
+	final ActionBar actionBar;
 	private final TabWidget tabWidget;
 	
 	private CommitNavigationView commitNavigationView;
@@ -70,7 +70,7 @@ public class CommitView extends LinearLayout {
 	private Repository repository;
 	private PlotWalk revWalk;
 	
-	private PlotCommit<PlotLane> commit;
+	PlotCommit<PlotLane> commit;
 	private Map<String, RevCommit> commitParents, commitChildren;
 
 	private CommitSelectedListener commitSelectedListener;
