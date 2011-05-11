@@ -24,6 +24,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.RDTBranch.BranchSummary.SORT_BY_COMMIT_TIME;
 import static com.madgag.agit.Time.timeSinceSeconds;
 import static java.util.Collections.sort;
+import static org.eclipse.jgit.lib.Constants.R_REMOTES;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;
 
 import java.io.IOException;
@@ -56,7 +57,7 @@ public class RDTBranch extends RepoDomainType<BranchSummary> {
 	public List<BranchSummary> getAll() {
 		RefDatabase refDatabase = repository.getRefDatabase();
 		try {
-			Map<String, Ref> remoteBranchRefs = refDatabase.getRefs(Constants.R_REMOTES);
+			Map<String, Ref> remoteBranchRefs = refDatabase.getRefs(R_REMOTES);
 			final RevWalk revWalk = new RevWalk(repository);
 			
 			List<BranchSummary> branchSummaries = newArrayList(transform(remoteBranchRefs.values(), new Function<Ref, BranchSummary>() {

@@ -84,8 +84,8 @@ public class CommitViewerActivity extends RepositoryActivity {
 		return new GitIntentBuilder("git.view.COMMIT").gitdir(gitdir);
 	}
 
-	@Inject @Named("branch") @Nullable Ref branch;
-	
+    @Inject LogStartProvider logStartProvider;
+
 	private PlotCommit<PlotLane> commit;
 	
 	CommitView currentCommitView, nextCommitView;
@@ -169,15 +169,13 @@ public class CommitViewerActivity extends RepositoryActivity {
 		setCurrentCommitViewVisible();
 	}
 
-	private PlotWalk generatePlotWalk() throws AmbiguousObjectException,
-			IOException, MissingObjectException, IncorrectObjectTypeException {
+	private PlotWalk generatePlotWalk() throws IOException {
 		PlotWalk revWalk = new PlotWalk(repo());
-        ObjectId headObjectId = repo().resolve(HEAD);
-        Log.d(TAG,"headObjectId "+headObjectId+" for "+repo().getDirectory());
-        ObjectId rootId = (branch==null)? headObjectId :branch.getObjectId();
-		Log.d(TAG,"Using root "+rootId+" branch="+branch);
-		RevCommit root = revWalk.parseCommit(rootId);
-		revWalk.markStart(root);
+
+        for (ObjectId startId : logStartProvider.get()) {
+            revWalk.markStart(revWalk.parseCommit(startId));
+        }
+
 		PlotCommitList<PlotLane> plotCommitList = new PlotCommitList<PlotLane>();
 		plotCommitList.source(revWalk);
 		plotCommitList.fillTo(Integer.MAX_VALUE);
