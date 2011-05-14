@@ -49,7 +49,7 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
     @Override
     protected void onPreExecute() {
     	Log.d(TAG, "Starting onPreExecute "+operation+" handler="+handler);
-    	lifecycleSupport.startedWith(new OpNotification(operation.getOngoingIcon(), operation.getTickerText(), "Event title", "Event detail"));
+    	lifecycleSupport.startedWith(new OpNotification(operation.getOngoingIcon(), operation.getTickerText(), operation.getShortDescription(), operation.getUrl().toString()));
     	startTime = currentTimeMillis();
     }
 
