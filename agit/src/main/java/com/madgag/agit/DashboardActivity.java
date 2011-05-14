@@ -1,8 +1,12 @@
 package com.madgag.agit;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +27,7 @@ import static android.graphics.PixelFormat.RGBA_8888;
 import static com.madgag.agit.R.layout.dashboard_repo_list_header;
 import static com.madgag.agit.Repos.knownRepos;
 import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
+import static com.madgag.agit.operations.Clone.GIT_REPO_INITIALISED_INTENT;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 
 public class DashboardActivity extends RoboActivity {
@@ -47,6 +52,13 @@ public class DashboardActivity extends RoboActivity {
         getWindow().setFormat(RGBA_8888);
     }
 
+    BroadcastReceiver repoListReceiver = new BroadcastReceiver() {
+		public void onReceive(Context context, Intent intent) {
+			Log.d(TAG, "repoListReceiver got broadcast : " + intent);
+			updateRepoList();
+		}
+	};
+
     private void setupRepoList() {
 
         listAdapter = new ViewHoldingListAdapter<File>(knownRepos(), viewInflatorFor(this, simple_list_item_2), new ViewHolderFactory<File>() {
@@ -55,12 +67,7 @@ public class DashboardActivity extends RoboActivity {
             }
         });
 
-        TextView repoListHeader = (TextView) LayoutInflater.from(this).inflate(dashboard_repo_list_header, null);
-        repoListHeader.setCompoundDrawables(null, null, null, listView.getDivider());
-        listView.addHeaderView(repoListHeader, null, false);
-        //View dividerView = new View(this);
-        //dividerView.setBackgroundDrawable(listView.getDivider());
-        //listView.addHeaderView(dividerView , null, false);
+        listView.addHeaderView(repoListHeader(), null, false);
         listView.setAdapter(listAdapter);
         listView.setHeaderDividersEnabled(true);
 
@@ -69,6 +76,12 @@ public class DashboardActivity extends RoboActivity {
                 startActivity(manageRepoIntent((File) listView.getAdapter().getItem(position)));
             }
         });
+    }
+
+    private TextView repoListHeader() {
+        TextView repoListHeader = (TextView) LayoutInflater.from(this).inflate(dashboard_repo_list_header, null);
+        repoListHeader.setCompoundDrawables(null, null, null, listView.getDivider());
+        return repoListHeader;
     }
 
     @Override
@@ -91,6 +104,16 @@ public class DashboardActivity extends RoboActivity {
 
     protected void onResume() {
         super.onResume();
+        registerReceiver(repoListReceiver, new IntentFilter(GIT_REPO_INITIALISED_INTENT));
+        updateRepoList();
+    }
+
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(repoListReceiver);
+    }
+
+    private void updateRepoList() {
         listAdapter.setList(knownRepos());
     }
 

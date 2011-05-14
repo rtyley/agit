@@ -1,5 +1,7 @@
 package com.madgag.agit.operations;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import com.google.inject.Inject;
 import com.madgag.agit.GitFetchService;
@@ -39,14 +41,15 @@ import static org.eclipse.jgit.lib.RepositoryCache.close;
 public class Clone implements GitOperation {
 
 	public static final String TAG = "Clone";
+    public static final String GIT_REPO_INITIALISED_INTENT = "org.openintents.git.repo.initialised";
 
-	private final boolean bare;
+    private final boolean bare;
 	private final URIish sourceUri;
 	private final File directory, gitdir;
     private String branch = Constants.HEAD;
 
-	@Inject
-	GitFetchService fetchService;
+	@Inject GitFetchService fetchService;
+    @Inject Context context;
 
 	public Clone(boolean bare, URIish sourceUri, File directory) {
 		this.bare = bare;
@@ -68,6 +71,8 @@ public class Clone implements GitOperation {
 			Git.init().setBare(bare).setDirectory(directory).call();
 			Repository repository = new FileRepository(gitdir);
 			RemoteConfig remote = addRemote(remoteName, repository);
+
+            context.sendBroadcast(new Intent(GIT_REPO_INITIALISED_INTENT));
 
 			FetchResult fetchResult = fetchService.fetch(remote, null, progressListener);
 
