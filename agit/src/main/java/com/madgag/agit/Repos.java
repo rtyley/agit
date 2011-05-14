@@ -53,6 +53,7 @@ public class Repos {
 				repos.add(gitdir);
 			}
 		}
+        Log.d(TAG, "Found "+repos.size()+" repos in "+reposDir);
 		return repos;
 	}
 
