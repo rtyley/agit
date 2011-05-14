@@ -24,6 +24,8 @@ import static android.view.View.VISIBLE;
 import static android.view.animation.AnimationUtils.loadAnimation;
 import static com.google.common.collect.Maps.newEnumMap;
 import static com.madgag.agit.R.anim.*;
+import static com.madgag.agit.R.string.checkout_commit_menu_option;
+import static com.madgag.agit.R.string.tag_commit_menu_option;
 import static com.madgag.agit.Relation.CHILD;
 import static com.madgag.agit.Relation.PARENT;
 import static org.eclipse.jgit.lib.Constants.HEAD;
@@ -187,7 +189,7 @@ public class CommitViewerActivity extends RepositoryActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	super.onCreateOptionsMenu(menu);
-        menu.add(0, TAG_ID, 0, R.string.tag_commit_menu_option).setShortcut('0', 't');
+        menu.add(0, TAG_ID, 0, tag_commit_menu_option).setShortcut('0', 't');
         return true;
     }
     
@@ -213,12 +215,12 @@ public class CommitViewerActivity extends RepositoryActivity {
                 .setView(textEntryView)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                    	 String tagName=((TextView) textEntryView.findViewById(R.id.tag_name_edit)).getText().toString();
-                    	 try {
-							new Git(repo()).tag().setName(tagName).setObjectId(commit).call();
-						} catch (Exception e) {
-							throw new RuntimeException(e);
-						}
+                        String tagName=((TextView) textEntryView.findViewById(R.id.tag_name_edit)).getText().toString();
+                        try {
+                            new Git(repo()).tag().setName(tagName).setObjectId(commit).call();
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 })
                 .create();

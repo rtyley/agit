@@ -22,6 +22,8 @@ package com.madgag.agit;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import com.google.inject.Inject;
 import com.madgag.agit.operation.lifecycle.CasualShortTermLifetime;
 import com.madgag.agit.operations.Fetch;
@@ -43,6 +45,8 @@ import java.util.List;
 import static android.R.id.list;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.CommitViewerActivity.commitViewerIntentCreatorFor;
+import static com.madgag.agit.R.string.checkout_commit_menu_option;
+import static com.madgag.agit.R.string.tag_commit_menu_option;
 import static com.madgag.agit.Repos.remoteConfigFor;
 import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;
@@ -52,6 +56,8 @@ public class BranchViewer extends RepositoryActivity {
     public static Intent branchViewerIntentFor(File gitdir, Ref branch) {
 		return new GitIntentBuilder("git.branch.VIEW").gitdir(gitdir).branch(branch).toIntent();
 	}
+    
+	private final static int CHECKOUT_ID= Menu.FIRST;
 
 	private static final String TAG = "BranchViewer";
 	
@@ -84,6 +90,27 @@ public class BranchViewer extends RepositoryActivity {
             }
         });
 	}
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	super.onCreateOptionsMenu(menu);
+        menu.add(0, CHECKOUT_ID, 0, checkout_commit_menu_option).setShortcut('0', 'c');
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case CHECKOUT_ID:
+        	try {
+                new Git(repo()).checkout().setName(branchName).call();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private Ref branch() {
         try {
