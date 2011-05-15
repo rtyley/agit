@@ -1,31 +1,33 @@
 package com.madgag.agit;
 
-import static com.google.common.collect.Iterables.find;
-import static com.madgag.agit.GitTestUtils.unpackRepo;
-import static com.madgag.compress.CompressUtil.unzip;
-import static java.lang.System.currentTimeMillis;
-import static org.hamcrest.CoreMatchers.startsWith;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.notNullValue;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
-import org.apache.commons.compress.archivers.ArchiveException;
-import org.apache.commons.io.FileUtils;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.storage.file.FileRepository;
-import org.junit.Test;
-
 import com.google.common.base.Predicate;
 import com.madgag.agit.RDTTag.TagSummary;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.junit.Test;
+
+import java.util.List;
+
+import static com.google.common.collect.Iterables.find;
+import static com.madgag.agit.GitTestUtils.unpackRepo;
+import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 public class RDTTagTest {
+
+    @Test
+	public void shouldHandleTheDatelessAnnotatedTagsThatGitUsedToHave() throws Exception {
+        Repository repository = unpackRepo("git-repo-has-dateless-tag.depth2.zip");
+        RDTTag rdtTag = new RDTTag(repository);
+		List<TagSummary> listOfTagsInRepo = rdtTag.getAll();
+		assertThat(listOfTagsInRepo, hasSize(1));
+		TagSummary tagSummary = listOfTagsInRepo.get(0);
+
+        assertThat(tagSummary.getTime(), equalTo(1121037394L));
+        // RevTag tag = new RevWalk(repository).parseTag(ObjectId.fromString("d6602ec5194c87b0fc87103ca4d67251c76f233a"));
+	}
+
 	@Test
 	public void shouldNotThrowNPEDueToUnparsedObjectDataEspeciallyForRepoWithJustOneAnnotatedTag() throws Exception {
 		RDTTag rdtTag = new RDTTag(unpackRepo("repo-with-just-an-annotated-tag-of-a-commit.zip"));
@@ -47,7 +49,7 @@ public class RDTTagTest {
 
 	@Test
 	public void shouldDescribeThingsProperly() throws Exception {
-		RDTTag rdtTag = new RDTTag(GitTestUtils.unpackRepo("small-repo.with-tags.zip"));
+		RDTTag rdtTag = new RDTTag(unpackRepo("small-repo.with-tags.zip"));
 		List<TagSummary> tags = rdtTag.getAll();
 		
 		TagSummary tag = find(tags, tagNamed("annotated-tag-of-2nd-commit"));

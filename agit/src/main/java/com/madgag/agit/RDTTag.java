@@ -19,28 +19,24 @@
 
 package com.madgag.agit;
 
+import com.google.common.base.Function;
+import com.google.inject.Inject;
+import com.madgag.agit.RDTTag.TagSummary;
+import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.*;
+
+import java.io.IOException;
+import java.util.Comparator;
+import java.util.List;
+
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.GitObjects.evaluate;
 import static com.madgag.agit.RDTTag.TagSummary.SORT_BY_TIME_AND_NAME;
+import static java.util.Collections.sort;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import com.google.inject.Inject;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevBlob;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevObject;
-import org.eclipse.jgit.revwalk.RevTag;
-import org.eclipse.jgit.revwalk.RevTree;
-import org.eclipse.jgit.revwalk.RevWalk;
-
-import com.google.common.base.Function;
-import com.madgag.agit.RDTTag.TagSummary;
 
 public class RDTTag extends RepoDomainType<TagSummary> {
 
@@ -54,31 +50,8 @@ public class RDTTag extends RepoDomainType<TagSummary> {
 	
 	public List<TagSummary> getAll() {
 		final RevWalk revWalk = new RevWalk(repository);
-		List<TagSummary> tagSummaries = newArrayList(transform(repository.getTags().values(), new Function<Ref, TagSummary>() {
-			public TagSummary apply(Ref tagRef) {
-				RevObject objectPointedToByRef;
-				try {
-					objectPointedToByRef = revWalk.parseAny(tagRef.getObjectId());
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-				RevTag tagObject = null;
-				RevObject taggedObject;
-				if (objectPointedToByRef instanceof RevTag) {
-					tagObject = (RevTag) objectPointedToByRef;
-					try {
-						taggedObject = revWalk.parseAny(tagObject.getObject());
-					} catch (Exception e) {
-						throw new RuntimeException(e);
-					}
-				} else {
-					taggedObject = objectPointedToByRef;
-				}
-				
-				return new TagSummary(tagRef, tagObject, taggedObject);
-			}
-		}));
-		Collections.sort(tagSummaries, SORT_BY_TIME_AND_NAME);
+		List<TagSummary> tagSummaries = newArrayList(transform(repository.getTags().values(), new TagSummaryFactory(revWalk)));
+		sort(tagSummaries, SORT_BY_TIME_AND_NAME);
 		return tagSummaries;
 		
 	}
@@ -110,6 +83,8 @@ public class RDTTag extends RepoDomainType<TagSummary> {
 		return evaluate(tagSummary.getTaggedObject(), GIT_OBJECT_SHORT_DESCRIPTION);
 	}
 
+
+
 	public static class TagSummary {
 		public final static Comparator<TagSummary> SORT_BY_TIME_AND_NAME = new Comparator<TagSummary>() {
 			public int compare(TagSummary t1, TagSummary t2) {
@@ -125,10 +100,12 @@ public class RDTTag extends RepoDomainType<TagSummary> {
 		private final Ref tagRef;
 		private final RevTag tagObject;
 		private final RevObject taggedObject;
+        private final long time;
 
-		public TagSummary(Ref tagRef, RevTag tagObject, RevObject taggedObject) {
+		public TagSummary(Ref tagRef, RevTag tagObject, RevObject taggedObject, long time) {
 			this.tagRef = tagRef;
-			name = shortenRefName(tagRef.getName());
+            this.time = time;
+            name = shortenRefName(tagRef.getName());
 			this.tagObject = tagObject;
 			this.taggedObject = taggedObject;
 		}
@@ -153,30 +130,13 @@ public class RDTTag extends RepoDomainType<TagSummary> {
 		public boolean isLightweight() {
 			return tagObject==null;
 		}
-		
-		public long getTime() {
-			if (isLightweight()) {
-				return evaluate(taggedObject, GIT_OBJECT_TIME);
-			} else {
-				return tagObject.getTaggerIdent().getWhen().getTime();
-			}
-		}
 
-		private static GitObjectFunction<Long> GIT_OBJECT_TIME = new GitObjectFunction<Long>() {
-				public Long apply(RevCommit commit) {
-					return (long)commit.getCommitTime();
-				}
-				public Long apply(RevTree tree) {
-					return 0L;
-				}
-				public Long apply(RevBlob blob) {
-					return 0L;
-				}
-				public Long apply(RevTag tag) {
-					return tag.getTaggerIdent().getWhen().getTime();
-				}
-		};
-	}
+		public long getTime() {
+            return time;
+        }
+
+    }
+
 	
 	static GitObjectFunction.Base<String> GIT_OBJECT_SHORT_DESCRIPTION = new GitObjectFunction.Base<String>() {
 		public String apply(RevCommit commit) {
@@ -189,4 +149,59 @@ public class RDTTag extends RepoDomainType<TagSummary> {
 			return "...";
 		}
 	};
+
+    private static class TagSummaryFactory implements Function<Ref, TagSummary> {
+        private final RevWalk revWalk;
+
+        public TagSummaryFactory(RevWalk revWalk) {
+            this.revWalk = revWalk;
+        }
+
+        public GitObjectFunction<Long> gitObjectTime =  new GitObjectFunction<Long>() {
+            public Long apply(RevCommit commit) {
+                return (long) commit.getCommitTime();
+            }
+            public Long apply(RevTree tree) { return 0L; }
+            public Long apply(RevBlob blob) { return 0L; }
+            public Long apply(RevTag tag) {
+                PersonIdent taggerIdent = tag.getTaggerIdent();
+                if (taggerIdent!=null) {
+                    return taggerIdent.getWhen().getTime();
+                }
+
+                try {
+                    return evaluate(revWalk.parseAny(tag.getObject()), this);
+                } catch (IOException e) {
+                    throw new RuntimeException();
+                }
+            }
+        };
+
+        public TagSummary apply(Ref tagRef) {
+            RevObject objectPointedToByRef;
+            try {
+                objectPointedToByRef = revWalk.parseAny(tagRef.getObjectId());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            RevTag tagObject = null;
+            RevObject taggedObject;
+            long time;
+            if (objectPointedToByRef instanceof RevTag) {
+                // annotated
+                tagObject = (RevTag) objectPointedToByRef;
+                try {
+                    taggedObject = revWalk.parseAny(tagObject.getObject());
+                    time = evaluate(tagObject, gitObjectTime);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                // lightweight
+                taggedObject = objectPointedToByRef;
+                time = evaluate(taggedObject, gitObjectTime);
+            }
+            return new TagSummary(tagRef, tagObject, taggedObject, time);
+        }
+    }
 }
