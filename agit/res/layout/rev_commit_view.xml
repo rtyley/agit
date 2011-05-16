@@ -13,7 +13,7 @@
 		android:layout_width="wrap_content" android:layout_height="wrap_content"/>
 	</LinearLayout>
 	
-	<ExpandableListView android:fastScrollEnabled="true"
+	<com.madgag.agit.BongleView android:fastScrollEnabled="true"
 		android:id="@android:id/list"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:cacheColorHint="#FFF" />
