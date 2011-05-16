@@ -16,6 +16,7 @@
 		android:layout_height="36dip"
 		android:layout_below="@id/person_ident_title"
 		android:layout_alignLeft="@id/person_ident_title"
+        android:paddingRight="4dip"
 		android:scaleType="center"
 		android:background="@drawable/gravatar_border" />
 	<TextView
