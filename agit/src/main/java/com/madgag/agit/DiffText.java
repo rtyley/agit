@@ -46,8 +46,6 @@ public class DiffText {
 	public void setTransitionProgress(float proportion) {
 		updateDisplayWith(proportion);
 	}
-	
-	
 
 	void updateDisplayWith(float proportion) {
 		DeltaSpan insertSpan = new DeltaSpan(true, proportion);

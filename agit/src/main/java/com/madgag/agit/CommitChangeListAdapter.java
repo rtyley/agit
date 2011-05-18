@@ -20,6 +20,7 @@
 package com.madgag.agit;
 
 import static com.google.common.collect.Lists.transform;
+import static com.madgag.agit.R.layout.commit_group_view;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -91,7 +92,7 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
 				boolean isLastChild, View convertView, ViewGroup parent) {
 			Hunk hunk = fileDiffs.get(groupPosition).getHunks().get(childPosition);
 			HunkDiffView v;
-			// Disabling view re-use for Children - too unpredicateable, can not easily tell when my difftext should be invalidated!
+			// Disabling view re-use for Children - too unpredictable, can not easily tell when my difftext should be invalidated!
 //			if (convertView==null || !(convertView instanceof HunkDiffView)) {
 				v=new HunkDiffView(context, hunk);
 //			} else {
@@ -161,8 +162,7 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
 		}
 
 		private View newGroupView(boolean isExpanded, ViewGroup parent) {
-			return mInflater.inflate(isExpanded ? R.layout.commit_group_view
-					: R.layout.commit_group_view, parent, false);
+			return mInflater.inflate(isExpanded ? commit_group_view	: commit_group_view, parent, false);
 		}
 
 		public boolean hasStableIds() {
