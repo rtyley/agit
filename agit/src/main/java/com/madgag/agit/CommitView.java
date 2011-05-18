@@ -27,6 +27,7 @@ import java.util.Map;
 import android.text.SpannableStringBuilder;
 import android.text.style.CharacterStyle;
 import android.text.style.TypefaceSpan;
+import com.madgag.agit.diff.CommitChangeListAdapter;
 import com.madgag.agit.views.ObjectIdView;
 import com.madgag.agit.views.PersonIdentView;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;

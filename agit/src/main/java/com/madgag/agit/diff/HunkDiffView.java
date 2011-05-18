@@ -20,16 +20,13 @@
 /**
  * 
  */
-package com.madgag.agit;
+package com.madgag.agit.diff;
 
 import static android.graphics.Typeface.MONOSPACE;
 import static android.widget.TextView.BufferType.EDITABLE;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.text.Editable;
 import android.widget.TextView;
-
-import com.madgag.agit.LineContextDiffer.Hunk;
 
 public class HunkDiffView extends TextView {
 	
@@ -43,7 +40,7 @@ public class HunkDiffView extends TextView {
 	
 	public void setHunk(Hunk hunk) {
 		diffText = new DiffText(getText());
-		diffText.initWith(hunk.before, hunk.after);
+		diffText.initWith(hunk.diffs());
 	}
 	
     @Override

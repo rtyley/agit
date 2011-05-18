@@ -89,7 +89,6 @@ public class BongleView extends ExpandableListView implements AbsListView.OnScro
         if (mHeaderView != null) {
             mHeaderView.layout(0, 0, mHeaderViewWidth, mHeaderViewHeight);
             configureHeaderView(getFirstVisiblePosition());
-            // mHeaderViewVisible = true;
         }
     }
 
@@ -211,12 +210,9 @@ public class BongleView extends ExpandableListView implements AbsListView.OnScro
     }
                 
 
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public void onScrollStateChanged(AbsListView view, int scrollState) {}
 
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-            int totalItemCount) {
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         if (view instanceof BongleView) {
             ((BongleView)view).configureHeaderView(firstVisibleItem);
         }

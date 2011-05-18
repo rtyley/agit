@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.madgag.agit;
+package com.madgag.agit.diff;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Math.max;
@@ -44,12 +44,10 @@ import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.AbbreviatedObjectId;
 import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.CoreConfig;
 import org.eclipse.jgit.lib.FileMode;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
 import org.eclipse.jgit.lib.ObjectReader;
-import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.util.QuotedString;
 
 /**
@@ -57,16 +55,7 @@ import org.eclipse.jgit.util.QuotedString;
  */
 public class LineContextDiffer {
 
-	public static class Hunk {
-		public final String before, after;
-
-		public Hunk(String before, String after) {
-			this.before=before;this.after=after;
-		}
-
-	}
-
-	private static final byte[] noNewLine = encodeASCII("\\ No newline at end of file\n");
+    private static final byte[] noNewLine = encodeASCII("\\ No newline at end of file\n");
 
 	private int context;
 

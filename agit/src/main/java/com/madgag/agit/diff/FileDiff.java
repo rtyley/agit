@@ -17,37 +17,46 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.madgag.agit;
+package com.madgag.agit.diff;
 
 import java.io.IOException;
+import java.lang.ref.SoftReference;
 import java.util.List;
 
+import android.util.Log;
 import org.eclipse.jgit.diff.DiffEntry;
 
-import com.madgag.agit.LineContextDiffer.Hunk;
-
 public class FileDiff {
-	private final LineContextDiffer lineContextDiffer;
-	private final DiffEntry diffEntry;
-	private List<Hunk> hunks;
+    private static final String TAG = "FD";
 
-	public FileDiff(LineContextDiffer lineContextDiffer,DiffEntry diffEntry) {
+    private final LineContextDiffer lineContextDiffer;
+    private final DiffEntry diffEntry;
+    private List<Hunk> hunks;
+
+    public FileDiff(LineContextDiffer lineContextDiffer,DiffEntry diffEntry) {
 		this.lineContextDiffer = lineContextDiffer;
 		this.diffEntry = diffEntry;
 	}
 	
 	public List<Hunk> getHunks() {
-		if (hunks==null) {
-			try {
-				hunks = lineContextDiffer.format(diffEntry);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		}
+        if (hunks==null) {
+            hunks = calculateHunks();
+        }
 		return hunks;
 	}
 
-	public DiffEntry getDiffEntry() {
+    private List<Hunk> calculateHunks() {
+        List<Hunk> h;
+        try {
+            h = lineContextDiffer.format(diffEntry);
+            Log.d(TAG, "Calculated "+h.size()+" hunks for "+diffEntry);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return h;
+    }
+
+    public DiffEntry getDiffEntry() {
 		return diffEntry;
 	}
 }

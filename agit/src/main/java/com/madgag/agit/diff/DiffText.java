@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.madgag.agit;
+package com.madgag.agit.diff;
 
 import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import static com.google.common.collect.Lists.newArrayList;
@@ -26,6 +26,7 @@ import static name.fraser.neil.plaintext.diff_match_patch.Operation.INSERT;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.madgag.agit.DeltaSpan;
 import name.fraser.neil.plaintext.StandardBreakScorer;
 import name.fraser.neil.plaintext.diff_match_patch;
 import name.fraser.neil.plaintext.diff_match_patch.Diff;
@@ -65,8 +66,7 @@ public class DiffText {
 		}
 	}
 	
-	public void initWith(String before,String after) {
-		LinkedList<Diff> diffs = diffsFor(before, after);
+	public void initWith(LinkedList<Diff> diffs) {
 		DeltaSpan insertSpan = new DeltaSpan(true, 0.5f);
 		DeltaSpan deleteSpan = new DeltaSpan(false, 0.5f);
 		insertSpans = newArrayList();
@@ -85,12 +85,6 @@ public class DiffText {
 		
 	}
 
-	private LinkedList<Diff> diffsFor(String before, String after) {
-		diff_match_patch differ = new diff_match_patch(new StandardBreakScorer());
-		LinkedList<Diff> diffs = differ.diff_main(before, after);
-		differ.diff_cleanupSemantic(diffs);
-		return diffs;
-	}
 	
 	private CharacterStyle deltaSpan(float proportion) {
 		return new DeltaSpan(true,proportion);
