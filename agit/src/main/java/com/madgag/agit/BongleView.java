@@ -3,6 +3,8 @@ package com.madgag.agit;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +24,7 @@ public class BongleView extends ExpandableListView implements AbsListView.OnScro
     private boolean mHeaderViewVisible;
     private static final String TAG = "BONGLE";
     private static final int MAX_ALPHA = 255;
+    private ExpandableListAdapter expAdapter;
 
     public BongleView(Context context) {
         super(context);
@@ -37,6 +40,7 @@ public class BongleView extends ExpandableListView implements AbsListView.OnScro
 
     @Override
     public void setAdapter(ExpandableListAdapter adapter) {
+        expAdapter = adapter;
         super.setAdapter(adapter);
         setOnScrollListener(this);
         stuffIt();
@@ -121,7 +125,6 @@ public class BongleView extends ExpandableListView implements AbsListView.OnScro
         }
 
         int state = getPinnedHeaderState(position);
-        // int state = PinnedHeaderListView.PinnedHeaderAdapter.PINNED_HEADER_PUSHED_UP;
         switch (state) {
             case PINNED_HEADER_GONE: {
                 mHeaderViewVisible = false;
@@ -129,7 +132,7 @@ public class BongleView extends ExpandableListView implements AbsListView.OnScro
             }
 
             case PINNED_HEADER_VISIBLE: {
-                // mAdapter.configurePinnedHeader(mHeaderView, position, MAX_ALPHA);
+                configurePinnedHeader(mHeaderView, position, MAX_ALPHA);
                 if (mHeaderView.getTop() != 0) {
                     mHeaderView.layout(0, 0, mHeaderViewWidth, mHeaderViewHeight);
                 }
@@ -153,7 +156,7 @@ public class BongleView extends ExpandableListView implements AbsListView.OnScro
                     alpha = MAX_ALPHA;
                 }
                 Log.d(TAG, "configureHeaderView y="+y);
-                // mAdapter.configurePinnedHeader(mHeaderView, position, alpha);
+                configurePinnedHeader(mHeaderView, position, alpha);
                 if (mHeaderView.getTop() != y) {
                     mHeaderView.layout(0, y, mHeaderViewWidth, mHeaderViewHeight + y);
                 }
@@ -174,18 +177,23 @@ public class BongleView extends ExpandableListView implements AbsListView.OnScro
 //        }
 
         int realPosition = position; // getRealPosition(position);
+        long packedPos = getExpandableListPosition(realPosition);
+        int group = getPackedPositionGroup(packedPos);
+        Log.d(TAG, "configurePinnedHeader group="+group);
+        mHeaderView = expAdapter.getGroupView(group, false, mHeaderView, this); // TODO Performance
+
         //int section = getSectionForPosition(realPosition);
 
         //String title = (String)mIndexer.getSections()[section];
         //cache.titleView.setText(title);
-
-        if (alpha == 255) {
+        Drawable background = new ColorDrawable(Color.WHITE); // header.getBackground()
+        if (alpha == MAX_ALPHA) {
             // Opaque: use the default background, and the original text color
-            header.setBackgroundDrawable(header.getBackground());
+            header.setBackgroundDrawable(background);
             // cache.titleView.setTextColor(cache.textColor); // cache.background
         } else {
 
-            header.setBackgroundDrawable(header.getBackground());
+            header.setBackgroundDrawable(background);
 
             // Faded: use a solid color approximation of the background, and
             // a translucent text color
