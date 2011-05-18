@@ -107,11 +107,14 @@ public class BongleView extends ExpandableListView implements AbsListView.OnScro
             return PINNED_HEADER_GONE;
         }
 
+        if (!isGroupExpanded(getPackedPositionGroup(getExpandableListPosition(position)))) {
+            return PINNED_HEADER_GONE;
+        }
+
         // The header should get pushed up if the top item shown
         // is the last item in a group.
-        long packedPos = getExpandableListPosition(position+1);
 
-        if (getPackedPositionType(packedPos) == PACKED_POSITION_TYPE_GROUP) {
+        if (getPackedPositionType(getExpandableListPosition(position+1)) == PACKED_POSITION_TYPE_GROUP) {
             return PINNED_HEADER_PUSHED_UP;
         }
 
@@ -177,8 +180,7 @@ public class BongleView extends ExpandableListView implements AbsListView.OnScro
 //        }
 
         int realPosition = position; // getRealPosition(position);
-        long packedPos = getExpandableListPosition(realPosition);
-        int group = getPackedPositionGroup(packedPos);
+        int group = getPackedPositionGroup(getExpandableListPosition(realPosition));
         Log.d(TAG, "configurePinnedHeader group="+group);
         mHeaderView = expAdapter.getGroupView(group, false, mHeaderView, this); // TODO Performance
 
