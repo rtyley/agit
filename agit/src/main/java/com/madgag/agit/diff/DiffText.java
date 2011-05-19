@@ -80,14 +80,6 @@ public class DiffText {
 				spannableText.setSpan(deltaSpan, spannableText.length()-diff.text.length(), spannableText.length(), SPAN_EXCLUSIVE_EXCLUSIVE);
 				(insertNotDelete?insertSpans:deleteSpans).add(deltaSpan);
 			}
-			
 		}
-		
 	}
-
-	
-	private CharacterStyle deltaSpan(float proportion) {
-		return new DeltaSpan(true,proportion);
-	}
-
 }
