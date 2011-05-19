@@ -16,6 +16,7 @@ import android.widget.TextView;
 import static com.madgag.agit.PinnedHeaderListView.PinnedHeaderAdapter.PINNED_HEADER_GONE;
 import static com.madgag.agit.PinnedHeaderListView.PinnedHeaderAdapter.PINNED_HEADER_PUSHED_UP;
 import static com.madgag.agit.PinnedHeaderListView.PinnedHeaderAdapter.PINNED_HEADER_VISIBLE;
+import static java.lang.Math.round;
 
 public class BongleView extends ExpandableListView implements AbsListView.OnScrollListener {
     private View mHeaderView;
@@ -25,7 +26,6 @@ public class BongleView extends ExpandableListView implements AbsListView.OnScro
     private static final String TAG = "BONGLE";
     private static final int MAX_ALPHA = 255;
     private ExpandableListAdapter expAdapter;
-
     public BongleView(Context context) {
         super(context);
     }
@@ -37,6 +37,8 @@ public class BongleView extends ExpandableListView implements AbsListView.OnScro
     public BongleView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
+
+    private Drawable shadowGradient = getResources().getDrawable(R.drawable.black_white_gradient);
 
     @Override
     public void setAdapter(ExpandableListAdapter adapter) {
@@ -70,9 +72,8 @@ public class BongleView extends ExpandableListView implements AbsListView.OnScro
         if (mHeaderViewVisible) {
             drawChild(canvas, mHeaderView, getDrawingTime());
 
-            Drawable d = getResources().getDrawable(R.drawable.black_white_gradient);
-            d.setBounds(0, mHeaderViewHeight, getWidth(), 10+mHeaderViewHeight);
-            d.draw(canvas);
+            shadowGradient.setBounds(0, mHeaderView.getBottom(), getWidth(), 15 + mHeaderView.getBottom());
+            shadowGradient.draw(canvas);
         }
     }
 
@@ -152,10 +153,11 @@ public class BongleView extends ExpandableListView implements AbsListView.OnScro
                 Log.d(TAG, "PINNED_HEADER_PUSHED_UP firstView="+firstView+" firstView.getBottom()="+bottom);
                 int itemHeight = firstView.getHeight();
                 int headerHeight = mHeaderView.getHeight();
+                int headerHeightWithBuffer = headerHeight+20;
                 int y;
                 int alpha;
-                if (bottom < headerHeight) {
-                    y = (bottom - headerHeight);
+                if (bottom < headerHeightWithBuffer) {
+                    y = round((bottom - headerHeightWithBuffer)*1.1f); // make header 'zoom' away from next header
                     alpha = MAX_ALPHA * (headerHeight + y) / headerHeight;
                 } else {
                     y = 0;
@@ -184,7 +186,7 @@ public class BongleView extends ExpandableListView implements AbsListView.OnScro
 
         int realPosition = position; // getRealPosition(position);
         int group = getPackedPositionGroup(getExpandableListPosition(realPosition));
-        Log.d(TAG, "configurePinnedHeader group="+group);
+        Log.d(TAG, "configurePinnedHeader group=" + group);
         mHeaderView = expAdapter.getGroupView(group, false, mHeaderView, this); // TODO Performance
 
         //int section = getSectionForPosition(realPosition);

@@ -66,9 +66,9 @@ public class DiffText {
 		}
 	}
 	
-	public void initWith(LinkedList<Diff> diffs) {
-		DeltaSpan insertSpan = new DeltaSpan(true, 0.5f);
-		DeltaSpan deleteSpan = new DeltaSpan(false, 0.5f);
+	public void initWith(LinkedList<Diff> diffs, float state) {
+		DeltaSpan insertSpan = new DeltaSpan(true, state);
+		DeltaSpan deleteSpan = new DeltaSpan(false, state);
 		insertSpans = newArrayList();
 		deleteSpans = newArrayList();
 		spannableText.clear();

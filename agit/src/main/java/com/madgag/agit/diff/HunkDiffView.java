@@ -30,27 +30,19 @@ import android.widget.TextView;
 
 public class HunkDiffView extends TextView {
 	
-	private DiffText diffText;
+	private final DiffText diffText;
 
-	public HunkDiffView(Context context, Hunk hunk) {
+	public HunkDiffView(Context context, Hunk hunk, float state) {
 		super(context);
 		setTypeface(MONOSPACE);
-		setHunk(hunk);
-	}
-	
-	public void setHunk(Hunk hunk) {
-		diffText = new DiffText(getText());
-		diffText.initWith(hunk.diffs());
-	}
-	
+        diffText = new DiffText(getText());
+        diffText.initWith(hunk.diffs(), state);
+    }
+
     @Override
     public void setText(CharSequence text, BufferType type) {
         super.setText(text, EDITABLE);
     }
-	
-	public void setProgress(float proportion) {
-		diffText.setTransitionProgress(proportion);
-	}
 	
     @Override
     public Editable getText() {

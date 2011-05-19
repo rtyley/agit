@@ -64,6 +64,7 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
     private final Repository repository;
     private final List<FileDiff> fileDiffs;
     Map<Long, DiffText> diffTexts=new HashMap<Long, DiffText>();
+    private float state = 0.5f;
 
     public CommitChangeListAdapter(Repository repository, RevCommit commit, RevCommit parentCommit, DiffSliderView diffSlider, ExpandableListView expandableList, Context context) {
         this.repository = repository;
@@ -93,7 +94,7 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
         HunkDiffView v;
         // Disabling view re-use for Children - too unpredictable, can not easily tell when my difftext should be invalidated!
 //			if (convertView==null || !(convertView instanceof HunkDiffView)) {
-        v=new HunkDiffView(context, hunk);
+        v=new HunkDiffView(context, hunk, state);
 //			} else {
 //				v=((HunkDiffView)convertView);
 //				v.setHunk(hunk);
@@ -173,6 +174,11 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
     }
 
     public void onStateChanged(DiffSliderView diffSliderView, float state) {
+        setDiffState(state);
+    }
+
+    private void setDiffState(float state) {
+        this.state = state;
         for (int i=0;i<fileDiffs.size();++i) {
             if (expandableList.isGroupExpanded(i)) {
                 for (int j=0;j<getChildrenCount(i);++j) {
