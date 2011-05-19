@@ -69,6 +69,10 @@ public class BongleView extends ExpandableListView implements AbsListView.OnScro
         super.dispatchDraw(canvas);
         if (mHeaderViewVisible) {
             drawChild(canvas, mHeaderView, getDrawingTime());
+
+            Drawable d = getResources().getDrawable(R.drawable.black_white_gradient);
+            d.setBounds(0, mHeaderViewHeight, getWidth(), 10+mHeaderViewHeight);
+            d.draw(canvas);
         }
     }
 
