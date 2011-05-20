@@ -16,6 +16,7 @@ import android.widget.TextView;
 import static com.madgag.agit.PinnedHeaderListView.PinnedHeaderAdapter.PINNED_HEADER_GONE;
 import static com.madgag.agit.PinnedHeaderListView.PinnedHeaderAdapter.PINNED_HEADER_PUSHED_UP;
 import static com.madgag.agit.PinnedHeaderListView.PinnedHeaderAdapter.PINNED_HEADER_VISIBLE;
+import static java.lang.Math.abs;
 import static java.lang.Math.round;
 
 public class BongleView extends ExpandableListView implements AbsListView.OnScrollListener {
@@ -111,9 +112,13 @@ public class BongleView extends ExpandableListView implements AbsListView.OnScro
             return PINNED_HEADER_GONE;
         }
 
-        if (!isGroupExpanded(getPackedPositionGroup(getExpandableListPosition(position)))) {
+        int pinnedHeaderGroup = getPackedPositionGroup(getExpandableListPosition(position));
+
+        if (!isGroupExpanded(pinnedHeaderGroup)) {
             return PINNED_HEADER_GONE;
         }
+
+        int nextHeaderGroup = pinnedHeaderGroup + 1; // TODO nextHeaderGroup could be not next, and yet close enough
 
         // The header should get pushed up if the top item shown
         // is the last item in a group.
@@ -139,6 +144,7 @@ public class BongleView extends ExpandableListView implements AbsListView.OnScro
             }
 
             case PINNED_HEADER_VISIBLE: {
+                Log.d(TAG, "PINNED_HEADER_VISIBLE");
                 configurePinnedHeader(mHeaderView, position, MAX_ALPHA);
                 if (mHeaderView.getTop() != 0) {
                     mHeaderView.layout(0, 0, mHeaderViewWidth, mHeaderViewHeight);

@@ -25,18 +25,41 @@ package com.madgag.agit.diff;
 import static android.graphics.Typeface.MONOSPACE;
 import static android.widget.TextView.BufferType.EDITABLE;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.text.Editable;
 import android.widget.TextView;
 
 public class HunkDiffView extends TextView {
 	
 	private final DiffText diffText;
+    private final DiffStateProvider diffStateProvider;
+    private float state;
 
-	public HunkDiffView(Context context, Hunk hunk, float state) {
+    public HunkDiffView(Context context, Hunk hunk, DiffStateProvider diffStateProvider) {
 		super(context);
-		setTypeface(MONOSPACE);
+        this.diffStateProvider = diffStateProvider;
+        setTypeface(MONOSPACE);
         diffText = new DiffText(getText());
-        diffText.initWith(hunk.diffs(), state);
+        float requiredDiffState = diffStateProvider.getDiffState();
+        diffText.initWith(hunk.diffs(), requiredDiffState);
+        state = requiredDiffState;
+    }
+
+    public void onDraw(Canvas c) {
+        updateDiffTextStateIfRequired();
+        super.onDraw(c);
+    }
+
+    private void updateDiffTextStateIfRequired() {
+        float requiredDiffState = diffStateProvider.getDiffState();
+        if (state!= requiredDiffState) {
+            updateDiffTextStateTo(requiredDiffState);
+        }
+    }
+
+    private void updateDiffTextStateTo(float requiredDiffState) {
+        diffText.setTransitionProgress(requiredDiffState);
+        state = requiredDiffState;
     }
 
     @Override
@@ -48,9 +71,6 @@ public class HunkDiffView extends TextView {
     public Editable getText() {
         return (Editable) super.getText();
     }
-    
-    public DiffText getDiffText() {
-		return diffText;
-	}
+
 
 }

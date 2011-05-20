@@ -52,7 +52,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.transform;
 import static com.madgag.agit.R.layout.commit_group_view;
 
-public class CommitChangeListAdapter extends BaseExpandableListAdapter implements OnStateUpdateListener {
+public class CommitChangeListAdapter extends BaseExpandableListAdapter implements OnStateUpdateListener, DiffStateProvider {
 
     private static final String TAG = "CCLA";
     
@@ -63,7 +63,7 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
     private final RevCommit commit, parentCommit;
     private final Repository repository;
     private final List<FileDiff> fileDiffs;
-    Map<Long, DiffText> diffTexts=new HashMap<Long, DiffText>();
+    // Map<Long, DiffText> diffTexts=new HashMap<Long, DiffText>();
     private float state = 0.5f;
 
     public CommitChangeListAdapter(Repository repository, RevCommit commit, RevCommit parentCommit, DiffSliderView diffSlider, ExpandableListView expandableList, Context context) {
@@ -94,12 +94,11 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
         HunkDiffView v;
         // Disabling view re-use for Children - too unpredictable, can not easily tell when my difftext should be invalidated!
 //			if (convertView==null || !(convertView instanceof HunkDiffView)) {
-        v=new HunkDiffView(context, hunk, state);
+        v=new HunkDiffView(context, hunk, this);
 //			} else {
 //				v=((HunkDiffView)convertView);
 //				v.setHunk(hunk);
 //			}
-        diffTexts.put(keyFor(groupPosition, childPosition), v.getDiffText());
         return v;
     }
 
@@ -179,16 +178,7 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
 
     private void setDiffState(float state) {
         this.state = state;
-        for (int i=0;i<fileDiffs.size();++i) {
-            if (expandableList.isGroupExpanded(i)) {
-                for (int j=0;j<getChildrenCount(i);++j) {
-                    DiffText diffText = diffTexts.get(keyFor(i, j));
-                    if (diffText!=null) {
-                        diffText.setTransitionProgress(state);
-                    }
-                }
-            }
-        }
+        expandableList.invalidate();
     }
 
     private long keyFor(int i, int j) {
@@ -236,5 +226,9 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
         return newArrayList(transform(files, new Function<DiffEntry,FileDiff>() { // transform IS JUST A VIEW
             public FileDiff apply(DiffEntry d) { return new FileDiff(lineContextDiffer, d); }
         }));
+    }
+
+    public float getDiffState() {
+        return state;
     }
 }
