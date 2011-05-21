@@ -20,7 +20,6 @@
 package com.madgag.agit.diff;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,34 +27,25 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.google.common.base.Function;
 import com.madgag.agit.DiffSliderView;
 import com.madgag.agit.DiffSliderView.OnStateUpdateListener;
 import com.madgag.agit.R;
+import com.madgag.android.listviews.ViewHolder;
 import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.diff.RenameDetector;
-import org.eclipse.jgit.errors.CorruptObjectException;
-import org.eclipse.jgit.errors.IncorrectObjectTypeException;
-import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.treewalk.TreeWalk;
-import org.eclipse.jgit.treewalk.filter.TreeFilter;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Lists.transform;
 import static com.madgag.agit.R.layout.commit_group_view;
 
 public class CommitChangeListAdapter extends BaseExpandableListAdapter implements OnStateUpdateListener, DiffStateProvider {
 
     private static final String TAG = "CCLA";
     
+    // private final ViewCreator groupHeaderCreator;
     private LayoutInflater mInflater;
     private final DiffSliderView diffSlider;
     private final ExpandableListView expandableList;
@@ -63,10 +53,11 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
     private final RevCommit commit, parentCommit;
     private final Repository repository;
     private final List<FileDiff> fileDiffs;
-    // Map<Long, DiffText> diffTexts=new HashMap<Long, DiffText>();
+    
     private float state = 0.5f;
 
     public CommitChangeListAdapter(Repository repository, RevCommit commit, RevCommit parentCommit, DiffSliderView diffSlider, ExpandableListView expandableList, Context context) {
+        // groupHeaderCreator = ViewInflator.viewInflatorFor(context,commit_group_view);
         this.repository = repository;
         this.commit = commit;
         this.parentCommit = parentCommit;
@@ -76,7 +67,7 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         diffSlider.setStateUpdateListener(this);
         try {
-            fileDiffs=setupFileDiffs(new RevWalk(repository));
+            fileDiffs=new CommitDiffer().calculateCommitDiffs(repository, parentCommit, commit);
         } catch (Exception e) { throw new RuntimeException(e); }
     }
 
@@ -126,38 +117,15 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
         } else {
             v = convertView;
         }
-        DiffEntry diffEntry = fileDiffs.get(groupPosition).getDiffEntry();
-        int changeTypeIcon = R.drawable.diff_changetype_modify;
-        String filename = diffEntry.getNewPath();
-        switch (diffEntry.getChangeType()) {
-            case ADD:
-                changeTypeIcon = R.drawable.diff_changetype_add;
-                break;
-            case DELETE:
-                changeTypeIcon = R.drawable.diff_changetype_delete;
-                filename = diffEntry.getOldPath();
-                break;
-            case MODIFY:
-                changeTypeIcon = R.drawable.diff_changetype_modify;
-                break;
-            case RENAME:
-                changeTypeIcon = R.drawable.diff_changetype_rename;
-                filename = nameChange(diffEntry);
-                break;
-            case COPY:
-                changeTypeIcon = R.drawable.diff_changetype_add;
-                break;
+        // TODO
+        ViewHolder<FileDiff> goo = (ViewHolder<FileDiff>) v.getTag();
+
+        if (goo==null) {
+            v.setTag(goo = new FileHeaderViewHolder(v));
         }
-        ((ImageView) v.findViewById(R.id.commit_file_diff_type))
-                .setImageResource(changeTypeIcon);
-        ((TextView) v.findViewById(R.id.commit_file_textview))
-                .setText(filename);
+        goo.updateViewFor(fileDiffs.get(groupPosition));
 
         return v;
-    }
-
-    private String nameChange(DiffEntry diffEntry) {
-        return new FilePathDiffer().diff(diffEntry.getOldPath(), diffEntry.getNewPath());
     }
 
     private View newGroupView(boolean isExpanded, ViewGroup parent) {
@@ -185,48 +153,6 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
         return (((long) i) << 32) + j;
     }
 
-
-    private List<DiffEntry> detectRenames(List<DiffEntry> files) throws IOException {
-        RenameDetector rd = new RenameDetector(repository);
-        rd.setRenameLimit(200); // 200^2 ain't so bad... ok, yep, totally arbitrary
-        rd.addAll(files);
-        return rd.compute();
-    }
-
-
-    private List<FileDiff> setupFileDiffs(RevWalk revWalk) throws MissingObjectException,
-            IncorrectObjectTypeException, IOException, CorruptObjectException {
-        Log.d(TAG, "setupFileDiffs");
-        final TreeWalk tw = new TreeWalk(revWalk.getObjectReader());
-        tw.setRecursive(true);
-        tw.reset();
-        tw.addTree(revWalk.parseTree(parentCommit.getTree()));
-        tw.addTree(revWalk.parseTree(commit.getTree()));
-        tw.setFilter(TreeFilter.ANY_DIFF);
-        List<DiffEntry> files = DiffEntry.scan(tw);
-
-        boolean detectRenames=true;
-//					if (pathFilter instanceof FollowFilter && isAdd(files)) {
-        // The file we are following was added here, find where it
-        // came from so we can properly show the rename or copy,
-        // then continue digging backwards.
-        //
-
-//						tw.reset();
-//						tw.addTree(commitParentTree);
-//						tw.addTree(commitTree);
-//						tw.setFilter(pathFilter);
-//						files = updateFollowFilter(detectRenames(DiffEntry.scan(tw)));
-//
-//					} else 
-        if (detectRenames)
-            files = detectRenames(files);
-
-        final LineContextDiffer lineContextDiffer = new LineContextDiffer(revWalk.getObjectReader());
-        return newArrayList(transform(files, new Function<DiffEntry,FileDiff>() { // transform IS JUST A VIEW
-            public FileDiff apply(DiffEntry d) { return new FileDiff(lineContextDiffer, d); }
-        }));
-    }
 
     public float getDiffState() {
         return state;
