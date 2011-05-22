@@ -194,7 +194,8 @@ public class BongleView extends ExpandableListView implements AbsListView.OnScro
         int group = getPackedPositionGroup(getExpandableListPosition(realPosition));
         Log.d(TAG, "configurePinnedHeader group=" + group);
         mHeaderView = expAdapter.getGroupView(group, false, mHeaderView, this); // TODO Performance
-
+        mHeaderView.requestLayout(); // TODO - is this the right thing to do to get the text to appear correctly?
+        mHeaderView.invalidate();
         //int section = getSectionForPosition(realPosition);
 
         //String title = (String)mIndexer.getSections()[section];
