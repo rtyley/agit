@@ -9,13 +9,15 @@
 	<LinearLayout android:layout_width="fill_parent"  android:layout_height="wrap_content"
 	android:background="@drawable/top_bar" android:orientation="horizontal"  android:gravity="right">
 	
-		<com.madgag.agit.DiffSliderView android:id="@+id/RevCommitDiffSlider"
+    <com.madgag.agit.DiffSliderView android:id="@+id/RevCommitDiffSlider"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"/>
 	</LinearLayout>
 	
 	<com.madgag.agit.BongleView android:fastScrollEnabled="true"
 		android:id="@android:id/list"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:cacheColorHint="#FFF" />
+		android:layout_height="fill_parent"
+        android:groupIndicator="@android:color/transparent"
+        android:cacheColorHint="#FFF" />
 
 </LinearLayout>
