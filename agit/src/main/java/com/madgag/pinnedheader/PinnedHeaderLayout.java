@@ -13,6 +13,7 @@ import android.widget.ExpandableListView;
 import com.madgag.agit.R;
 
 import static android.widget.ExpandableListView.*;
+import static android.widget.ExpandableListView.getPackedPositionForGroup;
 import static java.lang.Math.round;
 
 public class PinnedHeaderLayout extends ViewGroup implements AbsListView.OnScrollListener {
@@ -79,9 +80,6 @@ public class PinnedHeaderLayout extends ViewGroup implements AbsListView.OnScrol
         listView.layout(0, 0, listView.getMeasuredWidth(), listView.getMeasuredHeight());
 
         configureHeaderView(listView.getFirstVisiblePosition());
-        if (mHeaderView != null) {
-            mHeaderView.layout(0, 0, mHeaderViewWidth, mHeaderViewHeight);
-        }
     }
 
     private void configureHeaderView(int firstVisiblePosition) {
@@ -99,7 +97,7 @@ public class PinnedHeaderLayout extends ViewGroup implements AbsListView.OnScrol
             return;
         }
 
-        // int nextHeaderGroup = pinnedHeaderGroup + 1; // TODO nextHeaderGroup could be not next, and yet close enough
+        int nextHeaderGroup = group + 1; // TODO nextHeaderGroup could be not next, and yet close enough
 
         // The header should get pushed up if the top item shown is the last item in a group.
 //        if (getPackedPositionType(listView.getExpandableListPosition(firstVisiblePosition + 1)) == PACKED_POSITION_TYPE_GROUP) {
@@ -108,33 +106,38 @@ public class PinnedHeaderLayout extends ViewGroup implements AbsListView.OnScrol
         mHeaderView = getOrCreateHeaderView(listView, group);
 
         Log.d(TAG, "PINNED_HEADER_VISIBLE");
-        View firstView = getChildAt(0);
-        int bottom = firstView.getBottom();
-        Log.d(TAG, "PINNED_HEADER_PUSHED_UP firstView="+firstView+" firstView.getBottom()="+bottom);
-        int itemHeight = firstView.getHeight();
         int headerHeight = mHeaderView.getHeight();
         int headerHeightWithBuffer = headerHeight+20;
-        int y;
-        if (bottom < headerHeightWithBuffer) {
-            y = round((bottom - headerHeightWithBuffer)*1.1f); // make header 'zoom' away from next header
-        } else {
-            y = 0;
+
+        int headerTop=0;
+        int nextHeaderFlatListPosition = listView.getFlatListPosition(getPackedPositionForGroup(nextHeaderGroup));
+        if (nextHeaderFlatListPosition<=listView.getLastVisiblePosition()) {
+            // next header is visible, we may  need to handle partial push-up
+            View v = listView.getChildAt(nextHeaderFlatListPosition-firstVisiblePosition);
+            Log.d(TAG, "firstVisiblePosition = "+firstVisiblePosition+" nextHeaderFlatListPosition="+nextHeaderFlatListPosition+" v="+v);
+            if (v!=null && v.getTop() < headerHeightWithBuffer) {
+                headerTop = round((v.getTop() - headerHeightWithBuffer)*1.1f); // make header 'zoom' away from next header
+            }
         }
-        Log.d(TAG, "configureHeaderView y="+y);
+        Log.d(TAG, "configureHeaderView headerTop="+headerTop);
         Log.d(TAG, "configurePinnedHeader group=" + group);
 
-        if (getChildCount()>1) {
-            removeViewAt(1);
-        }
-        addView(mHeaderView, 1);
+        setHeaderViewAsChildOfViewGroup(mHeaderView);
 //        mHeaderView.requestLayout(); // TODO - is this the right thing to do to get the text to appear correctly?
 //        mHeaderView.invalidate();
         Drawable background = new ColorDrawable(Color.WHITE); // header.getBackground()
         mHeaderView.setBackgroundDrawable(background);
-        if (mHeaderView.getTop() != y) {
-            mHeaderView.layout(0, y, mHeaderViewWidth, mHeaderViewHeight + y);
+        if (mHeaderView.getTop() != headerTop) {
+            mHeaderView.layout(0, headerTop, mHeaderViewWidth, mHeaderViewHeight + headerTop);
         }
         mHeaderView.setVisibility(VISIBLE);
+    }
+
+    private void setHeaderViewAsChildOfViewGroup(View v) {
+        if (getChildCount()>1) {
+            removeViewAt(1);
+        }
+        addView(v, 1);
     }
 
 
