@@ -1,4 +1,4 @@
-package com.madgag.agit;
+package com.madgag.pinnedheader;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,10 +8,8 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
-import android.widget.TextView;
+import android.widget.*;
+import com.madgag.agit.R;
 
 import static com.madgag.agit.PinnedHeaderListView.PinnedHeaderAdapter.PINNED_HEADER_GONE;
 import static com.madgag.agit.PinnedHeaderListView.PinnedHeaderAdapter.PINNED_HEADER_PUSHED_UP;
@@ -92,6 +90,7 @@ public class BongleView extends ExpandableListView implements AbsListView.OnScro
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
+        Log.d(TAG, "onLayout called");
         if (mHeaderView != null) {
             mHeaderView.layout(0, 0, mHeaderViewWidth, mHeaderViewHeight);
             configureHeaderView(getFirstVisiblePosition());
@@ -194,6 +193,12 @@ public class BongleView extends ExpandableListView implements AbsListView.OnScro
         int group = getPackedPositionGroup(getExpandableListPosition(realPosition));
         Log.d(TAG, "configurePinnedHeader group=" + group);
         mHeaderView = expAdapter.getGroupView(group, false, mHeaderView, this); // TODO Performance
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "Boo", Toast.LENGTH_SHORT);
+            }
+        };
+        mHeaderView.setOnClickListener(onClickListener);
         mHeaderView.requestLayout(); // TODO - is this the right thing to do to get the text to appear correctly?
         mHeaderView.invalidate();
         //int section = getSectionForPosition(realPosition);
