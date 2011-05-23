@@ -1,6 +1,7 @@
 package com.madgag.pinnedheader;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import com.madgag.agit.R;
 
+import static android.view.View.VISIBLE;
 import static java.lang.Math.round;
 
 public class PinnedHeaderLayout extends ViewGroup implements PinnedHeaderTrait.HeaderViewGroupAttacher {
@@ -41,6 +43,16 @@ public class PinnedHeaderLayout extends ViewGroup implements PinnedHeaderTrait.H
     }
 
     @Override
+    protected void dispatchDraw(Canvas canvas) {
+        super.dispatchDraw(canvas);
+        View headerView = getHeaderView();
+        if (headerView!=null && headerView.getVisibility()==VISIBLE) {
+            shadowGradient.setBounds(0, headerView.getBottom(), getWidth(), 15 + headerView.getBottom());
+            shadowGradient.draw(canvas);
+        }
+    }
+
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         View v = getChildAt(0);
         // measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0);
@@ -50,10 +62,14 @@ public class PinnedHeaderLayout extends ViewGroup implements PinnedHeaderTrait.H
                 resolveSize(v.getMeasuredWidth(), widthMeasureSpec),
                 resolveSize(v.getMeasuredHeight(), heightMeasureSpec));
 
-        View headerView = pinnedHeaderTrait == null ? null : pinnedHeaderTrait.getHeaderView();
+        View headerView = getHeaderView();
         if (headerView != null) {
             measureChild(headerView, widthMeasureSpec, heightMeasureSpec);
         }
+    }
+
+    private View getHeaderView() {
+        return pinnedHeaderTrait == null ? null : pinnedHeaderTrait.getHeaderView();
     }
 
     @Override

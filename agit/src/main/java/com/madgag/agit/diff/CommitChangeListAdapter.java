@@ -114,7 +114,6 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
         }
 
         FileHeaderViewHolder viewHolder = (FileHeaderViewHolder) v.getTag();
-        // TODO
         if (viewHolder!=null && viewHolder.isExpanded()!=isExpanded) {
             v = newGroupView(isExpanded, parent);
             viewHolder = null;
