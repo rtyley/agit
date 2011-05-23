@@ -17,8 +17,10 @@ public class FileHeaderViewHolder implements ViewHolder<FileDiff> {
 
     private final ImageView changeTypeImageView;
     private final TextView filePathTextView;
+    private final boolean expanded;
 
-    public FileHeaderViewHolder(View v) {
+    public FileHeaderViewHolder(View v, boolean isExpanded) {
+        expanded = isExpanded;
         changeTypeImageView = (ImageView) v.findViewById(commit_file_diff_type);
         filePathTextView = (TextView) v.findViewById(commit_file_textview);
     }
@@ -49,5 +51,9 @@ public class FileHeaderViewHolder implements ViewHolder<FileDiff> {
 
         filePathTextView.setText(filename);
         changeTypeImageView.setImageResource(changeTypeIcon);
+    }
+
+    public boolean isExpanded() {
+        return expanded;
     }
 }

@@ -23,20 +23,18 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import com.madgag.agit.DiffSliderView;
 import com.madgag.agit.DiffSliderView.OnStateUpdateListener;
-import com.madgag.agit.R;
 import com.madgag.android.listviews.ViewHolder;
-import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevWalk;
 
 import java.util.List;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.madgag.agit.R.layout.commit_group_view;
+import static com.madgag.agit.R.layout.file_change_header_expanded_view;
+import static com.madgag.agit.R.layout.file_change_header_view;
 
 public class CommitChangeListAdapter extends BaseExpandableListAdapter implements OnStateUpdateListener, DiffStateProvider {
 
@@ -54,7 +52,7 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
     private float state = 0.5f;
 
     public CommitChangeListAdapter(Repository repository, RevCommit commit, RevCommit parentCommit, DiffSliderView diffSlider, ExpandableListView expandableList, Context context) {
-        // groupHeaderCreator = ViewInflator.viewInflatorFor(context,commit_group_view);
+        // groupHeaderCreator = ViewInflator.viewInflatorFor(context,file_change_header_view);
         this.repository = repository;
         this.commit = commit;
         this.parentCommit = parentCommit;
@@ -114,19 +112,24 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
         } else {
             v = convertView;
         }
-        // TODO
-        ViewHolder<FileDiff> goo = (ViewHolder<FileDiff>) v.getTag();
 
-        if (goo==null) {
-            v.setTag(goo = new FileHeaderViewHolder(v));
+        FileHeaderViewHolder viewHolder = (FileHeaderViewHolder) v.getTag();
+        // TODO
+        if (viewHolder!=null && viewHolder.isExpanded()!=isExpanded) {
+            v = newGroupView(isExpanded, parent);
+            viewHolder = null;
         }
-        goo.updateViewFor(fileDiffs.get(groupPosition));
+
+        if (viewHolder==null) {
+            v.setTag(viewHolder = new FileHeaderViewHolder(v,isExpanded));
+        }
+        viewHolder.updateViewFor(fileDiffs.get(groupPosition));
 
         return v;
     }
 
     private View newGroupView(boolean isExpanded, ViewGroup parent) {
-        return mInflater.inflate(isExpanded ? commit_group_view	: commit_group_view, parent, false);
+        return mInflater.inflate(isExpanded ? file_change_header_expanded_view : file_change_header_view, parent, false);
     }
 
     public boolean hasStableIds() {
