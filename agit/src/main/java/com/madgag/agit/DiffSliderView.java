@@ -20,20 +20,29 @@
 package com.madgag.agit;
 
 import static android.content.Context.VIBRATOR_SERVICE;
+import static android.graphics.Typeface.BOLD;
+import static android.graphics.Typeface.create;
+import static android.view.Gravity.CENTER;
 import static com.madgag.agit.R.id.DiffPlayerSeekBar;
+import static com.madgag.agit.R.id.afterText;
+import static com.madgag.agit.R.id.beforeText;
 import static com.madgag.agit.R.layout.diff_seekbar_view;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Vibrator;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
 import org.tautua.markdownpapers.ast.TagAttribute;
 
-public class DiffSliderView extends RelativeLayout {
+public class DiffSliderView extends LinearLayout {
 
     private String TAG="DSV";
 
@@ -42,11 +51,19 @@ public class DiffSliderView extends RelativeLayout {
 	}
 	
 	private OnStateUpdateListener stateUpdateListener;
-	
+	private final TextView beforeTextView,afterTextView;
+    private final Typeface defaultTypeface, boldTypeFace;
 	public DiffSliderView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+        setOrientation(HORIZONTAL);
+        setGravity(CENTER);
 		LayoutInflater.from(context).inflate(diff_seekbar_view, this);
-		
+
+        beforeTextView = (TextView) findViewById(beforeText);
+        afterTextView = (TextView) findViewById(afterText);
+        defaultTypeface = beforeTextView.getTypeface();
+        boldTypeFace = create(defaultTypeface, BOLD);
+
 		SeekBar seekBar = (SeekBar) findViewById(DiffPlayerSeekBar);
 		DiffSeekBarChangeListener foo = new DiffSeekBarChangeListener((Vibrator) context.getSystemService(VIBRATOR_SERVICE));
 		seekBar.setOnSeekBarChangeListener(foo);
@@ -73,11 +90,14 @@ public class DiffSliderView extends RelativeLayout {
 		public void onStartTrackingTouch(SeekBar seekBar) {}
 
 		public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-			if (progress==0 || seekBar.getMax()==progress) {
+            boolean before=progress==0, after=seekBar.getMax()==progress;
+			if (before || after) {
 				vibrator.vibrate(17);
 			}
-			
-			float unitProgress = unitProgress(seekBar);
+            // sadly makes the damn seekbar wiggle
+//            beforeTextView.setTypeface(before?boldTypeFace:defaultTypeface);
+//            afterTextView.setTypeface(after?boldTypeFace:defaultTypeface);
+	        float unitProgress = unitProgress(seekBar);
 
 			notifyTheOthers(unitProgress);
 			
