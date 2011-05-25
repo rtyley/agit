@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import com.madgag.agit.R;
 
-import static android.view.View.VISIBLE;
 import static java.lang.Math.round;
 
 public class PinnedHeaderLayout extends ViewGroup implements PinnedHeaderTrait.HeaderViewGroupAttacher {
@@ -64,6 +63,7 @@ public class PinnedHeaderLayout extends ViewGroup implements PinnedHeaderTrait.H
 
         View headerView = getHeaderView();
         if (headerView != null) {
+            Log.d(TAG,"Measuring headerView="+headerView);
             measureChild(headerView, widthMeasureSpec, heightMeasureSpec);
         }
     }
@@ -85,10 +85,20 @@ public class PinnedHeaderLayout extends ViewGroup implements PinnedHeaderTrait.H
     public void attach(View header) {
         View currentHeader = getChildAt(1);
         if (currentHeader ==null) {
-            addView(header, 1);
+            Log.d(TAG, "adding header "+header);
+            addHeaderAndTriggerMeasure(header);
         } else if (currentHeader!=header) {
+            Log.d(TAG, "replacing old header "+currentHeader+" with "+header);
             removeViewAt(1);
-            addView(header, 1);
+            addHeaderAndTriggerMeasure(header);
         }
+
+    }
+
+    private void addHeaderAndTriggerMeasure(View header) {
+        Log.d(TAG, "Hope to trigger onMeasure call...");
+        addView(header, 1);
+
+        header.requestLayout();
     }
 }
