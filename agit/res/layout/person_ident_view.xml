@@ -26,6 +26,8 @@
 		android:layout_toRightOf="@id/person_ident_avatar"
 		android:layout_alignTop="@id/person_ident_avatar"
 		android:textStyle="italic"
+        android:singleLine="true"
+        android:ellipsize="end"
 		android:text="Someone" />
 	<TextView
 		android:id="@+id/person_ident_when"
