@@ -44,9 +44,12 @@ public class PinnedHeaderTrait implements AbsListView.OnScrollListener {
         }
 
         int firstVisiblePosition = listView.getFirstVisiblePosition();
-        final int group = getPackedPositionGroup(listView.getExpandableListPosition(firstVisiblePosition));
+        long expandableListPosition = listView.getExpandableListPosition(firstVisiblePosition);
 
-        if (firstVisiblePosition < 0 || !listView.isGroupExpanded(group)) {
+        final int group = getPackedPositionGroup(expandableListPosition);
+
+        if (firstVisiblePosition < 0 || !listView.isGroupExpanded(group)
+                || (firstVisiblePosition== listView.getFlatListPosition(getPackedPositionForGroup(group)) && listView.getChildAt(0).getTop()>=0)) {
             Log.d(TAG, "PINNED_HEADER_GONE");
             if (headerView !=null) {
                 headerView.setVisibility(GONE);
@@ -60,15 +63,19 @@ public class PinnedHeaderTrait implements AbsListView.OnScrollListener {
             public void onClick(View view) {
                 Log.d(TAG, "Got a click...");
                 listView.collapseGroup(group);
+                listView.setSelectedGroup(group);
             }
         });
 
         int headerTop = calculatePushOffset(group, firstVisiblePosition);
         Drawable background = new ColorDrawable(Color.WHITE); // header.getBackground()
         headerView.setBackgroundDrawable(background);
-        if (headerView.getTop() != headerTop) {
+        int measuredHeight = headerView.getMeasuredHeight();
+        Log.d(TAG, "headerView.getTop()="+headerView.getTop()+" headerTop="+headerTop+"  measuredHeight="+measuredHeight);
+        if (headerView.getTop() != headerTop || headerView.getHeight()!= measuredHeight) {
+            Log.d(TAG, "Performing headerView layout measuredHeight="+measuredHeight);
             headerView.layout(0, headerTop,
-                    headerView.getMeasuredWidth(), headerView.getMeasuredHeight() + headerTop);
+                    headerView.getMeasuredWidth(), measuredHeight + headerTop);
         }
         headerView.setVisibility(VISIBLE);
     }
@@ -89,7 +96,7 @@ public class PinnedHeaderTrait implements AbsListView.OnScrollListener {
                 headerTop = round((v.getTop() - headerHeightWithBuffer)*1.1f); // make header 'zoom' away from next header
             }
         }
-        Log.d(TAG, "configureHeaderView headerTop="+headerTop);
+        Log.d(TAG, "configureHeaderView headerTop="+headerTop+" headerHeight="+headerHeight);
         return headerTop;
     }
 
