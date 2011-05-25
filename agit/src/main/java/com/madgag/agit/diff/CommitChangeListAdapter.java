@@ -20,6 +20,7 @@
 package com.madgag.agit.diff;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -146,6 +147,8 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
     private void setDiffState(float state) {
         this.state = state;
         expandableList.invalidate();
+        expandableList.requestLayout();
+        Log.d(TAG,"list invalidated state="+state);
     }
 
     private long keyFor(int i, int j) {

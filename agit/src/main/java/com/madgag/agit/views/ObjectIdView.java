@@ -55,7 +55,6 @@ public class ObjectIdView extends TextView {
     public ObjectIdView(Context context, AttributeSet attrs) {
 		super(context, attrs);
         clipboardManager = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
-        
 	}
 	
 	public void setObjectId(final ObjectId objectId) {

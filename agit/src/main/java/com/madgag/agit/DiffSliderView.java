@@ -20,17 +20,24 @@
 package com.madgag.agit;
 
 import static android.content.Context.VIBRATOR_SERVICE;
+import static com.madgag.agit.R.id.DiffPlayerSeekBar;
+import static com.madgag.agit.R.layout.diff_seekbar_view;
+
 import android.content.Context;
 import android.os.Vibrator;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import org.tautua.markdownpapers.ast.TagAttribute;
 
 public class DiffSliderView extends RelativeLayout {
 
-	public static interface OnStateUpdateListener {
+    private String TAG="DSV";
+
+    public static interface OnStateUpdateListener {
 		void onStateChanged (DiffSliderView diffSliderView, float state);
 	}
 	
@@ -38,9 +45,9 @@ public class DiffSliderView extends RelativeLayout {
 	
 	public DiffSliderView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		LayoutInflater.from(context).inflate(R.layout.diff_seekbar_view, this);
+		LayoutInflater.from(context).inflate(diff_seekbar_view, this);
 		
-		SeekBar seekBar = (SeekBar) findViewById(R.id.DiffPlayerSeekBar);
+		SeekBar seekBar = (SeekBar) findViewById(DiffPlayerSeekBar);
 		DiffSeekBarChangeListener foo = new DiffSeekBarChangeListener((Vibrator) context.getSystemService(VIBRATOR_SERVICE));
 		seekBar.setOnSeekBarChangeListener(foo);
 		seekBar.setProgress(seekBar.getMax());
@@ -83,6 +90,7 @@ public class DiffSliderView extends RelativeLayout {
 	}
 
 	private void notifyTheOthers(float unitProgress) {
+        Log.d(TAG, "notifyTheOthers stateUpdateListener="+stateUpdateListener);
 		if (stateUpdateListener!=null) {
 			stateUpdateListener.onStateChanged(this, unitProgress);
 		}

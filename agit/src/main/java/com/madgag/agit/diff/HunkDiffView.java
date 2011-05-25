@@ -27,11 +27,15 @@ import static android.widget.TextView.BufferType.EDITABLE;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.text.Editable;
+import android.util.Log;
 import android.widget.TextView;
+import org.tautua.markdownpapers.ast.TagAttribute;
 
 public class HunkDiffView extends TextView {
-	
-	private final DiffText diffText;
+
+    private static final String TAG = "HDV";
+    
+    private final DiffText diffText;
     private final DiffStateProvider diffStateProvider;
     private float state;
 
@@ -46,6 +50,7 @@ public class HunkDiffView extends TextView {
     }
 
     public void onDraw(Canvas c) {
+        Log.d(TAG, "asked to draw hunk");
         updateDiffTextStateIfRequired();
         super.onDraw(c);
     }
@@ -59,6 +64,7 @@ public class HunkDiffView extends TextView {
 
     private void updateDiffTextStateTo(float requiredDiffState) {
         diffText.setTransitionProgress(requiredDiffState);
+        Log.d(TAG, "updated text state from "+state+" to "+requiredDiffState);
         state = requiredDiffState;
     }
 
