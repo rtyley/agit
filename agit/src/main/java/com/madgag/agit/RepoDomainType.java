@@ -19,11 +19,19 @@
 
 package com.madgag.agit;
 
+import static android.R.layout.simple_list_item_2;
 import static android.text.Html.fromHtml;
+import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 
 import java.util.Collection;
 import java.util.List;
 
+import android.*;
+import android.content.Context;
+import android.view.View;
+import com.madgag.android.listviews.ViewFactory;
+import com.madgag.android.listviews.ViewHolder;
+import com.madgag.android.listviews.ViewHolderFactory;
 import org.eclipse.jgit.lib.Repository;
 
 import android.content.Intent;
@@ -81,5 +89,12 @@ public abstract class RepoDomainType<E> {
 	private GitIntentBuilder action(String action) {
 		return new GitIntentBuilder(action).repository(repository);
 	}
-	
+
+    public ViewFactory<E> getViewFactoryFor(Context context) {
+        return  new ViewFactory<E>(viewInflatorFor(context, simple_list_item_2), new ViewHolderFactory<E>() {
+            public ViewHolder<E> createViewHolderFor(View view) {
+                return new RDTypeInstanceViewHolder(RepoDomainType.this, view);
+            }
+        });
+    }
 }

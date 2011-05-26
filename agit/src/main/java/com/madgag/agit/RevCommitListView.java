@@ -24,6 +24,7 @@ import java.util.List;
 
 import android.util.Log;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.madgag.android.lazydrawables.ImageSession;
 import com.madgag.android.listviews.ViewHoldingListAdapter;
 import com.madgag.android.listviews.ViewHolder;
@@ -49,19 +50,16 @@ public class RevCommitListView extends PullToRefreshListView {
 
     private static String TAG="RCLV";
 
-    @Inject ImageSession imageSession;
+    @Inject CommitViewHolderFactory commitViewHolderFactory;
 	private Function<RevCommit, Intent> commitViewerIntentCreator;
 
     private final ViewHoldingListAdapter<RevCommit> adapter;
 
 	public RevCommitListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-        ((InjectorProvider)context).getInjector().injectMembers(this);
-        adapter = new ViewHoldingListAdapter<RevCommit>(Collections.<RevCommit>emptyList(), viewInflatorFor(getContext(), rev_commit_list_item), new ViewHolderFactory<RevCommit>() {
-            public ViewHolder<RevCommit> createViewHolderFor(View view) {
-                return new CommitViewHolder(view, imageSession);
-            }
-        });
+        ((InjectorProvider) context).getInjector().injectMembers(this);
+        adapter = new ViewHoldingListAdapter<RevCommit>(Collections.<RevCommit>emptyList(), viewInflatorFor(getContext(), rev_commit_list_item),
+                commitViewHolderFactory);
         setAdapter(adapter);
 
 		setOnItemClickListener(new OnItemClickListener() {

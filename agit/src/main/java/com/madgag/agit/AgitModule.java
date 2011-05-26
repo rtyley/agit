@@ -34,6 +34,7 @@ import android.os.Handler;
 import android.os.Looper;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.google.inject.assistedinject.FactoryProvider;
 import com.jcraft.jsch.HostKeyRepository;
 import com.madgag.agit.blockingprompt.*;
 import com.madgag.agit.guice.RepositoryScope;
@@ -90,6 +91,8 @@ public class AgitModule extends AbstractAndroidModule {
         bind(RepoDomainType.class).annotatedWith(named("branch")).to(RDTBranch.class);
         bind(RepoDomainType.class).annotatedWith(named("remote")).to(RDTRemote.class);
         bind(RepoDomainType.class).annotatedWith(named("tag")).to(RDTTag.class);
+
+        bind(CommitViewHolderFactory.class).toProvider(newFactory(CommitViewHolderFactory.class, CommitViewHolder.class));
     }
 
     @Provides @Singleton @Named("uiThread")

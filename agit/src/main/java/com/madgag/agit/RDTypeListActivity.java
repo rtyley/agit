@@ -36,7 +36,6 @@ import com.markupartist.android.widget.ActionBar;
 import roboguice.activity.RoboListActivity;
 
 import static android.R.layout.simple_list_item_2;
-import static android.R.layout.simple_list_item_2;
 import static com.google.inject.name.Names.named;
 import static com.madgag.agit.RepositoryActivity.enterRepositoryScopeFor;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
@@ -63,12 +62,10 @@ public class RDTypeListActivity<E> extends RoboListActivity {
 
 		setContentView(R.layout.list_activity_layout);
 		ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
+        actionBar.setHomeAction(new HomeAction(this));
 		actionBar.setTitle(rdt.conciseSummaryTitle());
-		setListAdapter(new ViewHoldingListAdapter<E>(rdt.getAll(), viewInflatorFor(this, simple_list_item_2), new ViewHolderFactory<E>() {
-            public ViewHolder<E> createViewHolderFor(View view) {
-                return new RDTypeInstanceViewHolder(rdt,view);
-            }
-        }));
+
+		setListAdapter(new ViewHoldingListAdapter<E>(rdt.getAll(), rdt.getViewFactoryFor(this)));
 	}
 	
 	@Override
@@ -98,4 +95,5 @@ public class RDTypeListActivity<E> extends RoboListActivity {
 		super.onDestroy();
 		rc.onDestroy();
 	}
+
 }

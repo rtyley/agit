@@ -24,6 +24,7 @@ import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import java.io.IOException;
 import java.util.Map;
 
+import android.app.Activity;
 import android.text.SpannableStringBuilder;
 import android.text.style.CharacterStyle;
 import android.text.style.TypefaceSpan;
@@ -82,6 +83,7 @@ public class CommitView extends LinearLayout {
 		
 		layoutInflater.inflate(R.layout.commit_view, this);
 		actionBar = (ActionBar) findViewById(R.id.actionbar);
+        actionBar.setHomeAction(new HomeAction((Activity)context));
 		tabHost = (TabHost) findViewById(android.R.id.tabhost);
 		tabWidget = (TabWidget) findViewById(android.R.id.tabs);
 		tabHost.setup();

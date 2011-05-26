@@ -68,7 +68,7 @@ public class AboutActivity extends RoboActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about_launcher);
-        actionBar.setHomeLogo(R.drawable.actionbar_agit_logo);
+        actionBar.setHomeAction(new HomeAction(this));
 
         Reader in = null;
         try {

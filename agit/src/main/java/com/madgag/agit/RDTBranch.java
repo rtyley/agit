@@ -19,10 +19,13 @@
 
 package com.madgag.agit;
 
+import static android.R.layout.simple_list_item_2;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.madgag.agit.R.layout.branch_list_item;
 import static com.madgag.agit.RDTBranch.BranchSummary.SORT_BY_COMMIT_TIME;
 import static com.madgag.agit.Time.timeSinceSeconds;
+import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 import static java.util.Collections.sort;
 import static org.eclipse.jgit.lib.Constants.R_REMOTES;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;
@@ -33,7 +36,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import android.content.Context;
+import android.view.View;
 import com.google.inject.Inject;
+import com.madgag.android.listviews.ViewFactory;
+import com.madgag.android.listviews.ViewHolder;
+import com.madgag.android.listviews.ViewHolderFactory;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefDatabase;
@@ -101,6 +109,15 @@ public class RDTBranch extends RepoDomainType<BranchSummary> {
 	CharSequence shortDescriptionOf(BranchSummary bs) {
 		return bs.getHeadCommit().getShortMessage()+" "+timeSinceSeconds(bs.getHeadCommit().getCommitTime());
 	}
+
+
+//    public ViewFactory<BranchSummary> getViewFactoryFor(Context context) {
+//        return  new ViewFactory<BranchSummary>(viewInflatorFor(context, branch_list_item), new ViewHolderFactory<BranchSummary>() {
+//            public ViewHolder<BranchSummary> createViewHolderFor(View view) {
+//                return new RDTypeInstanceViewHolder(RDTBranch.this, view);
+//            }
+//        });
+//    }
 	
 	public static class BranchSummary {
 		public final static Comparator<BranchSummary> SORT_BY_COMMIT_TIME = new Comparator<BranchSummary>() {

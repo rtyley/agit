@@ -73,7 +73,7 @@ public class CloneLauncherActivity extends RoboActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.clone_launcher);
-        actionBar.setHomeLogo(R.drawable.actionbar_agit_logo);
+        actionBar.setHomeAction(new HomeAction(this));
 
 
 		button.setOnClickListener(goCloneButtonListener);

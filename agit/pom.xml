@@ -18,7 +18,7 @@
 		<dependency>
 			<groupId>com.madgag</groupId>
 			<artifactId>android-viewholder-listviews</artifactId>
-			<version>0.2</version>
+			<version>0.3-SNAPSHOT</version>
 		</dependency>
         <dependency>
 			<groupId>com.madgag</groupId>

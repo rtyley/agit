@@ -19,6 +19,7 @@
 
 package com.madgag.agit;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -68,7 +69,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.repo_management);
 
-        //actionBar.setHomeLogo(R.drawable.actionbar_agit_logo);
+        actionBar.setHomeAction(new HomeAction(this));
 		actionBar.setTitle(niceNameFor(repo()));
         actionBar.addAction(new Action() {
             public void performAction(View view) {
