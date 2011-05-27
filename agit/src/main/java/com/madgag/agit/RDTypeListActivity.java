@@ -19,9 +19,11 @@
 
 package com.madgag.agit;
 
+import android.content.Context;
 import com.google.inject.Inject;
 import com.google.inject.Key;
 import com.madgag.agit.guice.RepositoryScope;
+import com.madgag.android.listviews.ViewFactory;
 import com.madgag.android.listviews.ViewHoldingListAdapter;
 import com.madgag.android.listviews.ViewHolder;
 import com.madgag.android.listviews.ViewHolderFactory;
@@ -37,6 +39,8 @@ import roboguice.activity.RoboListActivity;
 
 import static android.R.layout.simple_list_item_2;
 import static com.google.inject.name.Names.named;
+import static com.madgag.agit.R.id.actionbar;
+import static com.madgag.agit.R.layout.list_activity_layout;
 import static com.madgag.agit.RepositoryActivity.enterRepositoryScopeFor;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 
@@ -49,7 +53,8 @@ public class RDTypeListActivity<E> extends RoboListActivity {
 	private static final String TAG = "RDTL";
 	private @Inject RepositoryContext rc;
     private @Inject Repository repository;
-	private RepoDomainType<E> rdt;	
+	private RepoDomainType<E> rdt;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         RepositoryScope repositoryScope = enterRepositoryScopeFor(this,getIntent());
@@ -60,12 +65,11 @@ public class RDTypeListActivity<E> extends RoboListActivity {
             repositoryScope.exit();
         }
 
-		setContentView(R.layout.list_activity_layout);
-		ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
+		setContentView(list_activity_layout);
+		ActionBar actionBar = (ActionBar) findViewById(actionbar);
         actionBar.setHomeAction(new HomeAction(this));
 		actionBar.setTitle(rdt.conciseSummaryTitle());
-
-		setListAdapter(new ViewHoldingListAdapter<E>(rdt.getAll(), rdt.getViewFactoryFor(this)));
+		setListAdapter(new ViewHoldingListAdapter<E>(rdt.getAll(), getViewFactory()));
 	}
 	
 	@Override
@@ -96,4 +100,12 @@ public class RDTypeListActivity<E> extends RoboListActivity {
 		rc.onDestroy();
 	}
 
+
+    public ViewFactory<E> getViewFactory() {
+        return  new ViewFactory<E>(viewInflatorFor(this, simple_list_item_2), new ViewHolderFactory<E>() {
+            public ViewHolder<E> createViewHolderFor(View view) {
+                return new RDTypeInstanceViewHolder(rdt, view);
+            }
+        });
+    }
 }

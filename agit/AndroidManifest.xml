@@ -32,6 +32,9 @@
 				<action android:name="git.tag.LIST" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
+		</activity>
+
+        <activity android:name="RDTBranchListActivity">
 			<intent-filter>
 				<action android:name="git.branch.LIST" />
 				<category android:name="android.intent.category.DEFAULT" />

@@ -90,11 +90,4 @@ public abstract class RepoDomainType<E> {
 		return new GitIntentBuilder(action).repository(repository);
 	}
 
-    public ViewFactory<E> getViewFactoryFor(Context context) {
-        return  new ViewFactory<E>(viewInflatorFor(context, simple_list_item_2), new ViewHolderFactory<E>() {
-            public ViewHolder<E> createViewHolderFor(View view) {
-                return new RDTypeInstanceViewHolder(RepoDomainType.this, view);
-            }
-        });
-    }
 }

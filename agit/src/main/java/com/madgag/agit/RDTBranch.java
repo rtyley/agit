@@ -102,7 +102,7 @@ public class RDTBranch extends RepoDomainType<BranchSummary> {
 
 	@Override
 	String idFor(BranchSummary bs) {
-		return shortenRefName(bs.getRef().getName());
+        return bs.getShortName();
 	}
 	
 	@Override
@@ -141,6 +141,9 @@ public class RDTBranch extends RepoDomainType<BranchSummary> {
 		public Ref getRef() {
 			return branchRef;
 		}
-		
-	}
+
+        public String getShortName() {
+		    return shortenRefName(branchRef.getName());
+        }
+    }
 }

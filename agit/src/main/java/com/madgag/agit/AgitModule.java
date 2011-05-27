@@ -93,6 +93,7 @@ public class AgitModule extends AbstractAndroidModule {
         bind(RepoDomainType.class).annotatedWith(named("tag")).to(RDTTag.class);
 
         bind(CommitViewHolderFactory.class).toProvider(newFactory(CommitViewHolderFactory.class, CommitViewHolder.class));
+        bind(BranchViewHolderFactory.class).toProvider(newFactory(BranchViewHolderFactory.class, BranchViewHolder.class));
     }
 
     @Provides @Singleton @Named("uiThread")
@@ -137,7 +138,7 @@ public class AgitModule extends AbstractAndroidModule {
         	Log.i("BRP", "ImageSessionProvider INVOKED");
     		ImageProcessor<Bitmap> imageProcessor = new ScaledBitmapDrawableGenerator(34, resources);
     		ImageResourceDownloader<String, Bitmap> downloader = new GravatarBitmapDownloader();
-    		File file = new File(Environment.getExternalStorageDirectory(),"boho");
+    		File file = new File(Environment.getExternalStorageDirectory(),"gravatars");
     		ImageResourceStore<String, Bitmap> imageResourceStore = new BitmapFileStore<String>(file);
     		return new ImageSession<String, Bitmap>(imageProcessor, downloader, imageResourceStore, resources.getDrawable(R.drawable.loading_34_centred));
         }
