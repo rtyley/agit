@@ -50,6 +50,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 import static com.madgag.agit.GitIntents.EXTRA_SOURCE_URI;
 import static com.madgag.agit.GitIntents.EXTRA_TARGET_DIR;
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
+import static com.madgag.agit.R.string.about_activity_title;
 import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
 
@@ -69,6 +70,7 @@ public class AboutActivity extends RoboActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about_launcher);
         actionBar.setHomeAction(new HomeAction(this));
+        actionBar.setTitle(about_activity_title);
 
         Reader in = null;
         try {

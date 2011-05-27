@@ -49,6 +49,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 import static com.madgag.agit.GitIntents.EXTRA_SOURCE_URI;
 import static com.madgag.agit.GitIntents.EXTRA_TARGET_DIR;
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
+import static com.madgag.agit.R.string.clone_launcher_activity_title;
 import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
 
@@ -74,6 +75,7 @@ public class CloneLauncherActivity extends RoboActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.clone_launcher);
         actionBar.setHomeAction(new HomeAction(this));
+        actionBar.setTitle(clone_launcher_activity_title);
 
 
 		button.setOnClickListener(goCloneButtonListener);

@@ -4,6 +4,8 @@
     <string name="app_strap">Android Git Client</string>
     <string name="suggest_repos_button">Suggest repos...</string>
     <string name="about_app_menu_option">About</string>
+    <string name="about_activity_title">About...</string>
+    <string name="clone_launcher_activity_title">Clone...</string>
     <string name="clone_menu_option">Clone...</string>
     <string name="enter_clone_url">Url</string>
     <string name="clone_target_folder_label">Target Folder</string>
