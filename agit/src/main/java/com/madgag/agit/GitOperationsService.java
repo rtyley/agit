@@ -19,33 +19,28 @@
 
 package com.madgag.agit;
 
-import static android.widget.Toast.LENGTH_LONG;
-import static com.google.common.collect.Maps.newHashMap;
-import static com.madgag.agit.GitIntents.*;
-import static com.madgag.agit.Repos.openRepoFor;
-import static com.madgag.agit.Repos.remoteConfigFor;
-import static com.madgag.agit.RepositoryManagementActivity.manageRepoPendingIntent;
-import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
-
-import java.io.File;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.madgag.agit.operations.*;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.transport.URIish;
-
-import roboguice.service.RoboService;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.google.inject.Inject;
 import com.madgag.agit.operation.lifecycle.LongRunningServiceLifetime;
 import com.madgag.agit.operation.lifecycle.RepoNotifications;
+import com.madgag.agit.operations.*;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.transport.URIish;
+import roboguice.service.RoboService;
+
+import java.io.File;
+import java.net.URISyntaxException;
+
+import static android.widget.Toast.LENGTH_LONG;
+import static com.madgag.agit.GitIntents.*;
+import static com.madgag.agit.Repos.openRepoFor;
+import static com.madgag.agit.Repos.remoteConfigFor;
+import static com.madgag.agit.RepositoryManagementActivity.manageRepoPendingIntent;
+import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 
 public class GitOperationsService extends RoboService {
 
@@ -53,7 +48,6 @@ public class GitOperationsService extends RoboService {
 	
 	@Inject
     GitAsyncTaskFactory asyncTaskFactory;
-	private Map<File,RepositoryOperationContext> map=newHashMap();
 
 	public static Intent cloneOperationIntentFor(URIish uri, File directory, boolean bare) {
 		Intent intent = new Intent("git.CLONE");
@@ -124,12 +118,5 @@ public class GitOperationsService extends RoboService {
 		// repositoryOperationContext.enqueue(operation);
 		task.execute();
 		return START_STICKY;
-	}
-
-
-	public RepositoryOperationContext registerManagementActivity(RepositoryManagementActivity repositoryManagementActivity) {
-//		RepositoryOperationContext operationContext = getOrCreateRepositoryOperationContextFor(repositoryManagementActivity.gitdir());
-//		operationContext.setManagementActivity(repositoryManagementActivity);
-		return null;
 	}
 }
