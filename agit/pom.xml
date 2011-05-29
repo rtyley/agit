@@ -22,6 +22,12 @@
 		</dependency>
         <dependency>
 			<groupId>com.madgag</groupId>
+			<artifactId>android-pinned-header-listviews</artifactId>
+			<version>0.2-SNAPSHOT</version>
+            <type>apklib</type>
+		</dependency>
+        <dependency>
+			<groupId>com.madgag</groupId>
 			<artifactId>lazy-drawables</artifactId>
 			<version>0.8</version>
 		</dependency>

@@ -91,7 +91,7 @@
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>maven-android-plugin</artifactId>
                     <version>2.9.0-beta-4</version>
-
+                    <extensions>true</extensions>
                     <configuration>
                         <jvmArguments>
                             <jvmArgument>-Xmx512m</jvmArgument>
@@ -106,7 +106,6 @@
                         <deleteConflictingFiles>true</deleteConflictingFiles>
                         <undeployBeforeDeploy>true</undeployBeforeDeploy>
                     </configuration>
-                    <extensions>true</extensions>
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -144,6 +143,9 @@
                             <option>-keep public class * extends android.app.Service</option>
                             <option>-keep public class * extends android.content.BroadcastReceiver</option>
                             <option>-keep public class * extends android.content.ContentProvider</option>
+
+<option>-keep public class com.madgag.android.listviews.pinnedheader</option>
+                            
                             <option>-keep
                                 public class * extends android.view.View { public &lt;init&gt;(android.content.Context);
                                 public &lt;init&gt;(android.content.Context, android.util.AttributeSet);
