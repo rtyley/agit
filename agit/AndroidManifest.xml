@@ -82,6 +82,29 @@
 			</intent-filter>
 		</service>
 
+        <service android:name=".sync.AccountAuthenticatorService"
+                 android:exported="true" android:process=":auth">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data android:name="android.accounts.AccountAuthenticator"
+                       android:resource="@xml/authenticator" />
+        </service>
+
+        <service android:name=".sync.AgitSyncAdapterService"
+         android:exported="true" android:process=":contacts">
+         <intent-filter>
+          <action android:name="android.content.SyncAdapter" />
+         </intent-filter>
+         <meta-data android:name="android.content.SyncAdapter"
+          android:resource="@xml/sync_adapter" />
+        </service>
+
+        <provider android:name=".sync.DummyProvider"
+            android:authorities="com.madgag.agit.sync"
+            android:syncable="true"
+            android:label="Git Repos" />
+
 		<provider android:name="GitInfoProvider" android:authorities="com.madgag.agit.gitinfoprovider"></provider>
 
 		<activity android:name="BranchViewer">
@@ -132,4 +155,9 @@
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="org.openintents.ssh.permission.ACCESS_SSH_AGENT" />
 
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
 </manifest> 
