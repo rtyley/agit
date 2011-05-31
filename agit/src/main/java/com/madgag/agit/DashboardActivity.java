@@ -14,24 +14,19 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.madgag.agit.sync.AccountAuthenticatorService;
 import com.madgag.android.listviews.ViewHolder;
 import com.madgag.android.listviews.ViewHolderFactory;
 import com.madgag.android.listviews.ViewHoldingListAdapter;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 
-import java.io.File;
-
-import static android.R.layout.simple_list_item_2;
 import static android.graphics.PixelFormat.RGBA_8888;
 import static com.madgag.agit.R.layout.dashboard_repo_list_header;
 import static com.madgag.agit.R.layout.repo_list_item;
-import static com.madgag.agit.R.string.app_name;
-import static com.madgag.agit.Repos.knownRepos;
 import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
 import static com.madgag.agit.operations.Clone.GIT_REPO_INITIALISED_INTENT;
 import static com.madgag.agit.sync.AccountAuthenticatorService.addAccount;
+import static com.madgag.agit.sync.Constants.AGIT_ACCOUNT_NAME;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 
 public class DashboardActivity extends RoboActivity {
@@ -50,7 +45,7 @@ public class DashboardActivity extends RoboActivity {
         setupRepoList();
         
         try {
-            addAccount(this, getString(app_name));
+            addAccount(this, AGIT_ACCOUNT_NAME);
         } catch (Exception e) {
             Log.w(TAG, "Unable to add account for syncing",e);
         }
