@@ -19,7 +19,6 @@
 
 package com.madgag.agit;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -47,6 +46,10 @@ import static android.R.layout.simple_list_item_2;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.GitIntents.gitDirFrom;
+import static com.madgag.agit.R.drawable.ic_title_fetch;
+import static com.madgag.agit.R.id.branches_summary;
+import static com.madgag.agit.R.id.remotes_summary;
+import static com.madgag.agit.R.id.tags_summary;
 import static com.madgag.agit.RepoDeleter.REPO_DELETE_COMPLETED;
 import static com.madgag.agit.Repos.niceNameFor;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
@@ -67,7 +70,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.repo_management);
+        setContentView(R.layout.repo_management_activity);
 
         actionBar.setHomeAction(new HomeAction(this));
 		actionBar.setTitle(niceNameFor(repo()));
@@ -77,18 +80,16 @@ public class RepositoryManagementActivity extends RepositoryActivity {
             }
 			
 			public int getDrawable() {
-				return R.drawable.ic_title_fetch;
+				return ic_title_fetch;
 			}
         });
-        
-		rdtTypeList = (ListView) findViewById(R.id.BranchList);
-		rdtTypeList.setAdapter(new ArrayAdapter<String>(this, simple_list_item_2));
-		rdtTypeList.setOnItemClickListener(new OnItemClickListener(){
-			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				RepoDomainType<?> rdt = (RepoDomainType<?>) parent.getAdapter().getItem(position);
-				startActivity(rdt.listIntent());
-			}
-		});
+
+//		rdtTypeList.setOnItemClickListener(new OnItemClickListener(){
+//			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+//				RepoDomainType<?> rdt = (RepoDomainType<?>) parent.getAdapter().getItem(position);
+//				startActivity(rdt.listIntent());
+//			}
+//		});
     }
 
     @Override
@@ -203,12 +204,14 @@ public class RepositoryManagementActivity extends RepositoryActivity {
     }
 
 	void updateUI() {
-        List<RepoDomainType<?>> rdtList = newArrayList(new RDTRemote(repo()), new RDTBranch(repo()), new RDTTag(repo()));
-		rdtTypeList.setAdapter(new ViewHoldingListAdapter<RepoDomainType<?>>(rdtList, viewInflatorFor(this, simple_list_item_2), new ViewHolderFactory<RepoDomainType<?>>() {
-            public ViewHolder<RepoDomainType<?>> createViewHolderFor(View view) {
-                return new RDTypeViewHolder(view);
-            }
-        }));
+        TextView remotesSummary = (TextView) findViewById(remotes_summary);
+        remotesSummary.setText(new RDTRemote(repo()).summariseAll());
+
+        TextView branchesSummary = (TextView) findViewById(branches_summary);
+        branchesSummary.setText(new RDTBranch(repo()).summariseAll());
+
+        TextView tagsSummary = (TextView) findViewById(tags_summary);
+        tagsSummary.setText(new RDTTag(repo()).summariseAll());
 	}
 
 

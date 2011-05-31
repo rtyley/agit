@@ -1,13 +1,18 @@
 package com.madgag.agit;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import com.google.inject.Inject;
 import com.madgag.android.listviews.ViewHolder;
 import com.madgag.android.listviews.ViewHolderFactory;
 import com.madgag.android.listviews.ViewHoldingListAdapter;
 import com.markupartist.android.widget.ActionBar;
 import roboguice.activity.RoboListActivity;
+import roboguice.activity.event.OnCreateEvent;
+import roboguice.event.Observes;
+import roboguice.inject.InjectView;
 
 import java.util.List;
 
@@ -18,6 +23,7 @@ import static java.util.Arrays.asList;
 
 public class SuggestRepoActivity extends RoboListActivity {
     public static final String TAG = "SRA";
+    
     private ViewHoldingListAdapter<SuggestedRepo> adapter;
 
     /** Called when the activity is first created. */
@@ -25,8 +31,8 @@ public class SuggestRepoActivity extends RoboListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_activity_layout);
-
         ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
+        actionBar.setHomeAction(new HomeAction(this));
 		actionBar.setTitle("Some example repos...");
         // Bind to our new adapter.
         List<SuggestedRepo> suggestedRepos = asList(

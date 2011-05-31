@@ -24,7 +24,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.google.inject.Inject;
 import com.madgag.agit.views.ObjectSummaryView;
@@ -44,8 +43,6 @@ import roboguice.inject.InjectView;
 import java.io.File;
 import java.io.IOException;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 import static com.madgag.agit.R.id.*;
 
 public class TagViewer extends RepositoryActivity {
@@ -79,7 +76,7 @@ public class TagViewer extends RepositoryActivity {
 		super.onCreate(savedInstanceState);
         repositoryScope.doWith(repo(), new Runnable() {
             public void run() {
-                setContentView(R.layout.tag_view);
+                setContentView(R.layout.tag_viewer_activity);
             }
         });
 	}
