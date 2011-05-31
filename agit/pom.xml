@@ -23,7 +23,7 @@
         <dependency>
 			<groupId>com.madgag</groupId>
 			<artifactId>android-pinned-header-listviews</artifactId>
-			<version>0.2-SNAPSHOT</version>
+			<version>0.2</version>
             <type>apklib</type>
 		</dependency>
         <dependency>
