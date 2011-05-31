@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:padding="10dip">
+	<TextView
+		android:id="@+id/repo_name"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+        android:layout_marginTop="6dip"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    <ImageView
+		android:id="@+id/commit_icon"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+        android:layout_below="@id/repo_name"
+		android:src="@drawable/commit" />
+	<TextView
+		android:id="@+id/commit_subject"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+        android:layout_below="@id/repo_name"
+		android:layout_toRightOf="@id/commit_icon"
+		android:textSize="16dip"
+		android:textColor="@color/textColor"
+		android:ellipsize="end"
+		android:singleLine="true" />
+    <TextView
+		android:id="@+id/commit_time"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+		android:layout_above="@id/commit_subject"
+        android:textStyle="italic"
+        android:textAppearance="?android:attr/textAppearanceSmall"  />
+</RelativeLayout>

@@ -26,11 +26,15 @@ import static org.eclipse.jgit.lib.Constants.DOT_GIT;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
 
 import java.io.File;
+import java.util.Comparator;
 import java.util.List;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Ordering;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.lib.RepositoryCache.FileKey;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.util.FS;
 
@@ -96,4 +100,20 @@ public class Repos {
 			throw new RuntimeException(e);
 		}
 	}
+
+
+    public final static Function<RevCommit, Integer> COMMIT_TIME = new Function<RevCommit, Integer>() {
+        public Integer apply(RevCommit commit) {
+            return commit==null?0:commit.getCommitTime();
+        }
+    };
+
+    public final static Function<HasLatestCommit, RevCommit> LATEST_COMMIT = new Function<HasLatestCommit, RevCommit>() {
+        public RevCommit apply(HasLatestCommit branch) {
+            return branch.getLatestCommit();
+        }
+    };
+
+    public final static Ordering<HasLatestCommit> COMMIT_TIME_ORDERING =
+            Ordering.natural().reverse().onResultOf(COMMIT_TIME).onResultOf(LATEST_COMMIT);
 }

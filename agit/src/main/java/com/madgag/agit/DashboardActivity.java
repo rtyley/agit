@@ -26,6 +26,7 @@ import java.io.File;
 import static android.R.layout.simple_list_item_2;
 import static android.graphics.PixelFormat.RGBA_8888;
 import static com.madgag.agit.R.layout.dashboard_repo_list_header;
+import static com.madgag.agit.R.layout.repo_list_item;
 import static com.madgag.agit.R.string.app_name;
 import static com.madgag.agit.Repos.knownRepos;
 import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
@@ -39,7 +40,7 @@ public class DashboardActivity extends RoboActivity {
     private final static int MENU_ABOUT_ID= Menu.FIRST;
     
     @InjectView(android.R.id.list) ListView listView;
-    ViewHoldingListAdapter<File> listAdapter;
+    ViewHoldingListAdapter<RepoSummary> listAdapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -70,8 +71,8 @@ public class DashboardActivity extends RoboActivity {
 
     private void setupRepoList() {
 
-        listAdapter = new ViewHoldingListAdapter<File>(knownRepos(), viewInflatorFor(this, simple_list_item_2), new ViewHolderFactory<File>() {
-            public ViewHolder<File> createViewHolderFor(View view) {
+        listAdapter = new ViewHoldingListAdapter<RepoSummary>(RepoSummary.getAllReposOrderChronologically(), viewInflatorFor(this, repo_list_item), new ViewHolderFactory<RepoSummary>() {
+            public ViewHolder<RepoSummary> createViewHolderFor(View view) {
                 return new RepositoryViewHolder(view);
             }
         });
@@ -82,7 +83,7 @@ public class DashboardActivity extends RoboActivity {
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(manageRepoIntent((File) listView.getAdapter().getItem(position)));
+                startActivity(manageRepoIntent(((RepoSummary) listView.getAdapter().getItem(position)).getRepo().getDirectory()));
             }
         });
     }
@@ -123,7 +124,7 @@ public class DashboardActivity extends RoboActivity {
     }
 
     private void updateRepoList() {
-        listAdapter.setList(knownRepos());
+        listAdapter.setList(RepoSummary.getAllReposOrderChronologically());
     }
 
     // used by dashboard.xml

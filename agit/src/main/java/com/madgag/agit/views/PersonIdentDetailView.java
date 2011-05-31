@@ -21,12 +21,9 @@ package com.madgag.agit.views;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.text.format.DateFormat;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.google.inject.Inject;
 import com.madgag.agit.R;
@@ -34,15 +31,11 @@ import com.madgag.android.lazydrawables.ImageSession;
 import org.eclipse.jgit.lib.PersonIdent;
 import roboguice.inject.InjectorProvider;
 
-import java.text.SimpleDateFormat;
-
-import static com.madgag.agit.Time.timeSinceMS;
 import static com.madgag.android.lazydrawables.gravatar.Gravatars.gravatarIdFor;
 
 public class PersonIdentDetailView extends FrameLayout {
 
 	private static final String TAG = "PIDV";
-    public static final String ITALIC_CLIPPING_BUFFER = " ";
 
     private PersonIdent ident;
     private final ImageView avatarView;

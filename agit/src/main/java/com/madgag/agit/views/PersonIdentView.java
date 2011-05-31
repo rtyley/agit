@@ -19,32 +19,30 @@
 
 package com.madgag.agit.views;
 
-import static com.madgag.agit.Time.timeSinceMS;
-import static com.madgag.android.lazydrawables.gravatar.Gravatars.gravatarIdFor;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.view.View;
-import com.madgag.agit.R;
-import org.eclipse.jgit.lib.PersonIdent;
-
-import roboguice.inject.InjectorProvider;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.google.inject.Inject;
+import com.madgag.agit.R;
 import com.madgag.android.lazydrawables.ImageSession;
+import org.eclipse.jgit.lib.PersonIdent;
+import roboguice.inject.InjectorProvider;
+
+import static com.madgag.agit.Time.timeSinceMS;
+import static com.madgag.agit.views.TextUtil.ITALIC_CLIPPING_BUFFER;
+import static com.madgag.android.lazydrawables.gravatar.Gravatars.gravatarIdFor;
 
 public class PersonIdentView extends RelativeLayout {
 	
 	private static final String TAG = "PIV";
-    public static final String ITALIC_CLIPPING_BUFFER = " ";
 
     private PersonIdent ident;
     private final ImageView avatarView;

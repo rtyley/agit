@@ -1,27 +1,40 @@
 package com.madgag.agit;
 
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+import com.madgag.agit.views.TextUtil;
 import com.madgag.android.listviews.ViewHolder;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.storage.file.FileRepository;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
-import static android.text.TextUtils.TruncateAt.MIDDLE;
+import static com.madgag.agit.R.id.*;
 import static com.madgag.agit.Repos.niceNameFor;
+import static com.madgag.agit.Time.timeSinceSeconds;
+import static com.madgag.agit.views.TextUtil.ITALIC_CLIPPING_BUFFER;
 
-public class RepositoryViewHolder implements ViewHolder<File> {
-    private final TextView title,detail;
+public class RepositoryViewHolder implements ViewHolder<RepoSummary> {
+    private final TextView title,detail, commitTime;
 
     public RepositoryViewHolder(View v) {
-        title = (TextView) v.findViewById(android.R.id.text1);
-        detail = (TextView) v.findViewById(android.R.id.text2);
-        detail.setEllipsize(MIDDLE);
-        detail.setSingleLine();
+        title = (TextView) v.findViewById(repo_name);
+        detail = (TextView) v.findViewById(commit_subject);
+        commitTime = (TextView) v.findViewById(commit_time);
     }
 
-    public void updateViewFor(File gitdir) {
-        title.setText(niceNameFor(gitdir));
-        detail.setText(gitdir.getAbsolutePath());
+    public void updateViewFor(RepoSummary repoSummary) {
+        title.setText(niceNameFor(repoSummary.getRepo()));
+        detail.setText(repoSummary.getRepo().getDirectory().getAbsolutePath());
+        String commitTimeText="...";
+        RevCommit latestCommit = repoSummary.getLatestCommit();
+        if (latestCommit!=null) {
+            commitTimeText=Time.timeSinceSeconds(latestCommit.getCommitTime());
+        }
+        commitTime.setText(commitTimeText+ ITALIC_CLIPPING_BUFFER);
+
+
     }
 }
