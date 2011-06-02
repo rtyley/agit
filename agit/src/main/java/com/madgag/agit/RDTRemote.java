@@ -57,7 +57,7 @@ public class RDTRemote extends RepoDomainType<RemoteConfig> {
 	}
 
 	@Override
-	CharSequence conciseSummaryTitle() {
+	public CharSequence conciseSummaryTitle() {
 		return "Remotes";
 	}
 	@Override

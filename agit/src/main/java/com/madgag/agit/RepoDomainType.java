@@ -48,7 +48,7 @@ public abstract class RepoDomainType<E> {
 	
 	abstract List<E> getAll();
 	
-	abstract CharSequence conciseSummaryTitle();
+	public abstract CharSequence conciseSummaryTitle();
 	
 	abstract CharSequence conciseSummary(E e);
 	

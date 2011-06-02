@@ -29,30 +29,23 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
-import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+import com.commonsware.cwac.sacklist.SackOfViewsAdapter;
 import com.google.inject.Inject;
-import com.madgag.android.listviews.ViewHoldingListAdapter;
-import com.madgag.android.listviews.ViewHolder;
-import com.madgag.android.listviews.ViewHolderFactory;
+import com.madgag.agit.views.*;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
 import roboguice.inject.InjectView;
 
 import java.io.File;
-import java.util.List;
+import java.util.Arrays;
 
-import static android.R.layout.simple_list_item_2;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
-import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Lists.asList;
 import static com.madgag.agit.GitIntents.gitDirFrom;
 import static com.madgag.agit.R.drawable.ic_title_fetch;
-import static com.madgag.agit.R.id.branches_summary;
-import static com.madgag.agit.R.id.remotes_summary;
-import static com.madgag.agit.R.id.tags_summary;
 import static com.madgag.agit.RepoDeleter.REPO_DELETE_COMPLETED;
 import static com.madgag.agit.Repos.niceNameFor;
-import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 
 
 public class RepositoryManagementActivity extends RepositoryActivity {
@@ -66,6 +59,9 @@ public class RepositoryManagementActivity extends RepositoryActivity {
     @Inject DialogPromptMonkey dialogPromptMonkey;
 
     @InjectView(R.id.actionbar) ActionBar actionBar;
+    @InjectView(android.R.id.list) ListView listView;
+
+    @Inject RepoSummaryAdapter summaryAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -193,8 +189,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
     @Override
     protected void onResume() {
     	super.onResume();
-		((TextView) findViewById(R.id.RepositoryFileLocation)).setText(repo().getDirectory().getAbsolutePath());
-        registerReceiver(operationProgressBroadcastReceiver, new IntentFilter("git.operation.progress.update"));
+		registerReceiver(operationProgressBroadcastReceiver, new IntentFilter("git.operation.progress.update"));
 
 		registerReceiver(deletionBroadcastReceiver, new IntentFilter(REPO_DELETE_COMPLETED));
 		dialogPromptMonkey.registerReceiverForServicePromptRequests();
@@ -204,14 +199,15 @@ public class RepositoryManagementActivity extends RepositoryActivity {
     }
 
 	void updateUI() {
-        TextView remotesSummary = (TextView) findViewById(remotes_summary);
-        remotesSummary.setText(new RDTRemote(repo()).summariseAll());
-
-        TextView branchesSummary = (TextView) findViewById(branches_summary);
-        branchesSummary.setText(new RDTBranch(repo()).summariseAll());
-
-        TextView tagsSummary = (TextView) findViewById(tags_summary);
-        tagsSummary.setText(new RDTTag(repo()).summariseAll());
+        listView.setAdapter(summaryAdapter);
+//        TextView remotesSummary = (TextView) findViewById(remotes_summary);
+//        remotesSummary.setText(new RDTRemote(repo()).summariseAll());
+//
+//        TextView branchesSummary = (TextView) findViewById(branches_summary);
+//        branchesSummary.setText(new RDTBranch(repo()).summariseAll());
+//
+//        TextView tagsSummary = (TextView) findViewById(tags_summary);
+//        tagsSummary.setText(new RDTTag(repo()).summariseAll());
 	}
 
 

@@ -81,7 +81,7 @@ public class RDTBranch extends RepoDomainType<BranchSummary> {
 	}
 
 	@Override
-	CharSequence conciseSummaryTitle() {
+	public CharSequence conciseSummaryTitle() {
 		return "Branches";
 	}
 

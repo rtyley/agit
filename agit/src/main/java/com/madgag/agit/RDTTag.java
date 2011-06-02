@@ -72,7 +72,7 @@ public class RDTTag extends RepoDomainType<TagSummary> {
 	}
 	
 	@Override
-	CharSequence conciseSummaryTitle() {
+	public CharSequence conciseSummaryTitle() {
 		return "Tags";
 	}
 	

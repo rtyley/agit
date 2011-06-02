@@ -8,61 +8,11 @@
 	    android:id="@+id/actionbar"
 	    style="@style/ActionBar"
         />
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1.0"
-        android:fadingEdgeLength="32dip">
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="14dip" android:paddingRight="14dip"
-            android:paddingTop="6dip" android:paddingBottom="6dip" >
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" android:text="Repository Location :"/>
-            <TextView
-                android:id="@+id/RepositoryFileLocation"
-                android:textStyle="bold"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" android:text="..."/>
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" android:text="Remote :"/>
-            <TextView
-                android:id="@+id/remotes_summary"
-                android:textStyle="bold"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="..."/>
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" android:text="Branches :"/>
-            <TextView
-                android:id="@+id/branches_summary"
-                android:layout_width="fill_parent"
-                android:maxLines="2"
-                android:ellipsize="end"
-                android:layout_height="wrap_content" android:text="..."/>
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" android:text="Tags :"/>
-            <TextView
-                android:id="@+id/tags_summary"
-                android:textStyle="bold"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="2"
-                android:ellipsize="end"
-                android:text="..."/>
+    <ListView
+		android:id="@android:id/list"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:cacheColorHint="#FFF" />
 
 
-
-        </LinearLayout>
-    </ScrollView>
 </LinearLayout>
