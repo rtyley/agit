@@ -1,6 +1,7 @@
 package com.madgag.agit;
 
 import com.google.common.base.Function;
+import com.google.inject.Inject;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepository;
@@ -19,9 +20,8 @@ public class RepoSummary implements HasLatestCommit {
         public RepoSummary apply(File gitdir) {
             try {
                 Repository repo = new FileRepository(gitdir);
-                List<RDTBranch.BranchSummary> branchSummaries = new RDTBranch(repo).getAll();
-                RevCommit latestCommit = branchSummaries.isEmpty()?null: branchSummaries.get(0).getLatestCommit();
-                return new RepoSummary(repo, latestCommit);
+
+                return new RepoSummary(repo);
             } catch (IOException e) {
                 e.printStackTrace();
                 return null;
@@ -47,9 +47,11 @@ public class RepoSummary implements HasLatestCommit {
 
     private final RevCommit latestCommit;
 
-    public RepoSummary(Repository repo, RevCommit latestCommit) {
+    @Inject
+    public RepoSummary(Repository repo) {
         this.repo = repo;
-        this.latestCommit = latestCommit;
+        List<RDTBranch.BranchSummary> branchSummaries = new RDTBranch(repo).getAll();
+        latestCommit = branchSummaries.isEmpty()?null: branchSummaries.get(0).getLatestCommit();
     }
 
     public RevCommit getLatestCommit() {

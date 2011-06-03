@@ -19,8 +19,10 @@ public class RemotesSummaryView extends LinearLayout {
         super(context);
         this.repoRemotes = repoRemotes;
         layoutInflater.inflate(R.layout.remotes_summary_view, this);
-        remoteSummaryTextView = (TextView) findViewById(R.id.remote_summary);
+        remoteSummaryTextView = (TextView) findViewById(R.id.remote_summary_thing);
         Log.d(TAG,"remoteSummaryTextView : "+remoteSummaryTextView);
+        Log.d(TAG,"getChildCount() : "+getChildCount());
+
         updateStuff();
     }
 
