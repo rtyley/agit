@@ -46,7 +46,7 @@ public class RDTTag extends RepoDomainType<TagSummary> {
 	}
 
 	@Override
-	String name() { return "tag"; }
+	public String name() { return "tag"; }
 	
 	public List<TagSummary> getAll() {
 		final RevWalk revWalk = new RevWalk(repository);

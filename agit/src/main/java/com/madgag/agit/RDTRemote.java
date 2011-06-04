@@ -37,7 +37,7 @@ public class RDTRemote extends RepoDomainType<RemoteConfig> {
 	}
     
 	@Override
-	String name() { return "remote"; }
+	public String name() { return "remote"; }
 	public List<RemoteConfig> getAll() {
 		try {
 			return getAllRemoteConfigs(repository.getConfig());

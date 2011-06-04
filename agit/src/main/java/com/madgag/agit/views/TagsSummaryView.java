@@ -8,17 +8,21 @@ import android.widget.TextView;
 import com.google.inject.Inject;
 import com.madgag.agit.R;
 import com.madgag.agit.RDTTag;
+import org.eclipse.jgit.lib.Repository;
 
 import static android.R.layout.simple_list_item_2;
 import static com.madgag.agit.R.layout.simple_summary_list_item;
+import static com.madgag.agit.RDTypeListActivity.listIntent;
 
-public class TagsSummaryView extends RelativeLayout {
+public class TagsSummaryView extends RelativeLayout implements EnabledListItem {
     private final TextView detail, title;
+    private final Repository repository;
     private final RDTTag repoTags;
 
     @Inject
-    public TagsSummaryView(Context context, LayoutInflater layoutInflater, RDTTag repoTags) {
+    public TagsSummaryView(Context context, LayoutInflater layoutInflater, Repository repository, RDTTag repoTags) {
         super(context);
+        this.repository = repository;
         this.repoTags = repoTags;
         layoutInflater.inflate(simple_summary_list_item, this);
         title = (TextView) findViewById(R.id.title);
@@ -31,5 +35,10 @@ public class TagsSummaryView extends RelativeLayout {
         title.setText(repoTags.conciseSummaryTitle());
         detail.setText(repoTags.summariseAll());
     }
+
+    public void onItemClick() {
+        getContext().startActivity(listIntent(repository, repoTags.name()));
+    }
+
 
 }

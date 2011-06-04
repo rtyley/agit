@@ -44,7 +44,7 @@ public abstract class RepoDomainType<E> {
 		this.repository = repository;
 	}
 	
-	abstract String name();
+	public abstract String name();
 	
 	abstract List<E> getAll();
 	
