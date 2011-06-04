@@ -77,6 +77,7 @@ public class BranchViewer extends RepositoryActivity {
 		setContentView(R.layout.branch_view);
 		
 		actionBar.setTitle(shortenRefName(branch().getName()));
+        actionBar.setHomeAction(new HomeAction(this));
         setCommits();
         revCommitListView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
             public void onRefresh() {
