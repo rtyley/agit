@@ -92,7 +92,7 @@
         </service>
 
         <service android:name=".sync.AgitSyncAdapterService"
-         android:exported="true" android:process=":contacts">
+         android:exported="true" android:process=":repos">
          <intent-filter>
           <action android:name="android.content.SyncAdapter" />
          </intent-filter>
