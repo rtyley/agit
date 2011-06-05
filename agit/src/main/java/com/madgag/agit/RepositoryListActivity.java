@@ -44,9 +44,6 @@ public class RepositoryListActivity extends RoboListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // Query for all people contacts using the Contacts.People convenience class.
-        // Put a managed wrapper around the retrieved cursor so we don't have to worry about
-        // requerying or closing it as the activity changes state.
         Cursor mCursor = managedQuery(GitInfoProvider.CONTENT_URI, null, null, null, null);
 
         // Now create a new list adapter bound to the cursor.
