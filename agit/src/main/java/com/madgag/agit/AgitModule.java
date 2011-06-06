@@ -22,7 +22,7 @@ package com.madgag.agit;
 import static android.os.Looper.getMainLooper;
 import static com.google.inject.assistedinject.FactoryProvider.newFactory;
 import static com.google.inject.name.Names.named;
-import static com.madgag.agit.RepositoryManagementActivity.manageRepoPendingIntent;
+import static com.madgag.agit.RepositoryViewerActivity.manageRepoPendingIntent;
 import static java.lang.Thread.currentThread;
 
 import java.io.File;
@@ -34,7 +34,6 @@ import android.os.Handler;
 import android.os.Looper;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
-import com.google.inject.assistedinject.FactoryProvider;
 import com.jcraft.jsch.HostKeyRepository;
 import com.madgag.agit.blockingprompt.*;
 import com.madgag.agit.guice.RepositoryScope;

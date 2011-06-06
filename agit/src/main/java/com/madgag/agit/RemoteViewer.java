@@ -27,10 +27,10 @@ import org.eclipse.jgit.transport.RemoteConfig;
 import android.content.Intent;
 import android.os.Bundle;
 
-public class RemoteViewer extends RepositoryActivity {
+public class RemoteViewer extends RepoScopedActivityBase {
     
     public static Intent remoteViewerIntentFor(File gitdir, RemoteConfig remote) {
-		return new GitIntentBuilder("git.view.REMOTE").gitdir(gitdir).remote(remote).toIntent();
+		return new GitIntentBuilder("view.REMOTE").gitdir(gitdir).remote(remote).toIntent();
 	}
 
 	private static final String TAG = "RemoteViewer";

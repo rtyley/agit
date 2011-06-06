@@ -35,10 +35,6 @@ import static com.madgag.agit.R.string.about_activity_title;
 public class AboutActivity extends RoboActivity {
 	private final static String TAG="AboutActivity";
 
-    public static Intent aboutLauncherIntentFor(String sourceUri) {
-        return new GitIntentBuilder("com.agit.about").toIntent();
-	}
-
 	@InjectView(R.id.actionbar) ActionBar actionBar;
     @InjectView(R.id.webView) WebView webView;
 

@@ -30,15 +30,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import com.commonsware.cwac.sacklist.SackOfViewsAdapter;
 import com.google.inject.Inject;
-import com.madgag.agit.views.*;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
 import roboguice.inject.InjectView;
 
 import java.io.File;
-import java.util.Arrays;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.google.common.collect.Lists.asList;
@@ -48,9 +45,13 @@ import static com.madgag.agit.RepoDeleter.REPO_DELETE_COMPLETED;
 import static com.madgag.agit.Repos.niceNameFor;
 
 
-public class RepositoryManagementActivity extends RepositoryActivity {
+public class RepositoryViewerActivity extends RepoScopedActivityBase {
 
     public static final String TAG = "RMA";
+    
+	public static Intent manageRepoIntent(File gitdir) {
+		return new GitIntentBuilder("repo.VIEW").gitdir(gitdir).toIntent();
+	}
 
 	private ProgressDialog progressDialog;
 
@@ -72,7 +73,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 		actionBar.setTitle(niceNameFor(repo()));
         actionBar.addAction(new Action() {
             public void performAction(View view) {
-                startService(new GitIntentBuilder("git.FETCH").repository(repo()).toIntent());
+                startService(new GitIntentBuilder("FETCH").repository(repo()).toIntent());
             }
 			
 			public int getDrawable() {
@@ -101,7 +102,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
         switch (item.getItemId()) {
         case DELETE_ID:
         	showDialog(DELETION_DIALOG);
-			new RepoDeleter(repo(), RepositoryManagementActivity.this).execute();
+			new RepoDeleter(repo(), RepositoryViewerActivity.this).execute();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -190,7 +191,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
     @Override
     protected void onResume() {
     	super.onResume();
-		registerReceiver(operationProgressBroadcastReceiver, new IntentFilter("git.operation.progress.update"));
+		registerReceiver(operationProgressBroadcastReceiver, new IntentFilter("org.openintents.git.operation.progress.update"));
 
 		registerReceiver(deletionBroadcastReceiver, new IntentFilter(REPO_DELETE_COMPLETED));
 		dialogPromptMonkey.registerReceiverForServicePromptRequests();
@@ -227,8 +228,5 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 		return PendingIntent.getActivity(context, gitdir.hashCode(), intentForNotification, 0);
 	}
 
-	public static Intent manageRepoIntent(File gitdir) {
-		return new GitIntentBuilder("git.repo.MANAGE").gitdir(gitdir).toIntent();
-	}
 
 }

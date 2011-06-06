@@ -35,7 +35,7 @@ public class RepoDeleter extends AsyncTask<Void, Void, Void> {
 	
 	public static final String TAG = "RepoDeleter";
 	
-	public static final String REPO_DELETE_COMPLETED = "git.operation.repo.delete.completed";
+	public static final String REPO_DELETE_COMPLETED = "operation.repo.delete.completed";
 	
 	private final File gitdir;
 	private final Context context;

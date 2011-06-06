@@ -23,7 +23,7 @@ import roboguice.inject.InjectView;
 import static android.graphics.PixelFormat.RGBA_8888;
 import static com.madgag.agit.R.layout.dashboard_repo_list_header;
 import static com.madgag.agit.R.layout.repo_list_item;
-import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
+import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
 import static com.madgag.agit.operations.Clone.GIT_REPO_INITIALISED_INTENT;
 import static com.madgag.agit.sync.AccountAuthenticatorService.addAccount;
 import static com.madgag.agit.sync.Constants.AGIT_ACCOUNT_NAME;

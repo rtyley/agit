@@ -19,8 +19,8 @@
 
 package com.madgag.agit;
 
-import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
-import static com.madgag.agit.RepositoryManagementActivity.manageRepoPendingIntent;
+import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
+import static com.madgag.agit.RepositoryViewerActivity.manageRepoPendingIntent;
 
 import java.io.File;
 
@@ -43,7 +43,7 @@ public class RepositoryOperationContext {
 
 	private PromptUIProvider promptUIProvider;
 
-	private RepositoryManagementActivity repositoryManagementActivity;
+	private RepositoryViewerActivity repositoryViewerActivity;
 
 	public RepositoryOperationContext(File gitdir, GitOperationsService service, PromptUIProvider promptUIProvider) {
 		this.gitdir = gitdir.getAbsoluteFile();
@@ -64,8 +64,8 @@ public class RepositoryOperationContext {
 		return currentOperation;
 	}
 
-	public void setManagementActivity(RepositoryManagementActivity repositoryManagementActivity) {
-		this.repositoryManagementActivity = repositoryManagementActivity;
+	public void setManagementActivity(RepositoryViewerActivity repositoryViewerActivity) {
+		this.repositoryViewerActivity = repositoryViewerActivity;
 	}
 
 	@Override

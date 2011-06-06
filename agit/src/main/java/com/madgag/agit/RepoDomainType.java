@@ -76,12 +76,12 @@ public abstract class RepoDomainType<E> {
 	}
 
 	public Intent listIntent() {
-		return action("git."+name()+".LIST").toIntent();
+		return action(name()+".LIST").toIntent();
 	}
 
 	
 	public Intent viewIntentFor(E e) {
-		return action("git."+name()+".VIEW").add(name(),idFor(e)).toIntent();
+		return action(name()+".VIEW").add(name(),idFor(e)).toIntent();
 	}
 	
 	abstract String idFor(E e);

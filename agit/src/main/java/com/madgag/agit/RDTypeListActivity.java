@@ -19,7 +19,6 @@
 
 package com.madgag.agit;
 
-import android.content.Context;
 import com.google.inject.Inject;
 import com.google.inject.Key;
 import com.madgag.agit.guice.RepositoryScope;
@@ -41,13 +40,13 @@ import static android.R.layout.simple_list_item_2;
 import static com.google.inject.name.Names.named;
 import static com.madgag.agit.R.id.actionbar;
 import static com.madgag.agit.R.layout.list_activity_layout;
-import static com.madgag.agit.RepositoryActivity.enterRepositoryScopeFor;
+import static com.madgag.agit.RepoScopedActivityBase.enterRepositoryScopeFor;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 
 public class RDTypeListActivity<E> extends RoboListActivity {
 	
 	public static Intent listIntent(Repository repository, String typeName) {
-		return new GitIntentBuilder("git."+typeName+".LIST").repository(repository).toIntent();
+		return new GitIntentBuilder(typeName+".LIST").repository(repository).toIntent();
 	}
 	
 	private static final String TAG = "RDTL";
