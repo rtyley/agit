@@ -97,8 +97,7 @@
                             <jvmArgument>-Xmx512m</jvmArgument>
                         </jvmArguments>
                         <sdk>
-                            <path>${user.home}/android-sdk/</path>
-                            <platform>8</platform>
+                            <platform>10</platform>
                         </sdk>
                         <emulator>
                             <avd>22</avd>
