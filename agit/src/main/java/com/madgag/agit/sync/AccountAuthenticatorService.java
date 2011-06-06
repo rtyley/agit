@@ -2,13 +2,17 @@ package com.madgag.agit.sync;
 
 import android.accounts.*;
 import android.app.Service;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.ContactsContract;
 import android.util.Log;
 
+import static android.content.ContentResolver.*;
 import static com.madgag.agit.sync.Constants.AGIT_ACCOUNT_TYPE;
+import static com.madgag.agit.sync.Constants.AGIT_PROVIDER_AUTHORITY;
 import static com.madgag.agit.sync.Constants.AUTHTOKEN_TYPE;
 
 /**
@@ -43,6 +47,15 @@ public class AccountAuthenticatorService extends Service {
             result = new Bundle();
             result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
             result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
+
+//Account[] accounts = am.getAccountsByType(getString(R.string.ACCOUNT_TYPE));
+            Log.d(TAG,"Trying to configure account for sync...");
+            ContentResolver.setIsSyncable(account, AGIT_PROVIDER_AUTHORITY, 1);
+            ContentResolver.setSyncAutomatically(account, AGIT_PROVIDER_AUTHORITY, true);
+            Log.d(TAG,"getSyncAutomatically() = "+getSyncAutomatically(account, AGIT_PROVIDER_AUTHORITY));
+            Log.d(TAG,"isSyncActive = "+ isSyncActive(account, AGIT_PROVIDER_AUTHORITY));
+            Log.d(TAG,"isSyncPending = "+ isSyncPending(account, AGIT_PROVIDER_AUTHORITY));
+            addPeriodicSync(account, AGIT_PROVIDER_AUTHORITY, new Bundle(), 15*60);
         }
         return result;
     }
