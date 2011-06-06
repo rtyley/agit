@@ -50,14 +50,14 @@ import static com.madgag.agit.GitIntents.EXTRA_SOURCE_URI;
 import static com.madgag.agit.GitIntents.EXTRA_TARGET_DIR;
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
 import static com.madgag.agit.R.string.clone_launcher_activity_title;
-import static com.madgag.agit.RepositoryManagementActivity.manageRepoIntent;
+import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
 
 public class CloneLauncherActivity extends RoboActivity {
 	private final static String TAG="CloneLauncherActivity";
 
     public static Intent cloneLauncherIntentFor(String sourceUri) {
-        return new GitIntentBuilder("com.madgag.git.clone.prepare").sourceUri(sourceUri).toIntent();
+        return new GitIntentBuilder("clone.PREPARE").sourceUri(sourceUri).toIntent();
 	}
 
     @InjectView(R.id.BareRepo) CheckBox bareRepoCheckbox;
@@ -143,7 +143,7 @@ public class CloneLauncherActivity extends RoboActivity {
                     } else if (command.equals("view_existing_repo")) {
                         startActivity(manageRepoIntent(existingRepoGitDir()));
                     } else if (command.equals("suggest_repo")) {
-                        startActivityForResult(new Intent("com.madgag.git.repo.suggest"), 0);
+                        startActivityForResult(new GitIntentBuilder("repo.SUGGEST").toIntent(), 0);
                     }
                 }
             });

@@ -24,20 +24,15 @@ import static android.view.View.VISIBLE;
 import static android.view.animation.AnimationUtils.loadAnimation;
 import static com.google.common.collect.Maps.newEnumMap;
 import static com.madgag.agit.R.anim.*;
-import static com.madgag.agit.R.string.checkout_commit_menu_option;
 import static com.madgag.agit.R.string.tag_commit_menu_option;
 import static com.madgag.agit.Relation.CHILD;
 import static com.madgag.agit.Relation.PARENT;
-import static org.eclipse.jgit.lib.Constants.HEAD;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.errors.AmbiguousObjectException;
-import org.eclipse.jgit.errors.IncorrectObjectTypeException;
-import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revplot.PlotCommit;
@@ -61,11 +56,9 @@ import android.widget.TextView;
 
 import com.google.common.base.Function;
 import com.google.inject.Inject;
-import com.google.inject.internal.Nullable;
-import com.google.inject.name.Named;
 import com.madgag.agit.CommitNavigationView.CommitSelectedListener;
 
-public class CommitViewerActivity extends RepositoryActivity {
+public class CommitViewerActivity extends RepoScopedActivityBase {
 	private static final String TAG = "CVA";
 	
 	private final static int TAG_ID=Menu.FIRST;
@@ -83,7 +76,7 @@ public class CommitViewerActivity extends RepositoryActivity {
 	}
     
 	private static GitIntentBuilder commitViewerIntentBuilderFor(File gitdir) {
-		return new GitIntentBuilder("git.view.COMMIT").gitdir(gitdir);
+		return new GitIntentBuilder("commit.VIEW").gitdir(gitdir);
 	}
 
     @Inject LogStartProvider logStartProvider;

@@ -19,7 +19,6 @@
 
 package com.madgag.agit;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -30,31 +29,29 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
-import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 import com.google.inject.Inject;
-import com.madgag.android.listviews.ViewHoldingListAdapter;
-import com.madgag.android.listviews.ViewHolder;
-import com.madgag.android.listviews.ViewHolderFactory;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
 import roboguice.inject.InjectView;
 
 import java.io.File;
-import java.util.List;
 
-import static android.R.layout.simple_list_item_2;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
-import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Lists.asList;
 import static com.madgag.agit.GitIntents.gitDirFrom;
+import static com.madgag.agit.R.drawable.ic_title_fetch;
 import static com.madgag.agit.RepoDeleter.REPO_DELETE_COMPLETED;
 import static com.madgag.agit.Repos.niceNameFor;
-import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 
 
-public class RepositoryManagementActivity extends RepositoryActivity {
+public class RepositoryViewerActivity extends RepoScopedActivityBase {
 
     public static final String TAG = "RMA";
+    
+	public static Intent manageRepoIntent(File gitdir) {
+		return new GitIntentBuilder("repo.VIEW").gitdir(gitdir).toIntent();
+	}
 
 	private ProgressDialog progressDialog;
 
@@ -63,32 +60,34 @@ public class RepositoryManagementActivity extends RepositoryActivity {
     @Inject DialogPromptMonkey dialogPromptMonkey;
 
     @InjectView(R.id.actionbar) ActionBar actionBar;
+    @InjectView(android.R.id.list) ListView listView;
+
+    @Inject RepoSummaryAdapter summaryAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.repo_management);
+        setContentView(R.layout.repo_management_activity);
 
         actionBar.setHomeAction(new HomeAction(this));
 		actionBar.setTitle(niceNameFor(repo()));
         actionBar.addAction(new Action() {
             public void performAction(View view) {
-                startService(new GitIntentBuilder("git.FETCH").repository(repo()).toIntent());
+                startService(new GitIntentBuilder("FETCH").repository(repo()).toIntent());
             }
 			
 			public int getDrawable() {
-				return R.drawable.ic_title_fetch;
+				return ic_title_fetch;
 			}
         });
-        
-		rdtTypeList = (ListView) findViewById(R.id.BranchList);
-		rdtTypeList.setAdapter(new ArrayAdapter<String>(this, simple_list_item_2));
-		rdtTypeList.setOnItemClickListener(new OnItemClickListener(){
-			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				RepoDomainType<?> rdt = (RepoDomainType<?>) parent.getAdapter().getItem(position);
-				startActivity(rdt.listIntent());
-			}
-		});
+
+        listView.setOnItemClickListener(summaryAdapter.getOnItemClickListener());
+//		rdtTypeList.setOnItemClickListener(new OnItemClickListener(){
+//			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+//				RepoDomainType<?> rdt = (RepoDomainType<?>) parent.getAdapter().getItem(position);
+//				startActivity(rdt.listIntent());
+//			}
+//		});
     }
 
     @Override
@@ -103,7 +102,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
         switch (item.getItemId()) {
         case DELETE_ID:
         	showDialog(DELETION_DIALOG);
-			new RepoDeleter(repo(), RepositoryManagementActivity.this).execute();
+			new RepoDeleter(repo(), RepositoryViewerActivity.this).execute();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -192,8 +191,7 @@ public class RepositoryManagementActivity extends RepositoryActivity {
     @Override
     protected void onResume() {
     	super.onResume();
-		((TextView) findViewById(R.id.RepositoryFileLocation)).setText(repo().getDirectory().getAbsolutePath());
-        registerReceiver(operationProgressBroadcastReceiver, new IntentFilter("git.operation.progress.update"));
+		registerReceiver(operationProgressBroadcastReceiver, new IntentFilter("org.openintents.git.operation.progress.update"));
 
 		registerReceiver(deletionBroadcastReceiver, new IntentFilter(REPO_DELETE_COMPLETED));
 		dialogPromptMonkey.registerReceiverForServicePromptRequests();
@@ -203,12 +201,15 @@ public class RepositoryManagementActivity extends RepositoryActivity {
     }
 
 	void updateUI() {
-        List<RepoDomainType<?>> rdtList = newArrayList(new RDTRemote(repo()), new RDTBranch(repo()), new RDTTag(repo()));
-		rdtTypeList.setAdapter(new ViewHoldingListAdapter<RepoDomainType<?>>(rdtList, viewInflatorFor(this, simple_list_item_2), new ViewHolderFactory<RepoDomainType<?>>() {
-            public ViewHolder<RepoDomainType<?>> createViewHolderFor(View view) {
-                return new RDTypeViewHolder(view);
-            }
-        }));
+        listView.setAdapter(summaryAdapter);
+//        TextView remotesSummary = (TextView) findViewById(remotes_summary);
+//        remotesSummary.setText(new RDTRemote(repo()).summariseAll());
+//
+//        TextView branchesSummary = (TextView) findViewById(branches_summary);
+//        branchesSummary.setText(new RDTBranch(repo()).summariseAll());
+//
+//        TextView tagsSummary = (TextView) findViewById(tags_summary);
+//        tagsSummary.setText(new RDTTag(repo()).summariseAll());
 	}
 
 
@@ -227,8 +228,5 @@ public class RepositoryManagementActivity extends RepositoryActivity {
 		return PendingIntent.getActivity(context, gitdir.hashCode(), intentForNotification, 0);
 	}
 
-	public static Intent manageRepoIntent(File gitdir) {
-		return new GitIntentBuilder("git.repo.MANAGE").gitdir(gitdir).toIntent();
-	}
 
 }

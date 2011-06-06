@@ -24,7 +24,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.google.inject.Inject;
 import com.madgag.agit.views.ObjectSummaryView;
@@ -44,18 +43,18 @@ import roboguice.inject.InjectView;
 import java.io.File;
 import java.io.IOException;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 import static com.madgag.agit.R.id.*;
 
-public class TagViewer extends RepositoryActivity {
+public class TagViewer extends RepoScopedActivityBase {
+
+    public static final String ACTION_SUFFIX = "tag.VIEW";
 
     public static Intent tagViewerIntentFor(File gitdir, String tagName) {
-		return new GitIntentBuilder("git.tag.VIEW").gitdir(gitdir).tag(tagName).toIntent();
+		return new GitIntentBuilder(ACTION_SUFFIX).gitdir(gitdir).tag(tagName).toIntent();
 	}
 
     public static Intent tagViewerIntentFor(Repository repository, String tagName) {
-		return new GitIntentBuilder("git.tag.VIEW").repository(repository).tag(tagName).toIntent();
+		return new GitIntentBuilder(ACTION_SUFFIX).repository(repository).tag(tagName).toIntent();
 	}
 
 	private static final String TAG = "TV";
@@ -79,7 +78,7 @@ public class TagViewer extends RepositoryActivity {
 		super.onCreate(savedInstanceState);
         repositoryScope.doWith(repo(), new Runnable() {
             public void run() {
-                setContentView(R.layout.tag_view);
+                setContentView(R.layout.tag_viewer_activity);
             }
         });
 	}

@@ -30,13 +30,14 @@ import android.content.Intent;
 
 import static com.madgag.agit.GitIntents.EXTRA_SOURCE_URI;
 import static com.madgag.agit.GitIntents.EXTRA_TARGET_DIR;
+import static com.madgag.agit.GitIntents.OPEN_GIT_INTENT_PREFIX;
 
 public class GitIntentBuilder {
 
 	private final Intent intent;
 
-	public GitIntentBuilder(String action) {
-		intent = new Intent(action);
+	public GitIntentBuilder(String actionSuffix) {
+		intent = new Intent(OPEN_GIT_INTENT_PREFIX+actionSuffix);
 	}
 	
 	public GitIntentBuilder gitdir(File gitdir) {

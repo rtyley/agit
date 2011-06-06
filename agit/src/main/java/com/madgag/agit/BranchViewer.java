@@ -46,15 +46,14 @@ import static android.R.id.list;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.CommitViewerActivity.commitViewerIntentCreatorFor;
 import static com.madgag.agit.R.string.checkout_commit_menu_option;
-import static com.madgag.agit.R.string.tag_commit_menu_option;
 import static com.madgag.agit.Repos.remoteConfigFor;
 import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;
 
-public class BranchViewer extends RepositoryActivity {
+public class BranchViewer extends RepoScopedActivityBase {
     
     public static Intent branchViewerIntentFor(File gitdir, Ref branch) {
-		return new GitIntentBuilder("git.branch.VIEW").gitdir(gitdir).branch(branch).toIntent();
+		return new GitIntentBuilder("branch.VIEW").gitdir(gitdir).branch(branch).toIntent();
 	}
     
 	private final static int CHECKOUT_ID= Menu.FIRST;
@@ -77,6 +76,7 @@ public class BranchViewer extends RepositoryActivity {
 		setContentView(R.layout.branch_view);
 		
 		actionBar.setTitle(shortenRefName(branch().getName()));
+        actionBar.setHomeAction(new HomeAction(this));
         setCommits();
         revCommitListView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
             public void onRefresh() {

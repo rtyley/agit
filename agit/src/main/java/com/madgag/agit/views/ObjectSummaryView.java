@@ -37,7 +37,9 @@ import roboguice.inject.InjectorProvider;
 import static android.widget.LinearLayout.VERTICAL;
 import static com.madgag.agit.GitObjects.evaluate;
 import static com.madgag.agit.R.id.*;
+import static com.madgag.agit.R.layout.commit_summary_view;
 import static com.madgag.agit.R.layout.object_summary_view;
+import static com.madgag.agit.views.ViewUtil.injectFor;
 
 public class ObjectSummaryView extends LinearLayout {
 
@@ -54,9 +56,7 @@ public class ObjectSummaryView extends LinearLayout {
     public ObjectSummaryView(Context context, AttributeSet attrs) {
 		super(context, attrs);
         setOrientation(VERTICAL);
-        LayoutInflater.from(context).inflate(object_summary_view, this);
-        ((InjectorProvider)context).getInjector().injectMembers(this);
-
+        injectFor(this, object_summary_view);
         objectTypeIcon = (ImageView) findViewById(osv_object_type_icon);
         objectIdView = (ObjectIdView) findViewById(osv_object_id_text);
         objectTypeTextView = (TextView) findViewById(osv_object_type_text);

@@ -1,0 +1,43 @@
+package com.madgag.agit.views;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import com.google.inject.Inject;
+import com.madgag.agit.*;
+import org.eclipse.jgit.lib.Repository;
+
+import static android.R.layout.simple_list_item_2;
+import static com.madgag.agit.CommitViewerActivity.revCommitViewIntentFor;
+import static com.madgag.agit.R.layout.simple_summary_list_item;
+import static com.madgag.agit.RDTypeListActivity.listIntent;
+
+public class BranchesSummaryView extends RelativeLayout implements EnabledListItem {
+
+    private final TextView detail, title;
+    private final Repository repository;
+    private final RDTBranch repoBranches;
+
+    @Inject
+    public BranchesSummaryView(Context context, LayoutInflater layoutInflater, Repository repository, RDTBranch repoBranches) {
+        super(context);
+        this.repository = repository;
+        this.repoBranches = repoBranches;
+        layoutInflater.inflate(simple_summary_list_item, this);
+        title = (TextView) findViewById(R.id.title);
+        detail = (TextView) findViewById(R.id.detail);
+
+        updateStuff();
+    }
+
+    private void updateStuff() {
+        title.setText(repoBranches.conciseSummaryTitle());
+        detail.setText(repoBranches.summariseAll());
+    }
+
+    public void onItemClick() {
+        getContext().startActivity(listIntent(repository, repoBranches.name()));
+    }
+}

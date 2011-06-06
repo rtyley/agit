@@ -39,7 +39,7 @@ import static android.widget.Toast.LENGTH_LONG;
 import static com.madgag.agit.GitIntents.*;
 import static com.madgag.agit.Repos.openRepoFor;
 import static com.madgag.agit.Repos.remoteConfigFor;
-import static com.madgag.agit.RepositoryManagementActivity.manageRepoPendingIntent;
+import static com.madgag.agit.RepositoryViewerActivity.manageRepoPendingIntent;
 import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 
 public class GitOperationsService extends RoboService {
@@ -50,7 +50,7 @@ public class GitOperationsService extends RoboService {
     GitAsyncTaskFactory asyncTaskFactory;
 
 	public static Intent cloneOperationIntentFor(URIish uri, File directory, boolean bare) {
-		Intent intent = new Intent("git.CLONE");
+		Intent intent = new Intent("org.openintents.git.CLONE");
 		intent.putExtra("source-uri", uri.toPrivateString());
         intent.putExtra(BARE, bare);
 		addDirectoryTo(intent, directory);
@@ -93,7 +93,7 @@ public class GitOperationsService extends RoboService {
 		
 		
 		GitOperation operation = null;
-		if (action.equals("git.CLONE")) {
+		if (action.equals("org.openintents.git.CLONE")) {
 			String sourceUriString = intent.getStringExtra("source-uri");
             boolean bare = intent.getBooleanExtra(BARE, true);
             try {
@@ -102,7 +102,7 @@ public class GitOperationsService extends RoboService {
 				Toast.makeText(this, "Invalid uri "+sourceUriString, LENGTH_LONG).show();
 				return START_NOT_STICKY;
 			}
-		} else if (action.equals("git.FETCH")) {
+		} else if (action.equals("org.openintents.git.FETCH")) {
 			File gitdir = gitDirFrom(intent);
 
             Repository repository = openRepoFor(gitdir);

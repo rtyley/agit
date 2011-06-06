@@ -3,9 +3,9 @@ package com.madgag.agit;
 import android.test.suitebuilder.annotation.SmallTest;
 import roboguice.test.RoboActivityUnitTestCase;
 
-public class RepositoryManagementActivityTest extends RoboActivityUnitTestCase<RepositoryManagementActivity> {
-    public RepositoryManagementActivityTest() {
-        super(RepositoryManagementActivity.class);
+public class RepositoryViewerActivityTest extends RoboActivityUnitTestCase<RepositoryViewerActivity> {
+    public RepositoryViewerActivityTest() {
+        super(RepositoryViewerActivity.class);
     }
 
     @SmallTest

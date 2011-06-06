@@ -14,6 +14,8 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
         android:layout_below="@id/repo_name"
+        android:paddingLeft="1dip"
+        android:paddingRight="4dip"
 		android:src="@drawable/commit" />
 	<TextView
 		android:id="@+id/commit_subject"

@@ -27,11 +27,13 @@ public class RepositoryViewHolder implements ViewHolder<RepoSummary> {
 
     public void updateViewFor(RepoSummary repoSummary) {
         title.setText(niceNameFor(repoSummary.getRepo()));
-        detail.setText(repoSummary.getRepo().getDirectory().getAbsolutePath());
         String commitTimeText="...";
         RevCommit latestCommit = repoSummary.getLatestCommit();
         if (latestCommit!=null) {
+            detail.setText(repoSummary.getLatestCommit().getShortMessage());
             commitTimeText=Time.timeSinceSeconds(latestCommit.getCommitTime());
+        } else {
+            detail.setText(repoSummary.getRepo().getDirectory().getAbsolutePath());
         }
         commitTime.setText(commitTimeText+ ITALIC_CLIPPING_BUFFER);
 

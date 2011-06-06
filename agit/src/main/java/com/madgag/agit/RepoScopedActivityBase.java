@@ -33,7 +33,7 @@ import java.io.File;
 
 import static com.madgag.agit.GitIntents.gitDirFrom;
 
-public class RepositoryActivity extends RoboActivity {
+public abstract class RepoScopedActivityBase extends RoboActivity {
 
     private @Inject @Named("gitdir") File gitdir;
     private @Inject RepositoryContext rc;
