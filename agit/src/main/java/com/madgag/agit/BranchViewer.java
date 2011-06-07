@@ -43,10 +43,13 @@ import java.io.IOException;
 import java.util.List;
 
 import static android.R.id.list;
+import static android.text.format.DateUtils.FORMAT_SHOW_TIME;
+import static android.text.format.DateUtils.formatDateTime;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.CommitViewerActivity.commitViewerIntentCreatorFor;
 import static com.madgag.agit.R.string.checkout_commit_menu_option;
 import static com.madgag.agit.Repos.remoteConfigFor;
+import static java.lang.System.currentTimeMillis;
 import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;
 
@@ -84,7 +87,7 @@ public class BranchViewer extends RepoScopedActivityBase {
                 gitAsyncTaskFactory.createTaskFor(fetch, new CasualShortTermLifetime() {
                     public void completed(OpNotification completionNotification) {
                         setCommits();
-                        revCommitListView.onRefreshComplete(completionNotification.getTickerText());
+                        revCommitListView.onRefreshComplete("Last Fetch: " + formatDateTime(BranchViewer.this, currentTimeMillis(), FORMAT_SHOW_TIME)+" - "+completionNotification.getTickerText());
                     }
                 }).execute();
             }
