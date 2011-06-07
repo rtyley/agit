@@ -82,12 +82,6 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
         });
 
         listView.setOnItemClickListener(summaryAdapter.getOnItemClickListener());
-//		rdtTypeList.setOnItemClickListener(new OnItemClickListener(){
-//			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-//				RepoDomainType<?> rdt = (RepoDomainType<?>) parent.getAdapter().getItem(position);
-//				startActivity(rdt.listIntent());
-//			}
-//		});
     }
 
     @Override
