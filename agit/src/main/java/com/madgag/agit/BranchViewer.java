@@ -83,8 +83,8 @@ public class BranchViewer extends RepoScopedActivityBase {
                 Fetch fetch = new Fetch(repository, remoteConfigFor(repository, DEFAULT_REMOTE_NAME));
                 gitAsyncTaskFactory.createTaskFor(fetch, new CasualShortTermLifetime() {
                     public void completed(OpNotification completionNotification) {
-                        revCommitListView.onRefreshComplete(completionNotification.getTickerText());
                         setCommits();
+                        revCommitListView.onRefreshComplete(completionNotification.getTickerText());
                     }
                 }).execute();
             }
