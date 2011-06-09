@@ -2,7 +2,7 @@ package com.madgag.agit.blockingprompt;
 
 import com.madgag.agit.blockingprompt.ResponseInterface;
 
-public interface PromptUIProvider {
+public interface PromptExposer {
 
 	public void acceptPrompt(ResponseInterface responseInterface);
 

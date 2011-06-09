@@ -27,6 +27,8 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.treewalk.TreeWalk;
 
+import static com.madgag.agit.R.drawable.tree_icon;
+
 public class TreeSummaryView extends OSV<RevTree> {
 
     TextView treeTextView;
@@ -50,7 +52,7 @@ public class TreeSummaryView extends OSV<RevTree> {
 
     @Override
     public int iconId() {
-        return R.drawable.tree_36;
+        return tree_icon;
     }
 
     @Override
