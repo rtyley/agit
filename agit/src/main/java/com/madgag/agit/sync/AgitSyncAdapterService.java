@@ -8,9 +8,11 @@ import android.os.IBinder;
 import android.util.Log;
 import com.madgag.agit.Progress;
 import com.madgag.agit.ProgressListener;
+import com.madgag.agit.Repos;
 import com.madgag.agit.operations.Fetch;
 import com.madgag.agit.operations.GitOperationExecutor;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.RemoteConfig;
 import roboguice.inject.InjectorProvider;
@@ -22,6 +24,7 @@ import static com.madgag.agit.Repos.knownRepos;
 import static com.madgag.agit.Repos.remoteConfigFor;
 import static java.util.Arrays.asList;
 import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
+import static org.eclipse.jgit.lib.RepositoryCache.close;
 
 public class AgitSyncAdapterService extends Service {
 
@@ -56,8 +59,9 @@ public class AgitSyncAdapterService extends Service {
             GitOperationExecutor operationExecutor= injectorProvider.getInjector().getInstance(GitOperationExecutor.class);
 
             for (final File gitdir : knownRepos()) {
+                Repository repository = null;
                 try {
-                    Repository repository = new FileRepository(gitdir);
+                    repository = Repos.openRepoFor(gitdir);
                     RemoteConfig remoteConfig = remoteConfigFor(repository, DEFAULT_REMOTE_NAME);
                     Fetch fetch = new Fetch(repository, remoteConfig);
                     operationExecutor.call(fetch, new ProgressListener<Progress>() {
@@ -66,8 +70,11 @@ public class AgitSyncAdapterService extends Service {
                         }
                     });
                     syncResult.stats.numUpdates++;
-                } catch (IOException e) {
+                } catch (RuntimeException e) {
                     Log.w(TAG,"Problem with "+gitdir,e);
+                } finally {
+                    if (repository!=null)
+                        close(repository);
                 }
             }
 		}

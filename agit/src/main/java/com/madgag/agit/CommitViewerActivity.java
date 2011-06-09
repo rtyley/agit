@@ -27,6 +27,7 @@ import static com.madgag.agit.R.anim.*;
 import static com.madgag.agit.R.string.tag_commit_menu_option;
 import static com.madgag.agit.Relation.CHILD;
 import static com.madgag.agit.Relation.PARENT;
+import static java.lang.System.currentTimeMillis;
 
 import java.io.File;
 import java.io.IOException;
@@ -165,6 +166,7 @@ public class CommitViewerActivity extends RepoScopedActivityBase {
 	}
 
 	private PlotWalk generatePlotWalk() throws IOException {
+        long start=currentTimeMillis();
 		PlotWalk revWalk = new PlotWalk(repo());
 
         for (ObjectId startId : logStartProvider.get()) {
@@ -174,6 +176,8 @@ public class CommitViewerActivity extends RepoScopedActivityBase {
 		PlotCommitList<PlotLane> plotCommitList = new PlotCommitList<PlotLane>();
 		plotCommitList.source(revWalk);
 		plotCommitList.fillTo(Integer.MAX_VALUE);
+        long duration=currentTimeMillis()-start;
+        Log.d(TAG, "generatePlotWalk duration"+duration);
 		return revWalk;
 	}
 	

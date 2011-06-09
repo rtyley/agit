@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import com.google.inject.Inject;
 import com.madgag.agit.operation.lifecycle.CasualShortTermLifetime;
 import com.madgag.agit.operations.Fetch;
@@ -45,6 +46,8 @@ import java.util.List;
 import static android.R.id.list;
 import static android.text.format.DateUtils.FORMAT_SHOW_TIME;
 import static android.text.format.DateUtils.formatDateTime;
+import static android.widget.Toast.LENGTH_LONG;
+import static android.widget.Toast.LENGTH_SHORT;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.CommitViewerActivity.commitViewerIntentCreatorFor;
 import static com.madgag.agit.R.string.checkout_commit_menu_option;
@@ -83,11 +86,16 @@ public class BranchViewer extends RepoScopedActivityBase {
         setCommits();
         revCommitListView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
             public void onRefresh() {
+                revCommitListView.setLastUpdated("");
                 Fetch fetch = new Fetch(repository, remoteConfigFor(repository, DEFAULT_REMOTE_NAME));
                 gitAsyncTaskFactory.createTaskFor(fetch, new CasualShortTermLifetime() {
-                    public void completed(OpNotification completionNotification) {
+                    public void error(OpNotification errorNotification) {
+                        revCommitListView.onRefreshComplete("Last Fetch failed: "+errorNotification.getTickerText());
+                        Toast.makeText(BranchViewer.this, errorNotification.getTickerText(), LENGTH_SHORT).show();
+                    }
+                    public void success(OpNotification completionNotification) {
                         setCommits();
-                        revCommitListView.onRefreshComplete("Last Fetch: " + formatDateTime(BranchViewer.this, currentTimeMillis(), FORMAT_SHOW_TIME)+" - "+completionNotification.getTickerText());
+                        revCommitListView.onRefreshComplete("Last Fetch: " + formatDateTime(BranchViewer.this, currentTimeMillis(), FORMAT_SHOW_TIME));
                     }
                 }).execute();
             }

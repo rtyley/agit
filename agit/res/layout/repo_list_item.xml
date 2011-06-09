@@ -3,17 +3,24 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:padding="10dip">
+    <ImageView
+        android:id="@+id/repo_icon"
+		android:layout_width="32dip"
+		android:layout_height="32dip"
+		android:src="@drawable/repo_icon" />
 	<TextView
 		android:id="@+id/repo_name"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
         android:layout_marginTop="6dip"
+        android:layout_toRightOf="@id/repo_icon"
         android:textAppearance="?android:attr/textAppearanceLarge" />
     <ImageView
 		android:id="@+id/commit_icon"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
         android:layout_below="@id/repo_name"
+        android:layout_alignRight="@id/repo_icon"
         android:paddingLeft="1dip"
         android:paddingRight="4dip"
 		android:src="@drawable/commit" />

@@ -99,8 +99,10 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
 					public void startedWith(OpNotification ongoingNotification) {
                         Log.i(TAG,"Started "+gitOperation+" with "+ongoingNotification);
                     }
-					public void publish(Progress progress) {}
-					public void completed(OpNotification completionNotification) {
+                    public void publish(Progress progress) {}
+                    public void error(OpNotification completionNotification) {}
+                    public void success(OpNotification completionNotification) {}
+                    public void completed(OpNotification completionNotification) {
                         Log.i(TAG,"Completed "+gitOperation+" with "+completionNotification);
 						latch.countDown();
 					}

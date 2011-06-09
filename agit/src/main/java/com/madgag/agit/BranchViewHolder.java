@@ -4,23 +4,24 @@ import android.view.View;
 import android.widget.TextView;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.madgag.agit.views.PrettyCommitSummaryView;
 import com.madgag.android.listviews.ViewHolder;
-import org.eclipse.jgit.revwalk.RevCommit;
 
 import static com.madgag.agit.R.id.branch_name;
+import static com.madgag.agit.R.id.latest_commit;
 
 public class BranchViewHolder implements ViewHolder<RDTBranch.BranchSummary> {
     private final TextView branchName;
-    private final ViewHolder<RevCommit> commitViewHolder;
+    private final PrettyCommitSummaryView latestCommitView;
 
     @Inject
-    public BranchViewHolder(@Assisted View v, CommitViewHolderFactory commitViewHolderFactory) {
-        commitViewHolder = commitViewHolderFactory.createViewHolderFor(v);
+    public BranchViewHolder(@Assisted View v) {
         branchName = (TextView) v.findViewById(branch_name);
+        latestCommitView = (PrettyCommitSummaryView) v.findViewById(latest_commit);
     }
 
     public void updateViewFor(RDTBranch.BranchSummary branch) {
         branchName.setText(branch.getShortName());
-        commitViewHolder.updateViewFor(branch.getLatestCommit());
+        latestCommitView.setCommit(branch.getLatestCommit());
     }
 }

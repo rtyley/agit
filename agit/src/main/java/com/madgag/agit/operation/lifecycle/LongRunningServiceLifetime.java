@@ -38,7 +38,13 @@ public class LongRunningServiceLifetime implements OperationLifecycleSupport {
 		repoNotifications.notifyOngoing(ongoingNotification);
 	}
 
-	public void completed(OpNotification completionNotification) {
+    public void error(OpNotification errorNotification) {
+    }
+
+    public void success(OpNotification successNotification) {
+    }
+
+    public void completed(OpNotification completionNotification) {
 		removeServiceFromForeground();
 		repoNotifications.cancelOngoingNotification();
 		repoNotifications.notifyCompletionWith(completionNotification);

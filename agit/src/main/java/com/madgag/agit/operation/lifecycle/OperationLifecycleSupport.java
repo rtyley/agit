@@ -7,6 +7,10 @@ public interface OperationLifecycleSupport {
 	void startedWith(OpNotification ongoingNotification);
 	
 	void publish(Progress progress);
+
+    void error(OpNotification errorNotification);
+
+    void success(OpNotification successNotification);
 	
 	void completed(OpNotification completionNotification);
 }

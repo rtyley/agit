@@ -5,8 +5,10 @@ import static java.lang.System.currentTimeMillis;
 
 import java.util.concurrent.Future;
 
+import android.R;
 import com.google.inject.name.Named;
 import com.madgag.agit.guice.RepositoryScope;
+import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 import roboguice.util.RoboAsyncTask;
 import android.os.Handler;
 import android.util.Log;
@@ -60,10 +62,18 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
 	protected void onSuccess(OpNotification opResult) {
 		long duration=currentTimeMillis()-startTime;
 		Log.d(TAG, "Completed in "+duration+" ms");
+        lifecycleSupport.success(opResult);
 		lifecycleSupport.completed(opResult);
 	}
-	
-	// Called on background thread
+
+    @Override
+    protected void onException(Exception e) throws RuntimeException {
+        OpNotification notification = new OpNotification(stat_notify_error,operation.getName()+" failed","Fetch failed due to "+e.getMessage(), "");
+        lifecycleSupport.error(notification);
+        lifecycleSupport.completed(notification);
+    }
+
+    // Called on background thread
 	public void publish(Progress... values) {
 		latestProgress = values[values.length-1];
 		Log.d(TAG, "Got progress to post : "+latestProgress);

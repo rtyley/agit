@@ -13,7 +13,10 @@ public class CasualShortTermLifetime implements OperationLifecycleSupport {
 		// TODO Auto-generated method stub
 		
 	}
-	
+
+    public void error(OpNotification completionNotification) {}
+    public void success(OpNotification completionNotification) {}
+
 	public void completed(OpNotification completionNotification) {
 		// stop the animation, I guess
 	}

@@ -16,20 +16,11 @@ public class GitOperationExecutor {
 	@Inject RepositoryScope scope;
     @Inject Injector injector;
 
-    public OpNotification call(GitOperation operation, ProgressListener<Progress> boo) {
+    public OpNotification call(GitOperation operation, ProgressListener<Progress> progressListener) {
 		scope.enterWithRepoGitdir(operation.getGitDir());
 		try {
 			injector.injectMembers(operation);
-			// create and access scoped objects
-			try {
-				return operation.execute(boo);
-			} catch (RuntimeException e) {
-				String eventTitle = "Error " + operation.getDescription();
-				Log.e(TAG, "Banged out of call with : " + eventTitle, e);
-				String detail = e.getMessage() == null ? e.toString() : e.getMessage();
-				return new OpNotification(stat_notify_error, operation.getName() + " failed", eventTitle, detail);
-			}
-
+			return operation.execute(progressListener);
 		} finally {
             Log.d(TAG, "Exiting call()");
 			scope.exit();
