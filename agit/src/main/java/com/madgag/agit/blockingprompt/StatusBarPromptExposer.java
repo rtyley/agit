@@ -5,7 +5,7 @@ import com.madgag.agit.guice.RepositoryScoped;
 import com.madgag.agit.operation.lifecycle.RepoNotifications;
 
 @RepositoryScoped
-public class StatusBarPromptProvider implements PromptUIProvider {
+public class StatusBarPromptExposer implements PromptExposer {
     @Inject RepoNotifications repoNotifications;
 
     public void acceptPrompt(ResponseInterface responseInterface) {

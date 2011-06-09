@@ -29,6 +29,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 
 import static com.madgag.agit.CommitViewerActivity.revCommitViewIntentFor;
 import static com.madgag.agit.R.drawable.commit_36;
+import static com.madgag.agit.R.drawable.commit_icon;
 
 public class CommitSummaryView extends OSV<RevCommit> {
 
@@ -44,7 +45,7 @@ public class CommitSummaryView extends OSV<RevCommit> {
 
     @Override
     public int iconId() {
-        return commit_36;
+        return commit_icon;
     }
 
     @Override
