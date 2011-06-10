@@ -11,7 +11,7 @@ public interface GitOperation {
 	
 	int getOngoingIcon(); 
 	
-	OpNotification execute(ProgressListener<Progress> progressListener);
+	OpNotification execute();
 
 	String getName();
 

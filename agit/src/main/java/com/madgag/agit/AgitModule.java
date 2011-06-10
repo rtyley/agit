@@ -36,10 +36,12 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.jcraft.jsch.HostKeyRepository;
 import com.madgag.agit.blockingprompt.*;
+import com.madgag.agit.guice.OperationScope;
 import com.madgag.agit.guice.RepositoryScope;
 import com.madgag.agit.guice.RepositoryScoped;
 import com.madgag.agit.operations.GitAsyncTaskFactory;
 import com.madgag.agit.ssh.CuriousHostKeyRepository;
+import org.connectbot.service.PromptHelper;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.SshSessionFactory;
@@ -74,6 +76,7 @@ public class AgitModule extends AbstractAndroidModule {
 	@Override
     protected void configure() {
 		install(RepositoryScope.module());
+        install(OperationScope.module());
     	bind(ImageSession.class).toProvider(ImageSessionProvider.class);
 
     	bind(Repository.class).toProvider(RepositoryProvider.class);
@@ -85,7 +88,7 @@ public class AgitModule extends AbstractAndroidModule {
     	bind(PromptHumper.class);
 
         bind(HostKeyRepository.class).to(CuriousHostKeyRepository.class);
-        bind(PromptUIProvider.class).annotatedWith(named("status-bar")).to(StatusBarPromptProvider.class);
+        bind(PromptExposer.class).annotatedWith(named("status-bar")).to(StatusBarPromptExposer.class);
 
         bind(RepoDomainType.class).annotatedWith(named("branch")).to(RDTBranch.class);
         bind(RepoDomainType.class).annotatedWith(named("remote")).to(RDTRemote.class);
@@ -107,9 +110,9 @@ public class AgitModule extends AbstractAndroidModule {
         return manageRepoPendingIntent(gitdir, context);
     }
 
-    @Provides @RepositoryScoped
-    BlockingPromptService createBlockingPromptService(PromptHumper promptHumper) {
-        return promptHumper.getBlockingPromptService();
+    @Provides
+    PromptHelper createBlockingPromptService(PromptHumper promptHumper) {
+        return (PromptHelper) promptHumper.getBlockingPromptService();
     }
 
 	@ContextScoped

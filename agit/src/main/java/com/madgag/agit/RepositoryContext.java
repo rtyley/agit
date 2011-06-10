@@ -86,7 +86,7 @@ public class RepositoryContext
 	}
 
     private void enterScope() {
-        //scope.enterWithRepoGitdir(gitdir);
+        //scope.enterWithUIContext(gitdir);
     }
     private void exitScope() {
         // scope.exit();

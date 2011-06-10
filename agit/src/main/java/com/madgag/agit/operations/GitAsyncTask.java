@@ -6,9 +6,11 @@ import static java.lang.System.currentTimeMillis;
 import java.util.concurrent.Future;
 
 import android.R;
+import com.google.inject.Provider;
 import com.google.inject.name.Named;
 import com.madgag.agit.guice.RepositoryScope;
 import com.madgag.ssh.android.authagent.AndroidAuthAgent;
+import org.connectbot.service.PromptHelper;
 import roboguice.util.RoboAsyncTask;
 import android.os.Handler;
 import android.util.Log;
@@ -25,6 +27,7 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
 	public final static String TAG = "GAT";
 
     @Inject GitOperationExecutor operationExecutor;
+    @Inject Provider<PromptHelper> promptHelperProvider;
 	
 	private final GitOperation operation;
 	private final OperationLifecycleSupport lifecycleSupport;
@@ -55,7 +58,7 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
     }
 
 	public OpNotification call() {
-        return operationExecutor.call(operation, this);
+        return operationExecutor.call(operation, new OperationUIContext(this, promptHelperProvider));
 	}
 	
 	@Override

@@ -19,6 +19,7 @@
 
 package com.madgag.agit;
 
+import com.madgag.agit.guice.OperationScoped;
 import com.madgag.agit.guice.RepositoryScoped;
 import org.eclipse.jgit.errors.NotSupportedException;
 import org.eclipse.jgit.errors.TransportException;
@@ -31,19 +32,21 @@ import com.jcraft.jsch.JSchException;
 
 import java.util.Collection;
 
-@RepositoryScoped
+@OperationScoped
 public class GitFetchService {
 	
 	private static String TAG = "GFS";
 	
 	private final TransportFactory transportFactory;
+    private final ProgressListener<Progress> progressListener;
 	
 	@Inject
-	public GitFetchService(TransportFactory transportFactory) {
+	public GitFetchService(TransportFactory transportFactory, ProgressListener<Progress> progressListener) {
 		this.transportFactory = transportFactory;
-	}
+        this.progressListener = progressListener;
+    }
 
-	public FetchResult fetch(RemoteConfig remote, Collection<RefSpec> toFetch, ProgressListener<Progress> progressListener) {
+	public FetchResult fetch(RemoteConfig remote, Collection<RefSpec> toFetch) {
 		Log.d(TAG, "About to run fetch : " + remote.getName()+" "+remote.getURIs());
 		
 		Transport transport = transportFactory.transportFor(remote);

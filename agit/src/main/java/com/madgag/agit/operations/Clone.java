@@ -48,10 +48,11 @@ public class Clone implements GitOperation {
 	private final File directory, gitdir;
     private String branch = Constants.HEAD;
 
-	@Inject GitFetchService fetchService;
+    @Inject ProgressListener<Progress> progressListener;
+    @Inject GitFetchService fetchService;
     @Inject Context context;
 
-	public Clone(boolean bare, URIish sourceUri, File directory) {
+    public Clone(boolean bare, URIish sourceUri, File directory) {
 		this.bare = bare;
 		this.sourceUri = sourceUri;
 		this.directory = directory;
@@ -61,7 +62,7 @@ public class Clone implements GitOperation {
 				+ " gitdir=" + gitdir);
 	}
 
-	public OpNotification execute(ProgressListener<Progress> progressListener) {
+	public OpNotification execute() {
 		Log.d(TAG, "Starting execute... directory=" + directory);
 		ensureFolderExists(directory.getParentFile());
 
@@ -74,10 +75,10 @@ public class Clone implements GitOperation {
 
             context.sendBroadcast(new Intent(GIT_REPO_INITIALISED_INTENT));
 
-			FetchResult fetchResult = fetchService.fetch(remote, null, progressListener);
+			FetchResult fetchResult = fetchService.fetch(remote, null);
 
 			if (!bare) {
-				checkoutHeadFrom(fetchResult, repository, progressListener);
+				checkoutHeadFrom(fetchResult, repository);
 			}
 
 			close(repository); // do with a guice scope?
@@ -101,8 +102,7 @@ public class Clone implements GitOperation {
 		return remote;
 	}
 
-	private void checkoutHeadFrom(FetchResult fetchResult, Repository db,
-			ProgressListener<Progress> progressListener)
+	private void checkoutHeadFrom(FetchResult fetchResult, Repository db)
 			throws RefAlreadyExistsException, RefNotFoundException,
 			InvalidRefNameException, IOException {
 

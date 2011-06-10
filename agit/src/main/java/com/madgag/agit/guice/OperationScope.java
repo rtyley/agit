@@ -1,112 +1,62 @@
 package com.madgag.agit.guice;
 
-import static com.google.common.base.Preconditions.checkState;
-import static com.google.inject.name.Names.named;
-
-import java.io.File;
-import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
-
-import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;
-import com.google.inject.AbstractModule;
-import com.google.inject.Key;
-import com.google.inject.Module;
-import com.google.inject.OutOfScopeException;
-import com.google.inject.Provider;
-import com.google.inject.Scope;
-import org.eclipse.jgit.lib.Repository;
+import com.google.inject.*;
+import com.madgag.agit.Progress;
+import com.madgag.agit.ProgressListener;
+import com.madgag.agit.blockingprompt.BlockingPromptService;
+import com.madgag.agit.operations.OperationUIContext;
+
+import java.util.Map;
+
+import static com.google.common.base.Preconditions.checkState;
 
 
-public class OperationScope implements Scope {
+public class OperationScope extends ScopeBase implements Scope {
 
-    private final static Key<File> gitdirKey = Key.get(File.class, named("gitdir"));
+//    private final ProgressListener<Progress> progressListener;
+
+    private final static Key<ProgressListener<Progress>> PROGRESS_LISTENER_KEY = Key.get(new TypeLiteral<ProgressListener<Progress>>() {});
+
+    private final static Key<BlockingPromptService> BLOCKING_PROMPT_SERVICE_KEY = Key.get(BlockingPromptService.class);
 
 	public static Module module() {
 		return new AbstractModule() {
 			public void configure() {
 				OperationScope scope = new OperationScope();
 
-				bindScope(RepositoryScoped.class, scope);
+				bindScope(OperationScoped.class, scope);
 
 				bind(OperationScope.class).toInstance(scope);
 
-                bind(gitdirKey).toProvider(OperationScope.<File>seededKeyProvider()).in(RepositoryScoped.class);
+                bind(PROGRESS_LISTENER_KEY).toProvider(ScopeBase.<ProgressListener<Progress>>seededKeyProvider()).in(OperationScoped.class);
+                bind(BlockingPromptService.class).toProvider(ScopeBase.<BlockingPromptService>seededKeyProvider()).in(OperationScoped.class);
 			}
 		};
 	}
 
-    private final ThreadLocal<File> currentRepoGitdir = new ThreadLocal<File>();
+    private final ThreadLocal<Map<Key<?>, Object>> threadLocalMap = new ThreadLocal<Map<Key<?>, Object>>();
 
-    private final Map<File,Map<Key<?>, Object>> repoScopeMaps = new MapMaker().makeComputingMap(new Function<File,Map<Key<?>, Object>>() {
-        public Map<Key<?>, Object> apply(File gitdir) {
-            ConcurrentMap<Key<?>,Object> repoScopeMap = new MapMaker().makeMap();
-            repoScopeMap.put(gitdirKey, gitdir);
-            return repoScopeMap;
-        }
-    });
-
-    public void doWith(Repository repository, Runnable runnable) {
-        enterWithRepoGitdir(repository.getDirectory());
-		try {
-            runnable.run();
-        } finally {
-            exit();
-        }
-    }
-
-	public void enterWithRepoGitdir(File gitdir) {
-		checkState(currentRepoGitdir.get() == null, "A scoping block is already in progress");
-		currentRepoGitdir.set(gitdir);
+	public void enterWithUIContext(OperationUIContext operationUIContext) {
+		checkState(threadLocalMap.get() == null, "A scoping block is already in progress");
+        Map<Key<?>, Object> map = new MapMaker().makeMap();
+        threadLocalMap.set(map);
+        map.put(BLOCKING_PROMPT_SERVICE_KEY,operationUIContext.getBlockingPromptServiceProvider());
+        map.put(PROGRESS_LISTENER_KEY,operationUIContext.getProgressListener());
 	}
 
 	public void exit() {
-		checkState(currentRepoGitdir.get() != null, "No scoping block in progress");
-		currentRepoGitdir.remove();
+		checkState(threadLocalMap.get() != null, "No scoping block in progress");
+		threadLocalMap.remove();
 	}
 
-	public <T> Provider<T> scope(final Key<T> key, final Provider<T> unscoped) {
-		return new Provider<T>() {
-			public T get() {
-				Map<Key<?>, Object> scopedObjects = getScopedObjectMap(key);
-                
-				@SuppressWarnings("unchecked")
-				T current = (T) scopedObjects.get(key);
-				if (current == null && !scopedObjects.containsKey(key)) {
-					current = unscoped.get();
-					scopedObjects.put(key, current);
-				}
-				return current;
-			}
-		};
-	}
-
-	private <T> Map<Key<?>, Object> getScopedObjectMap(Key<T> key) {
-		File gitdir = currentRepoGitdir.get();
-		if (gitdir == null) {
+    @Override
+	protected <T> Map<Key<?>, Object> getScopedObjectMap(Key<T> key) {
+		Map<Key<?>, Object> map = threadLocalMap.get();
+		if (map == null) {
 			throw new OutOfScopeException("Cannot access " + key + " outside of a scoping block");
 		}
-		return repoScopeMaps.get(gitdir);
+		return map;
 	}
 
-	/**
-	 * Returns a provider that always throws exception complaining that the
-	 * object in question must be seeded before it can be injected.
-	 * 
-	 * @return typed provider
-	 */
-	@SuppressWarnings({ "unchecked" })
-	public static <T> Provider<T> seededKeyProvider() {
-		return (Provider<T>) SEEDED_KEY_PROVIDER;
-	}
-
-    private static final Provider<Object> SEEDED_KEY_PROVIDER = new Provider<Object>() {
-		public Object get() {
-			throw new IllegalStateException(
-					"If you got here then it means that"
-							+ " your code asked for scoped object which should have been"
-							+ " explicitly seeded in this scope by calling"
-							+ " SimpleScope.seed(), but was not.");
-		}
-	};
 }

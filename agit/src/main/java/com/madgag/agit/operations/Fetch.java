@@ -15,8 +15,6 @@ import android.util.Log;
 
 import com.google.inject.Inject;
 import com.madgag.agit.GitFetchService;
-import com.madgag.agit.Progress;
-import com.madgag.agit.ProgressListener;
 
 public class Fetch implements GitOperation {
 		
@@ -46,9 +44,9 @@ public class Fetch implements GitOperation {
 		return "Fetching "+remote.getName() + " " + fetchUrl();
 	}
 	
-	public OpNotification execute(ProgressListener<Progress> progressListener) {
+	public OpNotification execute() {
 		Log.d(TAG, "start execute() : repository=" + repository+" remote="+remote.getName());
-		FetchResult r = fetchService.fetch(remote, toFetch, progressListener);
+		FetchResult r = fetchService.fetch(remote, toFetch);
 		return new OpNotification(stat_sys_download_done,"Fetch complete", "Fetched "+remote.getName(), fetchUrl());
     }
 	

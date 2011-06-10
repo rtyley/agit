@@ -17,14 +17,14 @@ import org.connectbot.service.PromptHelper;
 @RepositoryScoped
 public class PromptHumper {
     private final PromptHelper promptHelper;
-    private final PromptUIProvider statusBarUIProvider;
-    private PromptUIProvider activityUIProvider;
+    private final PromptExposer statusBarExposer;
+    private PromptExposer activityPromptExposer;
     private String TAG = "PromptHumper";
 
     @Inject
-    public PromptHumper(@Named("uiThread") Handler uiThreadHandler, @Named("status-bar") PromptUIProvider statusBarUIProvider) {
+    public PromptHumper(@Named("uiThread") Handler uiThreadHandler, @Named("status-bar") PromptExposer statusBarExposer) {
         Log.d(TAG,"uiThreadHandler="+uiThreadHandler);
-        this.statusBarUIProvider = statusBarUIProvider;
+        this.statusBarExposer = statusBarExposer;
         promptHelper = new PromptHelper(uiThreadHandler, new Runnable() {
             public void run() {
                 uiThreadBroadcastOfPrompt();
@@ -33,26 +33,26 @@ public class PromptHumper {
     }
 
     private void uiThreadBroadcastOfPrompt() {
-        PromptUIProvider activeUI = activeUI();
+        PromptExposer activeUI = activeUI();
         Log.d(TAG, "Broadcasting to activeUI="+activeUI);
-        if (activeUI!=statusBarUIProvider) {
-            statusBarUIProvider.clearPrompt();
+        if (activeUI!= statusBarExposer) {
+            statusBarExposer.clearPrompt();
         }
         activeUI.acceptPrompt(promptHelper);
     }
 
-    private PromptUIProvider activeUI() {
-        return activityUIProvider==null?statusBarUIProvider:activityUIProvider;
+    private PromptExposer activeUI() {
+        return activityPromptExposer ==null? statusBarExposer : activityPromptExposer;
     }
 
-    public void setActivityUIProvider(PromptUIProvider activityUIProvider) {
-        this.activityUIProvider = activityUIProvider;
+    public void setActivityPromptExposer(PromptExposer activityExposer) {
+        this.activityPromptExposer = activityExposer;
         displayPromptIfNecessary();
     }
 
-    public void clearActivityUIProvider(PromptUIProvider providerToClear) {
-        if (activityUIProvider==providerToClear) {
-            activityUIProvider = null;
+    public void clearActivityUIProvider(PromptExposer providerToClear) {
+        if (activityPromptExposer ==providerToClear) {
+            activityPromptExposer = null;
             displayPromptIfNecessary();
         }
     }

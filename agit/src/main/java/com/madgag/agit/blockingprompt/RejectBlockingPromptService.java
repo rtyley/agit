@@ -1,11 +1,15 @@
 package com.madgag.agit.blockingprompt;
 
-/**
- * Created by IntelliJ IDEA.
- * User: roberto
- * Date: 09/06/11
- * Time: 16:24
- * To change this template use File | Settings | File Templates.
- */
-public class RejectBlockingPromptService {
+
+import android.util.Log;
+import com.madgag.agit.operations.OpPrompt;
+
+public class RejectBlockingPromptService implements BlockingPromptService {
+
+    private static final String TAG = "RBPS";
+
+    public <T> T request(OpPrompt<T> opPrompt) {
+        Log.d(TAG, "Going to reject prompt " + opPrompt);
+        throw new RuntimeException("Won't ask the user this: "+opPrompt.getOpNotification().getTickerText());
+    }
 }

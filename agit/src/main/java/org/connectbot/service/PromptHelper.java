@@ -101,34 +101,6 @@ public class PromptHelper implements ResponseInterface, BlockingPromptService {
 		return (T) response;
 	}
 
-//	/**
-//	 * Request a string response from parent. This is a blocking call until user
-//	 * interface returns a value.
-//	 * @return string user has entered
-//	 */
-//	public String requestStringPrompt(OpNotification opNotification) {
-//		String value = null;
-//		try {
-//			value = this.request(new OpPrompt<String>(opNotification, String.class));
-//		} catch(Exception e) {
-//		}
-//		return value;
-//	}
-//
-//	/**
-//	 * Request a boolean response from parent. This is a blocking call until user
-//	 * interface returns a value.
-//	 * @return choice user has made (yes/no)
-//	 */
-//	public Boolean requestBooleanPrompt(OpNotification opNotification) {
-//		Boolean value = null;
-//		try {
-//			value = this.request(new OpPrompt<Boolean>(opNotification, Boolean.class));
-//		} catch(Exception e) {
-//		}
-//		return value;
-//	}
-
 	/**
 	 * Cancel an in-progress prompt.
 	 */

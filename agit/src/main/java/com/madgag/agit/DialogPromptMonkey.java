@@ -7,11 +7,11 @@ import android.content.DialogInterface;
 import android.util.Log;
 import android.widget.EditText;
 import com.google.inject.Inject;
+import com.madgag.agit.blockingprompt.PromptExposer;
 import com.madgag.agit.blockingprompt.PromptHumper;
-import com.madgag.agit.blockingprompt.PromptUIProvider;
 import com.madgag.agit.blockingprompt.ResponseInterface;
 
-public class DialogPromptMonkey implements PromptUIProvider  {
+public class DialogPromptMonkey implements PromptExposer {
 
 
     private final Activity activity;
@@ -51,7 +51,7 @@ public class DialogPromptMonkey implements PromptUIProvider  {
 
     public void registerReceiverForServicePromptRequests() {
         Log.d(TAG, "Registering as prompt UI provider with "+promptHumper);
-    	promptHumper.setActivityUIProvider(this);
+    	promptHumper.setActivityPromptExposer(this);
 	}
 
 	public void unregisterRecieverForServicePromptRequests() {

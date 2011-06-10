@@ -1,22 +1,20 @@
 package com.madgag.agit.guice;
 
+import com.google.inject.Key;
+import com.google.inject.OutOfScopeException;
 import com.google.inject.Provider;
+import com.google.inject.Scope;
 
-/**
- * Created by IntelliJ IDEA.
- * User: roberto
- * Date: 09/06/11
- * Time: 17:19
- * To change this template use File | Settings | File Templates.
- */
-public class ScopeBase {
+import java.io.File;
+import java.util.Map;
+
+public abstract class ScopeBase implements Scope {
     private static final Provider<Object> SEEDED_KEY_PROVIDER = new Provider<Object>() {
         public Object get() {
             throw new IllegalStateException(
                     "If you got here then it means that"
                             + " your code asked for scoped object which should have been"
-                            + " explicitly seeded in this scope by calling"
-                            + " SimpleScope.seed(), but was not.");
+                            + " explicitly seeded in this scope, but was not.");
         }
     };
 
@@ -30,4 +28,22 @@ public class ScopeBase {
     public static <T> Provider<T> seededKeyProvider() {
         return (Provider<T>) SEEDED_KEY_PROVIDER;
     }
+
+    public <T> Provider<T> scope(final Key<T> key, final Provider<T> unscoped) {
+		return new Provider<T>() {
+			public T get() {
+				Map<Key<?>, Object> scopedObjects = getScopedObjectMap(key);
+
+				@SuppressWarnings("unchecked")
+				T current = (T) scopedObjects.get(key);
+				if (current == null && !scopedObjects.containsKey(key)) {
+					current = unscoped.get();
+					scopedObjects.put(key, current);
+				}
+				return current;
+			}
+		};
+	}
+
+    protected abstract <T> Map<Key<?>, Object> getScopedObjectMap(Key<T> key);
 }

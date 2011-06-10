@@ -19,6 +19,7 @@
 
 package com.madgag.agit;
 
+import com.google.inject.Inject;
 import org.eclipse.jgit.lib.ProgressMonitor;
 
 import android.util.Log;
@@ -38,20 +39,16 @@ public class MessagingProgressMonitor implements ProgressMonitor, CancellationSi
 	private int totalWork;
 	
 	private boolean cancelled=false;
-
-	public String myNiceStatusString;
-	
+    
 	public Progress currentProgress;
 
 	private final ProgressListener<Progress> progressListener;
 
-
-
-
 	public Progress getCurrentProgress() {
 		return currentProgress;
 	}
-	
+
+    @Inject
 	public MessagingProgressMonitor( ProgressListener<Progress> progressListener) {
 		this.progressListener = progressListener;
 	}
@@ -93,11 +90,9 @@ public class MessagingProgressMonitor implements ProgressMonitor, CancellationSi
 		
 		if (totalWork == UNKNOWN) {
 			display(cmp);
-			System.err.flush();
 		} else {
 			if ((cmp * 10 / totalWork) != (lastWorked * 10) / totalWork) {
 				display(cmp);
-				System.err.flush();
 			}
 		}
 		lastWorked = cmp;
