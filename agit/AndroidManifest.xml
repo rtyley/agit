@@ -2,14 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.madgag.agit"
 	android:installLocation="preferExternal"
-	android:versionCode="2"
-	android:versionName="1.1">
+	android:versionName="${project.version}"
+    android:versionCode="${versionCode}">
 	<application
 		android:name="com.madgag.agit.AgitApplication"
 		android:theme="@style/Theme.App"
 		android:icon="@drawable/icon"
 		android:label="@string/app_name"
-		android:debuggable="true">
+		android:debuggable="${android.debuggable}">
 
         <activity android:name="DashboardActivity">
             <intent-filter>
