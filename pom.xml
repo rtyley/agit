@@ -26,14 +26,12 @@
 	<artifactId>agit-parent</artifactId>
 	<packaging>pom</packaging>
 	<name>Agit parent POM project</name>
-	<modules>
-		<module>agit-test-utils</module>
-		<module>agit</module>
-		<module>agit-tests</module>
-	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<android.version>2.3.3</android.version>
+        <maven.build.timestamp.format>yyMMdddHHmm</maven.build.timestamp.format>
+        <!-- Apparently necessary due to http://jira.codehaus.org/browse/MRESOURCES-99 and also more readable -->
+        <versionCode>${maven.build.timestamp}</versionCode>
 	</properties>
     <licenses>
         <license>
@@ -102,6 +100,9 @@
                         <emulator>
                             <avd>22</avd>
                         </emulator>
+                        <zipalign>
+                            <verbose>true</verbose>
+                        </zipalign>
                         <deleteConflictingFiles>true</deleteConflictingFiles>
                         <undeployBeforeDeploy>true</undeployBeforeDeploy>
                     </configuration>
@@ -122,13 +123,24 @@
                             </goals>
                         </execution>
                     </executions>
+                    <!-- we need to override the dependency of the plugin to get a newer version of proguard -->
+                    <dependencies>
+                        <dependency>
+                            <groupId>net.sf.proguard</groupId>
+                            <artifactId>proguard</artifactId>
+                            <version>4.4</version>
+                            <scope>runtime</scope>
+                        </dependency>
+                    </dependencies>
                     <configuration>
                         <proguardVersion>4.4</proguardVersion>
+                        <maxMemory>512m</maxMemory>
                         <injar>android-classes</injar>
                         <libs>
                             <lib>${java.home}/lib/rt.jar</lib>
                         </libs>
                         <obfuscate>false</obfuscate>
+                        <addMavenDescriptor>false</addMavenDescriptor>
                         <options>
                             <option>-keepclassmembers
                                 enum * { public static **[] values(); public static ** valueOf(java.lang.String);
@@ -143,7 +155,7 @@
                             <option>-keep public class * extends android.content.BroadcastReceiver</option>
                             <option>-keep public class * extends android.content.ContentProvider</option>
 
-<option>-keep public class com.madgag.android.listviews.pinnedheader</option>
+                            <option>-keep public class com.madgag.android.listviews.pinnedheader</option>
                             
                             <option>-keep
                                 public class * extends android.view.View { public &lt;init&gt;(android.content.Context);
@@ -161,12 +173,28 @@
                             <option>-keep class com.jcraft.jsch.**</option> <!-- This is giving in - would rather rely on lines like the above -->
                             
                             <option>-dontskipnonpubliclibraryclasses</option>
-                            <option>-dontoptimize</option>
+
+
+                            <!-- you really should NOT avoid warning but it can be helpful when testing options -->
+                            <option>-ignorewarnings</option>
+                            <option>-verbose</option>
+
+                            <!-- next options are necessary to decipher stack traces with retrace later,
+                             relies on the map file created -->
+                            <option>-renamesourcefileattribute SourceFile</option>
+                            <option>-keepattributes SourceFile,LineNumberTable,*Annotation*</option>
+                            
                             <option>-printmapping map.txt</option>
                             <option>-printseeds seed.txt</option>
+                            
                             <option>-ignorewarnings</option>
-
-                            <option>-keepattributes *Annotation*</option>
+                            <option>-dontoptimize</option>
+                            <!--
+                            <option>-optimizationpasses 3</option>
+                             The -optimizations option disables some arithmetic simplifications that Dalvik 1.0
+                             and 1.5 can't handle.
+                            <option>-optimizations !code/simplification/arithmetic</option>-->
+                            
                             <option>-keepclassmembers class com.google.inject.assistedinject.FactoryProvider2 { *; }</option>
                             
                             <option>-keep public class * extends junit.framework.TestCase</option>
@@ -186,4 +214,34 @@
             </plugins>
         </pluginManagement>
     </build>
+    <profiles>
+        <profile>
+            <!-- the standard profile runs the instrumentation tests -->
+            <id>standard</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>agit-test-utils</module>
+                <module>agit</module>
+                <module>agit-tests</module>
+            </modules>
+        </profile>
+        <profile>
+            <!-- the release profile does sign, proguard, zipalign ... but does not run instrumentation tests -->
+            <id>release</id>
+            <!-- via this activation the profile is automatically used when the release is done with the maven release
+            plugin -->
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <modules>
+                <module>agit</module>
+                <module>agit-tests</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>
