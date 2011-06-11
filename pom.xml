@@ -97,7 +97,7 @@
                         During release:perform, enable the "release" profile
                        -->
                       <releaseProfiles>release</releaseProfiles>
-                      <goals>package</goals>
+                      <goals>validate</goals>
                     </configuration>
                   </plugin>
 
