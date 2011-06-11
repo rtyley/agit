@@ -89,6 +89,20 @@
     <build>
         <pluginManagement>
             <plugins>
+                  <plugin>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.1</version>
+                    <configuration>
+                      <!--
+                        During release:perform, enable the "release" profile
+                       -->
+                      <releaseProfiles>release</releaseProfiles>
+                      <goals>package</goals>
+                    </configuration>
+                  </plugin>
+
+
+
                 <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>maven-android-plugin</artifactId>
