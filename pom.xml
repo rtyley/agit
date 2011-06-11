@@ -244,8 +244,8 @@
                 </property>
             </activation>
             <modules>
+                <module>agit-test-utils</module>
                 <module>agit</module>
-                <module>agit-tests</module>
             </modules>
         </profile>
     </profiles>
