@@ -28,7 +28,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<android.version>2.3.3</android.version>
-        <maven.build.timestamp.format>yyMMdddHHmm</maven.build.timestamp.format>
+        <maven.build.timestamp.format>yyMMdddHH</maven.build.timestamp.format>
         <!-- Apparently necessary due to http://jira.codehaus.org/browse/MRESOURCES-99 and also more readable -->
         <versionCode>${maven.build.timestamp}</versionCode>
 	</properties>
