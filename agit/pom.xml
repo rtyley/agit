@@ -201,9 +201,6 @@
                                 <configuration>
                                     <removeExistingSignatures>true</removeExistingSignatures>
                                     <archiveDirectory/>
-                                    <!-- <includes>
-                                        <include>${project.build.directory}/${project.artifactId}.apk</include>
-                                    </includes> -->
                                     <keystore>${sign.keystore}</keystore>
                                     <alias>${sign.alias}</alias>
                                     <storepass>${sign.storepass}</storepass>
