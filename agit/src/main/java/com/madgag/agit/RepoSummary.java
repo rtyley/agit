@@ -1,15 +1,21 @@
 package com.madgag.agit;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import com.google.inject.Inject;
+import com.google.inject.internal.Iterables;
+import com.google.inject.internal.Lists;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepository;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
+import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Lists.transform;
 import static com.madgag.agit.Repos.COMMIT_TIME_ORDERING;
 import static com.madgag.agit.Repos.knownRepos;
@@ -22,7 +28,7 @@ public class RepoSummary implements HasLatestCommit {
                 Repository repo = new FileRepository(gitdir);
 
                 return new RepoSummary(repo);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
@@ -30,18 +36,16 @@ public class RepoSummary implements HasLatestCommit {
         }
     };
 
-//    	public final static Function<BranchSummary, RevCommit> LATEST_COMMIT_FOR_BRANCH = new Function<BranchSummary, RevCommit>() {
-//            public RevCommit apply(BranchSummary branch) {
-//                return branch.getHeadCommit();
-//            }
-//        };
-//
-//        public final static Ordering<RepoSummary> REPO_LATEST_COMMIT_ORDERING =
-//            Ordering.from(Repos.SORT_COMMIT_BY_COMMIT_TIME).onResultOf(HEAD_COMMIT_FOR_BRANCH);
+    private static final Predicate<RepoSummary> NON_NULL_REPO = new Predicate<RepoSummary>() {
+        public boolean apply(RepoSummary repo) {
+            return repo != null;
+        }
+    };
 
     public static List<RepoSummary> getAllReposOrderChronologically() {
-        return COMMIT_TIME_ORDERING.sortedCopy(transform(knownRepos(), REPO_SUMMARY_FOR_GITDIR));
+        return COMMIT_TIME_ORDERING.sortedCopy(filter(transform(knownRepos(), REPO_SUMMARY_FOR_GITDIR), NON_NULL_REPO));
     }
+
 
     private final Repository repo;
 

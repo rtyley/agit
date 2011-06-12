@@ -110,7 +110,7 @@ public class Repos {
 
     public final static Function<HasLatestCommit, RevCommit> LATEST_COMMIT = new Function<HasLatestCommit, RevCommit>() {
         public RevCommit apply(HasLatestCommit branch) {
-            return branch.getLatestCommit();
+            return branch==null?null:branch.getLatestCommit();
         }
     };
 
