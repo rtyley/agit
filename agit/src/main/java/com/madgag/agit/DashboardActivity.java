@@ -26,7 +26,6 @@ import static com.madgag.agit.R.layout.repo_list_item;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
 import static com.madgag.agit.operations.Clone.GIT_REPO_INITIALISED_INTENT;
 import static com.madgag.agit.sync.AccountAuthenticatorService.addAccount;
-import static com.madgag.agit.sync.Constants.AGIT_ACCOUNT_NAME;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 
 public class DashboardActivity extends RoboActivity {
@@ -45,7 +44,7 @@ public class DashboardActivity extends RoboActivity {
         setupRepoList();
         
         try {
-            addAccount(this, AGIT_ACCOUNT_NAME);
+            addAccount(this);
         } catch (Exception e) {
             Log.w(TAG, "Unable to add account for syncing",e);
         }

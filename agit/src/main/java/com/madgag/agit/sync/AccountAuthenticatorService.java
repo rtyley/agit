@@ -7,13 +7,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.provider.ContactsContract;
 import android.util.Log;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import static android.content.ContentResolver.*;
-import static com.madgag.agit.sync.Constants.AGIT_ACCOUNT_TYPE;
-import static com.madgag.agit.sync.Constants.AGIT_PROVIDER_AUTHORITY;
-import static com.madgag.agit.sync.Constants.AUTHTOKEN_TYPE;
+import static android.content.ContentResolver.setIsSyncable;
+import static android.content.ContentResolver.setSyncAutomatically;
+import static com.madgag.agit.sync.Constants.*;
 
 /**
  * Authenticator service that returns a subclass of AbstractAccountAuthenticator in onBind()
@@ -21,6 +24,21 @@ import static com.madgag.agit.sync.Constants.AUTHTOKEN_TYPE;
 public class AccountAuthenticatorService extends Service {
     private static final String TAG = "AccountAuthenticatorService";
     private static AccountAuthenticatorImpl sAccountAuthenticator = null;
+
+    private static Method methodContentResolver_addPeriodicSync;
+
+    static {
+        initCompatibility();
+    };
+
+    private static void initCompatibility() {
+        try {
+            methodContentResolver_addPeriodicSync = ContentResolver.class.getMethod(
+                    "addPeriodicSync", new Class[] { Account.class, String.class, Bundle.class, Integer.TYPE } );
+        } catch (NoSuchMethodException nsme) {
+            Log.w(TAG, "Periodic sync not available - addPeriodicSync() method not found.", nsme);
+        }
+    }
 
     public AccountAuthenticatorService() {
         super();
@@ -39,27 +57,45 @@ public class AccountAuthenticatorService extends Service {
         return sAccountAuthenticator;
     }
 
-    public static Bundle addAccount(Context ctx, String username) {
+    public static Bundle addAccount(Context ctx) {
         Bundle result = null;
-        Account account = new Account(username, AGIT_ACCOUNT_TYPE);
+        Account account = new Account(AGIT_ACCOUNT_NAME, AGIT_ACCOUNT_TYPE);
         AccountManager am = AccountManager.get(ctx);
         if (am.addAccountExplicitly(account, null, null)) {
             result = new Bundle();
             result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
             result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
 
-//Account[] accounts = am.getAccountsByType(getString(R.string.ACCOUNT_TYPE));
             Log.d(TAG,"Trying to configure account for sync...");
-            ContentResolver.setIsSyncable(account, AGIT_PROVIDER_AUTHORITY, 1);
-            ContentResolver.setSyncAutomatically(account, AGIT_PROVIDER_AUTHORITY, true);
-            Log.d(TAG,"getSyncAutomatically() = "+getSyncAutomatically(account, AGIT_PROVIDER_AUTHORITY));
-            Log.d(TAG,"isSyncActive = "+ isSyncActive(account, AGIT_PROVIDER_AUTHORITY));
-            Log.d(TAG,"isSyncPending = "+ isSyncPending(account, AGIT_PROVIDER_AUTHORITY));
-            addPeriodicSync(account, AGIT_PROVIDER_AUTHORITY, new Bundle(), 15*60);
+            setIsSyncable(account, AGIT_PROVIDER_AUTHORITY, 1);
+            setSyncAutomatically(account, AGIT_PROVIDER_AUTHORITY, true);
+
+            addPeriodicSyncIfSupported(account, 15 * 60);
         }
         return result;
     }
 
+    private static void addPeriodicSyncIfSupported(Account account, int pollPeriodInSeconds) {
+        // addPeriodicSync(account, AGIT_PROVIDER_AUTHORITY, new Bundle(), 15*60);
+        // public static void addPeriodicSync(android.accounts.Account account, java.lang.String authority, android.os.Bundle extras, long pollFrequency) { /* compiled code */ }
+
+       try {
+           methodContentResolver_addPeriodicSync.invoke(null, account, AGIT_PROVIDER_AUTHORITY, new Bundle(), pollPeriodInSeconds);
+       } catch (InvocationTargetException ite) {
+           /* unpack original exception when possible */
+           Throwable cause = ite.getCause();
+           if (cause instanceof RuntimeException) {
+               throw (RuntimeException) cause;
+           } else if (cause instanceof Error) {
+               throw (Error) cause;
+           } else {
+               /* unexpected checked exception; wrap and re-throw */
+               throw new RuntimeException(ite);
+           }
+       } catch (IllegalAccessException ie) {
+           Log.e(TAG,"Unexpected exception adding periodic sync",ie);
+       }
+   }
 
     private static class AccountAuthenticatorImpl extends AbstractAccountAuthenticator {
         private Context mContext;
