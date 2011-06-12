@@ -19,23 +19,20 @@
 
 package com.madgag.agit;
 
+import static com.madgag.agit.GitIntents.broadcastIntentForRepoStateChange;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
 
 import java.io.File;
 import java.io.IOException;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepository;
 
 public class RepoDeleter extends AsyncTask<Void, Void, Void> {
 	
 	public static final String TAG = "RepoDeleter";
-	
-	public static final String REPO_DELETE_COMPLETED = "operation.repo.delete.completed";
 	
 	private final File gitdir;
 	private final Context context;
@@ -66,10 +63,7 @@ public class RepoDeleter extends AsyncTask<Void, Void, Void> {
 	
 	@Override
     protected void onPostExecute(Void result) {
-        // finish the RMA, which should wipe the progress bar on it as well.
-		Intent deletionBroadcast = new GitIntentBuilder(REPO_DELETE_COMPLETED).gitdir(gitdir).toIntent();
-		context.sendBroadcast(deletionBroadcast);
-		Log.d(TAG, "Sent broadcast : "+deletionBroadcast);
+		context.sendBroadcast(broadcastIntentForRepoStateChange(gitdir));
     }
 
 }

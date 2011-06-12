@@ -35,8 +35,15 @@ public class GitIntents {
 
     public static final String OPEN_GIT_INTENT_PREFIX = "org.openintents.git.";
 
+    public static final String REPO_STATE_CHANGED_BROADCAST = "repo.UPDATED";
+
     public static String actionWithSuffix(String actionSuffix) {
         return OPEN_GIT_INTENT_PREFIX+actionSuffix;
+    }
+
+
+    public static Intent broadcastIntentForRepoStateChange(File gitdir) {
+        return new GitIntentBuilder(REPO_STATE_CHANGED_BROADCAST).gitdir(gitdir).toIntent();
     }
 
     public static final String

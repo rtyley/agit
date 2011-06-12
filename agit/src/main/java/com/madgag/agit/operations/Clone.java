@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 import com.google.inject.Inject;
 import com.madgag.agit.GitFetchService;
+import com.madgag.agit.GitIntents;
 import com.madgag.agit.Progress;
 import com.madgag.agit.ProgressListener;
 import org.eclipse.jgit.api.Git;
@@ -34,6 +35,7 @@ import java.util.List;
 
 import static android.R.drawable.stat_sys_download;
 import static android.R.drawable.stat_sys_download_done;
+import static com.madgag.agit.GitIntents.*;
 import static org.eclipse.jgit.lib.Constants.*;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;
 import static org.eclipse.jgit.lib.RepositoryCache.close;
@@ -41,8 +43,7 @@ import static org.eclipse.jgit.lib.RepositoryCache.close;
 public class Clone implements GitOperation {
 
 	public static final String TAG = "Clone";
-    public static final String GIT_REPO_INITIALISED_INTENT = "org.openintents.git.repo.initialised";
-
+    
     private final boolean bare;
 	private final URIish sourceUri;
 	private final File directory, gitdir;
@@ -73,10 +74,12 @@ public class Clone implements GitOperation {
 			Repository repository = new FileRepository(gitdir);
 			RemoteConfig remote = addRemote(remoteName, repository);
 
-            context.sendBroadcast(new Intent(GIT_REPO_INITIALISED_INTENT));
+            context.sendBroadcast(broadcastIntentForRepoStateChange(gitdir));
 
 			FetchResult fetchResult = fetchService.fetch(remote, null);
 
+            context.sendBroadcast(broadcastIntentForRepoStateChange(gitdir));
+            
 			if (!bare) {
 				checkoutHeadFrom(fetchResult, repository);
 			}

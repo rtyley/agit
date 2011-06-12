@@ -21,10 +21,11 @@ import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 
 import static android.graphics.PixelFormat.RGBA_8888;
+import static com.madgag.agit.GitIntents.REPO_STATE_CHANGED_BROADCAST;
+import static com.madgag.agit.GitIntents.actionWithSuffix;
 import static com.madgag.agit.R.layout.dashboard_repo_list_header;
 import static com.madgag.agit.R.layout.repo_list_item;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
-import static com.madgag.agit.operations.Clone.GIT_REPO_INITIALISED_INTENT;
 import static com.madgag.agit.sync.AccountAuthenticatorService.addAccount;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 
@@ -56,9 +57,9 @@ public class DashboardActivity extends RoboActivity {
         getWindow().setFormat(RGBA_8888);
     }
 
-    BroadcastReceiver repoListReceiver = new BroadcastReceiver() {
+    BroadcastReceiver repoStateChangeReceiver = new BroadcastReceiver() {
 		public void onReceive(Context context, Intent intent) {
-			Log.d(TAG, "repoListReceiver got broadcast : " + intent);
+			Log.d(TAG, "repoStateChangeReceiver got broadcast : " + intent);
 			updateRepoList();
 		}
 	};
@@ -108,13 +109,13 @@ public class DashboardActivity extends RoboActivity {
 
     protected void onResume() {
         super.onResume();
-        registerReceiver(repoListReceiver, new IntentFilter(GIT_REPO_INITIALISED_INTENT));
+        registerReceiver(repoStateChangeReceiver, new IntentFilter(actionWithSuffix(REPO_STATE_CHANGED_BROADCAST)));
         updateRepoList();
     }
 
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(repoListReceiver);
+        unregisterReceiver(repoStateChangeReceiver);
     }
 
     private void updateRepoList() {

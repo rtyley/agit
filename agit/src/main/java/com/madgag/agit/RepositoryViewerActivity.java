@@ -23,7 +23,6 @@ import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.*;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -38,11 +37,10 @@ import roboguice.inject.InjectView;
 import java.io.File;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
-import static com.google.common.collect.Lists.asList;
+import static com.madgag.agit.GitIntents.REPO_STATE_CHANGED_BROADCAST;
 import static com.madgag.agit.GitIntents.actionWithSuffix;
 import static com.madgag.agit.GitIntents.gitDirFrom;
 import static com.madgag.agit.R.drawable.ic_title_fetch;
-import static com.madgag.agit.RepoDeleter.REPO_DELETE_COMPLETED;
 import static com.madgag.agit.Repos.niceNameFor;
 
 
@@ -107,19 +105,13 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
 			Log.d(TAG, "Got broadcast : "+action);
-			if (action.equals(REPO_DELETE_COMPLETED)) {
-				if (intent.getData().equals(Uri.fromFile(gitdir()))) {
-					finish();
-				}
-			}
 		}
 	};
 	
-	BroadcastReceiver deletionBroadcastReceiver = new BroadcastReceiver() {
+	BroadcastReceiver repoStateChangeBroadcastReceiver = new BroadcastReceiver() {
 		public void onReceive(Context context, Intent intent) {
-			Log.d(TAG, "deletionBroadcastReceiver got broadcast : "+intent);
+			Log.d(TAG, "repoStateChangeBroadcastReceiver got broadcast : "+intent);
 			if (!gitdir().exists()) {
-			//if (intent.getData().equals(Uri.fromFile(gitdir))) {
 				finish();
 			}
 		}
@@ -188,7 +180,7 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
     	super.onResume();
 		registerReceiver(operationProgressBroadcastReceiver, new IntentFilter("org.openintents.git.operation.progress.update"));
 
-		registerReceiver(deletionBroadcastReceiver, new IntentFilter(actionWithSuffix(REPO_DELETE_COMPLETED)));
+		registerReceiver(repoStateChangeBroadcastReceiver, new IntentFilter(actionWithSuffix(REPO_STATE_CHANGED_BROADCAST)));
 		dialogPromptMonkey.registerReceiverForServicePromptRequests();
 		
 		updateUI();
@@ -213,6 +205,7 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
     protected void onPause() {
     	super.onPause();
     	unregisterReceiver(operationProgressBroadcastReceiver);
+        unregisterReceiver(repoStateChangeBroadcastReceiver);
     	dialogPromptMonkey.unregisterRecieverForServicePromptRequests();
     }
 	
