@@ -38,6 +38,7 @@ import roboguice.inject.InjectorProvider;
 
 import static com.madgag.agit.R.id.*;
 import static com.madgag.agit.R.layout.commit_summary_view;
+import static com.madgag.agit.views.TextUtil.ITALIC_CLIPPING_BUFFER;
 import static com.madgag.agit.views.ViewUtil.injectFor;
 import static com.madgag.android.lazydrawables.gravatar.Gravatars.gravatarIdFor;
 
@@ -59,11 +60,11 @@ public class PrettyCommitSummaryView extends FrameLayout {
 	}
 
 	public void setCommit(RevCommit commit) {
-        commit_date.setText(Time.timeSinceSeconds(commit.getCommitTime()));
+        commit_date.setText(Time.timeSinceSeconds(commit.getCommitTime())+ ITALIC_CLIPPING_BUFFER);
 
         Drawable avatar = avatarSession.get(gravatarIdFor(commit.getAuthorIdent().getEmailAddress()));
         gravatar.setImageDrawable(avatar);
 
-        shortMessage.setText(commit.getShortMessage()+TextUtil.ITALIC_CLIPPING_BUFFER);
+        shortMessage.setText(commit.getShortMessage()+ ITALIC_CLIPPING_BUFFER);
     }
 }
