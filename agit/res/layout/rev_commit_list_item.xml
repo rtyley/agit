@@ -9,7 +9,7 @@
 		android:layout_height="wrap_content"
 		android:layout_marginLeft="20dip"
 		android:layout_marginBottom="5dip"
-		android:src="@drawable/commit" />
+		android:src="@drawable/commit_icon_small" />
 	<TextView
 		android:id="@+id/tv_commit_list_item_commit_date"
 		android:layout_width="wrap_content"

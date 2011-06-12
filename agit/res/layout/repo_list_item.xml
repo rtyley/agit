@@ -23,7 +23,7 @@
         android:layout_alignRight="@id/repo_icon"
         android:paddingLeft="1dip"
         android:paddingRight="4dip"
-		android:src="@drawable/commit" />
+		android:src="@drawable/commit_icon_small" />
 	<TextView
 		android:id="@+id/commit_subject"
 		android:layout_width="fill_parent"
