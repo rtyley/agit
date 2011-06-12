@@ -77,13 +77,14 @@ public class TagViewer extends RepoScopedActivityBase {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        actionBar.setTitle(tagName);
-        actionBar.setHomeAction(new HomeAction(this));
         repositoryScope.doWith(repo(), new Runnable() {
             public void run() {
                 setContentView(R.layout.tag_viewer_activity);
             }
         });
+
+        actionBar.setTitle(tagName);
+        actionBar.setHomeAction(new HomeAction(this));
 	}
 
     @Override
