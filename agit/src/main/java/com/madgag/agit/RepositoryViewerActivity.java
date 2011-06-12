@@ -116,20 +116,6 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
 			}
 		}
 	};
-	private ListView rdtTypeList;
-	private ListView tagList;
-	
-//	private void updateOperationProgressDisplay() {
-//		Log.d(TAG, "Updating Operation Progress display");
-////		String boo = gitOperationsService.currentOperationFor(db);
-////		((TextView) findViewById(R.id.GitOperationStatus)).setText(boo);
-//		showDialog(PROGRESS_DIALOG);
-//		FetchThread ft=repositoryOperationContext.getCurrentOperation();
-//		Progress currentProgress = ft.progressMonitor.getCurrentProgress();
-//		progressDialog.setProgress(currentProgress.totalCompleted);
-//		progressDialog.setMax(currentProgress.totalWork);
-//		progressDialog.setMessage(currentProgress.msg);
-//	}
 	
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
