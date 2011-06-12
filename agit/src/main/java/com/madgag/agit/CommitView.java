@@ -19,6 +19,8 @@
 
 package com.madgag.agit;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import java.io.IOException;
@@ -172,7 +174,9 @@ public class CommitView extends LinearLayout {
 	private void addPerson(String title, PersonIdent commiter, ViewGroup vg) {
 		PersonIdentView personIdentView = new PersonIdentView(getContext(), null);
 		personIdentView.setIdent(title, commiter);
-		vg.addView(personIdentView);
+        LayoutParams layoutParams = new LayoutParams(MATCH_PARENT, WRAP_CONTENT);
+        layoutParams.weight=1;
+		vg.addView(personIdentView,layoutParams);
 	}
 
 	private TabHost.TabSpec detailTabSpec() {
