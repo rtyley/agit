@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static com.madgag.agit.R.id.*;
+import static org.eclipse.jgit.lib.Repository.shortenRefName;
 
 public class TagViewer extends RepoScopedActivityBase {
 
@@ -76,6 +77,8 @@ public class TagViewer extends RepoScopedActivityBase {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        actionBar.setTitle(tagName);
+        actionBar.setHomeAction(new HomeAction(this));
         repositoryScope.doWith(repo(), new Runnable() {
             public void run() {
                 setContentView(R.layout.tag_viewer_activity);
@@ -86,7 +89,7 @@ public class TagViewer extends RepoScopedActivityBase {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	super.onCreateOptionsMenu(menu);
-        menu.add(0, DELETE_ID, 0, R.string.delete_tag_menu_option).setShortcut('0', 'd');
+        // menu.add(0, DELETE_ID, 0, R.string.delete_tag_menu_option).setShortcut('0', 'd');
         return true;
     }
     

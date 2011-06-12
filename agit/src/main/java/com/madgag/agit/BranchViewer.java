@@ -105,7 +105,7 @@ public class BranchViewer extends RepoScopedActivityBase {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	super.onCreateOptionsMenu(menu);
-        menu.add(0, CHECKOUT_ID, 0, checkout_commit_menu_option).setShortcut('0', 'c');
+        // menu.add(0, CHECKOUT_ID, 0, checkout_commit_menu_option).setShortcut('0', 'c');
         return true;
     }
 

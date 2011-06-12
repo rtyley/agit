@@ -184,7 +184,7 @@ public class CommitViewerActivity extends RepoScopedActivityBase {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	super.onCreateOptionsMenu(menu);
-        menu.add(0, TAG_ID, 0, tag_commit_menu_option).setShortcut('0', 't');
+        // menu.add(0, TAG_ID, 0, tag_commit_menu_option).setShortcut('0', 't');
         return true;
     }
     
