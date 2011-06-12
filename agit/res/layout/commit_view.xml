@@ -9,31 +9,31 @@
 		    android:id="@+id/actionbar"
 		    style="@style/ActionBar"
 	        />
-	<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/tabhost"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <LinearLayout
-        android:orientation="vertical"
+	<com.madgag.agit.views.FixEclairTabHost
+        android:id="@android:id/tabhost"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TabWidget android:id="@android:id/tabs"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="32dip"
-            android:paddingLeft="1dip"
-            android:paddingRight="1dip"
-            android:paddingTop="4dip"
-        />
+            android:layout_height="match_parent">
 
-        <FrameLayout android:id="@android:id/tabcontent"
-            android:layout_width="match_parent"
-            android:layout_height="0dip"
-            android:layout_weight="1"
-        />
-    </LinearLayout>
-</TabHost>
+            <TabWidget android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="32dip"
+                android:paddingLeft="1dip"
+                android:paddingRight="1dip"
+                android:paddingTop="4dip"
+            />
+
+            <FrameLayout android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_weight="1"
+            />
+        </LinearLayout>
+    </com.madgag.agit.views.FixEclairTabHost>
 	
 		
 </LinearLayout>
