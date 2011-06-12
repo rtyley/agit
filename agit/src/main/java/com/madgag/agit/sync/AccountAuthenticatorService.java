@@ -76,26 +76,26 @@ public class AccountAuthenticatorService extends Service {
     }
 
     private static void addPeriodicSyncIfSupported(Account account, int pollPeriodInSeconds) {
-        // addPeriodicSync(account, AGIT_PROVIDER_AUTHORITY, new Bundle(), 15*60);
-        // public static void addPeriodicSync(android.accounts.Account account, java.lang.String authority, android.os.Bundle extras, long pollFrequency) { /* compiled code */ }
-
-       try {
-           methodContentResolver_addPeriodicSync.invoke(null, account, AGIT_PROVIDER_AUTHORITY, new Bundle(), pollPeriodInSeconds);
-       } catch (InvocationTargetException ite) {
-           /* unpack original exception when possible */
-           Throwable cause = ite.getCause();
-           if (cause instanceof RuntimeException) {
-               throw (RuntimeException) cause;
-           } else if (cause instanceof Error) {
-               throw (Error) cause;
-           } else {
-               /* unexpected checked exception; wrap and re-throw */
-               throw new RuntimeException(ite);
-           }
-       } catch (IllegalAccessException ie) {
-           Log.e(TAG,"Unexpected exception adding periodic sync",ie);
-       }
-   }
+        if (methodContentResolver_addPeriodicSync==null) {
+            return;
+        }
+        try {
+            methodContentResolver_addPeriodicSync.invoke(null, account, AGIT_PROVIDER_AUTHORITY, new Bundle(), pollPeriodInSeconds);
+        } catch (InvocationTargetException ite) {
+            /* unpack original exception when possible */
+            Throwable cause = ite.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            } else if (cause instanceof Error) {
+                throw (Error) cause;
+            } else {
+                /* unexpected checked exception; wrap and re-throw */
+                throw new RuntimeException(ite);
+            }
+        } catch (IllegalAccessException ie) {
+            Log.e(TAG,"Unexpected exception adding periodic sync",ie);
+        }
+    }
 
     private static class AccountAuthenticatorImpl extends AbstractAccountAuthenticator {
         private Context mContext;
