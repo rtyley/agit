@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@id/GoCloneButton"
-            android:src="@drawable/actionbar_agit_logo" />
+            android:src="@drawable/agit_dashboard_logo" />
         <TextView
             android:id="@+id/agit_description"
             android:layout_width="match_parent"
