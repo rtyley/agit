@@ -39,6 +39,7 @@ import java.io.File;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.google.common.collect.Lists.asList;
+import static com.madgag.agit.GitIntents.actionWithSuffix;
 import static com.madgag.agit.GitIntents.gitDirFrom;
 import static com.madgag.agit.R.drawable.ic_title_fetch;
 import static com.madgag.agit.RepoDeleter.REPO_DELETE_COMPLETED;
@@ -187,7 +188,7 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
     	super.onResume();
 		registerReceiver(operationProgressBroadcastReceiver, new IntentFilter("org.openintents.git.operation.progress.update"));
 
-		registerReceiver(deletionBroadcastReceiver, new IntentFilter(REPO_DELETE_COMPLETED));
+		registerReceiver(deletionBroadcastReceiver, new IntentFilter(actionWithSuffix(REPO_DELETE_COMPLETED)));
 		dialogPromptMonkey.registerReceiverForServicePromptRequests();
 		
 		updateUI();

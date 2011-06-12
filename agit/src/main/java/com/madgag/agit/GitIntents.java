@@ -34,7 +34,11 @@ public class GitIntents {
 	private static final String TAG="GitIntents";
 
     public static final String OPEN_GIT_INTENT_PREFIX = "org.openintents.git.";
-    
+
+    public static String actionWithSuffix(String actionSuffix) {
+        return OPEN_GIT_INTENT_PREFIX+actionSuffix;
+    }
+
     public static final String
             BARE="bare",
             EXTRA_TARGET_DIR="target-dir",

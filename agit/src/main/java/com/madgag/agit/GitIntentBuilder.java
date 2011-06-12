@@ -28,19 +28,17 @@ import org.eclipse.jgit.transport.RemoteConfig;
 
 import android.content.Intent;
 
-import static com.madgag.agit.GitIntents.EXTRA_SOURCE_URI;
-import static com.madgag.agit.GitIntents.EXTRA_TARGET_DIR;
-import static com.madgag.agit.GitIntents.OPEN_GIT_INTENT_PREFIX;
+import static com.madgag.agit.GitIntents.*;
 
 public class GitIntentBuilder {
 
 	private final Intent intent;
 
 	public GitIntentBuilder(String actionSuffix) {
-		intent = new Intent(OPEN_GIT_INTENT_PREFIX+actionSuffix);
+		intent = new Intent(actionWithSuffix(actionSuffix));
 	}
-	
-	public GitIntentBuilder gitdir(File gitdir) {
+
+    public GitIntentBuilder gitdir(File gitdir) {
 		return add("gitdir", gitdir.getAbsolutePath());
 	}
 	
