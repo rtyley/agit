@@ -103,6 +103,7 @@ public class CommitView extends LinearLayout {
         title.setSpan(MONOSPACE_SPAN,0,4,SPAN_EXCLUSIVE_EXCLUSIVE);
         actionBar.setTitle(title);
 
+        Log.d(TAG, "About to clearAllTabs() on "+tabHost);
         tabHost.clearAllTabs();
 
         tabHost.addTab(detailTabSpec());
@@ -132,6 +133,7 @@ public class CommitView extends LinearLayout {
             spec.setIndicator(newTabIndicator(tabHost, text)).setContent(contentFactory);
             tabHost.addTab(spec);
         }
+        Log.d(TAG, "Added all tabs to "+tabHost);
 
         commitNavigationView.setCommit(commit);
 

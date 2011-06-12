@@ -119,10 +119,8 @@ public class CommitViewerActivity extends RepoScopedActivityBase {
 			}
 		};
 		try {
-
-			
 			ObjectId revisionId = GitIntents.commitIdFrom(getIntent()); // intent.getStringExtra("commit");
-			Log.d("RCCV", revisionId.getName());
+			Log.d(TAG, revisionId.getName());
 			PlotWalk revWalk = generatePlotWalk();
 
 			commit = (PlotCommit<PlotLane>) revWalk.parseCommit(revisionId);
@@ -133,7 +131,7 @@ public class CommitViewerActivity extends RepoScopedActivityBase {
 			currentCommitView.setCommit(commit);
 		    setCurrentCommitViewVisible();
 		} catch (Exception e) {
-			e.printStackTrace();
+            Log.e(TAG, "Problem my friend",e);
 		}
 	}
 
