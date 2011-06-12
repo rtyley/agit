@@ -23,6 +23,9 @@ GNU General Public License for more details.
 Credits
 -------
 
+Many of the icons used in Agit were created by Michael Goldrei of [microsketch.com](http://microsketch.com/design/index.html)
+- others were culled from the internet or, in the worst case, drawn by me.
+
 Agit makes use of many different libraries:
 
 ### Runtime dependencies
