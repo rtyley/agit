@@ -3,8 +3,7 @@
 	<ImageView
 		android:id="@+id/osv_object_type_icon"
 		android:layout_width="32dip"
-		android:layout_height="32dip"
-		android:src="@drawable/commit_24" />
+		android:layout_height="32dip" />
     <TextView android:id="@+id/osv_object_type_text"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"/>

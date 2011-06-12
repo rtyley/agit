@@ -21,15 +21,12 @@ package com.madgag.agit.views;
 
 import android.view.View;
 import android.widget.TextView;
-import com.madgag.agit.R;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevBlob;
 
 import java.io.IOException;
 
-import static com.madgag.agit.R.drawable.blob_36;
 import static com.madgag.agit.R.drawable.blob_icon;
-import static com.madgag.agit.R.drawable.commit_24;
 import static com.madgag.agit.R.id.blob_size;
 import static com.madgag.agit.R.layout.osv_blob_summary_view;
 

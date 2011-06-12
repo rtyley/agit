@@ -19,16 +19,13 @@
 
 package com.madgag.agit.views;
 
-import android.content.DialogInterface;
 import android.view.View;
 import android.widget.TextView;
-import com.madgag.agit.CommitViewerActivity;
 import com.madgag.agit.R;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import static com.madgag.agit.CommitViewerActivity.revCommitViewIntentFor;
-import static com.madgag.agit.R.drawable.commit_36;
 import static com.madgag.agit.R.drawable.commit_icon;
 
 public class CommitSummaryView extends OSV<RevCommit> {
