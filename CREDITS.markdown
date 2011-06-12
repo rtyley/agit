@@ -20,6 +20,10 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
+If you find a bug, please leave a helpful bug report here:
+
+[https://github.com/rtyley/agit/issues](https://github.com/rtyley/agit/issues)
+
 Credits
 -------
 
