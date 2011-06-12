@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:layout_weight="1"
-	android:padding="10dip">
+	android:paddingRight="7dip">
 	<TextView
 		android:id="@+id/person_ident_title"
 		android:layout_width="wrap_content"
@@ -16,7 +16,6 @@
 		android:layout_height="36dip"
 		android:layout_below="@id/person_ident_title"
 		android:layout_alignLeft="@id/person_ident_title"
-        android:paddingRight="4dip"
 		android:scaleType="center"
 		android:background="@drawable/gravatar_border" />
 	<TextView
@@ -25,6 +24,7 @@
 		android:layout_height="wrap_content"
 		android:layout_toRightOf="@id/person_ident_avatar"
 		android:layout_alignTop="@id/person_ident_avatar"
+        android:paddingLeft="6dip"
 		android:textStyle="italic"
         android:singleLine="true"
         android:ellipsize="end"
@@ -34,7 +34,8 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/person_ident_name"
+        android:paddingLeft="6dip"
 		android:layout_alignLeft="@id/person_ident_name"
 		android:textStyle="italic"
 		android:text="Sometime" />
-</merge>
+</RelativeLayout>

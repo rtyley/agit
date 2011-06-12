@@ -103,7 +103,7 @@
                 android:layout_toLeftOf="@id/actionbar_progress"
                 android:paddingLeft="10dip"
                 android:paddingRight="10dip"
-                android:textSize="16dip"
+                android:textSize="17dip"
                 android:textStyle="bold"
                 android:textColor="@color/actionbar_title"
                 android:lines="1"

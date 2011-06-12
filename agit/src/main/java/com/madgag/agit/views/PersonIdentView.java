@@ -27,6 +27,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -40,7 +41,7 @@ import static com.madgag.agit.Time.timeSinceMS;
 import static com.madgag.agit.views.TextUtil.ITALIC_CLIPPING_BUFFER;
 import static com.madgag.android.lazydrawables.gravatar.Gravatars.gravatarIdFor;
 
-public class PersonIdentView extends RelativeLayout {
+public class PersonIdentView extends FrameLayout {
 	
 	private static final String TAG = "PIV";
 
@@ -68,7 +69,7 @@ public class PersonIdentView extends RelativeLayout {
 		Drawable avatar = avatarSession.get(gravatarIdFor(ident.getEmailAddress()));
 		avatarView.setImageDrawable(avatar);
 		nameView.setText(ident.getName()+ ITALIC_CLIPPING_BUFFER);
-		whenView.setText(timeSinceMS(ident.getWhen().getTime()));
+		whenView.setText(timeSinceMS(ident.getWhen().getTime())+ITALIC_CLIPPING_BUFFER);
         setClickable(true);
         setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
