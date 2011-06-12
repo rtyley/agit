@@ -17,7 +17,7 @@
 		android:layout_height="wrap_content"
 		android:layout_below="@id/title"
         android:layout_alignLeft="@id/title"
-		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:textSize="16dip"
         android:maxLines="2"
         android:ellipsize="end"
 	/>

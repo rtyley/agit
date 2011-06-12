@@ -23,7 +23,7 @@
     <string name="delete_repo_menu_option">Delete Repo</string>
     <string name="delete_tag_menu_option">Delete Tag</string>
 
-    <string name="latest_commit_title">Latest Commit...</string>
+    <string name="latest_commit_title">Latest Commit</string>
     <string name="empty_list">« none »</string>
     
     <string name="tag_name_label">Name:</string>
