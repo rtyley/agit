@@ -4,7 +4,8 @@ Agit - Android Git Client
 
 © 2011 Roberto Tyley
 
-This app can bought on the Android Market, doing so supports the author in the creation of open-source software.
+This app can bought on the [Android Market](https://market.android.com/details?id=com.madgag.agit),
+doing so supports the author in the creation of open-source software.
 
 The source code is freely available:
 
