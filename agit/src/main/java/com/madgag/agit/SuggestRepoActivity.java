@@ -36,13 +36,13 @@ public class SuggestRepoActivity extends RoboListActivity {
 		actionBar.setTitle("Some example repos...");
         // Bind to our new adapter.
         List<SuggestedRepo> suggestedRepos = asList(
-                new SuggestedRepo("Git", "git://git.kernel.org/pub/scm/git/git.git"),
+                new SuggestedRepo("Connectbot", "git://github.com/kruton/connectbot.git"),
+                new SuggestedRepo("Redis", "git://github.com/antirez/redis.git"),
                 new SuggestedRepo("JQuery", "git://github.com/jquery/jquery.git"),
+                new SuggestedRepo("sshj","git://github.com/shikhar/sshj.git"),
                 new SuggestedRepo("Scalatra", "git://github.com/scalatra/scalatra.git"),
                 new SuggestedRepo("JGit", "git://egit.eclipse.org/jgit.git"),
-                new SuggestedRepo("MongoDB", "git://github.com/mongodb/mongo.git"),
-                new SuggestedRepo("Redis", "git://github.com/antirez/redis.git")
-
+                new SuggestedRepo("MongoDB", "git://github.com/mongodb/mongo.git")
         );
         adapter = new ViewHoldingListAdapter<SuggestedRepo>(suggestedRepos, viewInflatorFor(this, simple_list_item_2), new ViewHolderFactory<SuggestedRepo>() {
             public ViewHolder<SuggestedRepo> createViewHolderFor(View view) {
