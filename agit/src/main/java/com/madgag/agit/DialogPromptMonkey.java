@@ -71,9 +71,11 @@ public class DialogPromptMonkey implements PromptExposer {
 		switch (id) {
 		case YES_NO_DIALOG:
         case STRING_ENTRY_DIALOG:
-			String msg = responseInterface.getOpPrompt().getOpNotification().getEventDetail();
-			Log.d(TAG, "Will prompt with: " + msg);
-			alertDialog.setMessage(msg);
+            if (responseInterface!=null) {
+                String msg = responseInterface.getOpPrompt().getOpNotification().getEventDetail();
+                Log.d(TAG, "Will prompt with: " + msg);
+                alertDialog.setMessage(msg);
+            }
 		default:
 		}
 	}
