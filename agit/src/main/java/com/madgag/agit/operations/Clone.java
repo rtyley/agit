@@ -52,6 +52,7 @@ public class Clone implements GitOperation {
     @Inject ProgressListener<Progress> progressListener;
     @Inject GitFetchService fetchService;
     @Inject Context context;
+    @Inject RepoUpdateBroadcaster repoUpdateBroadcaster;
 
     public Clone(boolean bare, URIish sourceUri, File directory) {
 		this.bare = bare;
@@ -73,12 +74,9 @@ public class Clone implements GitOperation {
 			Git.init().setBare(bare).setDirectory(directory).call();
 			Repository repository = new FileRepository(gitdir);
 			RemoteConfig remote = addRemote(remoteName, repository);
-
-            context.sendBroadcast(broadcastIntentForRepoStateChange(gitdir));
+            repoUpdateBroadcaster.broadcastUpdate();
 
 			FetchResult fetchResult = fetchService.fetch(remote, null);
-
-            context.sendBroadcast(broadcastIntentForRepoStateChange(gitdir));
             
 			if (!bare) {
 				checkoutHeadFrom(fetchResult, repository);
