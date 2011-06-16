@@ -19,28 +19,23 @@
 
 package com.madgag.agit;
 
-import static android.content.Context.VIBRATOR_SERVICE;
-import static android.graphics.Typeface.BOLD;
-import static android.graphics.Typeface.create;
-import static android.view.Gravity.CENTER;
-import static com.madgag.agit.R.id.DiffPlayerSeekBar;
-import static com.madgag.agit.R.id.afterText;
-import static com.madgag.agit.R.id.beforeText;
-import static com.madgag.agit.R.layout.diff_seekbar_view;
-
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Vibrator;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import org.tautua.markdownpapers.ast.TagAttribute;
+
+import static android.content.Context.VIBRATOR_SERVICE;
+import static android.graphics.Typeface.BOLD;
+import static android.graphics.Typeface.create;
+import static android.view.Gravity.CENTER;
+import static com.madgag.agit.R.id.*;
+import static com.madgag.agit.R.layout.diff_seekbar_view;
 
 public class DiffSliderView extends LinearLayout {
 

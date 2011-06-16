@@ -22,14 +22,14 @@
  */
 package com.madgag.agit.diff;
 
-import static android.graphics.Typeface.MONOSPACE;
-import static android.widget.TextView.BufferType.EDITABLE;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.text.Editable;
 import android.util.Log;
 import android.widget.TextView;
-import org.tautua.markdownpapers.ast.TagAttribute;
+
+import static android.graphics.Typeface.MONOSPACE;
+import static android.widget.TextView.BufferType.EDITABLE;
 
 public class HunkDiffView extends TextView {
 

@@ -19,15 +19,16 @@
 
 package com.madgag.agit;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.WebView;
 import com.markupartist.android.widget.ActionBar;
-import org.tautua.markdownpapers.Markdown;
+import com.petebevin.markdown.MarkdownProcessor;
+import org.apache.commons.io.IOUtils;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 
-import java.io.*;
+import java.io.Reader;
 
 import static com.madgag.agit.R.layout.about_activity;
 import static com.madgag.agit.R.string.about_activity_title;
@@ -46,17 +47,16 @@ public class AboutActivity extends RoboActivity {
         actionBar.setHomeAction(new HomeAction(this));
         actionBar.setTitle(about_activity_title);
 
-        Reader in = null;
+        String markdown;
         try {
-            in = new InputStreamReader(getAssets().open("CREDITS.markdown"));
-            Writer out = new StringWriter();
-
-            Markdown md = new Markdown();
-            md.transform(in, out);
-            webView.loadDataWithBaseURL(null, out.toString(),"text/html", "UTF-8", null);
+            markdown=IOUtils.toString(getAssets().open("CREDITS.markdown"));
         } catch (Exception e) {
-            e.printStackTrace();
+            markdown="Problem loading 'About' file.";
+            Log.e(TAG,markdown,e);
         }
 
+        MarkdownProcessor m = new MarkdownProcessor();
+        String html=m.markdown(markdown);
+        webView.loadDataWithBaseURL(null, html,"text/html", "UTF-8", null);
     }
 }

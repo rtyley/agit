@@ -33,5 +33,4 @@ public class AboutActivityStoryTest extends CalculonStoryTest<AboutActivity> {
 		assertThat(R.id.webView).isVisible();
 	}
 
-
 }

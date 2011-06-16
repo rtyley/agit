@@ -100,9 +100,9 @@
             <version>1.6.1</version>
         </dependency>
         <dependency>
-            <groupId>org.tautua.markdownpapers</groupId>
-            <artifactId>markdownpapers-core</artifactId>
-            <version>1.0.0</version>
+            <groupId>com.madgag</groupId>
+            <artifactId>markdownj-core</artifactId>
+            <version>0.4.1</version>
         </dependency>
 	</dependencies>
 	<build>

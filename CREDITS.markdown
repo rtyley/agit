@@ -28,8 +28,11 @@ If you find a bug, please leave a helpful bug report here:
 Credits
 -------
 
+### Artwork
+
 Many of the icons used in Agit were created by Michael Goldrei of [microsketch.com](http://microsketch.com/design/index.html)
-- others were culled from the internet or, in the worst case, drawn by me.
+- others were culled from the internet or, in the worst case, drawn by me. The Agit icon is composed of the Android
+Robot and the Git logo.
 
 Agit makes use of many different libraries:
 
@@ -37,41 +40,41 @@ Agit makes use of many different libraries:
 
 The distributed Agit binary contains software from the following projects:
 
-  * [JGit](http://www.eclipse.org/jgit/) - Pure Java library implementing Git.
+*   [JGit](http://www.eclipse.org/jgit/) - Pure Java library implementing Git.
 
     License: [EDL v1.0](http://www.eclipse.org/org/documents/edl-v10.php) (new-style BSD)
 
-  * [Guice](http://code.google.com/p/google-guice/)
+*   [Guice](http://code.google.com/p/google-guice/)
 
     License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
-  * [RoboGuice](http://code.google.com/p/roboguice/)
+*   [RoboGuice](http://code.google.com/p/roboguice/)
 
     License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
-  * [Commons IO](http://commons.apache.org/io)
+*   [Commons IO](http://commons.apache.org/io)
 
     License: [Apache 2.0](http://commons.apache.org/io/license.html)
 
-  * [Google Collections](http://code.google.com/p/google-collections/)
+*   [Google Collections](http://code.google.com/p/google-collections/)
 
     License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
-  * [sshj - SSHv2 library for Java](https://github.com/shikhar/sshj)
+*   [sshj - SSHv2 library for Java](https://github.com/shikhar/sshj)
 
     License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
 ### Test dependencies
 
-  * [Robolectric](http://pivotal.github.com/robolectric/)
+*   [Robolectric](http://pivotal.github.com/robolectric/)
 
     License: [MIT License](http://www.opensource.org/licenses/mit-license.php)
 
-  * [toy-android-ssh-agent](https://github.com/rtyley/toy-android-ssh-agent)
+*   [toy-android-ssh-agent](https://github.com/rtyley/toy-android-ssh-agent)
 
     License: [GPL v3](http://www.gnu.org/licenses/gpl-3.0.html)
 
-  * [mini-git-server](https://github.com/rtyley/mini-git-server)
+*   [mini-git-server](https://github.com/rtyley/mini-git-server)
 
     Pure-Java WAR capable of hosting git repos and serving them over git+ssh.
     Basically a stripped-down copy of [Gerrit](http://code.google.com/p/gerrit/).
@@ -83,11 +86,11 @@ The distributed Agit binary contains software from the following projects:
 
 In addition, the build process uses the following software:
 
-  * [Proguard](http://proguard.sourceforge.net/)
+*   [Proguard](http://proguard.sourceforge.net/)
 
     License: [GPL v2](http://proguard.sourceforge.net/license.html)
 
-  * [Maven Android Plugin](http://code.google.com/p/maven-android-plugin/)
+*   [Maven Android Plugin](http://code.google.com/p/maven-android-plugin/)
 
     License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
