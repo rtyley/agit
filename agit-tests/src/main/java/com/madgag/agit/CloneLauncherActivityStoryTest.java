@@ -26,11 +26,11 @@ import android.os.Environment;
 
 import com.github.calculon.CalculonStoryTest;
 
-public class CloneActivityStoryTest extends CalculonStoryTest<CloneLauncherActivity> {
+public class CloneLauncherActivityStoryTest extends CalculonStoryTest<CloneLauncherActivity> {
 	
 	private String existingFolder = File.listRoots()[0].getAbsolutePath();
 
-	public CloneActivityStoryTest() {
+	public CloneLauncherActivityStoryTest() {
 		super("com.agit",CloneLauncherActivity.class);
 	}
 	
