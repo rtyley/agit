@@ -32,7 +32,7 @@ Credits
 
 Many of the icons used in Agit were created by Michael Goldrei of [microsketch.com](http://microsketch.com/design/index.html)
 - others were culled from the internet or, in the worst case, drawn by me. The Agit icon is composed of the
-[Android Robot][http://www.android.com/branding.html] (used used according to terms described in the 
+[Android Robot](http://www.android.com/branding.html) (used used according to terms described in the 
 [Creative Commons 3.0 Attribution License](http://creativecommons.org/licenses/by/3.0/)) and
 the alternative [Git logo](http://henrik.nyh.se/2007/06/alternative-git-logo-and-favicon) by Henrik Nyh.
 
