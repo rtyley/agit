@@ -31,8 +31,11 @@ Credits
 ### Artwork
 
 Many of the icons used in Agit were created by Michael Goldrei of [microsketch.com](http://microsketch.com/design/index.html)
-- others were culled from the internet or, in the worst case, drawn by me. The Agit icon is composed of the Android
-Robot and the Git logo.
+- others were culled from the internet or, in the worst case, drawn by me. The Agit icon is composed of the
+[Android Robot][http://www.android.com/branding.html] (used used according to terms described in the 
+[Creative Commons 3.0 Attribution License](http://creativecommons.org/licenses/by/3.0/)) and
+the alternative [Git logo](http://henrik.nyh.se/2007/06/alternative-git-logo-and-favicon) by Henrik Nyh.
+
 
 Agit makes use of many different libraries:
 
@@ -63,6 +66,13 @@ The distributed Agit binary contains software from the following projects:
 *   [sshj - SSHv2 library for Java](https://github.com/shikhar/sshj)
 
     License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+*   [markdownj - pure Java port of Markdown](https://github.com/rtyley/markdownj)
+
+    License: [New BSD License](http://www.opensource.org/licenses/bsd-license.php)
+
+    Originally by Alex Coles, I made a Maven-Central release version of
+    [enr's fork](https://github.com/enr/markdownj).
 
 ### Test dependencies
 
