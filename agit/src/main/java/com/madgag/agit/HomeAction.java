@@ -6,6 +6,8 @@ import android.view.View;
 import com.google.inject.Inject;
 import com.markupartist.android.widget.ActionBar;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+
 public class HomeAction implements ActionBar.Action {
     private final Activity activity;
 
@@ -19,8 +21,9 @@ public class HomeAction implements ActionBar.Action {
     }
 
     public void performAction(View view) {
-        activity.startActivity(new Intent(activity, DashboardActivity.class));
-        activity.finish();
+        Intent intent = new Intent(activity, DashboardActivity.class);
+        intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
+        activity.startActivity(intent);
     }
     
 }

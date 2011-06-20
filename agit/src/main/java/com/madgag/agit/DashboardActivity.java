@@ -20,11 +20,13 @@ import com.madgag.android.listviews.ViewHoldingListAdapter;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 
+import static android.R.drawable.ic_menu_info_details;
 import static android.graphics.PixelFormat.RGBA_8888;
 import static com.madgag.agit.GitIntents.REPO_STATE_CHANGED_BROADCAST;
 import static com.madgag.agit.GitIntents.actionWithSuffix;
 import static com.madgag.agit.R.layout.dashboard_repo_list_header;
 import static com.madgag.agit.R.layout.repo_list_item;
+import static com.madgag.agit.R.string.about_app_menu_option;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
 import static com.madgag.agit.sync.AccountAuthenticatorService.addAccount;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
@@ -92,7 +94,7 @@ public class DashboardActivity extends RoboActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	super.onCreateOptionsMenu(menu);
-        menu.add(0, MENU_ABOUT_ID, 0, R.string.about_app_menu_option).setShortcut('0', 'a');
+        menu.add(0, MENU_ABOUT_ID, 0, about_app_menu_option).setShortcut('0', 'a').setIcon(ic_menu_info_details);
         return true;
     }
 
