@@ -32,7 +32,6 @@ public class RepoSummary implements HasLatestCommit {
                 e.printStackTrace();
                 return null;
             }
-
         }
     };
 
