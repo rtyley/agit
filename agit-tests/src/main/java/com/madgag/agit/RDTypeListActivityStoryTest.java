@@ -51,7 +51,7 @@ public class RDTypeListActivityStoryTest extends ActivityInstrumentationTestCase
 	private final static String TAG = RDTypeListActivityStoryTest.class.getSimpleName();
 	
 	public RDTypeListActivityStoryTest() {
-		super("com.agit",RDTypeListActivity.class);
+		super("com.madgag.agit",RDTypeListActivity.class);
 	}
 	
 	public void testShouldShowAllTags() throws Exception {

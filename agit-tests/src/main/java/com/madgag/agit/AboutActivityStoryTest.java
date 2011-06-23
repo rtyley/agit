@@ -26,7 +26,7 @@ import java.io.File;
 public class AboutActivityStoryTest extends CalculonStoryTest<AboutActivity> {
 
 	public AboutActivityStoryTest() {
-		super("com.agit",AboutActivity.class);
+		super("com.madgag.agit",AboutActivity.class);
 	}
 	
 	public void testDoesNotExplode() {

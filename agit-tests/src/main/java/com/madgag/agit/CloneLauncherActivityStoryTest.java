@@ -31,7 +31,7 @@ public class CloneLauncherActivityStoryTest extends CalculonStoryTest<CloneLaunc
 	private String existingFolder = File.listRoots()[0].getAbsolutePath();
 
 	public CloneLauncherActivityStoryTest() {
-		super("com.agit",CloneLauncherActivity.class);
+		super("com.madgag.agit",CloneLauncherActivity.class);
 	}
 	
 	public void testDefaultsToUseDefaultGitDirLocation() {
