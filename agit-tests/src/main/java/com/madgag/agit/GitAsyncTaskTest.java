@@ -47,7 +47,15 @@ import static org.hamcrest.Matchers.not;
 public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
 
 	private static final String TAG = "GitAsyncTaskTest";
-    
+
+    @MediumTest
+	public void testCloneRepoWithEmptyBlobInPack() throws Exception {
+		Clone cloneOp = new Clone(true, integrationGitServerURIFor("tiny-repo.with-empty-file.git"), newFolder());
+
+        Repository repo = executeAndWaitFor(cloneOp);
+        assertThat(repo, hasGitObject("e69de29bb2d1d6434b8b29ae775ad8c2e48c5391")); // empty blob
+        assertThat(repo, hasGitObject("adcb77d8f74590f54b4c1919b322aed456b22aeb")); // populated blob
+	}
 
     @MediumTest
 	public void testCloneNonBareRepoFromLocalTestServer() throws Exception {
