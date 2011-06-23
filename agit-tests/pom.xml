@@ -115,7 +115,6 @@
 					</execution>
 				</executions>
 				<configuration>
-					<wait>false</wait>
 					<container>
 						<containerId>jetty7x</containerId>
 						<type>embedded</type>
