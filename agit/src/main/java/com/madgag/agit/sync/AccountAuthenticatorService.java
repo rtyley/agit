@@ -25,7 +25,7 @@ public class AccountAuthenticatorService extends Service {
     private static final String TAG = "AccountAuthenticatorService";
     private static AccountAuthenticatorImpl sAccountAuthenticator = null;
 
-    private static Method methodContentResolver_addPeriodicSync;
+    static Method methodContentResolver_addPeriodicSync;
 
     static {
         initCompatibility();
@@ -34,7 +34,7 @@ public class AccountAuthenticatorService extends Service {
     private static void initCompatibility() {
         try {
             methodContentResolver_addPeriodicSync = ContentResolver.class.getMethod(
-                    "addPeriodicSync", new Class[] { Account.class, String.class, Bundle.class, Integer.TYPE } );
+                    "addPeriodicSync", new Class[] { Account.class, String.class, Bundle.class, Long.TYPE } );
         } catch (NoSuchMethodException nsme) {
             Log.w(TAG, "Periodic sync not available - addPeriodicSync() method not found.", nsme);
         }
@@ -65,17 +65,19 @@ public class AccountAuthenticatorService extends Service {
             result = new Bundle();
             result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
             result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
-
-            Log.d(TAG,"Trying to configure account for sync...");
-            setIsSyncable(account, AGIT_PROVIDER_AUTHORITY, 1);
-            setSyncAutomatically(account, AGIT_PROVIDER_AUTHORITY, true);
-
-            addPeriodicSyncIfSupported(account, 15 * 60);
         }
+        configureSyncFor(account);
         return result;
     }
 
-    private static void addPeriodicSyncIfSupported(Account account, int pollPeriodInSeconds) {
+    private static void configureSyncFor(Account account) {
+        Log.d(TAG, "Trying to configure account for sync...");
+        setIsSyncable(account, AGIT_PROVIDER_AUTHORITY, 1);
+        setSyncAutomatically(account, AGIT_PROVIDER_AUTHORITY, true);
+        addPeriodicSyncIfSupported(account, 15 * 60);
+    }
+
+    private static void addPeriodicSyncIfSupported(Account account, long pollPeriodInSeconds) {
         if (methodContentResolver_addPeriodicSync==null) {
             return;
         }
