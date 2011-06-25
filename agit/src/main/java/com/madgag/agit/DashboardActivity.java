@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.madgag.ZeroByteInflationCheck;
 import com.madgag.android.listviews.ViewHolder;
 import com.madgag.android.listviews.ViewHolderFactory;
 import com.madgag.android.listviews.ViewHoldingListAdapter;
@@ -22,6 +23,7 @@ import roboguice.inject.InjectView;
 
 import static android.R.drawable.ic_menu_info_details;
 import static android.graphics.PixelFormat.RGBA_8888;
+import static com.madgag.ZeroByteInflationCheck.checkHarmoniousRepose;
 import static com.madgag.agit.GitIntents.REPO_STATE_CHANGED_BROADCAST;
 import static com.madgag.agit.GitIntents.actionWithSuffix;
 import static com.madgag.agit.R.layout.dashboard_repo_list_header;
@@ -45,7 +47,7 @@ public class DashboardActivity extends RoboActivity {
         setContentView(R.layout.dashboard);
 
         setupRepoList();
-        
+        Log.i(TAG, "Inflater zero-byte inflation good (HARMONY-6637/Android #11755 fix applied) : " + checkHarmoniousRepose());
         try {
             addAccount(this);
         } catch (Exception e) {
