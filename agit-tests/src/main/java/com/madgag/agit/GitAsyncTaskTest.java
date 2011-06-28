@@ -128,9 +128,10 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
         }.start();
         long startTime= currentTimeMillis();
         Log.i(TAG, "I'm going  to wait for shit to happen - currentThread=" + currentThread());
-        boolean timeout=!latch.await(3, MINUTES);
-        long endTime= currentTimeMillis();
-        Log.i(TAG, "Finished waiting - timeout=" + timeout+" duration="+(endTime-startTime));
+        // http://stackoverflow.com/questions/5497324/why-arent-java-util-concurrent-timeunit-types-greater-than-seconds-available-in                  
+        boolean timeout=!latch.await(3*60, TimeUnit.SECONDS);
+        long duration = currentTimeMillis() - startTime;
+        Log.i(TAG, "Finished waiting - timeout=" + timeout+" duration="+ duration);
         assertThat("Timeout for "+operation, timeout, is(false));
         return new FileRepository(operation.getGitDir());
 	}
