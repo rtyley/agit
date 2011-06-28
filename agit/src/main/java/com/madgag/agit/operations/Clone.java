@@ -233,4 +233,8 @@ public class Clone implements GitOperation {
 	public File getGitDir() {
 		return gitdir;
 	}
+
+    public String toString() {
+        return getClass().getSimpleName()+"["+sourceUri+"]";
+    }
 }

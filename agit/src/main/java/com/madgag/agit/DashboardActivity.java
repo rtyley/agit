@@ -47,7 +47,7 @@ public class DashboardActivity extends RoboActivity {
         setContentView(R.layout.dashboard);
 
         setupRepoList();
-        Log.i(TAG, "Inflater zero-byte inflation good (HARMONY-6637/Android #11755 fix applied) : " + checkHarmoniousRepose());
+        Log.i(TAG, "Inflater zero-byte inflation (HARMONY-6637/Android #11755 fix applied) : " + checkHarmoniousRepose());
         try {
             addAccount(this);
         } catch (Exception e) {
