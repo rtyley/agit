@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static com.madgag.agit.GitTestUtils.*;
 import static com.madgag.agit.matchers.HasGitObjectMatcher.hasGitObject;
@@ -45,6 +46,7 @@ import static com.madgag.hamcrest.FileExistenceMatcher.exists;
 import static com.madgag.hamcrest.FileLengthMatcher.ofLength;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.Thread.currentThread;
+import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -126,7 +128,7 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
         }.start();
         long startTime= currentTimeMillis();
         Log.i(TAG, "I'm going  to wait for shit to happen - currentThread=" + currentThread());
-        boolean timeout=!latch.await(90, SECONDS);
+        boolean timeout=!latch.await(3, MINUTES);
         long endTime= currentTimeMillis();
         Log.i(TAG, "Finished waiting - timeout=" + timeout+" duration="+(endTime-startTime));
         assertThat("Timeout for "+operation, timeout, is(false));
@@ -140,7 +142,7 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
 
             Repository repo = executeAndWaitFor(new Clone(true, new URIish(suggestedRepo.getURI()), newFolder()));
             Map<String,Ref> allRefs = repo.getAllRefs();
-            assertThat("Refs for "+suggestedRepo+" @ "+repo, allRefs.size(), greaterThan(0));
+            assertThat("Refs for " + suggestedRepo + " @ " + repo, allRefs.size(), greaterThan(0));
         }
 	}
         
