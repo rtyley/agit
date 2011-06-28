@@ -19,30 +19,35 @@
 
 package com.madgag.agit;
 
-import android.os.Handler;
-import android.os.StrictMode;
+import android.net.Uri;
+import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.util.Log;
 import com.madgag.agit.operation.lifecycle.OperationLifecycleSupport;
 import com.madgag.agit.operations.*;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.URIish;
+import org.hamcrest.Matchers;
 import roboguice.test.RoboUnitTestCase;
 import roboguice.util.RoboLooperThread;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import static com.madgag.agit.GitTestUtils.*;
 import static com.madgag.agit.matchers.HasGitObjectMatcher.hasGitObject;
 import static com.madgag.hamcrest.FileExistenceMatcher.exists;
 import static com.madgag.hamcrest.FileLengthMatcher.ofLength;
+import static java.lang.System.currentTimeMillis;
 import static java.lang.Thread.currentThread;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 
 public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
 
@@ -96,32 +101,47 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
         assertThat(readmeFile, exists());
 	}
 
-	private Repository executeAndWaitFor(final GitOperation gitOperation)
+	private Repository executeAndWaitFor(final GitOperation operation)
 			throws InterruptedException, IOException {
 		final CountDownLatch latch = new CountDownLatch(1);
-        Log.d(TAG,"About to start "+gitOperation);
+        Log.d(TAG,"About to start "+operation);
 		new RoboLooperThread() {            
             public void run() {
-                Log.d(TAG,"In run method for "+gitOperation);
-            	GitAsyncTask task = injector.getInstance(GitAsyncTaskFactory.class).createTaskFor(gitOperation, new OperationLifecycleSupport() {
+                Log.d(TAG,"In run method for "+operation);
+            	GitAsyncTask task = injector.getInstance(GitAsyncTaskFactory.class).createTaskFor(operation, new OperationLifecycleSupport() {
 					public void startedWith(OpNotification ongoingNotification) {
-                        Log.i(TAG,"Started "+gitOperation+" with "+ongoingNotification);
+                        Log.i(TAG,"Started "+operation+" with "+ongoingNotification);
                     }
                     public void publish(Progress progress) {}
                     public void error(OpNotification completionNotification) {}
                     public void success(OpNotification completionNotification) {}
                     public void completed(OpNotification completionNotification) {
-                        Log.i(TAG,"Completed "+gitOperation+" with "+completionNotification);
+                        Log.i(TAG,"Completed "+operation+" with "+completionNotification);
 						latch.countDown();
 					}
             	});
             	task.execute();
-                Log.d(TAG,"Called execute() on task for "+gitOperation);
+                Log.d(TAG,"Called execute() on task for "+operation);
             }
         }.start();
+        long startTime= currentTimeMillis();
         Log.i(TAG, "I'm going  to wait for shit to happen - currentThread=" + currentThread());
-        latch.await(20, SECONDS);
-        return new FileRepository(gitOperation.getGitDir());
+        boolean timeout=!latch.await(90, SECONDS);
+        long endTime= currentTimeMillis();
+        Log.i(TAG, "Finished waiting - timeout=" + timeout+" duration="+(endTime-startTime));
+        assertThat("Timeout for "+operation, timeout, is(false));
+        return new FileRepository(operation.getGitDir());
 	}
 
+
+    @LargeTest
+	public void testCanCloneAllSuggestedRepos() throws Exception {
+        for (SuggestedRepo suggestedRepo : SuggestedRepo.SUGGESTIONS) {
+
+            Repository repo = executeAndWaitFor(new Clone(true, new URIish(suggestedRepo.getURI()), newFolder()));
+            Map<String,Ref> allRefs = repo.getAllRefs();
+            assertThat("Refs for "+suggestedRepo+" @ "+repo, allRefs.size(), greaterThan(0));
+        }
+	}
+        
 }

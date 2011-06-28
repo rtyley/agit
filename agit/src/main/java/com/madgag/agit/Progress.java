@@ -40,4 +40,8 @@ public class Progress {
 	public boolean isIndeterminate() {
 		return totalWork==UNKNOWN;
 	}
+
+    public String toString() {
+        return "["+msg+" totalCompleted="+totalCompleted+" totalWork="+totalWork+"]";
+    }
 }
