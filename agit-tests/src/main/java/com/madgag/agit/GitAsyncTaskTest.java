@@ -103,6 +103,15 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
         assertThat(readmeFile, exists());
 	}
 
+    @LargeTest
+	public void testCanCloneAllSuggestedRepos() throws Exception {
+        for (SuggestedRepo suggestedRepo : SuggestedRepo.SUGGESTIONS) {
+            Repository repo = executeAndWaitFor(new Clone(true, new URIish(suggestedRepo.getURI()), newFolder()));
+            Map<String,Ref> allRefs = repo.getAllRefs();
+            assertThat("Refs for " + suggestedRepo + " @ " + repo, allRefs.size(), greaterThan(0));
+        }
+	}
+
 	private Repository executeAndWaitFor(final GitOperation operation)
 			throws InterruptedException, IOException {
 		final CountDownLatch latch = new CountDownLatch(1);
@@ -127,24 +136,13 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
             }
         }.start();
         long startTime= currentTimeMillis();
-        Log.i(TAG, "I'm going  to wait for shit to happen - currentThread=" + currentThread());
+        Log.i(TAG, "Waiting for "+operation+" to complete - currentThread=" + currentThread());
         // http://stackoverflow.com/questions/5497324/why-arent-java-util-concurrent-timeunit-types-greater-than-seconds-available-in                  
-        boolean timeout=!latch.await(6*60, SECONDS);
+        boolean timeout=!latch.await(7*60, SECONDS);
         long duration = currentTimeMillis() - startTime;
         Log.i(TAG, "Finished waiting - timeout=" + timeout+" duration="+ duration);
         assertThat("Timeout for "+operation, timeout, is(false));
         return new FileRepository(operation.getGitDir());
-	}
-
-
-    @LargeTest
-	public void testCanCloneAllSuggestedRepos() throws Exception {
-        for (SuggestedRepo suggestedRepo : SuggestedRepo.SUGGESTIONS) {
-
-            Repository repo = executeAndWaitFor(new Clone(true, new URIish(suggestedRepo.getURI()), newFolder()));
-            Map<String,Ref> allRefs = repo.getAllRefs();
-            assertThat("Refs for " + suggestedRepo + " @ " + repo, allRefs.size(), greaterThan(0));
-        }
 	}
         
 }
