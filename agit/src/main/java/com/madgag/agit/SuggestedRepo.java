@@ -29,7 +29,7 @@ public class SuggestedRepo {
         new SuggestedRepo("SBT Android Plugin", "git://github.com/jberkel/android-plugin.git"), // 248K
         new SuggestedRepo("Maven Android Plugin","git://github.com/jayway/maven-android-plugin.git"), // 3.9M
         new SuggestedRepo("sshj","git://github.com/shikhar/sshj.git"), // 2.5M
-        // new SuggestedRepo("Redis", "git://github.com/antirez/redis.git"), // 3.3M - slow
+        // new SuggestedRepo("Redis", "git://github.com/antirez/redis.git"), // 3.3M - slow due to deltas
         new SuggestedRepo("GWT ORM", "git://android.git.kernel.org/tools/gwtorm.git"), //2.9M
         new SuggestedRepo("JGit", "git://egit.eclipse.org/jgit.git") // 5.0M
     );
