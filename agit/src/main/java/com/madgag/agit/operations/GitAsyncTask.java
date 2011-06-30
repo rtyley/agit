@@ -79,15 +79,13 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
     // Called on background thread
 	public void publish(Progress... values) {
 		latestProgress = values[values.length-1];
-		Log.d(TAG, "Got progress to post : "+latestProgress);
         handler().post(publishOnUIThreadRunnable);
-		Log.d(TAG, "...posted progress");
+		Log.d(TAG, "Posted "+latestProgress);
 	}
 	
 	protected void publishLatestProgress() {
-		Log.d(TAG, "publishLatestProgress() : Calling lifecycle publisher with "+latestProgress+" ...");
 		lifecycleSupport.publish(latestProgress);
-		Log.d(TAG, "...called lifecycle publisher.");
+		Log.d(TAG, "Called lifecycle publisher with "+latestProgress);
 	}
 
 	public GitOperation getOperation() {

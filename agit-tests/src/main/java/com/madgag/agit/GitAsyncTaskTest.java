@@ -41,6 +41,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static com.madgag.agit.GitTestUtils.*;
+import static com.madgag.agit.SuggestedRepo.SUGGESTIONS;
 import static com.madgag.agit.matchers.HasGitObjectMatcher.hasGitObject;
 import static com.madgag.hamcrest.FileExistenceMatcher.exists;
 import static com.madgag.hamcrest.FileLengthMatcher.ofLength;
@@ -105,7 +106,7 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
 
     @LargeTest
 	public void testCanCloneAllSuggestedRepos() throws Exception {
-        for (SuggestedRepo suggestedRepo : SuggestedRepo.SUGGESTIONS) {
+        for (SuggestedRepo suggestedRepo : SUGGESTIONS) {
             Repository repo = executeAndWaitFor(new Clone(true, new URIish(suggestedRepo.getURI()), newFolder()));
             Map<String,Ref> allRefs = repo.getAllRefs();
             assertThat("Refs for " + suggestedRepo + " @ " + repo, allRefs.size(), greaterThan(0));
