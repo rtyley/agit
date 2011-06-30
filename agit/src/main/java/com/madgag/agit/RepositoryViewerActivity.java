@@ -36,6 +36,7 @@ import roboguice.inject.InjectView;
 
 import java.io.File;
 
+import static android.R.drawable.ic_menu_delete;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.madgag.agit.GitIntents.REPO_STATE_CHANGED_BROADCAST;
 import static com.madgag.agit.GitIntents.actionWithSuffix;
@@ -86,7 +87,7 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	super.onCreateOptionsMenu(menu);
-        menu.add(0, DELETE_ID, 0, R.string.delete_repo_menu_option).setShortcut('0', 'd').setIcon(android.R.drawable.ic_menu_delete);
+        menu.add(0, DELETE_ID, 0, R.string.delete_repo_menu_option).setShortcut('0', 'd').setIcon(ic_menu_delete);
         return true;
     }
     
