@@ -51,7 +51,7 @@ public class LongRunningServiceLifetime implements OperationLifecycleSupport {
 	}
 
 	private RemoteViews notificationView(OpNotification startNotification) {
-		RemoteViews v=remoteViewWithLayout(R.layout.fetch_progress);
+		RemoteViews v=remoteViewWithLayout(R.layout.operation_progress);
 		v.setTextViewText(R.id.operation_description, startNotification.getEventTitle()); // TO-DO more suitable text?
 		v.setTextViewText(R.id.operation_long_url, startNotification.getEventDetail());
 		v.setTextViewText(R.id.status_text, "Please wait...");
