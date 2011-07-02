@@ -1,45 +1,17 @@
 package com.madgag.agit.sync;
 
-import android.accounts.Account;
-import android.app.Service;
-import android.content.*;
-import android.os.Bundle;
+import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
-import roboguice.inject.InjectorProvider;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import roboguice.service.RoboService;
 
-public class AgitSyncAdapterService extends Service {
+public class AgitSyncAdapterService extends RoboService {
 
-    public static final String TAG = "ASAS";
-
-	private static SyncAdapterImpl syncAdapter = null;
-
-	public AgitSyncAdapterService() {
-		super();
-	}
+	@Inject Provider<SyncAdapter> syncAdapterProvider;
 
 	@Override
 	public IBinder onBind(Intent intent) {
-        if (syncAdapter == null)
-            syncAdapter = new SyncAdapterImpl(this);
-        return syncAdapter.getSyncAdapterBinder();
-	}
-
-    private static class SyncAdapterImpl extends AbstractThreadedSyncAdapter {
-		private final Context context;
-
-		public SyncAdapterImpl(Context context) {
-			super(context, true);
-			this.context = context;
-		}
-
-		@Override
-		public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-            Context applicationContext = context.getApplicationContext();
-            Log.d(TAG, "onPerformSync account="+account+" "+ applicationContext);
-            InjectorProvider injectorProvider = (InjectorProvider) applicationContext;
-
-            injectorProvider.getInjector().getInstance(SyncService.class).syncAll(syncResult);
-		}
+        return syncAdapterProvider.get().getSyncAdapterBinder();
 	}
 }
