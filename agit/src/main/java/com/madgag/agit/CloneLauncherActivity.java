@@ -109,6 +109,7 @@ public class CloneLauncherActivity extends RoboActivity {
     	URIish cloneUri=null;
     	try {
     		cloneUri=getCloneUri();
+            // TODO Use Transport.getTransportProtocols() & canHandle to guide users to setup ssh correctly if they enter an SSH uri
     	} catch (URISyntaxException e) {
     		enableClone=false;
     	}
