@@ -47,7 +47,11 @@ public class RepositoryScope extends ScopeBase {
     });
 
     public void doWith(Repository repository, Runnable runnable) {
-        enterWithRepoGitdir(repository.getDirectory());
+        doWith(repository.getDirectory(), runnable);
+    }
+
+    public void doWith(File gitdir, Runnable runnable) {
+        enterWithRepoGitdir(gitdir);
 		try {
             runnable.run();
         } finally {
