@@ -76,7 +76,11 @@ public class Repos {
     }
 
     public static String niceNameFor(Repository repo) {
-        return niceNameFromNameDirectory(repo.isBare()? repo.getDirectory(): repo.getWorkTree());
+        return niceNameFromNameDirectory(topDirectoryFor(repo));
+    }
+
+    public static File topDirectoryFor(Repository repo) {
+        return repo.isBare()? repo.getDirectory(): repo.getWorkTree();
     }
 
     private static String niceNameFromNameDirectory(File directoryWithName) {
