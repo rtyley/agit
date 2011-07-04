@@ -20,7 +20,7 @@
 package com.madgag.agit;
 
 public interface CancellationSignaller {
-	void setCancelled();
+	void cancel();
 	
 	boolean isCancelled();
 }

@@ -58,7 +58,7 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
     }
 
 	public OpNotification call() {
-        return operationExecutor.call(operation, new OperationUIContext(this, promptHelperProvider));
+        return operationExecutor.call(operation, new OperationUIContext(this, promptHelperProvider), true);
 	}
 	
 	@Override
@@ -71,7 +71,12 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
 
     @Override
     protected void onException(Exception e) throws RuntimeException {
-        OpNotification notification = new OpNotification(stat_notify_error,operation.getName()+" failed","Fetch failed due to "+e.getMessage(), "");
+        String opName = operation.getName();
+        boolean cancelled = operation.isCancelled();
+        Log.d(TAG, "Examining exception "+e+" op "+operation+" cancelled="+cancelled);
+        OpNotification notification =
+                cancelled ?new OpNotification(stat_notify_error, opName +" cancelled", opName +" cancelled", operation.getUrl().toString()):
+                        new OpNotification(stat_notify_error, opName +" has failed","Due to "+e.getMessage(), "");
         lifecycleSupport.error(notification);
         lifecycleSupport.completed(notification);
     }

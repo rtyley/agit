@@ -41,6 +41,7 @@ public class GitFetchService {
 	private final TransportFactory transportFactory;
     private final ProgressListener<Progress> progressListener;
     @Inject RepoUpdateBroadcaster repoUpdateBroadcaster;
+    @Inject CancellationSignaller cancellationSignaller;
 	
 	@Inject
 	public GitFetchService(TransportFactory transportFactory, ProgressListener<Progress> progressListener) {
@@ -53,7 +54,7 @@ public class GitFetchService {
 		
 		Transport transport = transportFactory.transportFor(remote);
 		try {
-			FetchResult fetchResult = transport.fetch(new MessagingProgressMonitor(progressListener), toFetch);
+			FetchResult fetchResult = transport.fetch(new MessagingProgressMonitor(progressListener, cancellationSignaller), toFetch);
 			Log.d(TAG, "Fetch complete with : " + fetchResult);
             for (TrackingRefUpdate update : fetchResult.getTrackingRefUpdates()) {
                 Log.d(TAG, "TrackingRefUpdate : " + update.getLocalName()+" old="+update.getOldObjectId()+" new="+update.getNewObjectId());

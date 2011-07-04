@@ -16,7 +16,7 @@ import android.util.Log;
 import com.google.inject.Inject;
 import com.madgag.agit.GitFetchService;
 
-public class Fetch implements GitOperation {
+public class Fetch extends GitOperation {
 		
 	public static final String TAG = "Fetch";
 
@@ -31,6 +31,7 @@ public class Fetch implements GitOperation {
     }
 
 	public Fetch(Repository repository, RemoteConfig remote, Collection<RefSpec> toFetch) {
+        super(repository.getDirectory());
         this.repository = repository;
         this.remote = remote;
         this.toFetch = toFetch;

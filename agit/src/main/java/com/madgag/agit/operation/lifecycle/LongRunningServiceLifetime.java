@@ -19,6 +19,7 @@ public class LongRunningServiceLifetime implements OperationLifecycleSupport {
 	private final Service service;
 
 	private Notification ongoingNotification;
+    private StatusBarProgressView statusBarProgressView;
 
 	public LongRunningServiceLifetime(RepoNotifications repoNotifications, Service service) {
 		this.repoNotifications = repoNotifications;
@@ -29,12 +30,13 @@ public class LongRunningServiceLifetime implements OperationLifecycleSupport {
 		ongoingNotification = repoNotifications.createNotificationWith(startNotification);
 		ongoingNotification.flags = ongoingNotification.flags | FLAG_ONGOING_EVENT;
 		ongoingNotification.contentView = notificationView(startNotification);
+        statusBarProgressView = new StatusBarProgressView(ongoingNotification.contentView);
 		foregroundServiceWith(ongoingNotification); //definitely the job of this class, right?!
 	}
 
 	public void publish(Progress p) {
 		Log.i(TAG, "Publishing " + p);
-		updateWithProgress(p, ongoingNotification.contentView);
+        statusBarProgressView.publish(p);
 		repoNotifications.notifyOngoing(ongoingNotification);
 	}
 
@@ -62,11 +64,6 @@ public class LongRunningServiceLifetime implements OperationLifecycleSupport {
     private RemoteViews remoteViewWithLayout(int layoutId) {
         return new RemoteViews(service.getApplicationContext().getPackageName(), layoutId);
     }
-
-	private void updateWithProgress(Progress p, RemoteViews view) {
-		view.setProgressBar(R.id.status_progress, p.totalWork, p.totalCompleted, p.isIndeterminate());
-		view.setTextViewText(R.id.status_text, p.msg);
-	}
 
 	private void foregroundServiceWith(Notification ongoingNotification) {
 		Log.i(TAG, "Starting " + ongoingNotification + " in the foreground...");

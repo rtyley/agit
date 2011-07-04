@@ -20,11 +20,13 @@
 package com.madgag.agit;
 
 import com.google.inject.Inject;
+import com.madgag.agit.guice.OperationScoped;
 import org.eclipse.jgit.lib.ProgressMonitor;
 
 import android.util.Log;
 
-public class MessagingProgressMonitor implements ProgressMonitor, CancellationSignaller {
+@OperationScoped
+public class MessagingProgressMonitor implements ProgressMonitor {
 
 	public static final String TAG = "MessagingProgressMonitor";
 	
@@ -37,28 +39,24 @@ public class MessagingProgressMonitor implements ProgressMonitor, CancellationSi
 	private int lastWorked;
 
 	private int totalWork;
-	
-	private boolean cancelled=false;
     
 	public Progress currentProgress;
 
 	private final ProgressListener<Progress> progressListener;
+    private final CancellationSignaller cancellationSignaller;
 
-	public Progress getCurrentProgress() {
+    public Progress getCurrentProgress() {
 		return currentProgress;
 	}
 
     @Inject
-	public MessagingProgressMonitor( ProgressListener<Progress> progressListener) {
+	public MessagingProgressMonitor( ProgressListener<Progress> progressListener, CancellationSignaller cancellationSignaller) {
 		this.progressListener = progressListener;
-	}
-	
-	public void setCancelled() {
-		cancelled=true;
-	}
+        this.cancellationSignaller = cancellationSignaller;
+    }
 	
 	public boolean isCancelled() {
-		return cancelled;
+		return cancellationSignaller.isCancelled();
 	}
 	
 	public void beginTask(final String title, final int total) {

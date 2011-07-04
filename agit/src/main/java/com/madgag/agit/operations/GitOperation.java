@@ -2,24 +2,57 @@ package com.madgag.agit.operations;
 
 import java.io.File;
 
+import android.nfc.Tag;
+import android.util.Log;
+import com.madgag.agit.CancellationSignaller;
 import com.madgag.agit.Progress;
 import com.madgag.agit.ProgressListener;
 
-public interface GitOperation {
-	
-	String getTickerText();
-	
-	int getOngoingIcon(); 
-	
-	OpNotification execute();
+import static java.lang.Thread.currentThread;
 
-	String getName();
+public abstract class GitOperation implements CancellationSignaller {
+    
+    private boolean cancelled=false;
+    protected final File gitdir;
+    private Thread executionThread;
+    private static final String TAG = "GO";
 
-	String getShortDescription();
+    public GitOperation(File gitdir) {
+        this.gitdir = gitdir;
+    }
 	
-	String getDescription();
+	public abstract String getTickerText();
+	
+	public abstract int getOngoingIcon();
 
-	CharSequence getUrl();
+    public OpNotification executeAndRecordThread() {
+        executionThread = currentThread();
+        return execute();
+    }
 
-	File getGitDir();
+	protected abstract OpNotification execute();
+
+	public abstract String getName();
+
+	public abstract String getShortDescription();
+	
+	public abstract String getDescription();
+
+	public abstract CharSequence getUrl();
+
+	public File getGitDir() {
+        return gitdir;
+    }
+
+    public void cancel() {
+        cancelled=true;
+        if (executionThread!=null) {
+            Log.d(TAG, "Interrupting "+executionThread+" due to cancel");
+            executionThread.interrupt();
+        }
+    }
+    
+    public boolean isCancelled() {
+        return cancelled;
+    }
 }

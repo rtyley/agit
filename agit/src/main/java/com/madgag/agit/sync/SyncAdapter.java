@@ -78,8 +78,9 @@ class SyncAdapter extends AbstractThreadedSyncAdapter {
         try {
             repository = Repos.openRepoFor(gitdir);
             RemoteConfig remoteConfig = remoteConfigFor(repository, DEFAULT_REMOTE_NAME);
-            operationExecutor.call(new Fetch(repository, remoteConfig), operationUIContext);
-            syncResult.stats.numUpdates++;
+            if (operationExecutor.call(new Fetch(repository, remoteConfig), operationUIContext, false)!=null) { //feels bery bad
+                syncResult.stats.numUpdates++;
+            }
         } catch (RuntimeException e) {
             Log.w(TAG, "Problem with " + gitdir, e);
         } finally {
@@ -91,7 +92,7 @@ class SyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onSyncCanceled() {
 //        if (currentSyncCancellationSignaller!=null) {
-//            currentSyncCancellationSignaller.setCancelled();
+//            currentSyncCancellationSignaller.cancel();
 //        }
     }
 

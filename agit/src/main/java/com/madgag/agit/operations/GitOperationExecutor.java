@@ -10,17 +10,22 @@ public class GitOperationExecutor {
 
     private static final String TAG = "GOE";
 
-	@Inject RepositoryScope scope;
+	@Inject RepositoryScope repoScope;
     @Inject OperationScope operationScope;
     @Inject Injector injector;
 
-    public OpNotification call(GitOperation operation, OperationUIContext operationUIContext) {
-		scope.enterWithRepoGitdir(operation.getGitDir());
+    public OpNotification call(GitOperation operation, OperationUIContext operationUIContext, boolean interruptExistingOp) {
+		repoScope.enterWithRepoGitdir(operation.getGitDir());
+
 		try {
-            operationScope.enterWithUIContext(operationUIContext);
+            if (!injector.getInstance(RepoOpRegistry.class).setCurrentOperation(operation, interruptExistingOp)) {
+                return null; // it all feels a bit bad
+            }
+
+            operationScope.enterWithUIContext(operation, operationUIContext);
             try {
 			    injector.injectMembers(operation);
-			    return operation.execute();
+			    return operation.executeAndRecordThread();
             } finally {
                 operationScope.exit();
             }
@@ -29,7 +34,7 @@ public class GitOperationExecutor {
             throw e;
         } finally {
             Log.d(TAG, "Exiting call()");
-			scope.exit();
+			repoScope.exit();
 		}
 	}
 }

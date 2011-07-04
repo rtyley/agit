@@ -30,8 +30,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.madgag.agit.blockingprompt.RejectBlockingPromptService;
+import com.madgag.agit.operation.lifecycle.CasualShortTermLifetime;
+import com.madgag.agit.operations.GitAsyncTask;
+import com.madgag.agit.operations.GitAsyncTaskFactory;
+import com.madgag.agit.operations.GitOperationExecutor;
+import com.madgag.agit.operations.OperationUIContext;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
+import org.eclipse.jgit.api.Git;
 import roboguice.inject.InjectView;
 
 import java.io.File;
@@ -43,6 +51,7 @@ import static com.madgag.agit.GitIntents.actionWithSuffix;
 import static com.madgag.agit.GitIntents.gitDirFrom;
 import static com.madgag.agit.R.drawable.ic_title_fetch;
 import static com.madgag.agit.Repos.niceNameFor;
+import static java.util.Arrays.asList;
 
 
 public class RepositoryViewerActivity extends RepoScopedActivityBase {
@@ -58,11 +67,14 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
 	private final static int DELETE_ID=Menu.FIRST;
     private final int PROGRESS_DIALOG=0,DELETION_DIALOG=3;
     @Inject DialogPromptMonkey dialogPromptMonkey;
+    @Inject GitAsyncTaskFactory gitAsyncTaskFactory;
 
     @InjectView(R.id.actionbar) ActionBar actionBar;
     @InjectView(android.R.id.list) ListView listView;
+    @Inject Provider<RejectBlockingPromptService> rejectPrompts;
 
     @Inject RepoSummaryAdapter summaryAdapter;
+    @Inject GitOperationExecutor gitOperationExecutor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,7 +108,8 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
         switch (item.getItemId()) {
         case DELETE_ID:
         	showDialog(DELETION_DIALOG);
-			new RepoDeleter(repo(), RepositoryViewerActivity.this).execute();
+
+            gitAsyncTaskFactory.createTaskFor(new RepoDeleter(repo()), new CasualShortTermLifetime()).execute();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -149,7 +162,7 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
 			progressDialog.setProgress(0);
 			progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 public void onCancel(DialogInterface dialog) {
-                    // repositoryOperationContext.getCurrentOperation().getCancellationSignaller().setCancelled();
+                    // repositoryOperationContext.getCurrentOperation().getCancellationSignaller().cancel();
                 }
             });
 		default:

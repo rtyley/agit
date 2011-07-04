@@ -37,17 +37,19 @@ import static android.R.drawable.stat_sys_download;
 import static android.R.drawable.stat_sys_download_done;
 import static com.madgag.agit.GitIntents.*;
 import static org.eclipse.jgit.lib.Constants.*;
+import static org.eclipse.jgit.lib.Constants.HEAD;
+import static org.eclipse.jgit.lib.Constants.R_HEADS;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;
 import static org.eclipse.jgit.lib.RepositoryCache.close;
 
-public class Clone implements GitOperation {
+public class Clone extends GitOperation {
 
 	public static final String TAG = "Clone";
     
     private final boolean bare;
 	private final URIish sourceUri;
-	private final File directory, gitdir;
-    private String branch = Constants.HEAD;
+	private final File directory;
+    private String branch = HEAD;
 
     @Inject ProgressListener<Progress> progressListener;
     @Inject GitFetchService fetchService;
@@ -55,10 +57,10 @@ public class Clone implements GitOperation {
     @Inject RepoUpdateBroadcaster repoUpdateBroadcaster;
 
     public Clone(boolean bare, URIish sourceUri, File directory) {
+        super(bare ? directory : new File(directory, DOT_GIT));
 		this.bare = bare;
 		this.sourceUri = sourceUri;
 		this.directory = directory;
-		gitdir = bare ? directory : new File(directory, DOT_GIT);
 
 		Log.d(TAG, "Constructed with " + sourceUri + " directory=" + directory
 				+ " gitdir=" + gitdir);
@@ -82,7 +84,7 @@ public class Clone implements GitOperation {
 				checkoutHeadFrom(fetchResult, repository);
 			}
 
-			close(repository); // do with a guice scope?
+			close(repository); // do with a guice repoScope?
 			Log.d(TAG, "Completed checkout!");
 		} catch (Exception e) {
 			Log.e(TAG, "An actual exception", e);
@@ -110,18 +112,16 @@ public class Clone implements GitOperation {
 		Ref branch = guessHEAD(fetchResult);
 		String branchName = branch.getName();
 		Log.d(TAG, "Guessed head branchName=" + branchName);
-		progressListener.publish(new Progress("Performing checkout of "+  shortenRefName(branchName)));
-
+		progressListener.publish(new Progress("Performing checkout of "+ shortenRefName(branchName)));
 
         checkout(db, fetchResult);
 	}
 
     private void checkout(Repository repo, FetchResult result)
-			throws JGitInternalException,
-			MissingObjectException, IncorrectObjectTypeException, IOException {
+			throws JGitInternalException, IOException {
 
-		if (branch.startsWith(Constants.R_HEADS)) {
-			final RefUpdate head = repo.updateRef(Constants.HEAD);
+		if (branch.startsWith(R_HEADS)) {
+			final RefUpdate head = repo.updateRef(HEAD);
 			head.disableRefLog();
 			head.link(branch);
 		}
@@ -132,20 +132,21 @@ public class Clone implements GitOperation {
 
 		final RevCommit commit = parseCommit(repo, head);
 
-		boolean detached = !head.getName().startsWith(Constants.R_HEADS);
-		RefUpdate u = repo.updateRef(Constants.HEAD, detached);
-		u.setNewObjectId(commit.getId());
-		u.forceUpdate();
+        updateRefTo(commit, repo, head);
 
-		if (!bare) {
-			DirCache dc = repo.lockDirCache();
-			DirCacheCheckout co = new DirCacheCheckout(repo, dc,
-					commit.getTree());
-			co.checkout();
-		}
+        DirCache dc = repo.lockDirCache();
+        DirCacheCheckout co = new DirCacheCheckout(repo, dc, commit.getTree());
+        co.checkout();
 	}
 
-	private RevCommit parseCommit(Repository db, Ref branch)
+    private void updateRefTo(RevCommit commit, Repository repo, Ref head) throws IOException {
+        boolean detached = !head.getName().startsWith(R_HEADS);
+        RefUpdate u = repo.updateRef(HEAD, detached);
+        u.setNewObjectId(commit.getId());
+        u.forceUpdate();
+    }
+
+    private RevCommit parseCommit(Repository db, Ref branch)
 			throws MissingObjectException, IncorrectObjectTypeException,
 			IOException {
 		final RevWalk rw = new RevWalk(db);
@@ -187,12 +188,12 @@ public class Clone implements GitOperation {
 	}
 
 	private Ref guessHEAD(final FetchResult result) {
-		final Ref idHEAD = result.getAdvertisedRef(Constants.HEAD);
+		final Ref idHEAD = result.getAdvertisedRef(HEAD);
 		final List<Ref> availableRefs = new ArrayList<Ref>();
 		Ref head = null;
 		for (final Ref r : result.getAdvertisedRefs()) {
 			final String n = r.getName();
-			if (!n.startsWith(Constants.R_HEADS))
+			if (!n.startsWith(R_HEADS))
 				continue;
 			availableRefs.add(r);
 			if (idHEAD == null || head != null)
@@ -228,10 +229,6 @@ public class Clone implements GitOperation {
 
 	public String getShortDescription() {
 		return "Cloning";
-	}
-
-	public File getGitDir() {
-		return gitdir;
 	}
 
     public String toString() {

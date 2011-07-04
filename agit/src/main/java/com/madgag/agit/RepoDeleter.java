@@ -19,38 +19,34 @@
 
 package com.madgag.agit;
 
-import static com.madgag.agit.GitIntents.broadcastIntentForRepoStateChange;
-import static org.apache.commons.io.FileUtils.deleteDirectory;
+import android.util.Log;
+import com.google.inject.Inject;
+import com.madgag.agit.operations.GitOperation;
+import com.madgag.agit.operations.OpNotification;
+import com.madgag.agit.operations.RepoUpdateBroadcaster;
+import org.eclipse.jgit.lib.Repository;
 
 import java.io.File;
 import java.io.IOException;
 
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
-import org.eclipse.jgit.lib.Repository;
+import static android.R.drawable.stat_sys_download;
+import static android.R.drawable.stat_sys_download_done;
+import static com.madgag.agit.Repos.topDirectoryFor;
+import static org.apache.commons.io.FileUtils.deleteDirectory;
 
-public class RepoDeleter extends AsyncTask<Void, Void, Void> {
+public class RepoDeleter extends GitOperation {
 	
 	public static final String TAG = "RepoDeleter";
-	
-	private final File gitdir;
-	private final Context context;
+
+    @Inject RepoUpdateBroadcaster repoUpdateBroadcaster;
     private final File topFolderToDelete;
 
-    RepoDeleter(Repository repository, Context context) {
-        this.gitdir = repository.getDirectory();
-        this.topFolderToDelete = repository.isBare()?repository.getDirectory():repository.getWorkTree();
-		this.context = context;
+    RepoDeleter(Repository repository) {
+        super(repository.getDirectory());
+        this.topFolderToDelete = topDirectoryFor(repository);
     }
-	
-	@Override
-	protected void onPreExecute () {
-		// show 'deleting' dialog in RMA
-	}
-	
-	@Override
-	protected Void doInBackground(Void... args) {
+
+    public OpNotification execute() {
     	try {
     		Log.d(TAG, "Deleting : "+topFolderToDelete);
 			deleteDirectory(topFolderToDelete);
@@ -58,12 +54,39 @@ public class RepoDeleter extends AsyncTask<Void, Void, Void> {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return null;
-    }
-	
-	@Override
-    protected void onPostExecute(Void result) {
-		context.sendBroadcast(broadcastIntentForRepoStateChange(gitdir));
+        
+        repoUpdateBroadcaster.broadcastUpdate();
+		return new OpNotification(stat_sys_download_done, "Deleted", "Delete completed", gitdir.getAbsolutePath());
     }
 
+
+    public int getOngoingIcon() {
+		return stat_sys_download;
+	}
+
+	@Override
+    public String getTickerText() {
+		return "Deleting " + gitdir;
+	}
+
+	public String getName() {
+		return "Delete Repo";
+	}
+
+	public String getDescription() {
+		return "deleting " + gitdir;
+	}
+
+    @Override
+	public CharSequence getUrl() {
+		return "";
+	}
+
+	public String getShortDescription() {
+		return "Deleting Repo";
+	}
+
+    public String toString() {
+        return getClass().getSimpleName()+"["+gitdir+"]";
+    }
 }
