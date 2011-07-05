@@ -25,6 +25,17 @@
                 android:layout_width="fill_parent"
                 android:hint="@string/clone_url_hint"
                 android:inputType="textUri" />
+
+            <TextView
+                android:id="@+id/ProtocolLabel"
+                android:layout_gravity="right"
+                android:background="@drawable/label_background"
+                android:textStyle="bold"
+                android:textSize="8dip"
+                android:textColor="@android:color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

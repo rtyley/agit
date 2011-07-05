@@ -24,6 +24,12 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".AboutUsingSshActivity">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
 		<activity android:name="RepositoryViewerActivity"
 			android:label="@string/app_name">
 			<intent-filter>

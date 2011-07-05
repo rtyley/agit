@@ -31,13 +31,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.inject.internal.Iterables;
-import com.google.inject.internal.Lists;
 import com.markupartist.android.widget.ActionBar;
 import org.eclipse.jgit.lib.RepositoryCache;
-import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.TransportProtocol;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.util.FS;
@@ -47,9 +42,8 @@ import roboguice.inject.InjectView;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.NoSuchElementException;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_LONG;
@@ -59,10 +53,11 @@ import static com.madgag.agit.GitIntents.EXTRA_SOURCE_URI;
 import static com.madgag.agit.GitIntents.EXTRA_TARGET_DIR;
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
 import static com.madgag.agit.R.string.clone_launcher_activity_title;
+import static com.madgag.agit.R.string.ssh_agent_not_correctly_installed;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
+import static com.madgag.agit.TransportProtocols.niceProtocolNameFor;
 import static com.madgag.agit.TransportProtocols.protocolFor;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
-import static org.eclipse.jgit.transport.Transport.getTransportProtocols;
 
 public class CloneLauncherActivity extends RoboActivity {
 	private final static String TAG="CloneLauncherActivity";
@@ -74,6 +69,7 @@ public class CloneLauncherActivity extends RoboActivity {
     @InjectView(R.id.BareRepo) CheckBox bareRepoCheckbox;
     @InjectView(R.id.GoCloneButton) Button button;
 	@InjectView(R.id.UseDefaultGitDirLocation) CheckBox useDefaultGitDirLocationButton;
+    @InjectView(R.id.ProtocolLabel) TextView protocolLabel;
 	@InjectView(R.id.CloneReadinessMessage) TextView cloneReadinessMessageView;
 	@InjectView(R.id.GitDirEditText) EditText gitDirEditText;
     @InjectView(R.id.CloneUrlEditText) EditText cloneUrlEditText;
@@ -117,22 +113,30 @@ public class CloneLauncherActivity extends RoboActivity {
         if (cloneUriText.length()<=3) {
             message = getString(R.string.clone_readiness_needs_user_to_enter_a_url);
         }
-    	URIish cloneUri=null;
+    	URIish cloneUri = null;
+        String transportProtocol = null;
     	try {
     		cloneUri=getCloneUri();
-            // TODO Use Transport.getTransportProtocols() & canHandle to guide users to setup ssh correctly if they enter an SSH uri
-
-            TransportProtocol transportProtocol = protocolFor(cloneUri);
-            if (transportProtocol!=null) {
-                Log.w(TAG, "Smells like "+transportProtocol.getName());
-            } else {
-                Log.w(TAG, "Don't recognise protocol");
-            }
-
-
+            transportProtocol = niceProtocolNameFor(cloneUri);
         } catch (URISyntaxException e) {
     		enableClone=false;
     	}
+        
+        if (transportProtocol!=null) {
+            Log.w(TAG, "Smells like "+ transportProtocol);
+            protocolLabel.setText("Protocol: "+ transportProtocol);
+            protocolLabel.setVisibility(VISIBLE);
+            if (transportProtocol.equals("SSH")) {
+                boolean sshAgentAvailable = PERMISSION_GRANTED == checkCallingOrSelfPermission("org.openintents.ssh.permission.ACCESS_SSH_AGENT");
+                Log.d(TAG, "SSH good : "+ sshAgentAvailable);
+                if (!sshAgentAvailable) {
+                    message = getString(ssh_agent_not_correctly_installed);
+                }
+            }
+        } else {
+            Log.w(TAG, "Don't recognise protocol");
+            protocolLabel.setVisibility(INVISIBLE);
+        }
     	
     	gitDirEditText.setEnabled(!useDefaultGitDirLocationButton.isChecked());
     	if (useDefaultGitDirLocationButton.isChecked()) {
@@ -152,6 +156,21 @@ public class CloneLauncherActivity extends RoboActivity {
                 message=getString(R.string.clone_readiness_folder_already_exists);
             }
 		}
+        displayHelp(message);
+        
+		button.setEnabled(enableClone);
+    }
+
+    private TransportProtocol getNonTrivialProtocolFor(URIish uri) {
+        TransportProtocol transportProtocol;
+        transportProtocol = protocolFor(uri);
+        if (transportProtocol.getSchemes().contains("file")) {
+            transportProtocol = null; // Don't show the git bundle protocol, it's never
+        }
+        return transportProtocol;
+    }
+
+    private void displayHelp(CharSequence message) {
         cloneReadinessMessageView.setVisibility(message==null?INVISIBLE:VISIBLE);
         if (message!=null) {
             Editable spana=new SpannableStringBuilder(message);
@@ -163,6 +182,8 @@ public class CloneLauncherActivity extends RoboActivity {
                         setCursorToEnd(gitDirEditText);
                     } else if (command.equals("view_existing_repo")) {
                         startActivity(manageRepoIntent(existingRepoGitDir()));
+                    } else if (command.equals("view_ssh_instructions")) {
+                        startActivity(new Intent(CloneLauncherActivity.this, AboutUsingSshActivity.class));
                     } else if (command.equals("suggest_repo")) {
                         startActivityForResult(new GitIntentBuilder("repo.SUGGEST").toIntent(), 0);
                     }
@@ -171,8 +192,6 @@ public class CloneLauncherActivity extends RoboActivity {
             cloneReadinessMessageView.setText(spana);
             cloneReadinessMessageView.setMovementMethod(LinkMovementMethod.getInstance());
         }
-        
-		button.setEnabled(enableClone);
     }
 
     private File existingRepoGitDir() {

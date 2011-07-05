@@ -23,15 +23,15 @@ import com.markupartist.android.widget.ActionBar;
 
 import static com.madgag.agit.R.string.about_activity_title;
 
-public class AboutActivity extends MarkdownActivityBase {
+public class AboutUsingSshActivity extends MarkdownActivityBase {
 
     @Override
     protected String markdownFile() {
-        return "CREDITS.markdown";
+        return "Using-SSH.markdown";
     }
 
     @Override
     protected void configureActionBar(ActionBar actionBar) {
-        actionBar.setTitle(about_activity_title);
+        actionBar.setTitle(R.string.using_ssh_activity_title);
     }
 }

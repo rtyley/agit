@@ -5,6 +5,7 @@
     <string name="suggest_repos_button">Suggest repos...</string>
     <string name="about_app_menu_option">About</string>
     <string name="about_activity_title">About...</string>
+    <string name="using_ssh_activity_title">SSH Install Guide</string>
     <string name="clone_launcher_activity_title">Clone...</string>
     <string name="clone_menu_option">Clone...</string>
     <string name="enter_clone_url">Url</string>
@@ -14,6 +15,8 @@
     <string name="clone_readiness_needs_user_to_enter_a_url">Enter a repository url - or choose from some #suggest_repo[example repos].</string>
     <string name="clone_readiness_folder_already_exists">Folder already exists- #specify_target_dir[specify an alternative] location?</string>
     <string name="clone_readiness_repository_folder_already_exists">Folder already exists locally- view #view_existing_repo[existing repo]?</string>
+    <string name="ssh_agent_not_correctly_installed">No SSH-agent available - view #view_ssh_instructions[SSH setup guide]?</string>
+
 
     <string name="use_default_target_directory_checkbox_label">Use default location</string>
     <string name="bare_repo_checkbox_label">Bare</string>
