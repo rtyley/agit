@@ -36,7 +36,5 @@ public class RepositoryViewHolder implements ViewHolder<RepoSummary> {
             detail.setText(repoSummary.getRepo().getDirectory().getAbsolutePath());
         }
         commitTime.setText(commitTimeText+ ITALIC_CLIPPING_BUFFER);
-
-
     }
 }
