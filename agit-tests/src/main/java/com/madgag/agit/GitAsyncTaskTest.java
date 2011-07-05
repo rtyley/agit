@@ -104,14 +104,14 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
         assertThat(readmeFile, exists());
 	}
 
-    @LargeTest
-	public void testCanCloneAllSuggestedRepos() throws Exception {
-        for (SuggestedRepo suggestedRepo : SUGGESTIONS) {
-            Repository repo = executeAndWaitFor(new Clone(true, new URIish(suggestedRepo.getURI()), newFolder()));
-            Map<String,Ref> allRefs = repo.getAllRefs();
-            assertThat("Refs for " + suggestedRepo + " @ " + repo, allRefs.size(), greaterThan(0));
-        }
-	}
+//    @LargeTest
+//	public void testCanCloneAllSuggestedRepos() throws Exception {
+//        for (SuggestedRepo suggestedRepo : SUGGESTIONS) {
+//            Repository repo = executeAndWaitFor(new Clone(true, new URIish(suggestedRepo.getURI()), newFolder()));
+//            Map<String,Ref> allRefs = repo.getAllRefs();
+//            assertThat("Refs for " + suggestedRepo + " @ " + repo, allRefs.size(), greaterThan(0));
+//        }
+//	}
 
 	private Repository executeAndWaitFor(final GitOperation operation)
 			throws InterruptedException, IOException {
