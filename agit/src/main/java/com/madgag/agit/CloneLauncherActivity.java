@@ -31,8 +31,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.inject.internal.Iterables;
+import com.google.inject.internal.Lists;
 import com.markupartist.android.widget.ActionBar;
 import org.eclipse.jgit.lib.RepositoryCache;
+import org.eclipse.jgit.transport.Transport;
+import org.eclipse.jgit.transport.TransportProtocol;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.util.FS;
 import roboguice.activity.RoboActivity;
@@ -41,17 +47,22 @@ import roboguice.inject.InjectView;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.NoSuchElementException;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
+import static com.google.common.collect.Iterables.find;
 import static com.madgag.agit.GitIntents.EXTRA_SOURCE_URI;
 import static com.madgag.agit.GitIntents.EXTRA_TARGET_DIR;
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
 import static com.madgag.agit.R.string.clone_launcher_activity_title;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
+import static com.madgag.agit.TransportProtocols.protocolFor;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
+import static org.eclipse.jgit.transport.Transport.getTransportProtocols;
 
 public class CloneLauncherActivity extends RoboActivity {
 	private final static String TAG="CloneLauncherActivity";
@@ -110,7 +121,16 @@ public class CloneLauncherActivity extends RoboActivity {
     	try {
     		cloneUri=getCloneUri();
             // TODO Use Transport.getTransportProtocols() & canHandle to guide users to setup ssh correctly if they enter an SSH uri
-    	} catch (URISyntaxException e) {
+
+            TransportProtocol transportProtocol = protocolFor(cloneUri);
+            if (transportProtocol!=null) {
+                Log.w(TAG, "Smells like "+transportProtocol.getName());
+            } else {
+                Log.w(TAG, "Don't recognise protocol");
+            }
+
+
+        } catch (URISyntaxException e) {
     		enableClone=false;
     	}
     	
