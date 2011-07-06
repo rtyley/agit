@@ -2,12 +2,9 @@ package com.madgag.agit.guice;
 
 import com.google.common.collect.MapMaker;
 import com.google.inject.*;
-import com.madgag.agit.CancellationSignaller;
-import com.madgag.agit.Progress;
-import com.madgag.agit.ProgressListener;
+import com.madgag.agit.operations.*;
+import com.madgag.agit.operations.Progress;
 import com.madgag.agit.blockingprompt.BlockingPromptService;
-import com.madgag.agit.operations.GitOperation;
-import com.madgag.agit.operations.OperationUIContext;
 
 import java.util.Map;
 

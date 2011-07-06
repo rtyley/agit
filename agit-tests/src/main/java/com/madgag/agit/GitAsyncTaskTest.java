@@ -19,35 +19,26 @@
 
 package com.madgag.agit;
 
-import android.net.Uri;
-import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.util.Log;
 import com.madgag.agit.operation.lifecycle.OperationLifecycleSupport;
 import com.madgag.agit.operations.*;
-import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.URIish;
-import org.hamcrest.Matchers;
 import roboguice.test.RoboUnitTestCase;
 import roboguice.util.RoboLooperThread;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import static com.madgag.agit.GitTestUtils.*;
-import static com.madgag.agit.SuggestedRepo.SUGGESTIONS;
 import static com.madgag.agit.matchers.HasGitObjectMatcher.hasGitObject;
 import static com.madgag.hamcrest.FileExistenceMatcher.exists;
 import static com.madgag.hamcrest.FileLengthMatcher.ofLength;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.Thread.currentThread;
-import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;

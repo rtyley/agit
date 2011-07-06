@@ -2,23 +2,18 @@ package com.madgag.agit;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
 import com.google.inject.Inject;
-import com.google.inject.internal.Iterables;
-import com.google.inject.internal.Lists;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepository;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 
 import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Lists.transform;
-import static com.madgag.agit.Repos.COMMIT_TIME_ORDERING;
-import static com.madgag.agit.Repos.knownRepos;
+import static com.madgag.agit.git.Repos.COMMIT_TIME_ORDERING;
+import static com.madgag.agit.git.Repos.knownRepos;
 
 public class RepoSummary implements HasLatestCommit {
 

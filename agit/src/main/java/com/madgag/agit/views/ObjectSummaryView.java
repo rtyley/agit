@@ -28,16 +28,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.google.inject.Inject;
-import com.madgag.agit.GitObjectFunction;
+import com.madgag.agit.git.GitObjectFunction;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.*;
-import roboguice.inject.InjectView;
-import roboguice.inject.InjectorProvider;
 
-import static android.widget.LinearLayout.VERTICAL;
-import static com.madgag.agit.GitObjects.evaluate;
+import static com.madgag.agit.git.GitObjects.evaluate;
 import static com.madgag.agit.R.id.*;
-import static com.madgag.agit.R.layout.commit_summary_view;
 import static com.madgag.agit.R.layout.object_summary_view;
 import static com.madgag.agit.views.ViewUtil.injectFor;
 

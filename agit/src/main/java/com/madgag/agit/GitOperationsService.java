@@ -37,8 +37,8 @@ import java.net.URISyntaxException;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static com.madgag.agit.GitIntents.*;
-import static com.madgag.agit.Repos.openRepoFor;
-import static com.madgag.agit.Repos.remoteConfigFor;
+import static com.madgag.agit.git.Repos.openRepoFor;
+import static com.madgag.agit.git.Repos.remoteConfigFor;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoPendingIntent;
 import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 

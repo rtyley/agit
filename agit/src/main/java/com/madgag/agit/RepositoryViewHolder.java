@@ -2,18 +2,12 @@ package com.madgag.agit;
 
 import android.view.View;
 import android.widget.TextView;
-import com.madgag.agit.views.TextUtil;
+import com.madgag.agit.util.Time;
 import com.madgag.android.listviews.ViewHolder;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.storage.file.FileRepository;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 
 import static com.madgag.agit.R.id.*;
-import static com.madgag.agit.Repos.niceNameFor;
-import static com.madgag.agit.Time.timeSinceSeconds;
+import static com.madgag.agit.git.Repos.niceNameFor;
 import static com.madgag.agit.views.TextUtil.ITALIC_CLIPPING_BUFFER;
 
 public class RepositoryViewHolder implements ViewHolder<RepoSummary> {
@@ -31,7 +25,7 @@ public class RepositoryViewHolder implements ViewHolder<RepoSummary> {
         RevCommit latestCommit = repoSummary.getLatestCommit();
         if (latestCommit!=null) {
             detail.setText(repoSummary.getLatestCommit().getShortMessage());
-            commitTimeText=Time.timeSinceSeconds(latestCommit.getCommitTime());
+            commitTimeText= Time.timeSinceSeconds(latestCommit.getCommitTime());
         } else {
             detail.setText(repoSummary.getRepo().getDirectory().getAbsolutePath());
         }

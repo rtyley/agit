@@ -10,22 +10,19 @@ import android.util.Log;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.madgag.agit.CancellationSignaller;
-import com.madgag.agit.Progress;
-import com.madgag.agit.ProgressListener;
-import com.madgag.agit.Repos;
+import com.madgag.agit.operations.Progress;
+import com.madgag.agit.operations.*;
+import com.madgag.agit.git.Repos;
 import com.madgag.agit.blockingprompt.RejectBlockingPromptService;
-import com.madgag.agit.operations.Fetch;
-import com.madgag.agit.operations.GitOperationExecutor;
-import com.madgag.agit.operations.OperationUIContext;
+import com.madgag.agit.operations.ProgressListener;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.RemoteConfig;
 import roboguice.inject.ContextScope;
 
 import java.io.File;
 
-import static com.madgag.agit.Repos.knownRepos;
-import static com.madgag.agit.Repos.remoteConfigFor;
+import static com.madgag.agit.git.Repos.knownRepos;
+import static com.madgag.agit.git.Repos.remoteConfigFor;
 import static java.util.Arrays.asList;
 import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 import static org.eclipse.jgit.lib.RepositoryCache.close;

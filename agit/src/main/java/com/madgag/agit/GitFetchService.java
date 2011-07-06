@@ -19,9 +19,9 @@
 
 package com.madgag.agit;
 
+import com.madgag.agit.git.TransportFactory;
 import com.madgag.agit.guice.OperationScoped;
-import com.madgag.agit.guice.RepositoryScoped;
-import com.madgag.agit.operations.RepoUpdateBroadcaster;
+import com.madgag.agit.operations.*;
 import org.eclipse.jgit.errors.NotSupportedException;
 import org.eclipse.jgit.errors.TransportException;
 import org.eclipse.jgit.transport.*;
@@ -41,7 +41,8 @@ public class GitFetchService {
 	private final TransportFactory transportFactory;
     private final ProgressListener<Progress> progressListener;
     @Inject RepoUpdateBroadcaster repoUpdateBroadcaster;
-    @Inject CancellationSignaller cancellationSignaller;
+    @Inject
+    CancellationSignaller cancellationSignaller;
 	
 	@Inject
 	public GitFetchService(TransportFactory transportFactory, ProgressListener<Progress> progressListener) {

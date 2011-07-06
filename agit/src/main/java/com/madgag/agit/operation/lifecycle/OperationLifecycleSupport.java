@@ -1,6 +1,6 @@
 package com.madgag.agit.operation.lifecycle;
 
-import com.madgag.agit.Progress;
+import com.madgag.agit.operations.Progress;
 import com.madgag.agit.operations.OpNotification;
 
 public interface OperationLifecycleSupport {

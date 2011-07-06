@@ -33,8 +33,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.Iterables.transform;
-import static com.madgag.agit.Repos.COMMIT_TIME_ORDERING;
-import static com.madgag.agit.Time.timeSinceSeconds;
+import static com.madgag.agit.git.Repos.COMMIT_TIME_ORDERING;
+import static com.madgag.agit.util.Time.timeSinceSeconds;
 import static org.eclipse.jgit.lib.Constants.R_REMOTES;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;
 

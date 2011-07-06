@@ -1,13 +1,12 @@
 package com.madgag.agit;
 
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.madgag.agit.views.TextUtil;
+import com.madgag.agit.util.Time;
 import com.madgag.android.lazydrawables.ImageSession;
 import com.madgag.android.listviews.ViewHolder;
 import org.eclipse.jgit.revwalk.RevCommit;

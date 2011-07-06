@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.madgag.agit;
+package com.madgag.android.views;
 
 import android.content.Context;
 import android.graphics.Canvas;

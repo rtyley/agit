@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import com.madgag.android.ClickableText;
 import com.markupartist.android.widget.ActionBar;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.transport.TransportProtocol;
@@ -55,8 +56,8 @@ import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
 import static com.madgag.agit.R.string.clone_launcher_activity_title;
 import static com.madgag.agit.R.string.ssh_agent_not_correctly_installed;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
-import static com.madgag.agit.TransportProtocols.niceProtocolNameFor;
-import static com.madgag.agit.TransportProtocols.protocolFor;
+import static com.madgag.agit.git.TransportProtocols.niceProtocolNameFor;
+import static com.madgag.agit.git.TransportProtocols.protocolFor;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
 
 public class CloneLauncherActivity extends RoboActivity {

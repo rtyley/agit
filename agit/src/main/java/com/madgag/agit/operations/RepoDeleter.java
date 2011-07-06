@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.madgag.agit;
+package com.madgag.agit.operations;
 
 import android.util.Log;
 import com.google.inject.Inject;
@@ -31,7 +31,7 @@ import java.io.IOException;
 
 import static android.R.drawable.stat_sys_download;
 import static android.R.drawable.stat_sys_download_done;
-import static com.madgag.agit.Repos.topDirectoryFor;
+import static com.madgag.agit.git.Repos.topDirectoryFor;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
 
 public class RepoDeleter extends GitOperation {
@@ -41,7 +41,7 @@ public class RepoDeleter extends GitOperation {
     @Inject RepoUpdateBroadcaster repoUpdateBroadcaster;
     private final File topFolderToDelete;
 
-    RepoDeleter(Repository repository) {
+    public RepoDeleter(Repository repository) {
         super(repository.getDirectory());
         this.topFolderToDelete = topDirectoryFor(repository);
     }

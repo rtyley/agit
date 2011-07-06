@@ -17,12 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.madgag.agit;
-
-import static org.eclipse.jgit.lib.Constants.OBJ_BLOB;
-import static org.eclipse.jgit.lib.Constants.OBJ_COMMIT;
-import static org.eclipse.jgit.lib.Constants.OBJ_TAG;
-import static org.eclipse.jgit.lib.Constants.OBJ_TREE;
+package com.madgag.agit.git;
 
 import org.eclipse.jgit.revwalk.RevBlob;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -30,19 +25,24 @@ import org.eclipse.jgit.revwalk.RevObject;
 import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevTree;
 
-public class GitObjects {
-	public static <T> T evaluate(RevObject revObject, GitObjectFunction<T> f) {
-		switch (revObject.getType()) {
-			case OBJ_COMMIT:
-				return f.apply((RevCommit) revObject);
-			case OBJ_TREE:
-				return f.apply((RevTree) revObject);
-			case OBJ_BLOB:
-				return f.apply((RevBlob) revObject);
-			case OBJ_TAG:
-				return f.apply((RevTag) revObject);
-			default:
-				throw new IllegalArgumentException("Git object type '"+revObject.getType()+"' unknown");
-		}
+public interface GitObjectFunction<T> {
+	
+	T apply(RevCommit commit);
+	T apply(RevTree tree);
+	T apply(RevBlob blob);
+	T apply(RevTag tag);
+	
+	public static abstract class Base<T> implements GitObjectFunction<T> {
+
+		public T apply(RevCommit commit) { return applyDefault(commit); }
+
+		public T apply(RevTree tree) { return applyDefault(tree); }
+
+		public T apply(RevBlob blob) { return applyDefault(blob); }
+
+		public T apply(RevTag tag) { return applyDefault(tag); }
+		
+		public abstract T applyDefault(RevObject revObject);
+		
 	}
 }

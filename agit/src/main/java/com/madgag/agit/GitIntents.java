@@ -19,7 +19,7 @@
 
 package com.madgag.agit;
 
-import static com.madgag.agit.Repos.openRepoFor;
+import static com.madgag.agit.git.Repos.openRepoFor;
 
 import java.io.File;
 

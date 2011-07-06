@@ -9,7 +9,7 @@
 		    android:id="@+id/actionbar"
 		    style="@style/ActionBar"
 	        />
-	<com.madgag.agit.views.FixEclairTabHost
+	<com.madgag.android.views.FixEclairTabHost
         android:id="@android:id/tabhost"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -33,7 +33,7 @@
                 android:layout_weight="1"
             />
         </LinearLayout>
-    </com.madgag.agit.views.FixEclairTabHost>
+    </com.madgag.android.views.FixEclairTabHost>
 	
 		
 </LinearLayout>

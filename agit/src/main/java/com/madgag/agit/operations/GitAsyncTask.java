@@ -5,21 +5,15 @@ import static java.lang.System.currentTimeMillis;
 
 import java.util.concurrent.Future;
 
-import android.R;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
-import com.madgag.agit.guice.RepositoryScope;
-import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 import org.connectbot.service.PromptHelper;
 import roboguice.util.RoboAsyncTask;
 import android.os.Handler;
 import android.util.Log;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.assistedinject.Assisted;
-import com.madgag.agit.Progress;
-import com.madgag.agit.ProgressListener;
 import com.madgag.agit.operation.lifecycle.OperationLifecycleSupport;
 
 public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements ProgressListener<Progress> {

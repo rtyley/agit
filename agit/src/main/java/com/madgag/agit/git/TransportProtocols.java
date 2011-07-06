@@ -1,4 +1,4 @@
-package com.madgag.agit;
+package com.madgag.agit.git;
 
 import android.util.Log;
 import org.eclipse.jgit.JGitText;

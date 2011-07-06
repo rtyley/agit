@@ -4,8 +4,6 @@ package com.madgag.agit.operations;
 import android.util.Log;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import com.madgag.agit.Progress;
-import com.madgag.agit.ProgressListener;
 import com.madgag.agit.guice.RepositoryScoped;
 
 import java.io.File;

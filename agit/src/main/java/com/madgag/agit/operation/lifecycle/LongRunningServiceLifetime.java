@@ -6,7 +6,7 @@ import android.app.Service;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.madgag.agit.Progress;
+import com.madgag.agit.operations.Progress;
 import com.madgag.agit.R;
 import com.madgag.agit.operations.OpNotification;
 

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.madgag.agit;
+package com.madgag.agit.git;
 
 import static android.os.Environment.getExternalStorageDirectory;
 import static com.google.common.collect.Lists.newArrayList;
@@ -31,6 +31,7 @@ import java.util.List;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
+import com.madgag.agit.HasLatestCommit;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.lib.RepositoryCache.FileKey;

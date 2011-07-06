@@ -2,7 +2,7 @@ package com.madgag.agit;
 
 import java.io.File;
 
-import com.madgag.agit.Repos;
+import com.madgag.agit.git.Repos;
 import org.eclipse.jgit.lib.Repository;
 
 import com.google.inject.Inject;

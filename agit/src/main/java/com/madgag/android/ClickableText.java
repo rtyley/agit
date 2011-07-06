@@ -1,4 +1,4 @@
-package com.madgag.agit;
+package com.madgag.android;
 
 import android.nfc.Tag;
 import android.text.Editable;

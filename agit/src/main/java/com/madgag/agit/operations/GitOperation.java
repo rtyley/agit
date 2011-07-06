@@ -2,11 +2,7 @@ package com.madgag.agit.operations;
 
 import java.io.File;
 
-import android.nfc.Tag;
 import android.util.Log;
-import com.madgag.agit.CancellationSignaller;
-import com.madgag.agit.Progress;
-import com.madgag.agit.ProgressListener;
 
 import static java.lang.Thread.currentThread;
 

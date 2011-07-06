@@ -1,4 +1,4 @@
-package com.madgag.agit.views;
+package com.madgag.android.views;
 
 
 import android.content.Context;

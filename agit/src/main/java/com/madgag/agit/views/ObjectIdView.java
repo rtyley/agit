@@ -20,32 +20,18 @@
 package com.madgag.agit.views;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.text.*;
 import android.text.style.AlignmentSpan;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.inject.Inject;
-import com.madgag.agit.R;
-import com.madgag.android.lazydrawables.ImageSession;
 import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.PersonIdent;
-import roboguice.inject.InjectorProvider;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
-import static android.content.Context.WINDOW_SERVICE;
 import static android.text.Html.fromHtml;
 import static android.text.Layout.Alignment.ALIGN_CENTER;
-import static android.text.Spanned.SPAN_INCLUSIVE_INCLUSIVE;
 import static android.widget.Toast.LENGTH_SHORT;
-import static com.madgag.agit.R.string.object_id_copied;
-import static com.madgag.agit.Time.timeSinceMS;
-import static com.madgag.android.lazydrawables.gravatar.Gravatars.gravatarIdFor;
 
 public class ObjectIdView extends TextView {
 

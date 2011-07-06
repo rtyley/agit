@@ -36,6 +36,7 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.jcraft.jsch.HostKeyRepository;
 import com.madgag.agit.blockingprompt.*;
+import com.madgag.agit.git.TransportFactory;
 import com.madgag.agit.guice.OperationScope;
 import com.madgag.agit.guice.RepositoryScope;
 import com.madgag.agit.guice.RepositoryScoped;

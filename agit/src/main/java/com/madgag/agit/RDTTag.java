@@ -22,6 +22,7 @@ package com.madgag.agit;
 import com.google.common.base.Function;
 import com.google.inject.Inject;
 import com.madgag.agit.RDTTag.TagSummary;
+import com.madgag.agit.git.GitObjectFunction;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
@@ -33,7 +34,7 @@ import java.util.List;
 
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
-import static com.madgag.agit.GitObjects.evaluate;
+import static com.madgag.agit.git.GitObjects.evaluate;
 import static com.madgag.agit.RDTTag.TagSummary.SORT_BY_TIME_AND_NAME;
 import static java.util.Collections.sort;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;

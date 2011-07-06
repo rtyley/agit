@@ -1,8 +1,6 @@
 package com.madgag.agit.operations;
 
 import com.google.inject.Provider;
-import com.madgag.agit.Progress;
-import com.madgag.agit.ProgressListener;
 import com.madgag.agit.blockingprompt.BlockingPromptService;
 
 public class OperationUIContext {

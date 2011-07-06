@@ -33,13 +33,11 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.madgag.agit.blockingprompt.RejectBlockingPromptService;
 import com.madgag.agit.operation.lifecycle.CasualShortTermLifetime;
-import com.madgag.agit.operations.GitAsyncTask;
 import com.madgag.agit.operations.GitAsyncTaskFactory;
 import com.madgag.agit.operations.GitOperationExecutor;
-import com.madgag.agit.operations.OperationUIContext;
+import com.madgag.agit.operations.RepoDeleter;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
-import org.eclipse.jgit.api.Git;
 import roboguice.inject.InjectView;
 
 import java.io.File;
@@ -50,8 +48,7 @@ import static com.madgag.agit.GitIntents.REPO_STATE_CHANGED_BROADCAST;
 import static com.madgag.agit.GitIntents.actionWithSuffix;
 import static com.madgag.agit.GitIntents.gitDirFrom;
 import static com.madgag.agit.R.drawable.ic_title_fetch;
-import static com.madgag.agit.Repos.niceNameFor;
-import static java.util.Arrays.asList;
+import static com.madgag.agit.git.Repos.niceNameFor;
 
 
 public class RepositoryViewerActivity extends RepoScopedActivityBase {

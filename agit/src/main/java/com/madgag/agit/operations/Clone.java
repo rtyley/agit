@@ -1,13 +1,9 @@
 package com.madgag.agit.operations;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import com.google.inject.Inject;
 import com.madgag.agit.GitFetchService;
-import com.madgag.agit.GitIntents;
-import com.madgag.agit.Progress;
-import com.madgag.agit.ProgressListener;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
@@ -35,7 +31,6 @@ import java.util.List;
 
 import static android.R.drawable.stat_sys_download;
 import static android.R.drawable.stat_sys_download_done;
-import static com.madgag.agit.GitIntents.*;
 import static org.eclipse.jgit.lib.Constants.*;
 import static org.eclipse.jgit.lib.Constants.HEAD;
 import static org.eclipse.jgit.lib.Constants.R_HEADS;

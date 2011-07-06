@@ -11,8 +11,8 @@ import java.util.Arrays;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
-import static com.madgag.agit.DigestUtils.encodeHex;
-import static com.madgag.agit.DigestUtils.md5;
+import static com.madgag.agit.util.DigestUtils.encodeHex;
+import static com.madgag.agit.util.DigestUtils.md5;
 
 @Singleton
 public class CuriousHostKeyRepository implements HostKeyRepository {

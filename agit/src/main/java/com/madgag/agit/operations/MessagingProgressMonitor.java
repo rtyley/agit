@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.madgag.agit;
+package com.madgag.agit.operations;
 
 import com.google.inject.Inject;
 import com.madgag.agit.guice.OperationScoped;
