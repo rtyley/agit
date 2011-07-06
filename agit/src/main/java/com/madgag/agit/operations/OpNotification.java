@@ -4,7 +4,11 @@ public class OpNotification {
 	private final int icon;
 	private final String tickerText, eventTitle, eventDetail;
     private final boolean successful;
-	
+
+    public OpNotification(int icon, String tickerText, String eventDetail) {
+		this(icon, tickerText, tickerText, eventDetail, true);
+	}
+
 	public OpNotification(int icon, String tickerText, String eventTitle, String eventDetail) {
 		this(icon, tickerText, eventTitle, eventDetail, true);
 	}

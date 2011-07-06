@@ -75,8 +75,8 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
         boolean cancelled = operation.isCancelled();
         Log.d(TAG, "Examining exception "+e+" op "+operation+" cancelled="+cancelled);
         OpNotification notification =
-                cancelled ?new OpNotification(stat_notify_error, opName +" cancelled", opName +" cancelled", operation.getUrl().toString()):
-                        new OpNotification(stat_notify_error, opName +" has failed","Due to "+e.getMessage(), "");
+                cancelled ?new OpNotification(stat_notify_error, opName +" cancelled", operation.getUrl().toString()):
+                        new OpNotification(stat_notify_error, opName +" failed", "Due to "+e.getMessage());
         lifecycleSupport.error(notification);
         lifecycleSupport.completed(notification);
     }
