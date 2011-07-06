@@ -1,9 +1,11 @@
 Agit - Android Git Client
 =========================
 
+© 2011 Roberto Tyley
+
 https://market.android.com/details?id=com.madgag.agit
 
-Agit is an open-source Git client for Android devices, allowing you to checkout the entire history of any Git repository while on the move, review changes and store for full offline access.
+Agit is an open-source (GPL v3) Git client for Android devices, allowing you to checkout the entire history of any Git repository while on the move, review changes and store for full offline access. The app can be bought on the [Android Market](https://market.android.com/details?id=com.madgag.agit), doing so supports the author in the creation of open-source software.
 
  - Clone remote Git repositories onto your phone!
  - Just like regular Git, the full history is stored for offline access.
@@ -13,4 +15,8 @@ Agit is an open-source Git client for Android devices, allowing you to checkout 
  - Periodic sync enabled on Android 2.2 and later - latest commits fetched quarter-hourly.
  - Cloning substantial projects like Mongo or JQuery will take a few minutes to perform - fortunately subsequent fetches will be much faster.
 
+
+User Documentation: https://github.com/rtyley/agit/wiki
+
+Twitter: http://twitter.com/#!/AgitApp
 
