@@ -171,11 +171,8 @@ public class Clone extends GitOperation {
 		} catch (URISyntaxException e2) {
 			throw new RuntimeException(e2);
 		}
-		// dst.getConfig().setBoolean("core", null, "bare", false);
-		// dst.getConfig().save();
 
 		remote.addURI(sourceUri);
-		Log.i(TAG, "GAMMA");
 		remote.addFetchRefSpec(new RefSpec().setForceUpdate(true)
 				.setSourceDestination(R_HEADS + "*",
 						R_REMOTES + remoteName + "/*"));
