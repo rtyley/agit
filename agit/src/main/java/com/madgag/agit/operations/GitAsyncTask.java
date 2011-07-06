@@ -57,7 +57,7 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
     	startTime = currentTimeMillis();
     }
 
-	public OpNotification call() {
+	public OpNotification call() throws Exception {
         return operationExecutor.call(operation, new OperationUIContext(this, promptHelperProvider), true);
 	}
 	
@@ -76,7 +76,7 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
         Log.d(TAG, "Examining exception "+e+" op "+operation+" cancelled="+cancelled);
         OpNotification notification =
                 cancelled ?new OpNotification(stat_notify_error, opName +" cancelled", operation.getUrl().toString()):
-                        new OpNotification(stat_notify_error, opName +" failed", "Due to "+e.getMessage());
+                        new OpNotification(stat_notify_error, opName +" failed", e.getMessage());
         lifecycleSupport.error(notification);
         lifecycleSupport.completed(notification);
     }

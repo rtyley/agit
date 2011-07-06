@@ -81,7 +81,7 @@ class SyncAdapter extends AbstractThreadedSyncAdapter {
             if (operationExecutor.call(new Fetch(repository, remoteConfig), operationUIContext, false)!=null) { //feels bery bad
                 syncResult.stats.numUpdates++;
             }
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             Log.w(TAG, "Problem with " + gitdir, e);
         } finally {
             if (repository!=null)

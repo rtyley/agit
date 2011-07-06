@@ -14,7 +14,7 @@ public class GitOperationExecutor {
     @Inject OperationScope operationScope;
     @Inject Injector injector;
 
-    public OpNotification call(GitOperation operation, OperationUIContext operationUIContext, boolean interruptExistingOp) {
+    public OpNotification call(GitOperation operation, OperationUIContext operationUIContext, boolean interruptExistingOp) throws Exception {
 		repoScope.enterWithRepoGitdir(operation.getGitDir());
 
 		try {
@@ -27,13 +27,11 @@ public class GitOperationExecutor {
 			    injector.injectMembers(operation);
 			    return operation.executeAndRecordThread();
             } finally {
+                Log.d(TAG, "Exiting op scope");
                 operationScope.exit();
             }
-		} catch (RuntimeException e) {
-            Log.e(TAG, "Failed doing "+operation, e);
-            throw e;
         } finally {
-            Log.d(TAG, "Exiting call()");
+            Log.d(TAG, "Exiting repo scope");
 			repoScope.exit();
 		}
 	}

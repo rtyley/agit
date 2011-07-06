@@ -66,30 +66,26 @@ public class Clone extends GitOperation {
 				+ " gitdir=" + gitdir);
 	}
 
-	public OpNotification execute() {
+	public OpNotification execute() throws Exception {
 		Log.d(TAG, "Starting execute... directory=" + directory);
 		ensureFolderExists(directory.getParentFile());
 
 		String remoteName = DEFAULT_REMOTE_NAME;
 
-		try {
-			Git.init().setBare(bare).setDirectory(directory).call();
-			Repository repository = new FileRepository(gitdir);
-			RemoteConfig remote = addRemote(remoteName, repository);
-            repoUpdateBroadcaster.broadcastUpdate();
+        Git.init().setBare(bare).setDirectory(directory).call();
+        Repository repository = new FileRepository(gitdir);
+        RemoteConfig remote = addRemote(remoteName, repository);
+        repoUpdateBroadcaster.broadcastUpdate();
 
-			FetchResult fetchResult = fetchService.fetch(remote, null);
-            
-			if (!bare) {
-				checkoutHeadFrom(fetchResult, repository);
-			}
+        FetchResult fetchResult = fetchService.fetch(remote, null);
 
-			close(repository); // do with a guice repoScope?
-			Log.d(TAG, "Completed checkout!");
-		} catch (Exception e) {
-			Log.e(TAG, "An actual exception", e);
-			throw new RuntimeException(e);
-		}
+        if (!bare) {
+            checkoutHeadFrom(fetchResult, repository);
+        }
+
+        close(repository); // do with a guice repoScope?
+        Log.d(TAG, "Completed checkout!");
+
 
 		return new OpNotification(stat_sys_download_done, "Cloned "
 				+ sourceUri.getHumanishName(), "Clone completed",

@@ -25,12 +25,12 @@ public abstract class GitOperation implements CancellationSignaller {
 	
 	public abstract int getOngoingIcon();
 
-    public OpNotification executeAndRecordThread() {
+    public OpNotification executeAndRecordThread() throws Exception {
         executionThread = currentThread();
         return execute();
     }
 
-	protected abstract OpNotification execute();
+	protected abstract OpNotification execute() throws Exception;
 
 	public abstract String getName();
 
