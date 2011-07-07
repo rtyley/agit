@@ -173,8 +173,6 @@
                             <option>-keep public class * extends android.content.BroadcastReceiver</option>
                             <option>-keep public class * extends android.content.ContentProvider</option>
 
-                            <option>-keep public class com.madgag.android.listviews.pinnedheader</option>
-                            
                             <option>-keep
                                 public class * extends android.view.View { public &lt;init&gt;(android.content.Context);
                                 public &lt;init&gt;(android.content.Context, android.util.AttributeSet);
