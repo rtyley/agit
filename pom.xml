@@ -245,7 +245,7 @@
             <modules>
                 <module>agit-test-utils</module>
                 <module>agit</module>
-                <module>agit-tests</module>
+                <module>agit-integration-tests</module>
             </modules>
         </profile>
         <profile>
