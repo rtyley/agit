@@ -112,14 +112,6 @@
                 <targetPath>assets/</targetPath>
                 <includes><include>CREDITS.*</include></includes>
             </resource>
-            <resource>
-                <directory>${project.basedir}</directory>
-                <filtering>true</filtering>
-                <targetPath>${project.build.directory}/filtered-manifest</targetPath>
-                <includes>
-                    <include>AndroidManifest.xml</include>
-                </includes>
-            </resource>
         </resources>
 		<plugins>
             <plugin>
@@ -136,9 +128,6 @@
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>maven-android-plugin</artifactId>
-                <configuration>
-                    <androidManifestFile>${project.build.directory}/filtered-manifest/AndroidManifest.xml</androidManifestFile>
-                </configuration>
 			</plugin>
             <plugin>
                 <groupId>com.pyx4me</groupId>
@@ -223,6 +212,11 @@
                             </zipalign>
                         </configuration>
                         <executions>
+                            <execution>
+                                <goals>
+                                    <goal>version-update</goal>
+                                </goals>
+                            </execution>
                             <execution>
                                 <id>alignApk</id>
                                 <phase>package</phase>

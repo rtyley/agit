@@ -28,9 +28,6 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<android.version>2.3.3</android.version>
-        <maven.build.timestamp.format>yyMMdddHH</maven.build.timestamp.format>
-        <!-- Apparently necessary due to http://jira.codehaus.org/browse/MRESOURCES-99 and also more readable -->
-        <versionCode>${maven.build.timestamp}</versionCode>
 	</properties>
     <licenses>
         <license>
@@ -89,20 +86,20 @@
     <build>
         <pluginManagement>
             <plugins>
-                  <plugin>
+                <plugin>
                     <artifactId>maven-release-plugin</artifactId>
                     <version>2.1</version>
                     <configuration>
-                      <!--
-                        During release:perform, enable the "release" profile
-                       -->
-                      <releaseProfiles>release</releaseProfiles>
-                      <goals>validate</goals>
+                        <!--
+                         During release:perform, enable the "release" profile
+                        -->
+                        <releaseProfiles>release</releaseProfiles>
                     </configuration>
-                  </plugin>
-
-
-
+                </plugin>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.5</version>
+                </plugin>
                 <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>maven-android-plugin</artifactId>
@@ -123,6 +120,8 @@
                         </zipalign>
                         <deleteConflictingFiles>true</deleteConflictingFiles>
                         <undeployBeforeDeploy>true</undeployBeforeDeploy>
+                        <versionNameUpdate>true</versionNameUpdate>
+                        <versionCodeAutoIncrement>true</versionCodeAutoIncrement>
                     </configuration>
                 </plugin>
                 <plugin>

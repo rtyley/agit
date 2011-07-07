@@ -1,167 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.madgag.agit"
-	android:installLocation="preferExternal"
-	android:versionName="${project.version}"
-    android:versionCode="${versionCode}">
-	<application
-		android:name="com.madgag.agit.AgitApplication"
-		android:theme="@style/Theme.App"
-		android:icon="@drawable/icon"
-		android:label="@string/app_name"
-		android:debuggable="${android.debuggable}">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="preferExternal" android:versionCode="1000000001" android:versionName="1.13-SNAPSHOT" package="com.madgag.agit">
+	<application android:debuggable="true" android:icon="@drawable/icon" android:label="@string/app_name" android:name="com.madgag.agit.AgitApplication" android:theme="@style/Theme.App">
 
         <activity android:name="DashboardActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
         <activity android:name="AboutActivity">
             <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
         <activity android:name=".AboutUsingSshActivity">
             <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
-		<activity android:name="RepositoryViewerActivity"
-			android:label="@string/app_name">
+		<activity android:label="@string/app_name" android:name="RepositoryViewerActivity">
 			<intent-filter>
-				<action android:name="org.openintents.git.repo.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
+				<action android:name="org.openintents.git.repo.VIEW"/>
+				<category android:name="android.intent.category.DEFAULT"/>
 			</intent-filter>
 			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<data android:scheme="file" />
+				<action android:name="android.intent.action.VIEW"/>
+				<data android:scheme="file"/>
 			</intent-filter>
 		</activity>
 
 		<activity android:name="RDTypeListActivity">
 			<intent-filter>
-				<action android:name="org.openintents.git.remote.LIST" />
-				<category android:name="android.intent.category.DEFAULT" />
+				<action android:name="org.openintents.git.remote.LIST"/>
+				<category android:name="android.intent.category.DEFAULT"/>
 			</intent-filter>
 			<intent-filter>
-				<action android:name="org.openintents.git.tag.LIST" />
-				<category android:name="android.intent.category.DEFAULT" />
+				<action android:name="org.openintents.git.tag.LIST"/>
+				<category android:name="android.intent.category.DEFAULT"/>
 			</intent-filter>
 		</activity>
 
         <activity android:name="RDTBranchListActivity">
 			<intent-filter>
-				<action android:name="org.openintents.git.branch.LIST" />
-				<category android:name="android.intent.category.DEFAULT" />
+				<action android:name="org.openintents.git.branch.LIST"/>
+				<category android:name="android.intent.category.DEFAULT"/>
 			</intent-filter>
 		</activity>
 
         <activity android:name="BranchViewer">
 			<intent-filter>
-				<action android:name="org.openintents.git.branch.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
+				<action android:name="org.openintents.git.branch.VIEW"/>
+				<category android:name="android.intent.category.DEFAULT"/>
 			</intent-filter>
 		</activity>
 
 		<activity android:name="TagViewer">
 			<intent-filter>
-				<action android:name="org.openintents.git.tag.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
+				<action android:name="org.openintents.git.tag.VIEW"/>
+				<category android:name="android.intent.category.DEFAULT"/>
 			</intent-filter>
 		</activity>
 
 		<activity android:name="CommitViewerActivity">
 			<intent-filter>
-				<action android:name="org.openintents.git.commit.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
+				<action android:name="org.openintents.git.commit.VIEW"/>
+				<category android:name="android.intent.category.DEFAULT"/>
 			</intent-filter>
 		</activity>
 
 		<activity android:name="CloneLauncherActivity">
 			<intent-filter>
-				<action android:name="org.openintents.git.clone.PREPARE" />
-				<category android:name="android.intent.category.DEFAULT" />
+				<action android:name="org.openintents.git.clone.PREPARE"/>
+				<category android:name="android.intent.category.DEFAULT"/>
 			</intent-filter>
 		</activity>
 
         <activity android:name="SuggestRepoActivity">
 			<intent-filter>
-				<action android:name="org.openintents.git.repo.SUGGEST" />
-				<category android:name="android.intent.category.DEFAULT" />
+				<action android:name="org.openintents.git.repo.SUGGEST"/>
+				<category android:name="android.intent.category.DEFAULT"/>
 			</intent-filter>
 		</activity>
 
-        <activity android:name=".weblaunchers.GitHubWebLaunchActivity" android:label="@string/app_name">
+        <activity android:label="@string/app_name" android:name=".weblaunchers.GitHubWebLaunchActivity">
 			<intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-				<category android:name="android.intent.category.BROWSABLE"></category>
-                <action android:name="android.intent.action.VIEW"></action>
-				<data android:host="github.com" android:scheme="https" android:pathPattern="/.*/.*" />
-				<data android:host="github.com" android:scheme="http" android:pathPattern="/.*/.*" />
+                <category android:name="android.intent.category.DEFAULT"/>
+				<category android:name="android.intent.category.BROWSABLE"/>
+                <action android:name="android.intent.action.VIEW"/>
+				<data android:host="github.com" android:pathPattern="/.*/.*" android:scheme="https"/>
+				<data android:host="github.com" android:pathPattern="/.*/.*" android:scheme="http"/>
 			</intent-filter>
 		</activity>
 
-        <activity android:name=".weblaunchers.GitoriousWebLaunchActivity" android:label="@string/app_name">
+        <activity android:label="@string/app_name" android:name=".weblaunchers.GitoriousWebLaunchActivity">
 			<intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-				<category android:name="android.intent.category.BROWSABLE"></category>
-                <action android:name="android.intent.action.VIEW"></action>
-				<data android:host="gitorious.org" android:scheme="https" android:pathPattern="/.*/.*" />
-				<data android:host="gitorious.org" android:scheme="http" android:pathPattern="/.*/.*" />
+                <category android:name="android.intent.category.DEFAULT"/>
+				<category android:name="android.intent.category.BROWSABLE"/>
+                <action android:name="android.intent.action.VIEW"/>
+				<data android:host="gitorious.org" android:pathPattern="/.*/.*" android:scheme="https"/>
+				<data android:host="gitorious.org" android:pathPattern="/.*/.*" android:scheme="http"/>
 			</intent-filter>
 		</activity>
 
 		<service android:name="GitOperationsService">
 			<intent-filter>
-				<action android:name="org.openintents.git.FETCH" />
+				<action android:name="org.openintents.git.FETCH"/>
 			</intent-filter>
 			<intent-filter>
-				<action android:name="org.openintents.git.CLONE" />
+				<action android:name="org.openintents.git.CLONE"/>
 			</intent-filter>
 		</service>
 
-        <service android:name=".sync.AccountAuthenticatorService"
-                 android:exported="true" android:process=":auth">
+        <service android:exported="true" android:name=".sync.AccountAuthenticatorService" android:process=":auth">
             <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator" />
+                <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
-            <meta-data android:name="android.accounts.AccountAuthenticator"
-                       android:resource="@xml/authenticator" />
+            <meta-data android:name="android.accounts.AccountAuthenticator" android:resource="@xml/authenticator"/>
         </service>
 
-        <service android:name=".sync.AgitSyncAdapterService"
-         android:exported="true" android:process=":repos">
+        <service android:exported="true" android:name=".sync.AgitSyncAdapterService" android:process=":repos">
          <intent-filter>
-          <action android:name="android.content.SyncAdapter" />
+          <action android:name="android.content.SyncAdapter"/>
          </intent-filter>
-         <meta-data android:name="android.content.SyncAdapter"
-          android:resource="@xml/sync_adapter" />
+         <meta-data android:name="android.content.SyncAdapter" android:resource="@xml/sync_adapter"/>
         </service>
 
-        <provider android:name=".sync.DummyProvider"
-            android:authorities="com.madgag.agit.sync"
-            android:syncable="true"
-            android:label="Git Repos" />
+        <provider android:authorities="com.madgag.agit.sync" android:label="Git Repos" android:name=".sync.DummyProvider" android:syncable="true"/>
 
-		<provider android:name="GitInfoProvider" android:authorities="com.madgag.agit.gitinfoprovider"></provider>
+		<provider android:authorities="com.madgag.agit.gitinfoprovider" android:name="GitInfoProvider"/>
 
 
 	</application>
 	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="10"/>
 
-	<uses-permission android:name="android.permission.VIBRATE" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="org.openintents.ssh.permission.ACCESS_SSH_AGENT" />
+	<uses-permission android:name="android.permission.VIBRATE"/>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="android.permission.INTERNET"/>
+	<uses-permission android:name="org.openintents.ssh.permission.ACCESS_SSH_AGENT"/>
 
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
-    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
-    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
-</manifest> 
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_STATS"/>
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+</manifest>
