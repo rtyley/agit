@@ -181,7 +181,12 @@
                             </option>
                             <option>-keep public class roboguice.**</option>
                             <option>-keep class com.google.inject.Binder</option>
+                            <option>-keep class com.google.inject.Key</option>
+                            <option>-keep class com.google.inject.Provider</option>
+                            <option>-keep class com.google.inject.TypeLiteral</option>
                             <option>-keepclassmembers class * { @com.google.inject.Inject &lt;init&gt;(...); }</option>
+
+                            <option>-keep class org.eclipse.jgit.lib.Repository</option>
 
                             <!-- JSch -->
                             <option>-keep class com.jcraft.jsch.jce.*</option>
