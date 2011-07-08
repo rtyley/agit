@@ -5,7 +5,7 @@
 	<artifactId>agit-integration-tests</artifactId>
 
 	<parent>
-		<version>1.14</version>
+		<version>1.15-SNAPSHOT</version>
 		<groupId>com.madgag</groupId>
 		<artifactId>agit-parent</artifactId>
 	</parent>
