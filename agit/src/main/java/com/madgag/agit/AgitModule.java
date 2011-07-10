@@ -36,6 +36,8 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.jcraft.jsch.HostKeyRepository;
 import com.madgag.agit.prompts.StatusBarPromptUI;
+import com.madgag.agit.sync.SyncCampaign;
+import com.madgag.agit.sync.SyncCampaignFactory;
 import com.madgag.android.blockingprompt.*;
 import com.madgag.agit.git.TransportFactory;
 import com.madgag.agit.guice.OperationScope;
@@ -84,6 +86,9 @@ public class AgitModule extends AbstractAndroidModule {
     	bind(Ref.class).annotatedWith(named("branch")).toProvider(BranchRefProvider.class);
     	bind(AndroidAuthAgent.class).toProvider(AndroidAuthAgentProvider.class);
     	bind(GitAsyncTaskFactory.class).toProvider(newFactory(GitAsyncTaskFactory.class, GitAsyncTask.class));
+
+        bind(SyncCampaignFactory.class).toProvider(newFactory(SyncCampaignFactory.class, SyncCampaign.class));
+
     	bind(SshSessionFactory.class).to(AndroidSshSessionFactory.class);
     	bind(TransportFactory.class);
     	bind(PromptUIRegistry.class);

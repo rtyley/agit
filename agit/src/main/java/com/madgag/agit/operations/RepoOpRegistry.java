@@ -24,6 +24,11 @@ public class RepoOpRegistry {
             currentOperation = op;
             return true;
         }
+        if (currentOperation.isDone()) {
+            Log.d(TAG, "Prior finished op for  "+gitdir+" : "+currentOperation+" - new op="+op);
+            currentOperation = op;
+            return true;
+        }
         if (interruptExistingOp) {
             Log.d(TAG, "Interrupting existing op for "+gitdir+" : "+currentOperation+" -> "+op);
             currentOperation.cancel();
