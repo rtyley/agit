@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) 2011 Roberto Tyley
+ *
+ * This file is part of 'Agit' - an Android Git client.
+ *
+ * Agit is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Agit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.madgag.agit;
 
 import android.app.Activity;
@@ -7,24 +26,24 @@ import android.content.DialogInterface;
 import android.util.Log;
 import android.widget.EditText;
 import com.google.inject.Inject;
-import com.madgag.agit.blockingprompt.PromptExposer;
-import com.madgag.agit.blockingprompt.PromptHumper;
-import com.madgag.agit.blockingprompt.ResponseInterface;
+import com.madgag.android.blockingprompt.PromptUI;
+import com.madgag.android.blockingprompt.PromptUIRegistry;
+import com.madgag.android.blockingprompt.ResponseInterface;
 
-public class DialogPromptMonkey implements PromptExposer {
+public class DialogPromptMonkey implements PromptUI {
 
 
     private final Activity activity;
-    private final PromptHumper promptHumper;
+    private final PromptUIRegistry promptUIRegistry;
 
     public static final int YES_NO_DIALOG=1,STRING_ENTRY_DIALOG=2;
     private final String TAG="DPM";
     private ResponseInterface responseInterface;
 
     @Inject
-    public DialogPromptMonkey(Activity activity, PromptHumper promptHumper) {
+    public DialogPromptMonkey(Activity activity, PromptUIRegistry promptUIRegistry) {
         this.activity = activity;
-        this.promptHumper = promptHumper;
+        this.promptUIRegistry = promptUIRegistry;
     }
 
     protected Dialog onCreateDialog(int id) {
@@ -50,12 +69,12 @@ public class DialogPromptMonkey implements PromptExposer {
 
 
     public void registerReceiverForServicePromptRequests() {
-        Log.d(TAG, "Registering as prompt UI provider with "+promptHumper);
-    	promptHumper.setActivityPromptExposer(this);
+        Log.d(TAG, "Registering as prompt UI provider with "+ promptUIRegistry);
+    	promptUIRegistry.setActivityPromptUI(this);
 	}
 
 	public void unregisterRecieverForServicePromptRequests() {
-		promptHumper.clearActivityUIProvider(this);
+		promptUIRegistry.clearActivityUIProvider(this);
 	}
 
     private DialogInterface.OnClickListener sendDialogResponseOf(final boolean bool) {

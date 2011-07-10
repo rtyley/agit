@@ -30,8 +30,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.madgag.agit.blockingprompt.RejectBlockingPromptService;
 import com.madgag.agit.operation.lifecycle.CasualShortTermLifetime;
 import com.madgag.agit.operations.GitAsyncTaskFactory;
 import com.madgag.agit.operations.GitOperationExecutor;
@@ -68,7 +66,6 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
 
     @InjectView(R.id.actionbar) ActionBar actionBar;
     @InjectView(android.R.id.list) ListView listView;
-    @Inject Provider<RejectBlockingPromptService> rejectPrompts;
 
     @Inject RepoSummaryAdapter summaryAdapter;
     @Inject GitOperationExecutor gitOperationExecutor;

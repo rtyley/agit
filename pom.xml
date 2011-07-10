@@ -166,6 +166,7 @@
                             </option>
 
                             <option>-keep class com.madgag.agit.**</option>
+                            <option>-keep class com.madgag.android.blockingprompt.**</option>
 
                             <option>-keep public class * extends android.app.Activity</option>
                             <option>-keep public class * extends android.app.Application</option>
