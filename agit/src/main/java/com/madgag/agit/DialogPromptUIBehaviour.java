@@ -30,7 +30,7 @@ import com.madgag.android.blockingprompt.PromptUI;
 import com.madgag.android.blockingprompt.PromptUIRegistry;
 import com.madgag.android.blockingprompt.ResponseInterface;
 
-public class DialogPromptMonkey implements PromptUI {
+public class DialogPromptUIBehaviour implements PromptUI {
 
 
     private final Activity activity;
@@ -41,7 +41,7 @@ public class DialogPromptMonkey implements PromptUI {
     private ResponseInterface responseInterface;
 
     @Inject
-    public DialogPromptMonkey(Activity activity, PromptUIRegistry promptUIRegistry) {
+    public DialogPromptUIBehaviour(Activity activity, PromptUIRegistry promptUIRegistry) {
         this.activity = activity;
         this.promptUIRegistry = promptUIRegistry;
     }
@@ -85,7 +85,7 @@ public class DialogPromptMonkey implements PromptUI {
 		};
 	}
 
-	protected void onPrepareDialog(int id, Dialog dialog) {
+	public void onPrepareDialog(int id, Dialog dialog) {
         AlertDialog alertDialog = (AlertDialog) dialog;
 		switch (id) {
 		case YES_NO_DIALOG:

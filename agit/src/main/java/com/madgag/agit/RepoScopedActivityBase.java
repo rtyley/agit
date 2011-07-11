@@ -19,6 +19,8 @@
 
 package com.madgag.agit;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import com.google.inject.Inject;
 
@@ -60,6 +62,16 @@ public abstract class RepoScopedActivityBase extends RoboActivity {
 	protected void onResume() {
 		super.onResume();
 		rc.onResume();
+	}
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+	    return rc.onCreateDialog(id);
+	}
+
+    @Override
+    protected void onPrepareDialog(int id, Dialog dialog) {
+	    rc.onPrepareDialog(id, dialog);
 	}
 
 	@Override

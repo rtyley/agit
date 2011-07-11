@@ -23,6 +23,7 @@ import static com.google.common.collect.Lists.newArrayList;
 
 import java.io.File;
 
+import android.app.Dialog;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -33,8 +34,9 @@ import com.madgag.agit.guice.RepositoryScope;
 public class RepositoryContext
       //  implements IndexChangedListener, RefsChangedListener
 {
+    private @Inject RepositoryScope scope;
     private @Inject
-    RepositoryScope scope;
+    DialogPromptUIBehaviour dialogPromptUIBehaviour;
     private @Inject @Named("gitdir") File gitdir;
     private final Activity activity;
 	private final String tag;
@@ -54,8 +56,10 @@ public class RepositoryContext
 		}
         enterScope();
         try {
+            dialogPromptUIBehaviour.registerReceiverForServicePromptRequests();
             //addListeners();
 		    activity.onContentChanged();
+            dialogPromptUIBehaviour.updateUIToReflectServicePromptRequests();
 
             //rsa.onRepoScopedResume();
         } finally {
@@ -68,6 +72,7 @@ public class RepositoryContext
     public void onPause() {
         enterScope();
         try {
+            dialogPromptUIBehaviour.unregisterRecieverForServicePromptRequests();
             //removeListeners();
             // rsa.onRepoScopedPause();
         } finally {
@@ -90,6 +95,15 @@ public class RepositoryContext
     }
     private void exitScope() {
         // scope.exit();
+    }
+
+
+    public Dialog onCreateDialog(int id) {
+        return dialogPromptUIBehaviour.onCreateDialog(id);
+    }
+
+    public void onPrepareDialog(int id, Dialog dialog) {
+        dialogPromptUIBehaviour.onPrepareDialog(id, dialog);
     }
 
 
