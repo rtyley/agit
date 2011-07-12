@@ -128,6 +128,18 @@
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>maven-android-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>update-version</id>
+                            <goals>
+                                <goal>version-update</goal>
+                            </goals>
+                            <configuration>
+                                <versionCodeAutoIncrement>true</versionCodeAutoIncrement>
+                                <versionNameUpdate>true</versionNameUpdate>
+                            </configuration>
+                        </execution>
+                    </executions>
 			</plugin>
             <plugin>
                 <groupId>com.pyx4me</groupId>

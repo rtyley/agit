@@ -94,7 +94,6 @@
                          During release:perform, enable the "release" profile
                         -->
                         <releaseProfiles>release</releaseProfiles>
-                        <preparationGoals>clean verify android:version-update</preparationGoals>
                     </configuration>
                 </plugin>
                 <plugin>
