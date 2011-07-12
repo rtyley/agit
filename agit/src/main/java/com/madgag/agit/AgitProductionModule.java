@@ -22,6 +22,8 @@ package com.madgag.agit;
 import android.content.ComponentName;
 import com.google.inject.Provides;
 import com.google.inject.name.Named;
+import com.madgag.agit.guice.OperationScope;
+import com.madgag.agit.guice.OperationScoped;
 import com.madgag.agit.ssh.jsch.GUIUserInfo;
 import com.madgag.android.blockingprompt.BlockingPromptService;
 import com.madgag.android.blockingprompt.PromptBroker;
@@ -31,7 +33,7 @@ public class AgitProductionModule extends AbstractAndroidModule {
 
 	@Override
     protected void configure() {
-		bind(BlockingPromptService.class).to(PromptBroker.class);
+		bind(BlockingPromptService.class).to(PromptBroker.class).in(OperationScoped.class);
     }
 
     @Provides @Named("authAgent")
