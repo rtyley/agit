@@ -35,7 +35,9 @@ import android.os.Looper;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.jcraft.jsch.HostKeyRepository;
+import com.jcraft.jsch.UserInfo;
 import com.madgag.agit.prompts.StatusBarPromptUI;
+import com.madgag.agit.ssh.jsch.GUIUserInfo;
 import com.madgag.agit.sync.SyncCampaign;
 import com.madgag.agit.sync.SyncCampaignFactory;
 import com.madgag.android.blockingprompt.*;
@@ -80,6 +82,7 @@ public class AgitModule extends AbstractAndroidModule {
     protected void configure() {
 		install(RepositoryScope.module());
         install(OperationScope.module());
+        bind(UserInfo.class).to(GUIUserInfo.class);
     	bind(ImageSession.class).toProvider(ImageSessionProvider.class);
 
     	bind(Repository.class).toProvider(RepositoryProvider.class);

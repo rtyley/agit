@@ -38,14 +38,6 @@ import com.madgag.agit.operations.OpNotification;
 public class GUIUserInfo implements UserInfo {
 	private final static String TAG="GUIUI";
 	
-	public static Module module() {
-		return new AbstractModule() {
-			public void configure() {
-				bind(UserInfo.class).to(GUIUserInfo.class);
-			}
-		};
-	}
-	
 	private final BlockingPromptService blockingPrompt;
 
 	@Inject

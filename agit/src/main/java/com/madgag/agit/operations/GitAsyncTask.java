@@ -40,7 +40,7 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
 	public final static String TAG = "GAT";
 
     @Inject GitOperationExecutor operationExecutor;
-    @Inject Provider<PromptBroker> promptHelperProvider;
+    @Inject Provider<PromptBroker> promptBrokerProvider;
 	
 	private final GitOperation operation;
 	private final OperationLifecycleSupport lifecycleSupport;
@@ -71,7 +71,7 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
     }
 
 	public OpNotification call() throws Exception {
-        return operationExecutor.call(operation, new OperationUIContext(this, promptHelperProvider), true);
+        return operationExecutor.call(operation, new OperationUIContext(this, promptBrokerProvider), true);
 	}
 	
 	@Override

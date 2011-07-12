@@ -19,47 +19,39 @@
 
 package com.madgag.agit;
 
+import com.madgag.agit.operations.OpPrompt;
+import com.madgag.android.blockingprompt.BlockingPromptService;
 import roboguice.config.AbstractAndroidModule;
 import android.util.Log;
 
 import com.google.inject.Module;
 import com.jcraft.jsch.UserInfo;
 
-public final class YesToEverythingUserInfo implements UserInfo {
+import static java.lang.Boolean.TRUE;
+
+public final class YesToEveryPromptService implements BlockingPromptService {
+
+    private static final String TAG = "YTEPS";
 
 	public static Module module() {
 		return new AbstractAndroidModule() {
 			@Override
 			protected void configure() {
-				bind(UserInfo.class).toInstance(new YesToEverythingUserInfo());
+				bind(BlockingPromptService.class).toInstance(new YesToEveryPromptService());
 			}
 		};
 	}
 
-	private String TAG = "YTEUI";
-
-	public void showMessage(String msg) {
-		Log.i(TAG, msg);
-	}
-
-	public boolean promptYesNo(String msg) {
-		Log.i(TAG, msg);
-		return true;
-	}
-
-	public boolean promptPassword(String arg0) {
-		return false;
-	}
-
-	public boolean promptPassphrase(String arg0) {
-		return false;
-	}
-
-	public String getPassword() {
-		return null;
-	}
-
-	public String getPassphrase() {
-		return null;
-	}
+    public <T> T request(OpPrompt<T> opPrompt) {
+        if (opPrompt.getRequiredResponseType().equals(Boolean.class)) {
+            Log.e(TAG,"Returning true for "+opPrompt);
+            return (T) TRUE;
+        }
+        try {
+            return opPrompt.getRequiredResponseType().newInstance();
+        } catch (Exception e) {
+            Log.e(TAG,"Whoops",e);
+            return null;
+        }
+    }
 }

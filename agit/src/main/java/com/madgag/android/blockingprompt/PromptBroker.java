@@ -19,13 +19,13 @@
 
 package com.madgag.android.blockingprompt;
 
-import java.util.concurrent.Semaphore;
-
 import android.util.Log;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.madgag.agit.guice.RepositoryScoped;
 import com.madgag.agit.operations.OpPrompt;
+
+import java.util.concurrent.Semaphore;
 
 /**
  * PromptBroker is an adaptation of org.connectbot.service.PromptHelper
