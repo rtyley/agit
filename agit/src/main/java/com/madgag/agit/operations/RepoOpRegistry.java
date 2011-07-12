@@ -19,8 +19,8 @@ public class RepoOpRegistry {
     private GitOperation currentOperation;
 
     public synchronized boolean setCurrentOperation(GitOperation op, boolean interruptExistingOp) {
-        if (currentOperation==null) {
-            Log.d(TAG, "No current op for "+gitdir+" : setting to "+op);
+        if (currentOperation==null || currentOperation.isDone()) {
+            Log.d(TAG, "Prior op for  "+gitdir+" : "+currentOperation+" - new op="+op);
             currentOperation = op;
             return true;
         }

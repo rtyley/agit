@@ -30,8 +30,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.madgag.agit.blockingprompt.RejectBlockingPromptService;
 import com.madgag.agit.operation.lifecycle.CasualShortTermLifetime;
 import com.madgag.agit.operations.GitAsyncTaskFactory;
 import com.madgag.agit.operations.GitOperationExecutor;
@@ -59,16 +57,13 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
 		return new GitIntentBuilder("repo.VIEW").gitdir(gitdir).toIntent();
 	}
 
-	private ProgressDialog progressDialog;
-
 	private final static int DELETE_ID=Menu.FIRST;
-    private final int PROGRESS_DIALOG=0,DELETION_DIALOG=3;
-    @Inject DialogPromptMonkey dialogPromptMonkey;
+    private final int DELETION_DIALOG=3;
+
     @Inject GitAsyncTaskFactory gitAsyncTaskFactory;
 
     @InjectView(R.id.actionbar) ActionBar actionBar;
     @InjectView(android.R.id.list) ListView listView;
-    @Inject Provider<RejectBlockingPromptService> rejectPrompts;
 
     @Inject RepoSummaryAdapter summaryAdapter;
     @Inject GitOperationExecutor gitOperationExecutor;
@@ -130,13 +125,6 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
 	
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
-		case PROGRESS_DIALOG:
-			progressDialog = new ProgressDialog(this);
-			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			progressDialog.setMessage("Fetching...");
-			progressDialog.setTitle("Fetch totmarto");
-			progressDialog.setCancelable(true);
-			return progressDialog;
 		case DELETION_DIALOG:
 			ProgressDialog deletionDialog = new ProgressDialog(this);
 			deletionDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -144,26 +132,7 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
 			deletionDialog.setIndeterminate(true);
 			return deletionDialog;
 		default:
-			return dialogPromptMonkey.onCreateDialog(id);
-		}
-	}
-
-
-
-	@Override
-	protected void onPrepareDialog(int id, Dialog dialog) {
-		switch (id) {
-		case PROGRESS_DIALOG:
-			ProgressDialog progressDialog = (ProgressDialog) dialog;
-			progressDialog.setMessage("Ghostbusters...");
-			progressDialog.setProgress(0);
-			progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                public void onCancel(DialogInterface dialog) {
-                    // repositoryOperationContext.getCurrentOperation().getCancellationSignaller().cancel();
-                }
-            });
-		default:
-            dialogPromptMonkey.onPrepareDialog(id, dialog);
+			return super.onCreateDialog(id);
 		}
 	}
 	
@@ -178,10 +147,9 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
 		registerReceiver(operationProgressBroadcastReceiver, new IntentFilter("org.openintents.git.operation.progress.update"));
 
 		registerReceiver(repoStateChangeBroadcastReceiver, new IntentFilter(actionWithSuffix(REPO_STATE_CHANGED_BROADCAST)));
-		dialogPromptMonkey.registerReceiverForServicePromptRequests();
 		
 		updateUI();
-		dialogPromptMonkey.updateUIToReflectServicePromptRequests();
+		
     }
 
 	void updateUI() {
@@ -203,7 +171,6 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
     	super.onPause();
     	unregisterReceiver(operationProgressBroadcastReceiver);
         unregisterReceiver(repoStateChangeBroadcastReceiver);
-    	dialogPromptMonkey.unregisterRecieverForServicePromptRequests();
     }
 	
 	public static PendingIntent manageRepoPendingIntent(File gitdir,Context context) {

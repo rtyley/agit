@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) 2011 Roberto Tyley
+ *
+ * This file is part of 'Agit' - an Android Git client.
+ *
+ * Agit is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Agit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.madgag.agit.sync;
 
 import android.accounts.Account;
@@ -6,35 +25,18 @@ import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
-import android.util.Log;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.madgag.agit.operations.Progress;
-import com.madgag.agit.operations.*;
-import com.madgag.agit.git.Repos;
-import com.madgag.agit.blockingprompt.RejectBlockingPromptService;
-import com.madgag.agit.operations.ProgressListener;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.transport.RemoteConfig;
 import roboguice.inject.ContextScope;
-
-import java.io.File;
-
-import static com.madgag.agit.git.Repos.knownRepos;
-import static com.madgag.agit.git.Repos.remoteConfigFor;
-import static java.util.Arrays.asList;
-import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
-import static org.eclipse.jgit.lib.RepositoryCache.close;
 
 @Singleton
 class SyncAdapter extends AbstractThreadedSyncAdapter {
     private static final String TAG = "AgitSync";
-    
-    @Inject Provider<RejectBlockingPromptService> rejectPrompts;
-    @Inject GitOperationExecutor operationExecutor;
+
     @Inject ContextScope contextScope;
-//    private CancellationSignaller currentSyncCancellationSignaller;
+    @Inject SyncCampaignFactory syncCampaignFactory;
+
+    private SyncCampaign currentSyncCampaign = null;
 
     @Inject
     public SyncAdapter(Context context) {
@@ -43,54 +45,25 @@ class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-        Context context = getContext();
-        contextScope.enter(context);
+        cancelAnyCurrentCampaign();
+        contextScope.enter(getContext());
         try {
-            syncWith(account, syncResult);
+            currentSyncCampaign = syncCampaignFactory.createCampaignFor(syncResult);
+            currentSyncCampaign.run();
         } finally {
-            contextScope.exit(context);
-        }
-    }
-
-    private void syncWith(Account account, SyncResult syncResult) {
-        Log.d(TAG, "onPerformSync account=" + account);
-        //currentSyncCancellationSignaller = new;
-        ProgressListener<Progress> progressListener = new ProgressListener<Progress>() {
-            public void publish(Progress... values) {
-                Log.d(TAG, asList(values).toString());
-            }
-        };
-        OperationUIContext operationUIContext = new OperationUIContext(progressListener, rejectPrompts);
-
-        for (File gitdir : knownRepos()) {
-//            if (currentSyncCancellationSignaller.isCancelled()) {
-//                return;
-//            }
-            syncRepo(gitdir, operationUIContext, syncResult);
-        }
-    }
-
-    private void syncRepo(File gitdir, OperationUIContext operationUIContext, SyncResult syncResult) {
-        Repository repository = null;
-        try {
-            repository = Repos.openRepoFor(gitdir);
-            RemoteConfig remoteConfig = remoteConfigFor(repository, DEFAULT_REMOTE_NAME);
-            if (operationExecutor.call(new Fetch(repository, remoteConfig), operationUIContext, false)!=null) { //feels bery bad
-                syncResult.stats.numUpdates++;
-            }
-        } catch (Exception e) {
-            Log.w(TAG, "Problem with " + gitdir, e);
-        } finally {
-            if (repository!=null)
-                close(repository);
+            contextScope.exit(getContext());
         }
     }
 
     @Override
     public void onSyncCanceled() {
-//        if (currentSyncCancellationSignaller!=null) {
-//            currentSyncCancellationSignaller.cancel();
-//        }
+        cancelAnyCurrentCampaign();
+    }
+
+    private void cancelAnyCurrentCampaign() {
+        if (currentSyncCampaign!=null) {
+            currentSyncCampaign.cancel();
+        }
     }
 
 }

@@ -35,14 +35,16 @@ import android.os.Looper;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.jcraft.jsch.HostKeyRepository;
-import com.madgag.agit.blockingprompt.*;
+import com.madgag.agit.prompts.StatusBarPromptUI;
+import com.madgag.agit.sync.SyncCampaign;
+import com.madgag.agit.sync.SyncCampaignFactory;
+import com.madgag.android.blockingprompt.*;
 import com.madgag.agit.git.TransportFactory;
 import com.madgag.agit.guice.OperationScope;
 import com.madgag.agit.guice.RepositoryScope;
 import com.madgag.agit.guice.RepositoryScoped;
 import com.madgag.agit.operations.GitAsyncTaskFactory;
 import com.madgag.agit.ssh.CuriousHostKeyRepository;
-import org.connectbot.service.PromptHelper;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.SshSessionFactory;
@@ -84,12 +86,15 @@ public class AgitModule extends AbstractAndroidModule {
     	bind(Ref.class).annotatedWith(named("branch")).toProvider(BranchRefProvider.class);
     	bind(AndroidAuthAgent.class).toProvider(AndroidAuthAgentProvider.class);
     	bind(GitAsyncTaskFactory.class).toProvider(newFactory(GitAsyncTaskFactory.class, GitAsyncTask.class));
+
+        bind(SyncCampaignFactory.class).toProvider(newFactory(SyncCampaignFactory.class, SyncCampaign.class));
+
     	bind(SshSessionFactory.class).to(AndroidSshSessionFactory.class);
     	bind(TransportFactory.class);
-    	bind(PromptHumper.class);
+    	bind(PromptUIRegistry.class);
 
         bind(HostKeyRepository.class).to(CuriousHostKeyRepository.class);
-        bind(PromptExposer.class).annotatedWith(named("status-bar")).to(StatusBarPromptExposer.class);
+        bind(PromptUI.class).annotatedWith(named("status-bar")).to(StatusBarPromptUI.class);
 
         bind(RepoDomainType.class).annotatedWith(named("branch")).to(RDTBranch.class);
         bind(RepoDomainType.class).annotatedWith(named("remote")).to(RDTRemote.class);
@@ -109,11 +114,6 @@ public class AgitModule extends AbstractAndroidModule {
     @Provides @RepositoryScoped
     PendingIntent createRepoManagementPendingIntent(Context context, @Named("gitdir") File gitdir) {
         return manageRepoPendingIntent(gitdir, context);
-    }
-
-    @Provides
-    PromptHelper createBlockingPromptService(PromptHumper promptHumper) {
-        return (PromptHelper) promptHumper.getBlockingPromptService();
     }
 
 	@ContextScoped

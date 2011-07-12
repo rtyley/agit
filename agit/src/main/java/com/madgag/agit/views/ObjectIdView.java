@@ -32,6 +32,7 @@ import static android.content.Context.CLIPBOARD_SERVICE;
 import static android.text.Html.fromHtml;
 import static android.text.Layout.Alignment.ALIGN_CENTER;
 import static android.widget.Toast.LENGTH_SHORT;
+import static com.madgag.agit.views.TextUtil.centered;
 
 public class ObjectIdView extends TextView {
 
@@ -50,11 +51,11 @@ public class ObjectIdView extends TextView {
                 String idText = objectId.name();
                 clipboardManager.setText(idText);
                 String htmlMessage = "<small><small><b><tt>"+objectId.name()+"</tt></b></small><br />(copied to clipboard!)</small>";
-                SpannableString spannable= new SpannableString(fromHtml(htmlMessage));
-                spannable.setSpan(new AlignmentSpan.Standard(ALIGN_CENTER),0,spannable.length(),SpannableString.SPAN_INCLUSIVE_INCLUSIVE);
-                Toast.makeText(getContext(), spannable, LENGTH_SHORT).show();
+                Toast.makeText(getContext(), centered(htmlMessage), LENGTH_SHORT).show();
             }
         });
     }
+
+
 
 }

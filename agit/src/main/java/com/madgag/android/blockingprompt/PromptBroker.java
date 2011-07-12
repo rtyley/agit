@@ -1,41 +1,42 @@
 /*
- * ConnectBot: simple, powerful, open-source SSH client for Android
- * Copyright 2007 Kenny Root, Jeffrey Sharkey
+ * Copyright (c) 2011 Roberto Tyley
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This file is part of 'Agit' - an Android Git client.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * Agit is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Agit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.connectbot.service;
+package com.madgag.android.blockingprompt;
 
 import java.util.concurrent.Semaphore;
 
-import android.os.Handler;
-
 import android.util.Log;
-import com.madgag.agit.blockingprompt.BlockingPromptService;
-import com.madgag.agit.blockingprompt.ResponseInterface;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.madgag.agit.guice.RepositoryScoped;
 import com.madgag.agit.operations.OpPrompt;
 
 /**
- * Helps provide a relay for prompts and responses between a possible user
- * interface and some underlying service.
+ * PromptBroker is an adaptation of org.connectbot.service.PromptHelper
+ * by Jeffrey Sharkey. PromptHelper is released under the Apache License as
+ * part of ConnectBot, the open-source SSH client for Android.
  *
- * @author jsharkey, rtyley
+ * http://www.apache.org/licenses/LICENSE-2.0
  */
-public class PromptHelper implements ResponseInterface, BlockingPromptService {
 
-	private final Handler handler;
-    private final Runnable promptBroadcast;
+@RepositoryScoped
+public class PromptBroker implements ResponseInterface, BlockingPromptService {
 
     private Semaphore promptToken = new Semaphore(1);
 	private Semaphore promptResponse = new Semaphore(0);
@@ -43,11 +44,12 @@ public class PromptHelper implements ResponseInterface, BlockingPromptService {
 	private OpPrompt<?> opPrompt;
 
 	private Object response = null;
-    private static final String TAG = "PH";
+    private static final String TAG = "PB";
+    private final Provider<PromptUIRegistry> promptUIRegistry;
 
-    public PromptHelper(Handler handler, Runnable promptBroadcast) {
-        this.handler = handler;
-        this.promptBroadcast = promptBroadcast;
+    @Inject
+    public PromptBroker(Provider<PromptUIRegistry> promptUIRegistry) {
+        this.promptUIRegistry = promptUIRegistry;
     }
 
 	/**
@@ -83,10 +85,7 @@ public class PromptHelper implements ResponseInterface, BlockingPromptService {
             promptToken.acquire();
 			this.opPrompt = opPrompt;
 
-            Log.d(TAG, "handler=" + handler);
-			// notify any parent watching for live events
-            handler.post(promptBroadcast);
-			// Message.obtain(handler).sendToTarget();
+            promptUIRegistry.get().displayPrompt();
 
 			// acquire lock until user passes back value
 			promptResponse.acquire();
