@@ -51,7 +51,7 @@ public class OperationScope extends ScopeBase implements Scope {
 
                 bind(GIT_OPERATION_KEY).toProvider(ScopeBase.<GitOperation>seededKeyProvider()).in(OperationScoped.class);
                 bind(PROGRESS_LISTENER_KEY).toProvider(ScopeBase.<ProgressListener<Progress>>seededKeyProvider()).in(OperationScoped.class);
-                bind(BLOCKING_PROMPT_SERVICE_KEY).toProvider(ScopeBase.<BlockingPromptService>seededKeyProvider()).in(OperationScoped.class);
+                // bind(BLOCKING_PROMPT_SERVICE_KEY).toProvider(ScopeBase.<BlockingPromptService>seededKeyProvider()).in(OperationScoped.class);
 
                 bind(CancellationSignaller.class).to(GitOperation.class);
 			}

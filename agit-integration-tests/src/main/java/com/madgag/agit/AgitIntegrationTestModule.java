@@ -23,14 +23,12 @@ import android.content.ComponentName;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.name.Named;
-import com.madgag.agit.ssh.jsch.GUIUserInfo;
-import roboguice.config.AbstractAndroidModule;
 
 public class AgitIntegrationTestModule extends AbstractModule {
 
 	@Override
     protected void configure() {
-		install(YesToEverythingUserInfo.module());
+		install(YesToEveryPromptService.module());
     }
 
     @Provides @Named("authAgent")

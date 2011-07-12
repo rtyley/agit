@@ -23,13 +23,15 @@ import android.content.ComponentName;
 import com.google.inject.Provides;
 import com.google.inject.name.Named;
 import com.madgag.agit.ssh.jsch.GUIUserInfo;
+import com.madgag.android.blockingprompt.BlockingPromptService;
+import com.madgag.android.blockingprompt.PromptBroker;
 import roboguice.config.AbstractAndroidModule;
 
 public class AgitProductionModule extends AbstractAndroidModule {
 
 	@Override
     protected void configure() {
-		install(GUIUserInfo.module());
+		bind(BlockingPromptService.class).to(PromptBroker.class);
     }
 
     @Provides @Named("authAgent")
