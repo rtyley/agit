@@ -20,7 +20,9 @@
 package com.madgag.agit.ssh.jsch;
 
 import static android.R.drawable.stat_sys_warning;
+import static com.madgag.agit.operations.OpNotification.alert;
 import static com.madgag.agit.operations.OpPrompt.prompt;
+import static com.madgag.agit.operations.OpPrompt.promptYesOrNo;
 
 import android.util.Log;
 
@@ -63,29 +65,25 @@ public class GUIUserInfo implements UserInfo {
 
 	public boolean promptPassphrase(String msg) {
 		Log.d(TAG, "promptPassphrase : "+msg);
-		passphrase = blockingPrompt.request(prompt(String.class, note("Passphrase required", "Please enter your passphrase", msg)));
+		passphrase = blockingPrompt.request(prompt(String.class, alert("Passphrase required", "Please enter your passphrase", msg)));
 		return passphrase!=null;
 	}
 
 
     public boolean promptPassword(String msg) {
 		Log.d(TAG, "promptPassword : "+msg);
-		password = blockingPrompt.request(prompt(String.class, note("Password required", "Please enter your password", msg)));
+		password = blockingPrompt.request(prompt(String.class, alert("Password required", "Please enter your password", msg)));
         return password!=null;
 	}
 
 	public boolean promptYesNo(String msg) {
 		Log.d(TAG, "promptYesNo : "+msg);
-		Boolean bool = blockingPrompt.request(prompt(Boolean.class, note(msg, "SSH", msg)));
+		Boolean bool = blockingPrompt.request(promptYesOrNo(alert("SSH", msg)));
 		return bool!=null?bool:false;
 	}
 	
 	public void showMessage(String msg) {
 		Log.i(TAG, "Should show this: "+msg);
 	}
-
-    private OpNotification note(String tickerText, String eventTitle, String eventDetail) {
-        return new OpNotification(stat_sys_warning, tickerText, eventTitle, eventDetail);
-    }
 
 }

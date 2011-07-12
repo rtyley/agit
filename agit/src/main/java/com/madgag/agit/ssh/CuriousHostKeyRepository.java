@@ -1,27 +1,38 @@
 package com.madgag.agit.ssh;
 
+import android.content.Context;
+import android.text.SpannableString;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.jcraft.jsch.HostKey;
 import com.jcraft.jsch.HostKeyRepository;
 import com.jcraft.jsch.UserInfo;
+import com.madgag.android.blockingprompt.BlockingPromptService;
+import com.madgag.android.listviews.pinnedheader.R;
 
 import java.util.Arrays;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
+import static com.madgag.agit.operations.OpNotification.alert;
+import static com.madgag.agit.operations.OpPrompt.promptYesOrNo;
 import static com.madgag.agit.util.DigestUtils.encodeHex;
 import static com.madgag.agit.util.DigestUtils.md5;
+import static com.madgag.agit.views.TextUtil.centered;
+import static com.madgag.android.listviews.pinnedheader.R.string.ask_host_key_ok;
+import static java.lang.Boolean.TRUE;
 
 @Singleton
 public class CuriousHostKeyRepository implements HostKeyRepository {
     Map<String, byte[]> knownKeys = newHashMap();
-    private final Provider<UserInfo> userInfo;
+    private final Context context;
+    private final Provider<BlockingPromptService> blockingPromptService;
 
     @Inject
-    public CuriousHostKeyRepository(Provider<UserInfo> userInfo) {
-        this.userInfo = userInfo;
+    public CuriousHostKeyRepository(Context context, Provider<BlockingPromptService> blockingPromptService) {
+        this.context = context;
+        this.blockingPromptService = blockingPromptService;
     }
 
     public int check(String host, byte[] key) {
@@ -33,7 +44,9 @@ public class CuriousHostKeyRepository implements HostKeyRepository {
     }
 
     private int userCheckKey(String host, byte[] key) {
-        boolean userConfirmKeyGood=userInfo.get().promptYesNo("Server "+host+" has key fingerprint "+ encodeHex(md5(key)));
+        String keyFingerprint = "<small>"+code(encodeHex(md5(key)))+"</small><br />";
+        String message = context.getString(ask_host_key_ok, code(host)+"<br />", keyFingerprint);
+        boolean userConfirmKeyGood = TRUE == blockingPromptService.get().request(promptYesOrNo(alert("SSH", centered(message))));
         if (userConfirmKeyGood) {
             knownKeys.put(host,key);
             return OK;
@@ -42,24 +55,22 @@ public class CuriousHostKeyRepository implements HostKeyRepository {
         }
     }
 
-    public void add(HostKey hostkey, UserInfo ui) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    private String code(String s) {
+        return "<b><tt>"+s+"</tt></b>";
     }
 
-    public void remove(String host, String type) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public void add(HostKey hostkey, UserInfo ui) {}
 
-    public void remove(String host, String type, byte[] key) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public void remove(String host, String type) {}
+
+    public void remove(String host, String type, byte[] key) {}
 
     public String getKnownHostsRepositoryID() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     public HostKey[] getHostKey() {
-        return new HostKey[0];  //To change body of implemented methods use File | Settings | File Templates.
+        return new HostKey[0];
     }
 
     public HostKey[] getHostKey(String host, String type) {

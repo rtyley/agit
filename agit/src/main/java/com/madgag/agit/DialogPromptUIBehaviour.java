@@ -91,7 +91,7 @@ public class DialogPromptUIBehaviour implements PromptUI {
 		case YES_NO_DIALOG:
         case STRING_ENTRY_DIALOG:
             if (responseInterface!=null) {
-                String msg = responseInterface.getOpPrompt().getOpNotification().getEventDetail();
+                CharSequence msg = responseInterface.getOpPrompt().getOpNotification().getEventDetail();
                 Log.d(TAG, "Will prompt with: " + msg);
                 alertDialog.setMessage(msg);
             }

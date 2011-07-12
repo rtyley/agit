@@ -18,6 +18,10 @@ public class OpPrompt<T> {
 		return requiredResponseType;
 	}
 
+    public static OpPrompt<Boolean> promptYesOrNo(OpNotification opNotification) {
+        return prompt(Boolean.class, opNotification);
+    }
+
     public static <T> OpPrompt<T> prompt(Class<T> requiredResponseType, OpNotification opNotification) {
         return new OpPrompt<T>(opNotification, requiredResponseType);
     }
