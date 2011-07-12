@@ -54,6 +54,7 @@ import static com.madgag.agit.GitIntents.EXTRA_SOURCE_URI;
 import static com.madgag.agit.GitIntents.EXTRA_TARGET_DIR;
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
 import static com.madgag.agit.R.string.clone_launcher_activity_title;
+import static com.madgag.agit.R.string.clone_readiness_repository_folder_already_exists;
 import static com.madgag.agit.R.string.ssh_agent_not_correctly_installed;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
 import static com.madgag.agit.git.TransportProtocols.niceProtocolNameFor;
@@ -152,7 +153,7 @@ public class CloneLauncherActivity extends RoboActivity {
 		if (folderAlreadyExists) {
 			enableClone=false;
             if (existingRepoGitDir() !=null) {
-                message=getString(R.string.clone_readiness_repository_folder_already_exists);
+                message=getString(clone_readiness_repository_folder_already_exists);
             } else {
                 message=getString(R.string.clone_readiness_folder_already_exists);
             }
@@ -160,15 +161,6 @@ public class CloneLauncherActivity extends RoboActivity {
         displayHelp(message);
         
 		button.setEnabled(enableClone);
-    }
-
-    private TransportProtocol getNonTrivialProtocolFor(URIish uri) {
-        TransportProtocol transportProtocol;
-        transportProtocol = protocolFor(uri);
-        if (transportProtocol.getSchemes().contains("file")) {
-            transportProtocol = null; // Don't show the git bundle protocol, it's never
-        }
-        return transportProtocol;
     }
 
     private void displayHelp(CharSequence message) {
