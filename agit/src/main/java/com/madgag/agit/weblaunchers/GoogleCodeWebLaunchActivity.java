@@ -21,19 +21,23 @@ package com.madgag.agit.weblaunchers;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.madgag.agit.CloneLauncherActivity.cloneLauncherIntentFor;
+import static java.util.regex.Pattern.compile;
 
 
 public class GoogleCodeWebLaunchActivity extends WebLaunchActivity {
 
-    private static final String TAG = "WL-github";
+    private static final Pattern projectPathPattern = compile("^.*?/p/(.+?)/");
 
     Intent cloneLauncherForWebBrowseIntent(Uri uri) {
-        String projectName = uri.getPathSegments().get(1);
+        Matcher matcher = projectPathPattern.matcher(uri.getPath());
+        matcher.find();
         // https://roberto.tyley@code.google.com/p/test-for-agit/
-        String sourceUri = "https://code.google.com/p/"+projectName+"/"; // Read-only while Agit is read-only
+        String sourceUri = "https://code.google.com"+matcher.group(); // Read-only while Agit is read-only
         return cloneLauncherIntentFor(sourceUri);
     }
 
