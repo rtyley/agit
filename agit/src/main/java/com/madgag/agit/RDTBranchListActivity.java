@@ -20,6 +20,7 @@
 package com.madgag.agit;
 
 import com.google.inject.Inject;
+import com.madgag.agit.git.model.RDTBranch;
 import com.madgag.android.listviews.ViewFactory;
 
 import static com.madgag.agit.R.layout.branch_list_item;

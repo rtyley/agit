@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.madgag.agit;
+package com.madgag.agit.git.model;
 
 import static android.R.layout.simple_list_item_2;
 import static android.text.Html.fromHtml;
@@ -29,6 +29,7 @@ import java.util.List;
 import android.*;
 import android.content.Context;
 import android.view.View;
+import com.madgag.agit.GitIntentBuilder;
 import com.madgag.android.listviews.ViewFactory;
 import com.madgag.android.listviews.ViewHolder;
 import com.madgag.android.listviews.ViewHolderFactory;
@@ -46,13 +47,13 @@ public abstract class RepoDomainType<E> {
 	
 	public abstract String name();
 	
-	abstract List<E> getAll();
+	public abstract List<E> getAll();
 	
 	public abstract CharSequence conciseSummaryTitle();
 	
 	abstract CharSequence conciseSummary(E e);
 	
-	abstract CharSequence shortDescriptionOf(E e);
+	public abstract CharSequence shortDescriptionOf(E e);
 	
 	
 	public CharSequence summarise(Collection<E> list) {
@@ -84,7 +85,7 @@ public abstract class RepoDomainType<E> {
 		return action(name()+".VIEW").add(name(),idFor(e)).toIntent();
 	}
 	
-	abstract String idFor(E e);
+	public abstract String idFor(E e);
 
 	private GitIntentBuilder action(String action) {
 		return new GitIntentBuilder(action).repository(repository);

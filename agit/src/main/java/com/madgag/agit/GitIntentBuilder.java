@@ -62,11 +62,7 @@ public class GitIntentBuilder {
 	    return add(EXTRA_TARGET_DIR, targetDir);
 	}
 	
-	public Intent toIntent() {
-		return intent;
-	}
-
-	GitIntentBuilder add(String fieldName, String value) {
+	public GitIntentBuilder add(String fieldName, String value) {
 		intent.putExtra(fieldName, value);
 		return this;
 	}
@@ -83,4 +79,7 @@ public class GitIntentBuilder {
 		return add("commit", commitId);
 	}
 
+	public Intent toIntent() {
+		return intent;
+	}
 }

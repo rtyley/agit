@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.madgag.agit;
+package com.madgag.agit.diff;
 
 import static java.lang.Math.max;
 import static java.lang.Math.round;

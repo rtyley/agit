@@ -41,8 +41,7 @@ public class GitFetchService {
 	private final TransportFactory transportFactory;
     private final ProgressListener<Progress> progressListener;
     @Inject RepoUpdateBroadcaster repoUpdateBroadcaster;
-    @Inject
-    CancellationSignaller cancellationSignaller;
+    @Inject CancellationSignaller cancellationSignaller;
 	
 	@Inject
 	public GitFetchService(TransportFactory transportFactory, ProgressListener<Progress> progressListener) {

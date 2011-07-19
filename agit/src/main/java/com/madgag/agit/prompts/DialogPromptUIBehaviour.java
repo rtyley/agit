@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.madgag.agit;
+package com.madgag.agit.prompts;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -46,7 +46,7 @@ public class DialogPromptUIBehaviour implements PromptUI {
         this.promptUIRegistry = promptUIRegistry;
     }
 
-    protected Dialog onCreateDialog(int id) {
+    public Dialog onCreateDialog(int id) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		switch (id) {
 		case YES_NO_DIALOG:
@@ -100,7 +100,7 @@ public class DialogPromptUIBehaviour implements PromptUI {
 	}
 
 
-	void updateUIToReflectServicePromptRequests() {
+	public void updateUIToReflectServicePromptRequests() {
 		if (responseInterface!=null && responseInterface.getOpPrompt()!=null) {
 			Class<?> requiredResponseType = responseInterface.getOpPrompt().getRequiredResponseType();
 			if (String.class.equals(requiredResponseType)) {

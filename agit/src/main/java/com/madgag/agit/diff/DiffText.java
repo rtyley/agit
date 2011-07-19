@@ -26,9 +26,6 @@ import static name.fraser.neil.plaintext.diff_match_patch.Operation.INSERT;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.madgag.agit.DeltaSpan;
-import name.fraser.neil.plaintext.StandardBreakScorer;
-import name.fraser.neil.plaintext.diff_match_patch;
 import name.fraser.neil.plaintext.diff_match_patch.Diff;
 import name.fraser.neil.plaintext.diff_match_patch.Operation;
 import android.text.Editable;

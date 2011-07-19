@@ -1,4 +1,4 @@
-package com.madgag.agit;
+package com.madgag.agit.git.model;
 
 import org.eclipse.jgit.revwalk.RevCommit;
 

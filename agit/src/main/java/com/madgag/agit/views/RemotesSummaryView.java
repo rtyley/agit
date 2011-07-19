@@ -7,7 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.google.inject.Inject;
 import com.madgag.agit.R;
-import com.madgag.agit.RDTRemote;
+import com.madgag.agit.git.model.RDTRemote;
 
 public class RemotesSummaryView extends LinearLayout {
     private final TextView remoteSummaryTextView;

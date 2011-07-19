@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.madgag.agit;
+package com.madgag.agit.git.model;
 
 import com.google.common.base.Function;
 import com.google.inject.Inject;
-import com.madgag.agit.RDTTag.TagSummary;
+import com.madgag.agit.git.model.RDTTag.TagSummary;
 import com.madgag.agit.git.GitObjectFunction;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
@@ -35,7 +35,7 @@ import java.util.List;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.git.GitObjects.evaluate;
-import static com.madgag.agit.RDTTag.TagSummary.SORT_BY_TIME_AND_NAME;
+import static com.madgag.agit.git.model.RDTTag.TagSummary.SORT_BY_TIME_AND_NAME;
 import static java.util.Collections.sort;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;
 
@@ -68,7 +68,7 @@ public class RDTTag extends RepoDomainType<TagSummary> {
 	}
 
 	@Override
-	String idFor(TagSummary tagSummary) {
+    public String idFor(TagSummary tagSummary) {
 		return shortenRefName(tagSummary.getRef().getName());
 	}
 	
@@ -78,7 +78,7 @@ public class RDTTag extends RepoDomainType<TagSummary> {
 	}
 	
 	@Override
-	CharSequence shortDescriptionOf(TagSummary tagSummary) {
+    public CharSequence shortDescriptionOf(TagSummary tagSummary) {
 		//ObjectId peeledObjectId = repository.peel(tagSummary.getRef()).getPeeledObjectId();
 		//ObjectId taggedId = peeledObjectId==null?ref.getObjectId():peeledObjectId;
 		return evaluate(tagSummary.getTaggedObject(), GIT_OBJECT_SHORT_DESCRIPTION);

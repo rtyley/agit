@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.madgag.agit;
+package com.madgag.agit.git.model;
 
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static java.util.Arrays.asList;
@@ -30,13 +30,13 @@ import org.eclipse.jgit.revplot.PlotLane;
 public enum Relation {
 	PARENT  {
 		@SuppressWarnings({ "rawtypes", "unchecked" })
-		List<PlotCommit<PlotLane>> relationsOf(PlotCommit<PlotLane> commit) {
+		public List<PlotCommit<PlotLane>> relationsOf(PlotCommit<PlotLane> commit) {
 			return (List) asList(commit.getParents());
 		}
 	},
 	CHILD {
 		@SuppressWarnings({ "unchecked" })
-		List<PlotCommit<PlotLane>> relationsOf(PlotCommit<PlotLane> commit) {
+		public List<PlotCommit<PlotLane>> relationsOf(PlotCommit<PlotLane> commit) {
 			List<PlotCommit<PlotLane>> commitChildren = newArrayListWithExpectedSize(commit.getParentCount());
 			for (int i=0;i<commit.getChildCount();++i) {
 				commitChildren.add(commit.getChild(i));
@@ -45,5 +45,5 @@ public enum Relation {
 		}
 	};
 	
-	abstract List<PlotCommit<PlotLane>> relationsOf(PlotCommit<PlotLane> commit);
+	public abstract List<PlotCommit<PlotLane>> relationsOf(PlotCommit<PlotLane> commit);
 }

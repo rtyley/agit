@@ -26,9 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
-import com.madgag.agit.DiffSliderView;
-import com.madgag.agit.DiffSliderView.OnStateUpdateListener;
-import com.madgag.android.listviews.ViewHolder;
+import com.madgag.agit.diff.DiffSliderView.OnStateUpdateListener;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 

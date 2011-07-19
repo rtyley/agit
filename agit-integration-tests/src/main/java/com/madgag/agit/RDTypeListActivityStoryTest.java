@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import com.madgag.agit.git.model.RDTTag;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
@@ -44,7 +45,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.madgag.agit.RDTTag.TagSummary;
+import com.madgag.agit.git.model.RDTTag.TagSummary;
 
 public class RDTypeListActivityStoryTest extends ActivityInstrumentationTestCase2<RDTypeListActivity> {
 	

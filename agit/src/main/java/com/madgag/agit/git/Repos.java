@@ -26,12 +26,11 @@ import static org.eclipse.jgit.lib.Constants.DOT_GIT;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
 
 import java.io.File;
-import java.util.Comparator;
 import java.util.List;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
-import com.madgag.agit.HasLatestCommit;
+import com.madgag.agit.git.model.HasLatestCommit;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.lib.RepositoryCache.FileKey;

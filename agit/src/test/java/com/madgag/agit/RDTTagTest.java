@@ -1,7 +1,8 @@
 package com.madgag.agit;
 
 import com.google.common.base.Predicate;
-import com.madgag.agit.RDTTag.TagSummary;
+import com.madgag.agit.git.model.RDTTag.TagSummary;
+import com.madgag.agit.git.model.RDTTag;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Test;
