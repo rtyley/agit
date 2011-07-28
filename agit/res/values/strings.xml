@@ -38,4 +38,7 @@
     <string name="clone_launcher_farewell_due_to_clone_launched">Clone started..!</string>
     <string name="object_id_copied">Object id<br /><small><b><tt>%s</tt></b></small><br />copied to clipboard!</string>
     <string name="ask_host_key_ok" >"%1$s has key fingerprint: %2$s OK?"</string>
+
+    <string name="diff_seekbar_before">BEFORE</string>
+    <string name="diff_seekbar_after">AFTER</string>
 </resources>
