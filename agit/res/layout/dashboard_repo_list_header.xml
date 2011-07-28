@@ -8,4 +8,4 @@
     android:textStyle="bold"
     android:textSize="18dip"
     android:padding="5dip"
-    android:text="Local Repositories" />
+    android:text="@string/repo_list_title" />
