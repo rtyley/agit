@@ -36,8 +36,11 @@ Many of the icons used in Agit were created by Michael Goldrei of [microsketch.c
 [Creative Commons 3.0 Attribution License](http://creativecommons.org/licenses/by/3.0/)) and
 the alternative [Git logo](http://henrik.nyh.se/2007/06/alternative-git-logo-and-favicon) by Henrik Nyh.
 
+### Contributors
 
-Agit makes use of many different libraries:
+*   Chris Boyle - [Match http protocol for GitHub](https://github.com/rtyley/agit/pull/23)
+
+*   Samuel Tardieu - [French Translation](https://github.com/rtyley/agit/pull/28)
 
 ### Runtime dependencies
 
@@ -75,6 +78,10 @@ The distributed Agit binary contains software from the following projects:
     [enr's fork](https://github.com/enr/markdownj).
 
 *   [android-actionbar](https://github.com/johannilsson/android-actionbar)
+
+    License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+*   [android-pulltorefresh](https://github.com/johannilsson/android-pulltorefresh)
 
     License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
