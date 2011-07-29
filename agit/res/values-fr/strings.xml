@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Agit</string>
+    <string name="app_strap">Android Git Client</string>
+    <string name="suggest_repos_button">Suggestions de dépôts...</string>
+    <string name="about_app_menu_option">À propos</string>
+    <string name="about_activity_title">À propos...</string>
+    <string name="using_ssh_activity_title">Guide d’installation SSH</string>
+    <string name="clone_launcher_activity_title">Clone...</string>
+    <string name="clone_menu_option">Clone...</string>
+    <string name="enter_clone_url">Url</string>
+    <string name="clone_target_folder_label">Répertoire cible</string>
+    <string name="clone_url_hint">Url du dépôt</string>
+    <string name="clone_directory_hint">Copie de travail</string>
+    <string name="clone_readiness_needs_user_to_enter_a_url">Entrer l’Url d’un dépôt - ou choisissez à partir de quelques #suggest_repo[exemples].</string>
+    <string name="clone_readiness_folder_already_exists">Le répertoire existe déjà- #specify_target_dir[choisir un autre] endroit?</string>
+    <string name="clone_readiness_repository_folder_already_exists">Le répertoire existe déjà localement- voir #view_existing_repo[le dépôt existant]?</string>
+    <string name="ssh_agent_not_correctly_installed">Aucun SSH-agent disponible - voir #view_ssh_instructions[le guide d’installation SSH]?</string>
+
+    <string name="repo_list_title">Dépôt locaux</string>
+
+    <string name="use_default_target_directory_checkbox_label">Répertoire par défaut</string>
+    <string name="bare_repo_checkbox_label">Bare</string>
+
+
+    <string name="execute_clone_button_label">Clone!</string>
+    <string name="delete_repo_menu_option">Effacer le dépôt</string>
+    <string name="delete_tag_menu_option">Effacer le tag</string>
+
+    <string name="latest_commit_title">Dernier commit</string>
+    <string name="empty_list">« aucun »</string>
+
+    <string name="tag_name_label">Nom:</string>
+    <string name="tag_message_label">Message (facultatif):</string>
+    <string name="checkout_commit_menu_option">Checkout...</string>
+    <string name="tag_commit_menu_option">Tag...</string>
+
+    <string name="clone_launcher_farewell_due_to_clone_launched">Clone démarré..!</string>
+    <string name="object_id_copied">Object id<br /><small><b><tt>%s</tt></b></small><br />dans le presse-papier!</string>
+    <string name="ask_host_key_ok" >"Empreinte de la clé %1$s: %2$s OK?"</string>
+
+    <string name="diff_seekbar_before">AVANT</string>
+    <string name="diff_seekbar_after">APRÈS</string>
+</resources>

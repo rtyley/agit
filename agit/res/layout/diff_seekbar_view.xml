@@ -6,7 +6,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="5dip"
 		android:textSize="8dp"
-            android:text="BEFORE" />
+            android:text="@string/diff_seekbar_before" />
 	<SeekBar android:id="@+id/DiffPlayerSeekBar"
 		android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,5 +19,5 @@
         android:layout_height="wrap_content"
         android:textSize="8dip"
         android:paddingRight="5dip"
-		android:text="AFTER" />
+		android:text="@string/diff_seekbar_after" />
 </merge>
