@@ -21,7 +21,7 @@ public class RepositoryViewHolder implements ViewHolder<RepoSummary> {
 
     public void updateViewFor(RepoSummary repoSummary) {
         title.setText(niceNameFor(repoSummary.getRepo()));
-        String commitTimeText="...";
+        CharSequence commitTimeText="...";
         RevCommit latestCommit = repoSummary.getLatestCommit();
         if (latestCommit!=null) {
             detail.setText(repoSummary.getLatestCommit().getShortMessage());
