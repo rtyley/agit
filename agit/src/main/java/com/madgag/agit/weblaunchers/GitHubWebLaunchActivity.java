@@ -13,8 +13,11 @@ public class GitHubWebLaunchActivity extends WebLaunchActivity {
     private static final String TAG = "WL-github";
 
     Intent cloneLauncherForWebBrowseIntent(Uri uri) {
-        return cloneLauncherIntentFor("git://github.com"+ uri.getPath() +".git");
+        final String[] pathParts = uri.getPath().split("/");
+        String path = uri.getPath();
+        if (pathParts.length >= 2) {
+            path = pathParts[0] + "/" + pathParts[1];
+        }
+        return cloneLauncherIntentFor("git://github.com/"+ path +".git");
     }
-
-
 }
