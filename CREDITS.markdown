@@ -40,7 +40,10 @@ the alternative [Git logo](http://henrik.nyh.se/2007/06/alternative-git-logo-and
 
 *   Chris Boyle - [Match http protocol for GitHub](https://github.com/rtyley/agit/pull/23)
 
+*   Eddie Ringle - [Tweak GitHub url parsing](https://github.com/rtyley/agit/pull/29)
+
 *   Samuel Tardieu - [French Translation](https://github.com/rtyley/agit/pull/28)
+
 
 ### Runtime dependencies
 
