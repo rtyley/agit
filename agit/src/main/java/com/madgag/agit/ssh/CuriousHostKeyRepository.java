@@ -1,7 +1,6 @@
 package com.madgag.agit.ssh;
 
 import android.content.Context;
-import android.text.SpannableString;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -9,11 +8,11 @@ import com.jcraft.jsch.HostKey;
 import com.jcraft.jsch.HostKeyRepository;
 import com.jcraft.jsch.UserInfo;
 import com.madgag.android.blockingprompt.BlockingPromptService;
-import com.madgag.android.listviews.pinnedheader.R;
 
 import java.util.Arrays;
 import java.util.Map;
 
+import static android.text.Html.fromHtml;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.madgag.agit.operations.OpNotification.alert;
 import static com.madgag.agit.operations.OpPrompt.promptYesOrNo;
@@ -21,6 +20,7 @@ import static com.madgag.agit.util.DigestUtils.encodeHex;
 import static com.madgag.agit.util.DigestUtils.md5;
 import static com.madgag.agit.views.TextUtil.centered;
 import static com.madgag.android.listviews.pinnedheader.R.string.ask_host_key_ok;
+import static com.madgag.android.listviews.pinnedheader.R.string.ask_host_key_ok_ticker;
 import static java.lang.Boolean.TRUE;
 
 @Singleton
@@ -45,8 +45,9 @@ public class CuriousHostKeyRepository implements HostKeyRepository {
 
     private int userCheckKey(String host, byte[] key) {
         String keyFingerprint = "<small>"+code(encodeHex(md5(key)))+"</small><br />";
+        String ticker = context.getString(ask_host_key_ok_ticker, code(host));
         String message = context.getString(ask_host_key_ok, code(host)+"<br />", keyFingerprint);
-        boolean userConfirmKeyGood = TRUE == blockingPromptService.get().request(promptYesOrNo(alert("SSH", centered(message))));
+        boolean userConfirmKeyGood = TRUE == blockingPromptService.get().request(promptYesOrNo(alert(fromHtml(ticker), "SSH", centered(message))));
         if (userConfirmKeyGood) {
             knownKeys.put(host,key);
             return OK;
