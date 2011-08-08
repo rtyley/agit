@@ -22,5 +22,9 @@ public class GitHubWebLaunchActivityTest {
         assertThat(sourceUriFrom(cloneIntent), is("git://github.com/JodaOrg/joda-time.git"));
     }
 
-
+    @Test
+    public void shouldSupplyOnlyUserepoOwnerAndNameForCloneUrl() {
+        Intent cloneIntent = activity.cloneLauncherForWebBrowseIntent(parse("https://github.com/eddieringle/hubroid/issues/66"));
+        assertThat(sourceUriFrom(cloneIntent), is("git://github.com/eddieringle/hubroid.git"));
+    }
 }
