@@ -1,6 +1,7 @@
 package com.madgag.agit.views;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -25,17 +26,19 @@ public class LatestCommitView extends FrameLayout implements EnabledListItem {
 
         PrettyCommitSummaryView objectSummaryView = (PrettyCommitSummaryView) findViewById(latest_commit);
         RevCommit latestCommit = repoSummary.getLatestCommit();
-        if (latestCommit==null) {
+        if (latestCommit ==null) {
             objectSummaryView.setVisibility(GONE);
         } else {
             objectSummaryView.setCommit(latestCommit);
             objectSummaryView.setVisibility(VISIBLE);
         }
-        //objectSummaryView.setBackgroundColor(Color.YELLOW);
         objectSummaryView.setBackgroundResource(R.drawable.single_line_frame);
     }
 
     public void onItemClick() {
-        getContext().startActivity(revCommitViewIntentFor(repoSummary.getRepo().getDirectory(), repoSummary.getLatestCommit().getId().name()));
+        if (repoSummary.hasCommits()) {
+            getContext().startActivity(revCommitViewIntentFor(repoSummary, repoSummary.getLatestCommit()));
+        }
     }
+
 }

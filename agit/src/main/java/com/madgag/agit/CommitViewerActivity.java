@@ -72,6 +72,10 @@ public class CommitViewerActivity extends RepoScopedActivityBase {
 		};
 	}
     
+    public static Intent revCommitViewIntentFor(RepoSummary repoSummary, RevCommit commit) {
+        return revCommitViewIntentFor(repoSummary.getRepo().getDirectory(), commit.name());
+    }
+
     public static Intent revCommitViewIntentFor(File gitdir, String commitId) {
 		return commitViewerIntentBuilderFor(gitdir).commit(commitId).toIntent();
 	}

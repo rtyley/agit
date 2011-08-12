@@ -54,6 +54,10 @@ public class RepoSummary implements HasLatestCommit {
         latestCommit = branchSummaries.isEmpty()?null: branchSummaries.get(0).getLatestCommit();
     }
 
+    public boolean hasCommits() {
+        return latestCommit != null;
+    }
+
     public RevCommit getLatestCommit() {
         return latestCommit;
     }
