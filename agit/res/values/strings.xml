@@ -17,6 +17,7 @@
     <string name="clone_readiness_repository_folder_already_exists">Folder already exists locally- view #view_existing_repo[existing repo]?</string>
     <string name="ssh_agent_not_correctly_installed">No SSH-agent available - view #view_ssh_instructions[SSH setup guide]?</string>
 
+    <string name="repo_list_title">Local Repositories</string>
 
     <string name="use_default_target_directory_checkbox_label">Use default location</string>
     <string name="bare_repo_checkbox_label">Bare</string>
@@ -36,5 +37,10 @@
 
     <string name="clone_launcher_farewell_due_to_clone_launched">Clone started..!</string>
     <string name="object_id_copied">Object id<br /><small><b><tt>%s</tt></b></small><br />copied to clipboard!</string>
+
+    <string name="ask_host_key_ok_ticker" >"Host %1$s SSH fingerprint..."</string>
     <string name="ask_host_key_ok" >"%1$s has key fingerprint: %2$s OK?"</string>
+
+    <string name="diff_seekbar_before">BEFORE</string>
+    <string name="diff_seekbar_after">AFTER</string>
 </resources>

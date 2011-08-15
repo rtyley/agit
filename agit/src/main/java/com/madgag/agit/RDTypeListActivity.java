@@ -21,6 +21,7 @@ package com.madgag.agit;
 
 import com.google.inject.Inject;
 import com.google.inject.Key;
+import com.madgag.agit.git.model.RepoDomainType;
 import com.madgag.agit.guice.RepositoryScope;
 import com.madgag.android.listviews.ViewFactory;
 import com.madgag.android.listviews.ViewHoldingListAdapter;

@@ -20,11 +20,12 @@
 package com.madgag.agit;
 
 import static com.google.common.collect.Maps.newEnumMap;
-import static com.madgag.agit.Relation.CHILD;
-import static com.madgag.agit.Relation.PARENT;
+import static com.madgag.agit.git.model.Relation.CHILD;
+import static com.madgag.agit.git.model.Relation.PARENT;
 
 import java.util.Map;
 
+import com.madgag.agit.git.model.Relation;
 import org.eclipse.jgit.revplot.PlotCommit;
 import org.eclipse.jgit.revplot.PlotLane;
 

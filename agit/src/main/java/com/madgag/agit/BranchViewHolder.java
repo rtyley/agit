@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.TextView;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.madgag.agit.git.model.RDTBranch;
 import com.madgag.agit.views.PrettyCommitSummaryView;
 import com.madgag.android.listviews.ViewHolder;
 

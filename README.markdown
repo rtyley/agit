@@ -7,6 +7,8 @@ https://market.android.com/details?id=com.madgag.agit
 
 Agit is an open-source (GPL v3) Git client for Android devices, allowing you to checkout the entire history of any Git repository while on the move, review changes and store for full offline access. The app can be bought on the [Android Market](https://market.android.com/details?id=com.madgag.agit), doing so supports the author in the creation of open-source software.
 
+You can read some of the back-story of Agit in these articles which I wrote for the Guardian, [here](http://www.guardian.co.uk/info/developer-blog/2011/jul/27/android-git-client) & [here](http://www.guardian.co.uk/info/developer-blog/2011/jul/28/android-zero-byte-killer) - they are about as technical as you're allowed to get on a newspaper site!
+
  - Clone remote Git repositories onto your phone!
  - Just like regular Git, the full history is stored for offline access.
  - Animated Diffs - Watch diffs smoothly transition from Before to After - and back again. I'm using 'smoothly' figuratively here. It's still pretty cool.

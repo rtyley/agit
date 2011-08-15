@@ -3,6 +3,8 @@ package com.madgag.agit;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
+import com.madgag.agit.git.model.HasLatestCommit;
+import com.madgag.agit.git.model.RDTBranch;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepository;
@@ -50,6 +52,10 @@ public class RepoSummary implements HasLatestCommit {
         this.repo = repo;
         List<RDTBranch.BranchSummary> branchSummaries = new RDTBranch(repo).getAll();
         latestCommit = branchSummaries.isEmpty()?null: branchSummaries.get(0).getLatestCommit();
+    }
+
+    public boolean hasCommits() {
+        return latestCommit != null;
     }
 
     public RevCommit getLatestCommit() {

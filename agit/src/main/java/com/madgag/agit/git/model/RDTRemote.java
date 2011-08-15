@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.madgag.agit;
+package com.madgag.agit.git.model;
 
 import static org.eclipse.jgit.transport.RemoteConfig.getAllRemoteConfigs;
 
@@ -25,7 +25,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.RemoteConfig;
 
@@ -61,12 +60,12 @@ public class RDTRemote extends RepoDomainType<RemoteConfig> {
 		return "Remotes";
 	}
 	@Override
-	String idFor(RemoteConfig e) {
+    public String idFor(RemoteConfig e) {
 		return e.getName();
 	}
 	
 	@Override
-	CharSequence shortDescriptionOf(RemoteConfig rc) {
+    public CharSequence shortDescriptionOf(RemoteConfig rc) {
 		return rc.getURIs().get(0).toString();
 	}
 }

@@ -2,6 +2,7 @@ package com.madgag.agit;
 
 import android.view.View;
 import android.widget.TextView;
+import com.madgag.agit.git.model.RepoDomainType;
 import com.madgag.android.listviews.ViewHolder;
 
 public class RDTypeInstanceViewHolder<B> implements ViewHolder<B> {

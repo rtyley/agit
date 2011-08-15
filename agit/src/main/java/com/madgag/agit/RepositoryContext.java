@@ -30,6 +30,7 @@ import com.google.inject.name.Named;
 import android.app.Activity;
 import android.util.Log;
 import com.madgag.agit.guice.RepositoryScope;
+import com.madgag.agit.prompts.DialogPromptUIBehaviour;
 
 public class RepositoryContext
       //  implements IndexChangedListener, RefsChangedListener

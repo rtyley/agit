@@ -56,6 +56,10 @@ public class GitIntents {
 		String directory = intent.getStringExtra("directory");
 		return new File(directory);
 	}
+
+    public static String sourceUriFrom(Intent intent) {
+		return intent.getStringExtra(EXTRA_SOURCE_URI);
+	}
 	
 	public static File gitDirFrom(Intent intent) {
 		String gitdirString = intent.getStringExtra(GITDIR);

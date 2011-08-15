@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.madgag.agit;
+package com.madgag.agit.git.model;
 
 import com.google.common.base.Function;
 import com.google.inject.Inject;
-import com.madgag.agit.RDTBranch.BranchSummary;
+import com.madgag.agit.git.model.RDTBranch.BranchSummary;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefDatabase;
 import org.eclipse.jgit.lib.Repository;
@@ -86,12 +86,12 @@ public class RDTBranch extends RepoDomainType<BranchSummary> {
 	}
 
 	@Override
-	String idFor(BranchSummary bs) {
+    public String idFor(BranchSummary bs) {
         return bs.getShortName();
 	}
 	
 	@Override
-	CharSequence shortDescriptionOf(BranchSummary bs) {
+    public CharSequence shortDescriptionOf(BranchSummary bs) {
         return bs.getLatestCommit().getShortMessage()+" "+timeSinceSeconds(bs.getLatestCommit().getCommitTime());
 	}
 

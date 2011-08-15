@@ -24,15 +24,15 @@ import static android.view.View.VISIBLE;
 import static android.view.animation.AnimationUtils.loadAnimation;
 import static com.google.common.collect.Maps.newEnumMap;
 import static com.madgag.agit.R.anim.*;
-import static com.madgag.agit.R.string.tag_commit_menu_option;
-import static com.madgag.agit.Relation.CHILD;
-import static com.madgag.agit.Relation.PARENT;
+import static com.madgag.agit.git.model.Relation.CHILD;
+import static com.madgag.agit.git.model.Relation.PARENT;
 import static java.lang.System.currentTimeMillis;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
+import com.madgag.agit.git.model.Relation;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
@@ -72,6 +72,10 @@ public class CommitViewerActivity extends RepoScopedActivityBase {
 		};
 	}
     
+    public static Intent revCommitViewIntentFor(RepoSummary repoSummary, RevCommit commit) {
+        return revCommitViewIntentFor(repoSummary.getRepo().getDirectory(), commit.name());
+    }
+
     public static Intent revCommitViewIntentFor(File gitdir, String commitId) {
 		return commitViewerIntentBuilderFor(gitdir).commit(commitId).toIntent();
 	}

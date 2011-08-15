@@ -52,6 +52,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 import static com.google.common.collect.Iterables.find;
 import static com.madgag.agit.GitIntents.EXTRA_SOURCE_URI;
 import static com.madgag.agit.GitIntents.EXTRA_TARGET_DIR;
+import static com.madgag.agit.GitIntents.sourceUriFrom;
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
 import static com.madgag.agit.R.string.*;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
@@ -211,7 +212,7 @@ public class CloneLauncherActivity extends RoboActivity {
     }
 
     private void setSourceUriFrom(Intent intent) {
-		String sourceUri= intent.getStringExtra(EXTRA_SOURCE_URI);
+		String sourceUri= sourceUriFrom(intent);
 		if (sourceUri != null) {
 			cloneUrlEditText.setText(sourceUri);
             setCursorToEnd(cloneUrlEditText);
