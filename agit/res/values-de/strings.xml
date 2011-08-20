@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Agit</string>
+    <string name="app_strap">Android Git Client</string>
+    <string name="suggest_repos_button">Repository hinzufügen...</string>
+    <string name="about_app_menu_option">Über</string>
+    <string name="about_activity_title">Über...</string>
+    <string name="using_ssh_activity_title">SSH Installationshilfe</string>
+    <string name="clone_launcher_activity_title">Klonen...</string>
+    <string name="clone_menu_option">Klonen...</string>
+    <string name="enter_clone_url">URL</string>
+    <string name="clone_target_folder_label">Zielordner</string>
+    <string name="clone_url_hint">Repository URL</string>
+    <string name="clone_directory_hint">Ordner für den Checkout</string>
+    <string name="clone_readiness_needs_user_to_enter_a_url">Bitte Repository URL eingeben- oder hier auswählen #suggest_repo[example repos].</string>
+    <string name="clone_readiness_folder_already_exists">Ordner bereits vorhanden- #specify_target_dir[specify an alternative] location?</string>
+    <string name="clone_readiness_repository_folder_already_exists">Ordner existiert bereits lokal- view #view_existing_repo[existing repo]?</string>
+    <string name="ssh_agent_not_correctly_installed">Kein SSH-Agent verfügbar- view #view_ssh_instructions[SSH setup guide]?</string>
+
+    <string name="repo_list_title">Lokale Repositories</string>
+
+    <string name="use_default_target_directory_checkbox_label">Benutze Standard-Speicherplatz</string>
+    <string name="bare_repo_checkbox_label">Bare</string>
+
+
+    <string name="execute_clone_button_label">Klonen!</string>
+    <string name="delete_repo_menu_option">Lösche Repository</string>
+    <string name="delete_tag_menu_option">Lösche Tag</string>
+
+    <string name="latest_commit_title">Letzter Commit</string>
+    <string name="empty_list">« leer »</string>
+    
+    <string name="tag_name_label">Name:</string>
+    <string name="tag_message_label">Nachricht (optional):</string>
+    <string name="checkout_commit_menu_option">Checkout...</string>
+    <string name="tag_commit_menu_option">Tag...</string>
+
+    <string name="clone_launcher_farewell_due_to_clone_launched">Klonen gestartet!</string>
+    <string name="object_id_copied">Objekt ID<br /><small><b><tt>%s</tt></b></small><br />In die Zwischenablage kopiert!</string>
+
+    <string name="ask_host_key_ok_ticker" >"Host %1$s SSH Fingerabdruck..."</string>
+    <string name="ask_host_key_ok" >"Fingerabdruck des Schlüssels von %1$s: %2$s OK?"</string>
+
+    <string name="diff_seekbar_before">VORHER</string>
+    <string name="diff_seekbar_after">NACHHER</string>
+</resources>
