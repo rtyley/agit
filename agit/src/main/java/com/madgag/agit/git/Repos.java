@@ -24,6 +24,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.System.identityHashCode;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
+import static org.eclipse.jgit.storage.file.WindowCacheConfig.MB;
 
 import java.io.File;
 import java.util.List;
@@ -35,6 +36,8 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.lib.RepositoryCache.FileKey;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.storage.file.WindowCache;
+import org.eclipse.jgit.storage.file.WindowCacheConfig;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.util.FS;
 
@@ -44,6 +47,14 @@ public class Repos {
 
     private final static String TAG = "Repos";
 
+    static {
+        // Set memory config appropriate to Android devices
+        WindowCacheConfig cfg = new WindowCacheConfig();
+        cfg.setPackedGitLimit(2 * MB);
+        cfg.setDeltaBaseCacheLimit(2 * MB);
+        cfg.setStreamFileThreshold(1 * MB);
+        WindowCache.reconfigure(cfg);
+    }
 
 	public static List<File> knownRepos() {
 		File reposDir = new File(getExternalStorageDirectory(),"git-repos");
