@@ -19,10 +19,6 @@
 
 package com.madgag.agit;
 
-import java.io.File;
-
-import org.eclipse.jgit.lib.Constants;
-
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -33,7 +29,7 @@ import android.util.Log;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.util.FS;
 
-import static org.eclipse.jgit.lib.RepositoryCache.FileKey.isGitRepository;
+import java.io.File;
 
 public class GitInfoProvider extends ContentProvider {
 	public static final Uri CONTENT_URI  = Uri.parse("content://com.madgag.agit.gitinfoprovider/repos");

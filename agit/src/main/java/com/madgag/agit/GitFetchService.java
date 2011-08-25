@@ -19,61 +19,56 @@
 
 package com.madgag.agit;
 
-import com.madgag.agit.git.TransportFactory;
+import android.util.Log;
+import com.google.inject.Inject;
 import com.madgag.agit.guice.OperationScoped;
 import com.madgag.agit.operations.*;
-import org.eclipse.jgit.errors.NotSupportedException;
-import org.eclipse.jgit.errors.TransportException;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.TransportConfigCallback;
+import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.transport.*;
 
-import android.util.Log;
-
-import com.google.inject.Inject;
-import com.jcraft.jsch.JSchException;
-
 import java.util.Collection;
+import java.util.Collections;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 @OperationScoped
 public class GitFetchService {
 	
 	private static String TAG = "GFS";
-	
-	private final TransportFactory transportFactory;
-    private final ProgressListener<Progress> progressListener;
-    @Inject RepoUpdateBroadcaster repoUpdateBroadcaster;
-    @Inject CancellationSignaller cancellationSignaller;
-	
-	@Inject
-	public GitFetchService(TransportFactory transportFactory, ProgressListener<Progress> progressListener) {
-		this.transportFactory = transportFactory;
-        this.progressListener = progressListener;
-    }
+
+	@Inject Git git;
+    @Inject MessagingProgressMonitor messagingProgressMonitor;
+	@Inject CredentialsProvider credentialsProvider;
+	@Inject	TransportConfigCallback transportConfigCallback;
+	@Inject RepoUpdateBroadcaster repoUpdateBroadcaster;
 
 	public FetchResult fetch(RemoteConfig remote, Collection<RefSpec> toFetch) {
 		Log.d(TAG, "About to run fetch : " + remote.getName()+" "+remote.getURIs());
-		
-		Transport transport = transportFactory.transportFor(remote);
+
+		FetchResult fetchResult = null;
 		try {
-			FetchResult fetchResult = transport.fetch(new MessagingProgressMonitor(progressListener, cancellationSignaller), toFetch);
-			Log.d(TAG, "Fetch complete with : " + fetchResult);
-            for (TrackingRefUpdate update : fetchResult.getTrackingRefUpdates()) {
-                Log.d(TAG, "TrackingRefUpdate : " + update.getLocalName()+" old="+update.getOldObjectId()+" new="+update.getNewObjectId());
-            }
-            repoUpdateBroadcaster.broadcastUpdate();
-			return fetchResult;
-		} catch (NotSupportedException e) {
+
+			fetchResult = git.fetch()
+					.setProgressMonitor(messagingProgressMonitor)
+					.setRemote(remote.getName())
+					.setRefSpecs(toFetch==null? Collections.<RefSpec>emptyList():newArrayList(toFetch))
+					.setTransportConfigCallback(transportConfigCallback)
+					.setCredentialsProvider(credentialsProvider)
+					.call();
+		} catch (InvalidRemoteException e) {
 			throw new RuntimeException(e);
-		} catch (TransportException e) {
-			Log.e(TAG, "TransportException ", e);
-			String message = e.getMessage();
-			Throwable cause = e.getCause();
-			if (cause != null && cause instanceof JSchException) {
-				message = "SSH: " + ((JSchException) cause).getMessage();
-			}
-			throw new RuntimeException(message, e);
-		} finally {
-			Log.d(TAG, "Closing transport " + transport);
-			transport.close();
 		}
+		Log.d(TAG, "Fetch complete with : " + fetchResult);
+		for (TrackingRefUpdate update : fetchResult.getTrackingRefUpdates()) {
+			Log.d(TAG, "TrackingRefUpdate : " + update.getLocalName()+" old="+update.getOldObjectId()+" new="+update.getNewObjectId());
+		}
+		repoUpdateBroadcaster.broadcastUpdate();
+		return fetchResult;
+//			if (cause != null && cause instanceof JSchException) {
+//				message = "SSH: " + ((JSchException) cause).getMessage();
+//			}
 	}
+
 }

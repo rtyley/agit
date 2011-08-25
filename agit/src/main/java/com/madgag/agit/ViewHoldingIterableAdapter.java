@@ -26,8 +26,6 @@ import com.madgag.android.listviews.ViewCreator;
 import com.madgag.android.listviews.ViewFactory;
 import com.madgag.android.listviews.ViewHolderFactory;
 
-import java.nio.channels.NonWritableChannelException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 

@@ -1,21 +1,20 @@
 package com.madgag.agit.operation.lifecycle;
 
-import static android.app.Notification.FLAG_AUTO_CANCEL;
-import static android.content.Context.NOTIFICATION_SERVICE;
-import static java.lang.System.currentTimeMillis;
-
-import java.io.File;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.util.Log;
-
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.madgag.agit.guice.RepositoryScoped;
 import com.madgag.agit.operations.OpNotification;
+
+import java.io.File;
+
+import static android.app.Notification.FLAG_AUTO_CANCEL;
+import static android.content.Context.NOTIFICATION_SERVICE;
+import static java.lang.System.currentTimeMillis;
 
 @RepositoryScoped
 public class RepoNotifications {

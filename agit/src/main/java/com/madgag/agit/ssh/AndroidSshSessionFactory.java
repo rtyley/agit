@@ -14,8 +14,6 @@ import org.eclipse.jgit.util.FS;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import static com.google.common.collect.Maps.newHashMap;
-
 public class AndroidSshSessionFactory extends JschConfigSessionFactory {
 
 	private static final String TAG = "ASSF";

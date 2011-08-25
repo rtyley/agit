@@ -19,13 +19,12 @@
 
 package com.madgag.agit;
 
-import java.io.File;
-import java.net.URISyntaxException;
-
-import org.eclipse.jgit.transport.RemoteConfig;
-
 import android.content.Intent;
 import android.os.Bundle;
+import org.eclipse.jgit.transport.RemoteConfig;
+
+import java.io.File;
+import java.net.URISyntaxException;
 
 public class RemoteViewer extends RepoScopedActivityBase {
     

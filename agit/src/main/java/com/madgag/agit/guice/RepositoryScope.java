@@ -1,21 +1,19 @@
 package com.madgag.agit.guice;
 
-import static com.google.common.base.Preconditions.checkState;
-import static com.google.inject.name.Names.named;
-
-import java.io.File;
-import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
-
 import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;
 import com.google.inject.AbstractModule;
 import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.OutOfScopeException;
-import com.google.inject.Provider;
-import com.google.inject.Scope;
 import org.eclipse.jgit.lib.Repository;
+
+import java.io.File;
+import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
+
+import static com.google.common.base.Preconditions.checkState;
+import static com.google.inject.name.Names.named;
 
 
 public class RepositoryScope extends ScopeBase {

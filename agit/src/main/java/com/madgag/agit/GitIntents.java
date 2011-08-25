@@ -19,15 +19,14 @@
 
 package com.madgag.agit;
 
-import static com.madgag.agit.git.Repos.openRepoFor;
-
-import java.io.File;
-
+import android.content.Intent;
+import android.util.Log;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 
-import android.content.Intent;
-import android.util.Log;
+import java.io.File;
+
+import static com.madgag.agit.git.Repos.openRepoFor;
 
 public class GitIntents {
 

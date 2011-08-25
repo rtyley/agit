@@ -19,21 +19,20 @@
 
 package com.madgag.agit.operations;
 
-import static android.R.drawable.stat_notify_error;
-import static java.lang.System.currentTimeMillis;
+import android.os.Handler;
+import android.util.Log;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.name.Named;
+import com.madgag.agit.operation.lifecycle.OperationLifecycleSupport;
+import com.madgag.android.blockingprompt.PromptBroker;
+import roboguice.util.RoboAsyncTask;
 
 import java.util.concurrent.Future;
 
-import com.google.inject.Provider;
-import com.google.inject.name.Named;
-import com.madgag.android.blockingprompt.PromptBroker;
-import roboguice.util.RoboAsyncTask;
-import android.os.Handler;
-import android.util.Log;
-
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-import com.madgag.agit.operation.lifecycle.OperationLifecycleSupport;
+import static android.R.drawable.stat_notify_error;
+import static java.lang.System.currentTimeMillis;
 
 public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements ProgressListener<Progress> {
 
@@ -86,7 +85,7 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
     protected void onException(Exception e) throws RuntimeException {
         String opName = operation.getName();
         boolean cancelled = operation.isCancelled();
-        Log.d(TAG, "Examining exception "+e+" op "+operation+" cancelled="+cancelled);
+        Log.e(TAG, "Examining exception "+e+" op "+operation+" cancelled="+cancelled, e);
         OpNotification notification =
                 cancelled ?new OpNotification(stat_notify_error, opName +" cancelled", operation.getUrl().toString()):
                         new OpNotification(stat_notify_error, opName +" failed", e.getMessage());

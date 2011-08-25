@@ -1,10 +1,6 @@
 package com.madgag.android;
 
-import android.nfc.Tag;
 import android.text.Editable;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.View;

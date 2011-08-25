@@ -1,22 +1,13 @@
 package com.madgag.agit;
 
-import com.google.inject.Inject;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Repository;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
 
-import static com.madgag.agit.GitTestUtils.unpackRepo;
-import static com.madgag.agit.GitTestUtils.unpackRepoAndGetGitDir;
+import static com.madgag.agit.OracleJVMTestEnvironment.helper;
 import static com.madgag.agit.TagViewer.tagViewerIntentFor;
-import static com.madgag.agit.matchers.VisibilityMatcher.gone;
-import static com.madgag.agit.matchers.VisibilityMatcher.visible;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 
 @RunWith(InjectedTestRunner.class)
 public class TagViewerRobolectricTest {
@@ -24,7 +15,7 @@ public class TagViewerRobolectricTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        gitdirForSmallRepo = unpackRepoAndGetGitDir("small-repo.with-tags.zip");
+        gitdirForSmallRepo = helper().unpackRepoAndGetGitDir("small-repo.with-tags.zip");
     }
 
 

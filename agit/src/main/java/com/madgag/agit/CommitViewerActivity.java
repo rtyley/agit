@@ -19,29 +19,6 @@
 
 package com.madgag.agit;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-import static android.view.animation.AnimationUtils.loadAnimation;
-import static com.google.common.collect.Maps.newEnumMap;
-import static com.madgag.agit.R.anim.*;
-import static com.madgag.agit.git.model.Relation.CHILD;
-import static com.madgag.agit.git.model.Relation.PARENT;
-import static java.lang.System.currentTimeMillis;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-
-import com.madgag.agit.git.model.Relation;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.revplot.PlotCommit;
-import org.eclipse.jgit.revplot.PlotCommitList;
-import org.eclipse.jgit.revplot.PlotLane;
-import org.eclipse.jgit.revplot.PlotWalk;
-import org.eclipse.jgit.revwalk.RevCommit;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -54,10 +31,31 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.TextView;
-
 import com.google.common.base.Function;
 import com.google.inject.Inject;
 import com.madgag.agit.CommitNavigationView.CommitSelectedListener;
+import com.madgag.agit.git.model.Relation;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.revplot.PlotCommit;
+import org.eclipse.jgit.revplot.PlotCommitList;
+import org.eclipse.jgit.revplot.PlotLane;
+import org.eclipse.jgit.revplot.PlotWalk;
+import org.eclipse.jgit.revwalk.RevCommit;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+import static android.view.animation.AnimationUtils.loadAnimation;
+import static com.google.common.collect.Maps.newEnumMap;
+import static com.madgag.agit.R.anim.*;
+import static com.madgag.agit.git.model.Relation.CHILD;
+import static com.madgag.agit.git.model.Relation.PARENT;
+import static java.lang.System.currentTimeMillis;
 
 public class CommitViewerActivity extends RepoScopedActivityBase {
 	private static final String TAG = "CVA";

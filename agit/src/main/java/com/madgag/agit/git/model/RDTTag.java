@@ -21,8 +21,8 @@ package com.madgag.agit.git.model;
 
 import com.google.common.base.Function;
 import com.google.inject.Inject;
-import com.madgag.agit.git.model.RDTTag.TagSummary;
 import com.madgag.agit.git.GitObjectFunction;
+import com.madgag.agit.git.model.RDTTag.TagSummary;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;

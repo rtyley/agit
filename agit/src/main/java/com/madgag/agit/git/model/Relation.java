@@ -19,13 +19,13 @@
 
 package com.madgag.agit.git.model;
 
-import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
-import static java.util.Arrays.asList;
+import org.eclipse.jgit.revplot.PlotCommit;
+import org.eclipse.jgit.revplot.PlotLane;
 
 import java.util.List;
 
-import org.eclipse.jgit.revplot.PlotCommit;
-import org.eclipse.jgit.revplot.PlotLane;
+import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
+import static java.util.Arrays.asList;
 
 public enum Relation {
 	PARENT  {

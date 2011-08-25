@@ -19,24 +19,24 @@
 
 package com.madgag.agit;
 
-import static com.madgag.agit.GitTestUtils.newFolder;
-import static org.eclipse.jgit.lib.Constants.DOT_GIT;
+import android.content.Context;
+import android.test.suitebuilder.annotation.SmallTest;
+import com.madgag.agit.matchers.GitTestHelper;
+import com.madgag.agit.operation.lifecycle.RepoNotifications;
+import roboguice.test.RoboUnitTestCase;
 
 import java.io.File;
 
-import android.content.Context;
-import roboguice.test.RoboUnitTestCase;
-import android.test.suitebuilder.annotation.SmallTest;
-
-import com.madgag.agit.operation.lifecycle.RepoNotifications;
+import static org.eclipse.jgit.lib.Constants.DOT_GIT;
 
 public class RepoNotificationsTest extends RoboUnitTestCase<AgitTestApplication> {
 	
 	private static final String TAG="RNT";
+	private final GitTestHelper helper = AndroidTestEnvironment.helper(getInstrumentation());
 	
 	@SmallTest
 	public void testShouldHaveDifferentOngoingNotificationIds() throws Exception {
-		File gitdir1=new File(newFolder(), DOT_GIT),gitdir2=new File(newFolder(), DOT_GIT);
+		File gitdir1=new File(helper.newFolder(), DOT_GIT),gitdir2=new File(helper.newFolder(), DOT_GIT);
 
         Context c = getInstrumentation().getContext();
         RepoNotifications roc1a = new RepoNotifications(c, gitdir1, null);

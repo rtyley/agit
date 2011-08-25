@@ -8,8 +8,6 @@ import com.madgag.agit.guice.RepositoryScoped;
 
 import java.io.File;
 
-import static com.google.common.collect.Lists.newArrayList;
-
 @RepositoryScoped
 public class RepoOpRegistry {
 

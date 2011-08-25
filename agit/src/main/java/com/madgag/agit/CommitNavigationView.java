@@ -19,16 +19,6 @@
 
 package com.madgag.agit;
 
-import static com.google.common.collect.Maps.newEnumMap;
-import static com.madgag.agit.git.model.Relation.CHILD;
-import static com.madgag.agit.git.model.Relation.PARENT;
-
-import java.util.Map;
-
-import com.madgag.agit.git.model.Relation;
-import org.eclipse.jgit.revplot.PlotCommit;
-import org.eclipse.jgit.revplot.PlotLane;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -36,6 +26,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import com.madgag.agit.git.model.Relation;
+import org.eclipse.jgit.revplot.PlotCommit;
+import org.eclipse.jgit.revplot.PlotLane;
+
+import java.util.Map;
+
+import static com.google.common.collect.Maps.newEnumMap;
+import static com.madgag.agit.git.model.Relation.CHILD;
+import static com.madgag.agit.git.model.Relation.PARENT;
 
 public class CommitNavigationView extends LinearLayout {
 

@@ -37,9 +37,9 @@ import java.net.URISyntaxException;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static com.madgag.agit.GitIntents.*;
+import static com.madgag.agit.RepositoryViewerActivity.manageRepoPendingIntent;
 import static com.madgag.agit.git.Repos.openRepoFor;
 import static com.madgag.agit.git.Repos.remoteConfigFor;
-import static com.madgag.agit.RepositoryViewerActivity.manageRepoPendingIntent;
 import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 
 public class GitOperationsService extends RoboService {
@@ -89,9 +89,7 @@ public class GitOperationsService extends RoboService {
 		
 		String action = intent.getAction();
 		Log.i(TAG, "Got action "+action);
-		
-		
-		
+			
 		GitOperation operation = null;
 		if (action.equals("org.openintents.git.CLONE")) {
 			String sourceUriString = intent.getStringExtra("source-uri");

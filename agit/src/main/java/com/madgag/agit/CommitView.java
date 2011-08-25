@@ -19,21 +19,25 @@
 
 package com.madgag.agit;
 
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
-import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
-import java.io.IOException;
-import java.util.Map;
-
 import android.app.Activity;
+import android.content.Context;
 import android.text.SpannableStringBuilder;
 import android.text.style.CharacterStyle;
 import android.text.style.TypefaceSpan;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.*;
+import android.widget.TabHost.TabContentFactory;
+import android.widget.TabHost.TabSpec;
+import com.madgag.agit.CommitNavigationView.CommitSelectedListener;
 import com.madgag.agit.diff.CommitChangeListAdapter;
 import com.madgag.agit.diff.DiffSliderView;
 import com.madgag.agit.views.ObjectIdView;
 import com.madgag.agit.views.PersonIdentView;
+import com.markupartist.android.widget.ActionBar;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -43,22 +47,13 @@ import org.eclipse.jgit.revplot.PlotLane;
 import org.eclipse.jgit.revplot.PlotWalk;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ExpandableListView;
-import android.widget.LinearLayout;
-import android.widget.TabHost;
-import android.widget.TabHost.TabContentFactory;
-import android.widget.TabHost.TabSpec;
-import android.widget.TabWidget;
-import android.widget.TextView;
+import java.io.IOException;
+import java.util.Map;
 
-import com.madgag.agit.CommitNavigationView.CommitSelectedListener;
-import com.markupartist.android.widget.ActionBar;
+import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 
 public class CommitView extends LinearLayout {
 	

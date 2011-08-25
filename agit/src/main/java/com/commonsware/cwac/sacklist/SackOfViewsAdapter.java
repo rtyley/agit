@@ -18,7 +18,7 @@ package com.commonsware.cwac.sacklist;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 

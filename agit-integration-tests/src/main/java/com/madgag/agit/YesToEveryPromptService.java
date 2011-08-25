@@ -19,13 +19,11 @@
 
 package com.madgag.agit;
 
+import android.util.Log;
+import com.google.inject.Module;
 import com.madgag.agit.operations.OpPrompt;
 import com.madgag.android.blockingprompt.BlockingPromptService;
 import roboguice.config.AbstractAndroidModule;
-import android.util.Log;
-
-import com.google.inject.Module;
-import com.jcraft.jsch.UserInfo;
 
 import static java.lang.Boolean.TRUE;
 

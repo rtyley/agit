@@ -2,7 +2,6 @@ package com.madgag.agit;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import com.markupartist.android.widget.ActionBar;
 import com.petebevin.markdown.MarkdownProcessor;
@@ -11,7 +10,6 @@ import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 
 import static com.madgag.agit.R.layout.about_activity;
-import static com.madgag.agit.R.string.about_activity_title;
 
 public abstract class MarkdownActivityBase extends RoboActivity {
 

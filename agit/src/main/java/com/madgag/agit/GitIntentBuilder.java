@@ -19,14 +19,13 @@
 
 package com.madgag.agit;
 
-import java.io.File;
-
+import android.content.Intent;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.RemoteConfig;
 
-import android.content.Intent;
+import java.io.File;
 
 import static com.madgag.agit.GitIntents.*;
 

@@ -20,8 +20,7 @@
 package com.madgag.agit.views;
 
 import android.content.Context;
-import android.text.*;
-import android.text.style.AlignmentSpan;
+import android.text.ClipboardManager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;

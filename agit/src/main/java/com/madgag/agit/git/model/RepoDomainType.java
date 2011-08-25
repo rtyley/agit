@@ -19,23 +19,14 @@
 
 package com.madgag.agit.git.model;
 
-import static android.R.layout.simple_list_item_2;
-import static android.text.Html.fromHtml;
-import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
+import android.content.Intent;
+import com.madgag.agit.GitIntentBuilder;
+import org.eclipse.jgit.lib.Repository;
 
 import java.util.Collection;
 import java.util.List;
 
-import android.*;
-import android.content.Context;
-import android.view.View;
-import com.madgag.agit.GitIntentBuilder;
-import com.madgag.android.listviews.ViewFactory;
-import com.madgag.android.listviews.ViewHolder;
-import com.madgag.android.listviews.ViewHolderFactory;
-import org.eclipse.jgit.lib.Repository;
-
-import android.content.Intent;
+import static android.text.Html.fromHtml;
 
 public abstract class RepoDomainType<E> { 
 	

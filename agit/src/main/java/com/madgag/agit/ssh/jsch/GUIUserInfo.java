@@ -19,20 +19,15 @@
 
 package com.madgag.agit.ssh.jsch;
 
-import static android.R.drawable.stat_sys_warning;
+import android.util.Log;
+import com.google.inject.Inject;
+import com.jcraft.jsch.UserInfo;
+import com.madgag.agit.guice.RepositoryScoped;
+import com.madgag.android.blockingprompt.BlockingPromptService;
+
 import static com.madgag.agit.operations.OpNotification.alert;
 import static com.madgag.agit.operations.OpPrompt.prompt;
 import static com.madgag.agit.operations.OpPrompt.promptYesOrNo;
-
-import android.util.Log;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
-import com.google.inject.Module;
-import com.jcraft.jsch.UserInfo;
-import com.madgag.android.blockingprompt.BlockingPromptService;
-import com.madgag.agit.guice.RepositoryScoped;
-import com.madgag.agit.operations.OpNotification;
 
 @RepositoryScoped
 public class GUIUserInfo implements UserInfo {

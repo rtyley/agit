@@ -1,13 +1,11 @@
 package roboguice.test;
 
-import roboguice.application.RoboApplication;
-import roboguice.service.RoboService;
-import roboguice.inject.ContextScope;
-
 import android.content.Context;
 import android.test.ServiceTestCase;
-
 import com.google.inject.Injector;
+import roboguice.application.RoboApplication;
+import roboguice.inject.ContextScope;
+import roboguice.service.RoboService;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;

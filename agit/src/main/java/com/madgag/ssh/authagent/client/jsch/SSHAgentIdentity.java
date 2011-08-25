@@ -2,7 +2,6 @@ package com.madgag.ssh.authagent.client.jsch;
 
 import android.os.RemoteException;
 import android.util.Log;
-
 import com.google.inject.Provider;
 import com.jcraft.jsch.Identity;
 import com.jcraft.jsch.JSchException;

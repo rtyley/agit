@@ -19,11 +19,10 @@
 
 package com.madgag.agit.operations;
 
+import android.util.Log;
 import com.google.inject.Inject;
 import com.madgag.agit.guice.OperationScoped;
 import org.eclipse.jgit.lib.ProgressMonitor;
-
-import android.util.Log;
 
 @OperationScoped
 public class MessagingProgressMonitor implements ProgressMonitor {

@@ -1,11 +1,9 @@
 package com.madgag.agit.guice;
 
 import com.google.inject.Key;
-import com.google.inject.OutOfScopeException;
 import com.google.inject.Provider;
 import com.google.inject.Scope;
 
-import java.io.File;
 import java.util.Map;
 
 public abstract class ScopeBase implements Scope {

@@ -21,9 +21,6 @@ package com.madgag.agit.operations;
 
 import android.util.Log;
 import com.google.inject.Inject;
-import com.madgag.agit.operations.GitOperation;
-import com.madgag.agit.operations.OpNotification;
-import com.madgag.agit.operations.RepoUpdateBroadcaster;
 import org.eclipse.jgit.lib.Repository;
 
 import java.io.File;

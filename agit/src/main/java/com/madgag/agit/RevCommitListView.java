@@ -19,30 +19,22 @@
 
 package com.madgag.agit;
 
-import java.util.Collections;
-import java.util.List;
-
-import android.util.Log;
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-import com.madgag.android.lazydrawables.ImageSession;
-import com.madgag.android.listviews.ViewHoldingListAdapter;
-import com.madgag.android.listviews.ViewHolder;
-import com.madgag.android.listviews.ViewHolderFactory;
-import com.markupartist.android.widget.PullToRefreshListView;
-import org.eclipse.jgit.revwalk.RevCommit;
-
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-
 import com.google.common.base.Function;
+import com.google.inject.Inject;
+import com.madgag.android.listviews.ViewHoldingListAdapter;
+import com.markupartist.android.widget.PullToRefreshListView;
+import org.eclipse.jgit.revwalk.RevCommit;
 import roboguice.inject.InjectorProvider;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
+import java.util.Collections;
+import java.util.List;
+
 import static com.madgag.agit.R.layout.rev_commit_list_item;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 

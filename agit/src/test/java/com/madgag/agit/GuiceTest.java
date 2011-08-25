@@ -1,12 +1,11 @@
 package com.madgag.agit;
 
-import static com.google.inject.Guice.createInjector;
-import static com.google.inject.name.Names.named;
-
-import org.junit.Test;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Key;
+import org.junit.Test;
+
+import static com.google.inject.Guice.createInjector;
+import static com.google.inject.name.Names.named;
 
 public class GuiceTest {
 

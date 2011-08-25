@@ -19,16 +19,9 @@
 
 package com.madgag.agit.git;
 
-import static org.eclipse.jgit.lib.Constants.OBJ_BLOB;
-import static org.eclipse.jgit.lib.Constants.OBJ_COMMIT;
-import static org.eclipse.jgit.lib.Constants.OBJ_TAG;
-import static org.eclipse.jgit.lib.Constants.OBJ_TREE;
+import org.eclipse.jgit.revwalk.*;
 
-import org.eclipse.jgit.revwalk.RevBlob;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevObject;
-import org.eclipse.jgit.revwalk.RevTag;
-import org.eclipse.jgit.revwalk.RevTree;
+import static org.eclipse.jgit.lib.Constants.*;
 
 public class GitObjects {
 	public static <T> T evaluate(RevObject revObject, GitObjectFunction<T> f) {

@@ -1,19 +1,13 @@
 package com.madgag.agit;
 
-import org.eclipse.jgit.lib.Repository;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
 
-import static com.madgag.agit.CommitViewerActivity.commitViewerIntentCreatorFor;
 import static com.madgag.agit.CommitViewerActivity.revCommitViewIntentFor;
-import static com.madgag.agit.GitTestUtils.unpackRepo;
-import static com.madgag.agit.GitTestUtils.unpackRepoAndGetGitDir;
-import static com.madgag.agit.TagViewer.tagViewerIntentFor;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static com.madgag.agit.OracleJVMTestEnvironment.helper;
 
 @RunWith(InjectedTestRunner.class)
 public class CommitViewerRobolectricTest {
@@ -21,7 +15,7 @@ public class CommitViewerRobolectricTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        gitdirForSmallRepo = unpackRepoAndGetGitDir("small-repo.with-tags.zip");
+        gitdirForSmallRepo = helper().unpackRepoAndGetGitDir("small-repo.with-tags.zip");
     }
 
     @Test

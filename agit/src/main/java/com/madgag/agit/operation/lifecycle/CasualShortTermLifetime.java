@@ -1,7 +1,7 @@
 package com.madgag.agit.operation.lifecycle;
 
-import com.madgag.agit.operations.Progress;
 import com.madgag.agit.operations.OpNotification;
+import com.madgag.agit.operations.Progress;
 
 public class CasualShortTermLifetime implements OperationLifecycleSupport {
 

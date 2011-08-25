@@ -21,8 +21,6 @@ package com.madgag.agit;
 
 import com.github.calculon.CalculonStoryTest;
 
-import java.io.File;
-
 public class AboutActivityStoryTest extends CalculonStoryTest<AboutActivity> {
 
 	public AboutActivityStoryTest() {

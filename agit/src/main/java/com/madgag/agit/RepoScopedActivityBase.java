@@ -20,15 +20,13 @@
 package com.madgag.agit;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import com.google.inject.Inject;
-
 import com.google.inject.name.Named;
 import com.madgag.agit.guice.RepositoryScope;
 import org.eclipse.jgit.lib.Repository;
 import roboguice.activity.RoboActivity;
-import android.os.Bundle;
 import roboguice.inject.InjectorProvider;
 
 import java.io.File;

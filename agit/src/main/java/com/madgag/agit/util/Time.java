@@ -22,8 +22,6 @@ package com.madgag.agit.util;
 
 import android.text.format.DateUtils;
 
-import static java.lang.System.currentTimeMillis;
-
 public class Time {
 	public static CharSequence timeSinceSeconds(int epochTimeInSeconds) {
 		return timeSinceMS(epochTimeInSeconds*1000L); 

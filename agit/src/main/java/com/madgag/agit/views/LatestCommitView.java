@@ -1,16 +1,13 @@
 package com.madgag.agit.views;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.FrameLayout;
 import com.google.inject.Inject;
-import com.madgag.agit.*;
+import com.madgag.agit.R;
+import com.madgag.agit.RepoSummary;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 import static com.madgag.agit.CommitViewerActivity.revCommitViewIntentFor;
 import static com.madgag.agit.R.id.latest_commit;
 import static com.madgag.agit.R.layout.latest_commit_view;

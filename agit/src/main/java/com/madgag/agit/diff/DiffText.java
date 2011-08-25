@@ -19,17 +19,17 @@
 
 package com.madgag.agit.diff;
 
-import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
-import static com.google.common.collect.Lists.newArrayList;
-import static name.fraser.neil.plaintext.diff_match_patch.Operation.INSERT;
+import android.text.Editable;
+import android.text.style.CharacterStyle;
+import name.fraser.neil.plaintext.diff_match_patch.Diff;
+import name.fraser.neil.plaintext.diff_match_patch.Operation;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import name.fraser.neil.plaintext.diff_match_patch.Diff;
-import name.fraser.neil.plaintext.diff_match_patch.Operation;
-import android.text.Editable;
-import android.text.style.CharacterStyle;
+import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
+import static com.google.common.collect.Lists.newArrayList;
+import static name.fraser.neil.plaintext.diff_match_patch.Operation.INSERT;
 
 public class DiffText {
 	

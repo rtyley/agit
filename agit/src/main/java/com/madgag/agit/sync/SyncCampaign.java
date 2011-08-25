@@ -19,29 +19,18 @@
 
 package com.madgag.agit.sync;
 
-import android.accounts.Account;
-import android.content.AbstractThreadedSyncAdapter;
-import android.content.ContentProviderClient;
-import android.content.Context;
 import android.content.SyncResult;
-import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.google.inject.Singleton;
 import com.google.inject.assistedinject.Assisted;
-import com.google.inject.name.Named;
 import com.madgag.agit.git.Repos;
-import com.madgag.agit.operation.lifecycle.OperationLifecycleSupport;
 import com.madgag.agit.operations.*;
 import com.madgag.android.blockingprompt.RejectBlockingPromptService;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.RemoteConfig;
-import roboguice.inject.ContextScope;
 
 import java.io.File;
-import java.util.List;
 
 import static com.madgag.agit.git.Repos.knownRepos;
 import static com.madgag.agit.git.Repos.remoteConfigFor;

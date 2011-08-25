@@ -32,9 +32,9 @@ import com.madgag.agit.git.GitObjectFunction;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.*;
 
-import static com.madgag.agit.git.GitObjects.evaluate;
 import static com.madgag.agit.R.id.*;
 import static com.madgag.agit.R.layout.object_summary_view;
+import static com.madgag.agit.git.GitObjects.evaluate;
 import static com.madgag.agit.views.ViewUtil.injectFor;
 
 public class ObjectSummaryView extends LinearLayout {

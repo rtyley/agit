@@ -19,15 +19,14 @@
 
 package com.madgag.agit.diff;
 
-import java.util.LinkedList;
-import java.util.List;
-
+import com.madgag.diff.Update;
+import com.madgag.diff.UpdatesFromDiffConverter;
 import name.fraser.neil.plaintext.SemanticBreakScorer;
 import name.fraser.neil.plaintext.diff_match_patch;
 import name.fraser.neil.plaintext.diff_match_patch.Diff;
 
-import com.madgag.diff.Update;
-import com.madgag.diff.UpdatesFromDiffConverter;
+import java.util.LinkedList;
+import java.util.List;
 
 public class FilePathDiffer {
 	

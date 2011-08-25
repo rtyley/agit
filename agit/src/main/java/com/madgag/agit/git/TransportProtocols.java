@@ -1,6 +1,5 @@
 package com.madgag.agit.git;
 
-import android.util.Log;
 import org.eclipse.jgit.JGitText;
 import org.eclipse.jgit.transport.TransportProtocol;
 import org.eclipse.jgit.transport.URIish;

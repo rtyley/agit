@@ -22,7 +22,6 @@ package com.madgag.agit.guice;
 import com.google.common.collect.MapMaker;
 import com.google.inject.*;
 import com.madgag.agit.operations.*;
-import com.madgag.agit.operations.Progress;
 import com.madgag.android.blockingprompt.BlockingPromptService;
 
 import java.util.Map;

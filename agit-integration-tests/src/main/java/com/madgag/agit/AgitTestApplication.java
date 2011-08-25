@@ -19,15 +19,14 @@
 
 package com.madgag.agit;
 
-import static java.util.Arrays.asList;
-
-import java.util.List;
-
 import android.app.Instrumentation;
 import android.content.Context;
 import android.util.Log;
-
 import com.google.inject.Module;
+
+import java.util.List;
+
+import static java.util.Arrays.asList;
 
 public class AgitTestApplication extends AgitApplication {
 	

@@ -19,64 +19,62 @@
 
 package com.madgag.agit;
 
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
+import com.jcraft.jsch.HostKeyRepository;
+import com.jcraft.jsch.UserInfo;
+import com.madgag.agit.git.AgitTransportConfig;
+import com.madgag.agit.git.TransportFactory;
+import com.madgag.agit.git.model.RDTBranch;
+import com.madgag.agit.git.model.RDTRemote;
+import com.madgag.agit.git.model.RDTTag;
+import com.madgag.agit.git.model.RepoDomainType;
+import com.madgag.agit.guice.OperationScope;
+import com.madgag.agit.guice.RepositoryScope;
+import com.madgag.agit.guice.RepositoryScoped;
+import com.madgag.agit.operations.GitAsyncTask;
+import com.madgag.agit.operations.GitAsyncTaskFactory;
+import com.madgag.agit.prompts.StatusBarPromptUI;
+import com.madgag.agit.ssh.AndroidAuthAgentProvider;
+import com.madgag.agit.ssh.AndroidSshSessionFactory;
+import com.madgag.agit.ssh.CuriousHostKeyRepository;
+import com.madgag.agit.ssh.jsch.GUIUserInfo;
+import com.madgag.agit.sync.SyncCampaign;
+import com.madgag.agit.sync.SyncCampaignFactory;
+import com.madgag.android.blockingprompt.PromptUI;
+import com.madgag.android.blockingprompt.PromptUIRegistry;
+import com.madgag.android.lazydrawables.*;
+import com.madgag.android.lazydrawables.gravatar.GravatarBitmapDownloader;
+import com.madgag.ssh.android.authagent.AndroidAuthAgent;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.TransportConfigCallback;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.SshSessionFactory;
+import roboguice.config.AbstractAndroidModule;
+import roboguice.inject.ContextScoped;
+import roboguice.inject.InjectExtra;
+
+import java.io.File;
+import java.io.IOException;
+
 import static android.os.Looper.getMainLooper;
 import static com.google.inject.assistedinject.FactoryProvider.newFactory;
 import static com.google.inject.name.Names.named;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoPendingIntent;
 import static java.lang.Thread.currentThread;
-
-import java.io.File;
-import java.io.IOException;
-
-import android.app.PendingIntent;
-import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
-import com.jcraft.jsch.HostKeyRepository;
-import com.jcraft.jsch.UserInfo;
-import com.madgag.agit.git.model.RDTBranch;
-import com.madgag.agit.git.model.RDTRemote;
-import com.madgag.agit.git.model.RDTTag;
-import com.madgag.agit.git.model.RepoDomainType;
-import com.madgag.agit.prompts.StatusBarPromptUI;
-import com.madgag.agit.ssh.jsch.GUIUserInfo;
-import com.madgag.agit.sync.SyncCampaign;
-import com.madgag.agit.sync.SyncCampaignFactory;
-import com.madgag.android.blockingprompt.*;
-import com.madgag.agit.git.TransportFactory;
-import com.madgag.agit.guice.OperationScope;
-import com.madgag.agit.guice.RepositoryScope;
-import com.madgag.agit.guice.RepositoryScoped;
-import com.madgag.agit.operations.GitAsyncTaskFactory;
-import com.madgag.agit.ssh.CuriousHostKeyRepository;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.transport.SshSessionFactory;
-
-import roboguice.config.AbstractAndroidModule;
-import roboguice.inject.ContextScoped;
-import roboguice.inject.InjectExtra;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.os.Environment;
-import android.util.Log;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.name.Named;
-import com.madgag.agit.operations.GitAsyncTask;
-import com.madgag.agit.ssh.AndroidAuthAgentProvider;
-import com.madgag.agit.ssh.AndroidSshSessionFactory;
-import com.madgag.android.lazydrawables.BitmapFileStore;
-import com.madgag.android.lazydrawables.ImageProcessor;
-import com.madgag.android.lazydrawables.ImageResourceDownloader;
-import com.madgag.android.lazydrawables.ImageResourceStore;
-import com.madgag.android.lazydrawables.ImageSession;
-import com.madgag.android.lazydrawables.ScaledBitmapDrawableGenerator;
-import com.madgag.android.lazydrawables.gravatar.GravatarBitmapDownloader;
-import com.madgag.ssh.android.authagent.AndroidAuthAgent;
 
 public class AgitModule extends AbstractAndroidModule {
 
@@ -96,6 +94,8 @@ public class AgitModule extends AbstractAndroidModule {
 
         bind(SyncCampaignFactory.class).toProvider(newFactory(SyncCampaignFactory.class, SyncCampaign.class));
 
+		bind(TransportConfigCallback.class).to(AgitTransportConfig.class);
+		bind(CredentialsProvider.class).to(GUICredentialsProvider.class);
     	bind(SshSessionFactory.class).to(AndroidSshSessionFactory.class);
     	bind(TransportFactory.class);
     	bind(PromptUIRegistry.class);
@@ -121,6 +121,11 @@ public class AgitModule extends AbstractAndroidModule {
     @Provides @RepositoryScoped
     PendingIntent createRepoManagementPendingIntent(Context context, @Named("gitdir") File gitdir) {
         return manageRepoPendingIntent(gitdir, context);
+    }
+
+	@Provides @RepositoryScoped
+	Git gitApi(Repository repository) {
+        return Git.wrap(repository);
     }
 
 	@ContextScoped

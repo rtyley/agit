@@ -1,20 +1,18 @@
 package com.madgag.agit.operations;
 
-import static android.R.drawable.stat_sys_download;
-import static android.R.drawable.stat_sys_download_done;
-
-import java.io.File;
-import java.util.Collection;
-
+import android.util.Log;
+import com.google.inject.Inject;
+import com.madgag.agit.GitFetchService;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
 
-import android.util.Log;
+import java.io.File;
+import java.util.Collection;
 
-import com.google.inject.Inject;
-import com.madgag.agit.GitFetchService;
+import static android.R.drawable.stat_sys_download;
+import static android.R.drawable.stat_sys_download_done;
 
 public class Fetch extends GitOperation {
 		

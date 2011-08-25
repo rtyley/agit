@@ -23,8 +23,6 @@ import com.github.calculon.CalculonStoryTest;
 
 import java.io.File;
 
-import static com.madgag.agit.GitTestUtils.newFolder;
-
 public class DashboardActivityTest extends CalculonStoryTest<DashboardActivity> {
 
 	private String existingFolder = File.listRoots()[0].getAbsolutePath();

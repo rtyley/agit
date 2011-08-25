@@ -22,7 +22,6 @@ package com.madgag.agit.views;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import com.madgag.agit.R;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevObject;
 import org.eclipse.jgit.revwalk.RevTag;
@@ -31,9 +30,7 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import java.io.IOException;
 
 import static com.madgag.agit.R.drawable.tag_icon;
-import static com.madgag.agit.R.id.message_text;
-import static com.madgag.agit.R.id.tagged_object;
-import static com.madgag.agit.R.id.tagger_ident;
+import static com.madgag.agit.R.id.*;
 import static com.madgag.agit.R.layout.osv_tag_summary_view;
 
 public class TagSummaryView extends OSV<RevTag> {

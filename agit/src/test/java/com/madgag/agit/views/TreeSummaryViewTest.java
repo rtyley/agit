@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static com.madgag.agit.GitTestUtils.unpackRepo;
+import static com.madgag.agit.OracleJVMTestEnvironment.helper;
 import static org.eclipse.jgit.lib.FileMode.TREE;
 
 public class TreeSummaryViewTest {
@@ -20,7 +20,7 @@ public class TreeSummaryViewTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        repo = unpackRepo("small-repo.with-tags.zip");
+        repo = helper().unpackRepo("small-repo.with-tags.zip");
     }
 
     @Test

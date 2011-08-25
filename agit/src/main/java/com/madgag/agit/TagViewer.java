@@ -43,8 +43,8 @@ import roboguice.inject.InjectView;
 import java.io.File;
 import java.io.IOException;
 
-import static com.madgag.agit.R.id.*;
-import static org.eclipse.jgit.lib.Repository.shortenRefName;
+import static com.madgag.agit.R.id.actionbar;
+import static com.madgag.agit.R.id.tv_tag_ref_object;
 
 public class TagViewer extends RepoScopedActivityBase {
 

@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.google.inject.Inject;
-import com.madgag.agit.*;
+import com.madgag.agit.R;
 import com.madgag.agit.git.model.RDTBranch;
 import org.eclipse.jgit.lib.Repository;
 

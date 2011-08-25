@@ -1,12 +1,10 @@
 package com.madgag.agit.operations;
 
-import java.io.File;
-
 import android.util.Log;
 
-import static com.madgag.agit.operations.GitOperation.Status.FINISHED;
-import static com.madgag.agit.operations.GitOperation.Status.NOT_STARTED;
-import static com.madgag.agit.operations.GitOperation.Status.RUNNING;
+import java.io.File;
+
+import static com.madgag.agit.operations.GitOperation.Status.*;
 import static java.lang.Thread.currentThread;
 
 public abstract class GitOperation implements CancellationSignaller {

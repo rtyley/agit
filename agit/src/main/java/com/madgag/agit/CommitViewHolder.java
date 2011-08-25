@@ -11,9 +11,7 @@ import com.madgag.android.lazydrawables.ImageSession;
 import com.madgag.android.listviews.ViewHolder;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-import static com.madgag.agit.R.id.iv_commit_list_item_gravatar;
-import static com.madgag.agit.R.id.tv_commit_list_item_commit_date;
-import static com.madgag.agit.R.id.tv_commit_list_item_shortdesc;
+import static com.madgag.agit.R.id.*;
 import static com.madgag.agit.views.TextUtil.ITALIC_CLIPPING_BUFFER;
 import static com.madgag.android.lazydrawables.gravatar.Gravatars.gravatarIdFor;
 

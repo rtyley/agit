@@ -19,29 +19,32 @@
 
 package com.madgag.agit.git;
 
-import static android.os.Environment.getExternalStorageDirectory;
-import static com.google.common.collect.Lists.newArrayList;
-import static java.lang.System.identityHashCode;
-import static org.eclipse.jgit.lib.Constants.DOT_GIT;
-import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
-import static org.eclipse.jgit.storage.file.WindowCacheConfig.MB;
-
-import java.io.File;
-import java.util.List;
-
+import android.util.Log;
 import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
 import com.madgag.agit.git.model.HasLatestCommit;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.lib.RepositoryCache.FileKey;
+import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.WindowCache;
 import org.eclipse.jgit.storage.file.WindowCacheConfig;
+import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
+import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.util.FS;
 
-import android.util.Log;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.List;
+
+import static android.os.Environment.getExternalStorageDirectory;
+import static com.google.common.collect.Lists.newArrayList;
+import static java.lang.System.identityHashCode;
+import static org.eclipse.jgit.lib.Constants.*;
+import static org.eclipse.jgit.storage.file.WindowCacheConfig.MB;
 
 public class Repos {
 
@@ -116,6 +119,26 @@ public class Repos {
 		}
 	}
 
+	public static RemoteConfig addRemoteTo(Repository repository, String remoteName, URIish sourceUri)
+			throws IOException {
+        StoredConfig config = repository.getConfig();
+        RemoteConfig remote;
+        try {
+            remote = new RemoteConfig(config, remoteName);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+
+        remote.addURI(sourceUri);
+        remote.addFetchRefSpec(new RefSpec().setForceUpdate(true)
+                .setSourceDestination(R_HEADS + "*",
+                        R_REMOTES + remoteName + "/*"));
+        remote.update(config);
+
+		Log.d(TAG, "About to save config...");
+		repository.getConfig().save();
+		return remote;
+	}
 
     public final static Function<RevCommit, Integer> COMMIT_TIME = new Function<RevCommit, Integer>() {
         public Integer apply(RevCommit commit) {

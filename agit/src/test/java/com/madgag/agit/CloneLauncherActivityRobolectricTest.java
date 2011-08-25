@@ -14,7 +14,8 @@ import static com.madgag.agit.matchers.CharSequenceMatcher.charSequence;
 import static com.madgag.agit.matchers.IsCheckedMatcher.checked;
 import static com.madgag.agit.matchers.IsCheckedMatcher.unchecked;
 import static com.xtremelabs.robolectric.matchers.TextViewHasTextMatcher.hasText;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 @RunWith(InjectedTestRunner.class)

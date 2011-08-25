@@ -19,22 +19,20 @@
 
 package com.madgag.agit;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ListView;
 import com.google.inject.Inject;
 import com.google.inject.Key;
 import com.madgag.agit.git.model.RepoDomainType;
 import com.madgag.agit.guice.RepositoryScope;
 import com.madgag.android.listviews.ViewFactory;
-import com.madgag.android.listviews.ViewHoldingListAdapter;
 import com.madgag.android.listviews.ViewHolder;
 import com.madgag.android.listviews.ViewHolderFactory;
-import org.eclipse.jgit.lib.Repository;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ListView;
-
+import com.madgag.android.listviews.ViewHoldingListAdapter;
 import com.markupartist.android.widget.ActionBar;
+import org.eclipse.jgit.lib.Repository;
 import roboguice.activity.RoboListActivity;
 
 import static android.R.layout.simple_list_item_2;

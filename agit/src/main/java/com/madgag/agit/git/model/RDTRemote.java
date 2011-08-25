@@ -19,14 +19,14 @@
 
 package com.madgag.agit.git.model;
 
-import static org.eclipse.jgit.transport.RemoteConfig.getAllRemoteConfigs;
+import com.google.inject.Inject;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.transport.RemoteConfig;
 
 import java.net.URISyntaxException;
 import java.util.List;
 
-import com.google.inject.Inject;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.transport.RemoteConfig;
+import static org.eclipse.jgit.transport.RemoteConfig.getAllRemoteConfigs;
 
 
 public class RDTRemote extends RepoDomainType<RemoteConfig> {

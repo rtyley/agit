@@ -1,9 +1,9 @@
 package com.madgag.agit.operation.lifecycle;
 
 import android.widget.RemoteViews;
+import com.madgag.agit.R;
 import com.madgag.agit.operations.Progress;
 import com.madgag.agit.operations.ProgressListener;
-import com.madgag.agit.R;
 
 public class StatusBarProgressView implements ProgressListener<Progress> {
 

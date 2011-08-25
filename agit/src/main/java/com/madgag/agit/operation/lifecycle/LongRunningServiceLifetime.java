@@ -1,14 +1,14 @@
 package com.madgag.agit.operation.lifecycle;
 
-import static android.app.Notification.FLAG_ONGOING_EVENT;
 import android.app.Notification;
 import android.app.Service;
 import android.util.Log;
 import android.widget.RemoteViews;
-
-import com.madgag.agit.operations.Progress;
 import com.madgag.agit.R;
 import com.madgag.agit.operations.OpNotification;
+import com.madgag.agit.operations.Progress;
+
+import static android.app.Notification.FLAG_ONGOING_EVENT;
 
 // Stateful? Relates to a specific operation?
 public class LongRunningServiceLifetime implements OperationLifecycleSupport {

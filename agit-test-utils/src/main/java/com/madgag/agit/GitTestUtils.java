@@ -20,23 +20,21 @@
 package com.madgag.agit;
 
 import android.os.Environment;
-import org.apache.commons.compress.archivers.ArchiveException;
-import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.util.FS;
-import org.hamcrest.CoreMatchers;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.Properties;
 
-import static com.madgag.compress.CompressUtil.unzip;
-import static java.lang.System.currentTimeMillis;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -60,14 +58,6 @@ public class GitTestUtils {
 		return hostAddress;
 	}
 
-	private static long unique_number = currentTimeMillis();
-
-	public static File newFolder() {
-		File path = new File(Environment.getExternalStorageDirectory(),
-				"agit-test-repos");
-		return new File(path, "" + (unique_number++));
-	}
-
 	public static URIish integrationGitServerURIFor(String repoPath)
 			throws URISyntaxException, IOException, FileNotFoundException,
 			UnknownHostException {
@@ -79,21 +69,7 @@ public class GitTestUtils {
                 .setPath(repoPath);
 	}
 
-
-	public static Repository unpackRepo(String fileName) throws IOException, ArchiveException {
-        return repoFor(unpackRepoAndGetGitDir(fileName));
-    }
-
-    public static File unpackRepoAndGetGitDir(String fileName) throws IOException, ArchiveException {
-        File repoParentFolder = new File(FileUtils.getTempDirectory(),"unpacked-"+fileName+"-"+currentTimeMillis());
-        InputStream rawZipFileInputStream = GitTestUtils.class.getResourceAsStream("/" + fileName);
-        assertThat(rawZipFileInputStream, notNullValue());
-        unzip(rawZipFileInputStream, repoParentFolder);
-        rawZipFileInputStream.close();
-        return repoParentFolder;
-    }
-
-    private static Repository repoFor(File folder) throws IOException {
+    public static Repository repoFor(File folder) throws IOException {
         File resolvedGitDir = resolveGitDirFor(folder);
         assertThat("gitdir "+resolvedGitDir+" exists",resolvedGitDir, notNullValue());
         return new FileRepository(resolvedGitDir);

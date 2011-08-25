@@ -19,17 +19,15 @@
 
 package com.madgag.agit;
 
-import static java.util.Arrays.asList;
-
-import java.util.List;
-
-import roboguice.application.RoboApplication;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.util.Log;
-
 import com.google.inject.Module;
-import com.madgag.agit.ssh.jsch.GUIUserInfo;
+import roboguice.application.RoboApplication;
+
+import java.util.List;
+
+import static java.util.Arrays.asList;
 
 public class AgitApplication extends RoboApplication {
 	

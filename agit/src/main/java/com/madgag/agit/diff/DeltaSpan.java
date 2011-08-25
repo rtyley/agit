@@ -19,10 +19,11 @@
 
 package com.madgag.agit.diff;
 
-import static java.lang.Math.max;
-import static java.lang.Math.round;
 import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
+
+import static java.lang.Math.max;
+import static java.lang.Math.round;
 
 public class DeltaSpan extends MetricAffectingSpan {
 

@@ -51,4 +51,12 @@
 
     <string name="repo_deletion_dialog_confirmation_title">"Delete repo..."</string>
     <string name="repo_deletion_dialog_confirmation_message">"Are you sure want to delete this Git repository?"</string>
+
+    <string name="pull_cancelled">"Pull cancelled"</string>
+    <string name="ref_not_resolved">"Ref {0} can not be resolved"</string>
+
+    <string name="missing_configuration_for_key">"No value for section '%1$s', subsection '%2$s', name '%3$s' found in configuration"</string>
+    <string name="can_not_pull_on_a_repo_with_state">"Cannot pull into a repository with state: %1$s"</string>
+    <string name="can_not_pull_on_a_repo_with_detached_head">"Cannot pull into a repository with a detached HEAD - first checkout a branch"</string>
+
 </resources>

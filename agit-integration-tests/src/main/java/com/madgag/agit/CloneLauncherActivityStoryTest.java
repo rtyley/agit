@@ -18,13 +18,10 @@
  */
 
 package com.madgag.agit;
-import static com.madgag.agit.GitTestUtils.*;
-import java.io.File;
-import java.io.IOException;
-
-import android.os.Environment;
 
 import com.github.calculon.CalculonStoryTest;
+
+import java.io.File;
 
 public class CloneLauncherActivityStoryTest extends CalculonStoryTest<CloneLauncherActivity> {
 	
@@ -52,7 +49,7 @@ public class CloneLauncherActivityStoryTest extends CalculonStoryTest<CloneLaunc
     
     
 //    public void testCheckoutToCustomLocationWorks() {
-//        File customLocation = newFolder();
+//        File customLocation = tempFolder();
 //        setUp(R.id.CloneUrlEditText).setText("git://github.com/agittest/small-project.git").now();
 //        setUp(R.id.UseDefaultGitDirLocation).setChecked(false).now();
 //        setUp(R.id.GitDirEditText).setText(customLocation.getAbsolutePath()).now();

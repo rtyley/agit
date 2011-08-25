@@ -28,7 +28,7 @@ import android.widget.TextView;
 import com.google.inject.Inject;
 import com.madgag.agit.util.Time;
 import com.madgag.android.lazydrawables.ImageSession;
-import org.eclipse.jgit.revwalk.*;
+import org.eclipse.jgit.revwalk.RevCommit;
 
 import static com.madgag.agit.R.id.*;
 import static com.madgag.agit.R.layout.commit_summary_view;

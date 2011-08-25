@@ -19,12 +19,11 @@
 
 package com.madgag.agit.diff;
 
-import java.io.IOException;
-import java.lang.ref.SoftReference;
-import java.util.List;
-
 import android.util.Log;
 import org.eclipse.jgit.diff.DiffEntry;
+
+import java.io.IOException;
+import java.util.List;
 
 public class FileDiff {
     private static final String TAG = "FD";

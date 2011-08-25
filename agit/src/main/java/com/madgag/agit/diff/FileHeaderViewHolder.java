@@ -3,7 +3,6 @@ package com.madgag.agit.diff;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.madgag.agit.R;
 import com.madgag.android.listviews.ViewHolder;
 import org.eclipse.jgit.diff.DiffEntry;
 

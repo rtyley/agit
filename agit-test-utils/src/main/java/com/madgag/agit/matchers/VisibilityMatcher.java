@@ -1,14 +1,11 @@
 package com.madgag.agit.matchers;
 
 import android.view.View;
-import android.widget.Checkable;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
-import static android.view.View.GONE;
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
+import static android.view.View.*;
 
 public class VisibilityMatcher extends TypeSafeMatcher<View> {
 
