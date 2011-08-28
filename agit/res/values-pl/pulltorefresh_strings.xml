@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pull_to_refresh_pull_label">Pull to refresh...</string>
+    <string name="pull_to_refresh_release_label">Puść aby odświeżyć...</string>
+    <string name="pull_to_refresh_refreshing_label">Ładuję...</string>
+    <string name="pull_to_refresh_tap_label">Tapnij aby odświeżyć...</string>
+</resources>
+
