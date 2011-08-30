@@ -36,7 +36,7 @@
     <string name="tag_commit_menu_option">Tag...</string>
 
     <string name="clone_launcher_farewell_due_to_clone_launched">Clone started..!</string>
-    <string name="object_id_copied">Object id<br /><small><b><tt>%s</tt></b></small><br />copied to clipboard!</string>
+    <string name="object_id_copied">copied to clipboard!</string>
 
     <string name="ask_host_key_ok_ticker" >"Host %1$s SSH fingerprint..."</string>
     <string name="ask_host_key_ok" >"%1$s has key fingerprint: %2$s OK?"</string>
