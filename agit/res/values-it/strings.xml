@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Agit</string>
+	<string name="app_strap">Client Git per Android</string>
+	<string name="suggest_repos_button">Repository consigliati...</string>
+	<string name="about_app_menu_option">About</string>
+	<string name="about_activity_title">About...</string>
+	<string name="using_ssh_activity_title">Guida per l\'installazione di SSH</string>
+	<string name="clone_launcher_activity_title">Clona...</string>
+	<string name="clone_menu_option">Clona...</string>
+	<string name="enter_clone_url">Url</string>
+	<string name="clone_target_folder_label">Cartella di destinazione</string>
+	<string name="clone_url_hint">Url del repository</string>
+	<string name="clone_directory_hint">Cartella di destinazione</string>
+	<string name="clone_readiness_needs_user_to_enter_a_url">Inserisci l\'url di un repository - o scegli tra uno dei #suggest_repo[repository consigliati].</string>
+	<string name="clone_readiness_folder_already_exists">La cartella esiste già - #specify_target_dir[specificare una posizione alternativa]?</string>
+	<string name="clone_readiness_repository_folder_already_exists">La cartella esiste già in locale - visualizzare #view_existing_repo[il repository esistente]?</string>
+	<string name="ssh_agent_not_correctly_installed">Nessun agente SSH disponibile - visualizzare #view_ssh_instructions[la guida per l\'installazione di SSH]?</string>
+
+	<string name="repo_list_title">Repository locali</string>
+
+	<string name="use_default_target_directory_checkbox_label">Usa destinazione predefinita</string>
+	<string name="bare_repo_checkbox_label">Bare</string>
+
+	<string name="execute_clone_button_label">Clona!</string>
+	<string name="delete_repo_menu_option">Elimina repository</string>
+	<string name="delete_tag_menu_option">Elimina tag</string>
+
+	<string name="latest_commit_title">Ultimo commit</string>
+	<string name="empty_list">« nulla »</string>
+
+	<string name="tag_name_label">Nome:</string>
+	<string name="tag_message_label">Messaggio (opzionale):</string>
+	<string name="checkout_commit_menu_option">Checkout...</string>
+	<string name="tag_commit_menu_option">Tag...</string>
+
+	<string name="clone_launcher_farewell_due_to_clone_launched">Clone iniziato..!</string>
+	<string name="object_id_copied">copiato negli appunti!</string>
+
+	<string name="ask_host_key_ok_ticker">"Impronta SSH dell\'host %1$s..."</string>
+	<string name="ask_host_key_ok">"%1$s ha la chiave con impronta: %2$s OK?"</string>
+
+	<string name="diff_seekbar_before">PRIMA</string>
+	<string name="diff_seekbar_after">DOPO</string>
+
+	<!-- Button label to answer "Yes" to a yes/no prompt -->
+	<string name="button_yes">"Sì"</string>
+	<!-- Button label to answer "No" to a yes/no prompt -->
+	<string name="button_no">"No"</string>
+
+	<string name="repo_deletion_dialog_confirmation_title">"Elimina repository..."</string>
+	<string name="repo_deletion_dialog_confirmation_message">"Sei sicuro di voler eliminare questo repository Git?"</string>
+</resources>

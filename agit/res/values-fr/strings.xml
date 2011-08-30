@@ -36,7 +36,7 @@
     <string name="tag_commit_menu_option">Tag...</string>
 
     <string name="clone_launcher_farewell_due_to_clone_launched">Clone démarré..!</string>
-    <string name="object_id_copied">Object id<br /><small><b><tt>%s</tt></b></small><br />dans le presse-papier!</string>
+    <string name="object_id_copied">dans le presse-papier!</string>
     <string name="ask_host_key_ok_ticker" >"Empreinte de la clé %1$s ..."</string>
     <string name="ask_host_key_ok" >"Empreinte de la clé %1$s: %2$s OK?"</string>
 

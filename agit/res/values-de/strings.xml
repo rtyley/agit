@@ -36,7 +36,7 @@
     <string name="tag_commit_menu_option">Tag...</string>
 
     <string name="clone_launcher_farewell_due_to_clone_launched">Clone gestartet!</string>
-    <string name="object_id_copied">Object id<br /><small><b><tt>%s</tt></b></small><br />In die Zwischenablage kopiert!</string>
+    <string name="object_id_copied">In die Zwischenablage kopiert!</string>
 
     <string name="ask_host_key_ok_ticker" >"SSH Fingerabdruck von Host %1$s..."</string>
     <string name="ask_host_key_ok" >"Fingerabdruck des Schlüssels von %1$s: %2$s OK?"</string>

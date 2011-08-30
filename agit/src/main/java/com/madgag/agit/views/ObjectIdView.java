@@ -26,9 +26,11 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.madgag.agit.R;
 import org.eclipse.jgit.lib.ObjectId;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
+import static android.content.Context.CONTEXT_IGNORE_SECURITY;
 import static android.text.Html.fromHtml;
 import static android.text.Layout.Alignment.ALIGN_CENTER;
 import static android.widget.Toast.LENGTH_SHORT;
@@ -50,7 +52,8 @@ public class ObjectIdView extends TextView {
             public void onClick(View v) {
                 String idText = objectId.name();
                 clipboardManager.setText(idText);
-                String htmlMessage = "<small><small><b><tt>"+objectId.name()+"</tt></b></small><br />(copied to clipboard!)</small>";
+				String copiedText = getContext().getString(R.string.object_id_copied);
+                String htmlMessage = "<small><small><b><tt>"+objectId.name()+"</tt></b></small><br />("+copiedText+")</small>";
                 Toast.makeText(getContext(), centered(htmlMessage), LENGTH_SHORT).show();
             }
         });
