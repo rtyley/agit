@@ -42,4 +42,7 @@
 
     <string name="diff_seekbar_before">AVANT</string>
     <string name="diff_seekbar_after">APRÈS</string>
+
+    <string name="button_yes">"Oui"</string>
+    <string name="button_no">"Non"</string>
 </resources>

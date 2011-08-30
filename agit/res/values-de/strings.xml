@@ -43,4 +43,7 @@
 
     <string name="diff_seekbar_before">VORHER</string>
     <string name="diff_seekbar_after">NACHHER</string>
+
+    <string name="button_yes">"Ja"</string>
+    <string name="button_no">"Nein"</string>
 </resources>
