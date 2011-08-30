@@ -121,7 +121,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     /**
      * Set the enabled state of the progress bar.
      * 
-     * @param One of {@link View#VISIBLE}, {@link View#INVISIBLE},
+     * @param visibility One of {@link View#VISIBLE}, {@link View#INVISIBLE},
      *   or {@link View#GONE}.
      */
     public void setProgressBarVisibility(int visibility) {
@@ -131,7 +131,7 @@ public class ActionBar extends RelativeLayout implements OnClickListener {
     /**
      * Returns the visibility status for the progress bar.
      * 
-     * @param One of {@link View#VISIBLE}, {@link View#INVISIBLE},
+     * @return One of {@link View#VISIBLE}, {@link View#INVISIBLE},
      *   or {@link View#GONE}.
      */
     public int getProgressBarVisibility() {
