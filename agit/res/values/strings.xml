@@ -43,4 +43,12 @@
 
     <string name="diff_seekbar_before">BEFORE</string>
     <string name="diff_seekbar_after">AFTER</string>
+
+    <!-- Button label to answer "Yes" to a yes/no prompt -->
+    <string name="button_yes">"Yes"</string>
+    <!-- Button label to answer "No" to a yes/no prompt -->
+    <string name="button_no">"No"</string>
+
+    <string name="repo_deletion_dialog_confirmation_title">"Delete repo..."</string>
+    <string name="repo_deletion_dialog_confirmation_message">"Are you sure want to delete this Git repository?"</string>
 </resources>

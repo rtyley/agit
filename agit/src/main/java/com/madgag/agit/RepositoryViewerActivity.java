@@ -19,6 +19,7 @@
 
 package com.madgag.agit;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -41,24 +42,35 @@ import roboguice.inject.InjectView;
 import java.io.File;
 
 import static android.R.drawable.ic_menu_delete;
+import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.madgag.agit.GitIntents.REPO_STATE_CHANGED_BROADCAST;
 import static com.madgag.agit.GitIntents.actionWithSuffix;
 import static com.madgag.agit.GitIntents.gitDirFrom;
 import static com.madgag.agit.R.drawable.ic_title_fetch;
+import static com.madgag.agit.R.string.*;
 import static com.madgag.agit.git.Repos.niceNameFor;
 
 
 public class RepositoryViewerActivity extends RepoScopedActivityBase {
 
     public static final String TAG = "RMA";
-    
+
 	public static Intent manageRepoIntent(File gitdir) {
 		return new GitIntentBuilder("repo.VIEW").gitdir(gitdir).toIntent();
 	}
 
 	private final static int DELETE_ID=Menu.FIRST;
-    private final int DELETION_DIALOG=3;
+    private final int DELETION_IN_PROGRESS_DIALOG =3;
+	private final int DELETION_CONFIRMATION_DIALOG =DELETION_IN_PROGRESS_DIALOG + 1;
+
+	private DialogInterface.OnClickListener DELETION_CONFIRMATION_DIALOG_LISTENER = new DialogInterface.OnClickListener() {
+		public void onClick(DialogInterface dialogInterface, int which) {
+			if (which== BUTTON_POSITIVE) {
+				doDeletion();
+			}
+		}
+	};
 
     @Inject GitAsyncTaskFactory gitAsyncTaskFactory;
 
@@ -99,14 +111,18 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case DELETE_ID:
-        	showDialog(DELETION_DIALOG);
-
-            gitAsyncTaskFactory.createTaskFor(new RepoDeleter(repo()), new CasualShortTermLifetime()).execute();
+			showDialog(DELETION_CONFIRMATION_DIALOG);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
-    
+
+	private void doDeletion() {
+		showDialog(DELETION_IN_PROGRESS_DIALOG);
+
+		gitAsyncTaskFactory.createTaskFor(new RepoDeleter(repo()), new CasualShortTermLifetime()).execute();
+	}
+
 	BroadcastReceiver operationProgressBroadcastReceiver = new BroadcastReceiver() {
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
@@ -125,12 +141,20 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
 	
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
-		case DELETION_DIALOG:
+		case DELETION_IN_PROGRESS_DIALOG:
 			ProgressDialog deletionDialog = new ProgressDialog(this);
 			deletionDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			deletionDialog.setMessage("Deleting repo...");
 			deletionDialog.setIndeterminate(true);
 			return deletionDialog;
+		case DELETION_CONFIRMATION_DIALOG:
+			return new AlertDialog.Builder(this)
+					.setIcon(R.drawable.icon)
+					.setTitle(repo_deletion_dialog_confirmation_title)
+					.setMessage(repo_deletion_dialog_confirmation_message)
+					.setPositiveButton(button_yes, DELETION_CONFIRMATION_DIALOG_LISTENER)
+					.setNegativeButton(button_no, DELETION_CONFIRMATION_DIALOG_LISTENER)
+					.create();
 		default:
 			return super.onCreateDialog(id);
 		}
