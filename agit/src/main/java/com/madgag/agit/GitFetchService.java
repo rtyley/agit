@@ -26,12 +26,14 @@ import com.madgag.agit.operations.*;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.TransportConfigCallback;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.transport.*;
 
 import java.util.Collection;
 import java.util.Collections;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.madgag.agit.operations.JGitAPIExceptions.throwExceptionWithFriendlyMessageFor;
 
 @OperationScoped
 public class GitFetchService {
@@ -49,16 +51,17 @@ public class GitFetchService {
 
 		FetchResult fetchResult = null;
 		try {
-
 			fetchResult = git.fetch()
-					.setProgressMonitor(messagingProgressMonitor)
 					.setRemote(remote.getName())
-					.setRefSpecs(toFetch==null? Collections.<RefSpec>emptyList():newArrayList(toFetch))
+					.setRefSpecs(toFetch == null ? Collections.<RefSpec>emptyList() : newArrayList(toFetch))
+					.setProgressMonitor(messagingProgressMonitor)
 					.setTransportConfigCallback(transportConfigCallback)
 					.setCredentialsProvider(credentialsProvider)
 					.call();
 		} catch (InvalidRemoteException e) {
 			throw new RuntimeException(e);
+		} catch (JGitInternalException e) {
+			throwExceptionWithFriendlyMessageFor(e);
 		}
 		Log.d(TAG, "Fetch complete with : " + fetchResult);
 		for (TrackingRefUpdate update : fetchResult.getTrackingRefUpdates()) {
@@ -66,9 +69,6 @@ public class GitFetchService {
 		}
 		repoUpdateBroadcaster.broadcastUpdate();
 		return fetchResult;
-//			if (cause != null && cause instanceof JSchException) {
-//				message = "SSH: " + ((JSchException) cause).getMessage();
-//			}
 	}
 
 }

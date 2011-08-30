@@ -3,42 +3,18 @@ package com.madgag.agit.operations;
 import android.content.Context;
 import android.util.Log;
 import com.google.inject.Inject;
-import com.madgag.agit.GitFetchService;
-import com.madgag.agit.git.Repos;
-import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.TransportConfigCallback;
-import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
-import org.eclipse.jgit.api.errors.RefNotFoundException;
-import org.eclipse.jgit.dircache.DirCache;
-import org.eclipse.jgit.dircache.DirCacheCheckout;
-import org.eclipse.jgit.errors.IncorrectObjectTypeException;
-import org.eclipse.jgit.errors.MissingObjectException;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.RefComparator;
-import org.eclipse.jgit.lib.RefUpdate;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.CredentialsProvider;
-import org.eclipse.jgit.transport.FetchResult;
-import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import static android.R.drawable.stat_sys_download;
 import static android.R.drawable.stat_sys_download_done;
+import static com.madgag.agit.operations.JGitAPIExceptions.throwExceptionWithFriendlyMessageFor;
 import static org.eclipse.jgit.api.Git.cloneRepository;
 import static org.eclipse.jgit.lib.Constants.*;
-import static org.eclipse.jgit.lib.Repository.shortenRefName;
-import static org.eclipse.jgit.lib.RepositoryCache.close;
 
 public class Clone extends GitOperation {
 
@@ -70,17 +46,22 @@ public class Clone extends GitOperation {
 		Log.d(TAG, "Starting execute... directory=" + directory);
 		ensureFolderExists(directory.getParentFile());
 
-		cloneRepository()
+		try {
+			cloneRepository()
 				.setBare(bare)
 				.setDirectory(directory)
 				.setURI(sourceUri.toPrivateString())
-				.setCredentialsProvider(credentialsProvider)
 				.setProgressMonitor(messagingProgressMonitor)
+				.setTransportConfigCallback(transportConfigCallback)
+				.setCredentialsProvider(credentialsProvider)
 				.call();
 
-        repoUpdateBroadcaster.broadcastUpdate();
-
-        Log.d(TAG, "Completed checkout!");
+			Log.d(TAG, "Completed checkout!");
+		} catch (JGitInternalException e) {
+			throwExceptionWithFriendlyMessageFor(e);
+		} finally {
+			repoUpdateBroadcaster.broadcastUpdate();
+		}
 
 		return new OpNotification(stat_sys_download_done, "Cloned "
 				+ sourceUri.getHumanishName(), "Clone completed",
