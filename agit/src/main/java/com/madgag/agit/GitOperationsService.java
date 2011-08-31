@@ -104,7 +104,7 @@ public class GitOperationsService extends RoboService {
 			File gitdir = gitDirFrom(intent);
 
             Repository repository = openRepoFor(gitdir);
-            operation = new Fetch(repository, remoteConfigFor(repository, DEFAULT_REMOTE_NAME));
+            operation = new Fetch(repository, DEFAULT_REMOTE_NAME);
 		} else {
 			Log.e(TAG, "What is "+action);
 			return START_NOT_STICKY;

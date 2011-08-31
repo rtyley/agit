@@ -46,13 +46,13 @@ public class GitFetchService {
 	@Inject	TransportConfigCallback transportConfigCallback;
 	@Inject RepoUpdateBroadcaster repoUpdateBroadcaster;
 
-	public FetchResult fetch(RemoteConfig remote, Collection<RefSpec> toFetch) {
-		Log.d(TAG, "About to run fetch : " + remote.getName()+" "+remote.getURIs());
+	public FetchResult fetch(String remote, Collection<RefSpec> toFetch) {
+		Log.d(TAG, "About to run fetch : " + remote);
 
 		FetchResult fetchResult = null;
 		try {
 			fetchResult = git.fetch()
-					.setRemote(remote.getName())
+					.setRemote(remote)
 					.setRefSpecs(toFetch == null ? Collections.<RefSpec>emptyList() : newArrayList(toFetch))
 					.setProgressMonitor(messagingProgressMonitor)
 					.setTransportConfigCallback(transportConfigCallback)

@@ -116,7 +116,7 @@ public class Pull extends GitOperation {
 
             checkCancellation();
 
-            fetchRes = fetchService.fetch(remoteConfigFor(repo, remote), null);
+            fetchRes = fetchService.fetch(remote, null);
 		} else {
 			// we can skip the fetch altogether
 			remoteUri = "local repository";

@@ -72,9 +72,8 @@ public class SyncCampaign implements CancellationSignaller, Runnable {
         Repository repository = null;
         try {
             repository = Repos.openRepoFor(gitdir);
-            RemoteConfig remoteConfig = remoteConfigFor(repository, DEFAULT_REMOTE_NAME);
 
-            currentOperation = new Fetch(repository, remoteConfig);
+            currentOperation = new Fetch(repository, DEFAULT_REMOTE_NAME);
             if (operationExecutor.call(currentOperation, operationUIContext, false)!=null) { //feels bery bad
                 syncResult.stats.numUpdates++;
             }

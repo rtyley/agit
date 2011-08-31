@@ -85,7 +85,7 @@ public class BranchViewer extends RepoScopedActivityBase {
         revCommitListView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
             public void onRefresh() {
                 revCommitListView.setLastUpdated("");
-                Fetch fetch = new Fetch(repository, remoteConfigFor(repository, DEFAULT_REMOTE_NAME));
+                Fetch fetch = new Fetch(repository, DEFAULT_REMOTE_NAME);
                 gitAsyncTaskFactory.createTaskFor(fetch, new CasualShortTermLifetime() {
                     public void error(OpNotification errorNotification) {
                         revCommitListView.onRefreshComplete("Last Fetch failed: "+errorNotification.getTickerText());

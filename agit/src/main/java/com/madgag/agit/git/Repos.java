@@ -23,6 +23,7 @@ import android.util.Log;
 import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
 import com.madgag.agit.git.model.HasLatestCommit;
+import org.eclipse.jgit.ignore.IgnoreNode;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.lib.RepositoryCache.FileKey;
@@ -114,9 +115,24 @@ public class Repos {
 		try {
 			return new RemoteConfig(repository.getConfig(), remoteName);
 		} catch (Exception e) {
-			Log.e(TAG, "Couldn't parse config", e);
-			throw new RuntimeException(e);
+			throw new RuntimeException("Couldn't parse config for "+remoteName , e);
 		}
+	}
+
+	public static URIish uriForRemote(Repository repository, String remoteName) {
+		RemoteConfig remoteConfig = remoteConfigFor(repository, remoteName);
+		if (doesNotExist(remoteConfig)) {
+			try {
+				return new URIish(remoteName);
+			} catch (URISyntaxException e) {
+				throw new RuntimeException("Couldn't parse uri "+remoteName, e);
+			}
+		}
+		return remoteConfig.getURIs().get(0);
+	}
+
+	private static boolean doesNotExist(RemoteConfig cfg) {
+		return cfg.getURIs().isEmpty() && cfg.getPushURIs().isEmpty();
 	}
 
 	public static RemoteConfig addRemoteTo(Repository repository, String remoteName, URIish sourceUri)
