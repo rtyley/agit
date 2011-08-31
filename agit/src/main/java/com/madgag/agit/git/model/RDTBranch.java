@@ -29,12 +29,14 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.Iterables.transform;
 import static com.madgag.agit.git.Repos.COMMIT_TIME_ORDERING;
 import static com.madgag.agit.util.Time.timeSinceSeconds;
+import static org.eclipse.jgit.lib.Constants.R_HEADS;
 import static org.eclipse.jgit.lib.Constants.R_REMOTES;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;
 
@@ -51,25 +53,37 @@ public class RDTBranch extends RepoDomainType<BranchSummary> {
 	public List<BranchSummary> getAll() {
 		RefDatabase refDatabase = repository.getRefDatabase();
 		try {
-			Map<String, Ref> remoteBranchRefs = refDatabase.getRefs(R_REMOTES);
-			final RevWalk revWalk = new RevWalk(repository);
-			
-			Iterable<BranchSummary> branchSummaries = transform(remoteBranchRefs.values(), new Function<Ref, BranchSummary>() {
-				public BranchSummary apply(Ref branchRef) {
-					try {
-						RevCommit branchHeadCommit = revWalk.parseCommit(branchRef.getObjectId());
-						return new BranchSummary(branchRef, branchHeadCommit);
-					} catch (Exception e) {
-						throw new RuntimeException(e);
-					}
-				}
-				
-			});
+			Map<String, Ref> branchRefs = localOrRemoteBranches(refDatabase);
 
-			return COMMIT_TIME_ORDERING.sortedCopy(branchSummaries);
+			return summariesForRefs(branchRefs.values());
 		} catch (IOException e) { throw new RuntimeException(e); }
 	}
-	
+
+	private Map<String, Ref> localOrRemoteBranches(RefDatabase refDatabase) throws IOException {
+		Map<String, Ref> branchRefs = refDatabase.getRefs(R_HEADS);
+		if (branchRefs.isEmpty()) {
+			branchRefs = refDatabase.getRefs(R_REMOTES);
+		}
+		return branchRefs;
+	}
+
+	private List<BranchSummary> summariesForRefs(Collection<Ref> values) {
+		final RevWalk revWalk = new RevWalk(repository);
+		Iterable<BranchSummary> branchSummaries = transform(values, new Function<Ref, BranchSummary>() {
+			public BranchSummary apply(Ref branchRef) {
+				try {
+					RevCommit branchHeadCommit = revWalk.parseCommit(branchRef.getObjectId());
+					return new BranchSummary(branchRef, branchHeadCommit);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+
+		});
+
+		return COMMIT_TIME_ORDERING.sortedCopy(branchSummaries);
+	}
+
 	@Override
 	CharSequence conciseSummary(BranchSummary bs) {
 		return idFor(bs);
