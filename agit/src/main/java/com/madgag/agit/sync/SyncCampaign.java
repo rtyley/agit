@@ -33,6 +33,7 @@ import org.eclipse.jgit.transport.RemoteConfig;
 import java.io.File;
 
 import static com.madgag.agit.git.Repos.knownRepos;
+import static com.madgag.agit.git.Repos.refreshOperationFor;
 import static com.madgag.agit.git.Repos.remoteConfigFor;
 import static java.util.Arrays.asList;
 import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
@@ -73,7 +74,7 @@ public class SyncCampaign implements CancellationSignaller, Runnable {
         try {
             repository = Repos.openRepoFor(gitdir);
 
-            currentOperation = new Fetch(repository, DEFAULT_REMOTE_NAME);
+            currentOperation = refreshOperationFor(repository);
             if (operationExecutor.call(currentOperation, operationUIContext, false)!=null) { //feels bery bad
                 syncResult.stats.numUpdates++;
             }

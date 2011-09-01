@@ -127,7 +127,7 @@
 
 		<service android:name="GitOperationsService">
 			<intent-filter>
-				<action android:name="org.openintents.git.FETCH" />
+				<action android:name="org.openintents.git.repo.SYNC" />
 			</intent-filter>
 			<intent-filter>
 				<action android:name="org.openintents.git.CLONE" />

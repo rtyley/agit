@@ -23,6 +23,9 @@ import android.util.Log;
 import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
 import com.madgag.agit.git.model.HasLatestCommit;
+import com.madgag.agit.operations.Fetch;
+import com.madgag.agit.operations.GitOperation;
+import com.madgag.agit.operations.Pull;
 import org.eclipse.jgit.ignore.IgnoreNode;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
@@ -108,6 +111,10 @@ public class Repos {
 
     public static String describe(Repository repository) {
 		return repository+" #"+identityHashCode(repository);
+	}
+
+	public static GitOperation refreshOperationFor(Repository repository) {
+		return repository.isBare()?new Fetch(repository,DEFAULT_REMOTE_NAME):new Pull(repository);
 	}
 
 

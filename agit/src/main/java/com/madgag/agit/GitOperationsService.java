@@ -25,6 +25,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 import com.google.inject.Inject;
+import com.madgag.agit.git.Repos;
 import com.madgag.agit.operation.lifecycle.LongRunningServiceLifetime;
 import com.madgag.agit.operation.lifecycle.RepoNotifications;
 import com.madgag.agit.operations.*;
@@ -39,6 +40,7 @@ import static android.widget.Toast.LENGTH_LONG;
 import static com.madgag.agit.GitIntents.*;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoPendingIntent;
 import static com.madgag.agit.git.Repos.openRepoFor;
+import static com.madgag.agit.git.Repos.refreshOperationFor;
 import static com.madgag.agit.git.Repos.remoteConfigFor;
 import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 
@@ -100,11 +102,11 @@ public class GitOperationsService extends RoboService {
 				Toast.makeText(this, "Invalid uri "+sourceUriString, LENGTH_LONG).show();
 				return START_NOT_STICKY;
 			}
-		} else if (action.equals("org.openintents.git.FETCH")) {
+		} else if (action.equals("org.openintents.git.repo.SYNC")) {
 			File gitdir = gitDirFrom(intent);
 
             Repository repository = openRepoFor(gitdir);
-            operation = new Fetch(repository, DEFAULT_REMOTE_NAME);
+            operation = refreshOperationFor(repository);
 		} else {
 			Log.e(TAG, "What is "+action);
 			return START_NOT_STICKY;

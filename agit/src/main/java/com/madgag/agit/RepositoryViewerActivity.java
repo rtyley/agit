@@ -87,7 +87,7 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
 		actionBar.setTitle(niceNameFor(repo()));
         actionBar.addAction(new Action() {
             public void performAction(View view) {
-                startService(new GitIntentBuilder("FETCH").repository(repo()).toIntent());
+                startService(new GitIntentBuilder("repo.SYNC").repository(repo()).toIntent());
             }
 			
 			public int getDrawable() {
