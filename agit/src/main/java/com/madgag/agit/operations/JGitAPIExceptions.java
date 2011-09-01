@@ -28,7 +28,7 @@ import static com.google.common.base.Throwables.getRootCause;
 
 public class JGitAPIExceptions {
 
-	public static void throwExceptionWithFriendlyMessageFor(JGitInternalException e) {
+	public static void throwExceptionWithFriendlyMessageFor(Exception e) {
 		Throwable cause = getRootCause(e);
 		String message = cause.getMessage();
 		if (cause instanceof JSchException) {
