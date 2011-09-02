@@ -2,7 +2,6 @@
 <resources>
     <string name="app_name">Agit</string>
     <string name="app_strap">Android Git Client</string>
-    <string name="suggest_repos_button">Zasugeruj repozytoria...</string>
     <string name="about_app_menu_option">O programie</string>
     <string name="about_activity_title">O programie...</string>
     <string name="using_ssh_activity_title">Podręcznik instalacji SSH</string>
@@ -10,8 +9,8 @@
     <string name="clone_menu_option">Sklonuj...</string>
     <string name="enter_clone_url">URL</string>
     <string name="clone_target_folder_label">Folder docelowy</string>
-    <string name="clone_url_hint">URL repozytorium</string>
-    <string name="clone_directory_hint">Folder, w którym zostanie zapisane repo</string>
+    <string name="clone_url_hint">Adres repozytorium</string>
+    <string name="clone_directory_hint">Folder, w którym zostanie zapisane repozytorium</string>
     <string name="clone_readiness_needs_user_to_enter_a_url">Podaj adres repozytorium - lub wybierz jedno z #suggest_repo[przykładowych].</string>
     <string name="clone_readiness_folder_already_exists">Folder już istnieje - czy chcesz #specify_target_dir[określić alternatywną] lokalizację?</string>
     <string name="clone_readiness_repository_folder_already_exists">Folder istnieje lokalnie - czy chcesz zobaczyć #view_existing_repo[istniejące repozytorium]?</string>
@@ -20,18 +19,18 @@
     <string name="repo_list_title">Repozytoria lokalne</string>
 
     <string name="use_default_target_directory_checkbox_label">Użyj domyślnej lokalizacji</string>
-    <string name="bare_repo_checkbox_label">Bare</string>
+    <string name="bare_repo_checkbox_label">Bare (bez katalogu roboczego)</string>
 
 
     <string name="execute_clone_button_label">Klonuj!</string>
     <string name="delete_repo_menu_option">Usuń repozytorium</string>
-    <string name="delete_tag_menu_option">Usuń Tag</string>
+    <string name="delete_tag_menu_option">Usuń tag</string>
 
-    <string name="latest_commit_title">Ostatni Commit</string>
+    <string name="latest_commit_title">Ostatni commit</string>
     <string name="empty_list">« brak »</string>
 
-    <string name="tag_name_label">Nazwa:</string>
-    <string name="tag_message_label">Wiadomość (opcjonalnie):</string>
+    <string name="tag_name_label">Name:</string>
+    <string name="tag_message_label">Message (optional):</string>
     <string name="checkout_commit_menu_option">Checkout...</string>
     <string name="tag_commit_menu_option">Tag...</string>
 
