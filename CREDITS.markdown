@@ -38,6 +38,8 @@ the alternative [Git logo](http://henrik.nyh.se/2007/06/alternative-git-logo-and
 
 ### Contributors
 
+*   Michal Borychowski - [Polish translation](https://github.com/rtyley/agit/pull/38)
+
 *   Chris Boyle - [Match http protocol for GitHub](https://github.com/rtyley/agit/pull/23)
 
 *   Bernd Hirschler - [German Translation](https://github.com/rtyley/agit/pull/35)
