@@ -21,14 +21,18 @@ package com.madgag.agit.operations;
 
 import android.util.Log;
 import com.google.inject.Inject;
+import com.madgag.agit.R;
 import org.eclipse.jgit.lib.Repository;
+import roboguice.inject.InjectResource;
 
 import java.io.File;
 import java.io.IOException;
 
 import static android.R.drawable.stat_sys_download;
 import static android.R.drawable.stat_sys_download_done;
+import static com.madgag.agit.R.string.delete_repo;
 import static com.madgag.agit.git.Repos.topDirectoryFor;
+import static com.madgag.android.listviews.pinnedheader.R.string.clone;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
 
 public class RepoDeleter extends GitOperation {
@@ -36,6 +40,8 @@ public class RepoDeleter extends GitOperation {
 	public static final String TAG = "RepoDeleter";
 
     @Inject RepoUpdateBroadcaster repoUpdateBroadcaster;
+	@InjectResource(delete_repo) String opName;
+
     private final File topFolderToDelete;
 
     public RepoDeleter(Repository repository) {
@@ -67,7 +73,7 @@ public class RepoDeleter extends GitOperation {
 	}
 
 	public String getName() {
-		return "Delete Repo";
+		return opName;
 	}
 
 	public String getDescription() {
@@ -79,7 +85,7 @@ public class RepoDeleter extends GitOperation {
 		return "";
 	}
 
-	public String getShortDescription() {
+	public String getActionTitle() {
 		return "Deleting Repo";
 	}
 

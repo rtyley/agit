@@ -33,7 +33,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.madgag.agit.operations.JGitAPIExceptions.throwExceptionWithFriendlyMessageFor;
+import static com.madgag.agit.operations.JGitAPIExceptions.exceptionWithFriendlyMessageFor;
 
 @OperationScoped
 public class GitFetchService {
@@ -61,7 +61,7 @@ public class GitFetchService {
 		} catch (InvalidRemoteException e) {
 			throw new RuntimeException(e);
 		} catch (JGitInternalException e) {
-			throwExceptionWithFriendlyMessageFor(e);
+			throw exceptionWithFriendlyMessageFor(e);
 		}
 		Log.d(TAG, "Fetch complete with : " + fetchResult);
 		for (TrackingRefUpdate update : fetchResult.getTrackingRefUpdates()) {

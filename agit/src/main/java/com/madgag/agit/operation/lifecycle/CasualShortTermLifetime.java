@@ -11,7 +11,6 @@ public class CasualShortTermLifetime implements OperationLifecycleSupport {
 
 	public void publish(Progress progress) {
 		// TODO Auto-generated method stub
-		
 	}
 
     public void error(OpNotification completionNotification) {}

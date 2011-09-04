@@ -1,15 +1,22 @@
 package com.madgag.agit.operations;
 
+import android.content.Context;
 import android.util.Log;
+import com.google.inject.Inject;
+import com.madgag.agit.R;
 
 import java.io.File;
 
+import static com.madgag.agit.R.string.operation_complete;
 import static com.madgag.agit.operations.GitOperation.Status.*;
 import static java.lang.Thread.currentThread;
 
 public abstract class GitOperation implements CancellationSignaller {
 
-    public enum Status {
+
+    protected @Inject Context context;
+
+	public enum Status {
         NOT_STARTED,
         RUNNING,
         FINISHED
@@ -47,10 +54,8 @@ public abstract class GitOperation implements CancellationSignaller {
 
 	public abstract String getName();
 
-	public abstract String getShortDescription();
+	public abstract String getActionTitle();
 	
-	public abstract String getDescription();
-
 	public abstract CharSequence getUrl();
 
 	public File getGitDir() {
@@ -68,4 +73,12 @@ public abstract class GitOperation implements CancellationSignaller {
     public boolean isCancelled() {
         return cancelled;
     }
+
+	protected String str_operationCompleted() {
+		return string(operation_complete, getName());
+	}
+
+	protected String string(int resId, java.lang.Object... formatArgs) {
+		return context.getString(resId, formatArgs);
+	}
 }

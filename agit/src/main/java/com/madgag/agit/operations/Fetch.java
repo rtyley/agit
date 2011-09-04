@@ -3,16 +3,21 @@ package com.madgag.agit.operations;
 import android.util.Log;
 import com.google.inject.Inject;
 import com.madgag.agit.GitFetchService;
+import com.madgag.agit.R;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
+import roboguice.inject.InjectResource;
 
 import java.io.File;
 import java.util.Collection;
 
 import static android.R.drawable.stat_sys_download;
 import static android.R.drawable.stat_sys_download_done;
+import static com.madgag.agit.R.string.*;
+import static com.madgag.agit.git.Repos.niceNameFor;
 import static com.madgag.agit.git.Repos.uriForRemote;
+import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 
 public class Fetch extends GitOperation {
 		
@@ -24,6 +29,7 @@ public class Fetch extends GitOperation {
     private final Collection<RefSpec> toFetch;
 
 	@Inject GitFetchService fetchService;
+	@InjectResource(fetch) String opName;
 
     public Fetch(Repository repository, String remote) {
         this(repository, remote, null);
@@ -40,10 +46,6 @@ public class Fetch extends GitOperation {
 	public int getOngoingIcon() {
 		return stat_sys_download;
 	}
-
-	public String getTickerText() {
-		return "Fetching "+remote + " " + fetchUrl;
-	}
 	
 	public OpNotification execute() {
 		Log.d(TAG, "start execute() : repository=" + repository+" remote="+remote);
@@ -52,19 +54,19 @@ public class Fetch extends GitOperation {
     }
 	
 	public String getName() {
-		return "Fetch";
+		return opName;
+	}
+
+	public String getTickerText() {
+		return string(fetching)+"...";
 	}
 	
-	public String getDescription() {
-		return "fetching "+remote + " " + fetchUrl;
+	public String getActionTitle() {
+		return string(fetching_from_remote_on_repo, remote, niceNameFor(repository));
 	}
 
 	public CharSequence getUrl() {
 		return fetchUrl;
-	}
-
-	public String getShortDescription() {
-		return "Fetching "+remote;
 	}
 
 	public File getGitDir() {

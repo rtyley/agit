@@ -19,35 +19,22 @@
 
 package com.madgag.agit.operations;
 
-import android.content.Context;
 import com.google.inject.Inject;
-import com.madgag.agit.GitFetchService;
-import com.madgag.agit.R;
-import org.eclipse.jgit.JGitText;
-import org.eclipse.jgit.api.*;
-import org.eclipse.jgit.api.errors.*;
-import org.eclipse.jgit.lib.*;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PullResult;
+import org.eclipse.jgit.api.TransportConfigCallback;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.CredentialsProvider;
-import org.eclipse.jgit.transport.FetchResult;
-import org.eclipse.jgit.transport.RefSpec;
+import roboguice.inject.InjectResource;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.Collections;
 
 import static android.R.drawable.stat_sys_download;
 import static android.R.drawable.stat_sys_download_done;
-import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.R.string.*;
-import static com.madgag.agit.git.Repos.remoteConfigFor;
-import static com.madgag.agit.operations.JGitAPIExceptions.throwExceptionWithFriendlyMessageFor;
-import static org.eclipse.jgit.api.Git.cloneRepository;
-import static org.eclipse.jgit.api.RebaseCommand.Operation.BEGIN;
-import static org.eclipse.jgit.lib.ConfigConstants.*;
-import static org.eclipse.jgit.lib.ConfigConstants.CONFIG_KEY_REBASE;
-import static org.eclipse.jgit.lib.Constants.R_HEADS;
-import static org.eclipse.jgit.lib.RepositoryState.SAFE;
+import static com.madgag.agit.git.Repos.niceNameFor;
+import static com.madgag.agit.operations.JGitAPIExceptions.exceptionWithFriendlyMessageFor;
+import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 
 public class Pull extends GitOperation {
 
@@ -58,7 +45,7 @@ public class Pull extends GitOperation {
     @Inject MessagingProgressMonitor messagingProgressMonitor;
 	@Inject CredentialsProvider credentialsProvider;
 	@Inject	TransportConfigCallback transportConfigCallback;
-    @Inject Context context;
+	@InjectResource(pull) String opName;
 
     public Pull(Repository repository) {
         super(repository.getDirectory());
@@ -69,91 +56,33 @@ public class Pull extends GitOperation {
 		return stat_sys_download;
 	}
 
-	public String getTickerText() {
-		return "Pulling!";
-	}
-
-    
-    public RuntimeException exceptionMessage(int resId, java.lang.Object... formatArgs) {
-        return new RuntimeException(context.getString(resId, formatArgs));
-    }
-
 	public OpNotification execute() {
 		try {
-			git.pull().setProgressMonitor(messagingProgressMonitor)
+			PullResult pullResult = git.pull().setProgressMonitor(messagingProgressMonitor)
 				.setTransportConfigCallback(transportConfigCallback)
 				.setCredentialsProvider(credentialsProvider)
 				.call();
+			return new OpNotification(stat_sys_download_done, str_operationCompleted(),
+				string(pulled_from_remote, pullResult.getFetchedFrom()) +" - " + string(merge_status, pullResult.getMergeResult().getMergeStatus()));
 		} catch (Exception e) {
-			throwExceptionWithFriendlyMessageFor(e);
+			throw exceptionWithFriendlyMessageFor(e);
 		}
-
-
-        return new OpNotification(stat_sys_download_done,"Pull complete", "Pulled");
     }
 
-    private AnyObjectId commitToMergeFor(FetchResult fetchRes, String remoteBranchName, boolean remote) {
-        // we check the updates to see which of the updated branches
-        // corresponds
-        // to the remote branch name
-        AnyObjectId commitToMerge;
-        if (remote) {
-            Ref r = null;
-            if (fetchRes != null) {
-                r = fetchRes.getAdvertisedRef(remoteBranchName);
-                if (r == null)
-                    r = fetchRes.getAdvertisedRef(R_HEADS + remoteBranchName);
-            }
-            if (r == null)
-                throw new JGitInternalException(MessageFormat.format(JGitText
-                        .get().couldNotGetAdvertisedRef, remoteBranchName));
-            else
-                commitToMerge = r.getObjectId();
-        } else {
-            try {
-                commitToMerge = repo.resolve(remoteBranchName);
-                if (commitToMerge == null)
-                    throw exceptionMessage(R.string.ref_not_resolved, remoteBranchName);
-            } catch (IOException e) {
-                throw new JGitInternalException(
-                        JGitText.get().exceptionCaughtDuringExecutionOfPullCommand,
-                        e);
-            }
-        }
-        return commitToMerge;
-    }
-
-    private void checkCancellation() {
-        if (isCancelled())
-            throw exceptionMessage(pull_cancelled);
-    }
-
-    private String getConfigOrDie(Config repoConfig, String section, String subsection, String name) {
-        String val = repoConfig.getString(section, subsection, name);
-        if (val == null) {
-            throw exceptionMessage(missing_configuration_for_key, section, subsection, name);
-        }
-        return val;
-    }
-
-    private boolean branchUsesPullRebase(String branchName, Config repoConfig) {
-        return repoConfig.getBoolean(CONFIG_BRANCH_SECTION, branchName, CONFIG_KEY_REBASE, false);
-    }
-
-    public String getName() {
-		return "Pull";
-	}
-
-	public String getDescription() {
-		return "Pulling!";
+	public String getName() {
+		return opName;
 	}
 
 	public CharSequence getUrl() {
-		return "Arrgg";
+		return ""; // TODO - give reasonable value
 	}
 
-	public String getShortDescription() {
-		return "Pulling";
+	public String getTickerText() {
+		return string(pulling)+"...";
+	}
+
+	public String getActionTitle() {
+		return string(pulling_from_remote_on_repo, DEFAULT_REMOTE_NAME, niceNameFor(repo)); // TODO Correct remote name
 	}
 
 	public File getGitDir() {

@@ -28,12 +28,12 @@ import static com.google.common.base.Throwables.getRootCause;
 
 public class JGitAPIExceptions {
 
-	public static void throwExceptionWithFriendlyMessageFor(Exception e) {
+	public static RuntimeException exceptionWithFriendlyMessageFor(Exception e) {
 		Throwable cause = getRootCause(e);
 		String message = cause.getMessage();
 		if (cause instanceof JSchException) {
 			message = "SSH: "+message;
 		}
-		throw new RuntimeException(message,cause);
+		return new RuntimeException(message,cause);
 	}
 }

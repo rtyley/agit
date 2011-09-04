@@ -52,11 +52,27 @@
     <string name="repo_deletion_dialog_confirmation_title">"Delete repo..."</string>
     <string name="repo_deletion_dialog_confirmation_message">"Are you sure want to delete this Git repository?"</string>
 
-    <string name="pull_cancelled">"Pull cancelled"</string>
-    <string name="ref_not_resolved">"Ref {0} can not be resolved"</string>
+    <string name="operation_complete">"%1$s complete"</string>
+    <string name="operation_cancelled">"%1$s cancelled"</string>
+    <string name="operation_failed">"%1$s failed"</string>
 
-    <string name="missing_configuration_for_key">"No value for section '%1$s', subsection '%2$s', name '%3$s' found in configuration"</string>
-    <string name="can_not_pull_on_a_repo_with_state">"Cannot pull into a repository with state: %1$s"</string>
-    <string name="can_not_pull_on_a_repo_with_detached_head">"Cannot pull into a repository with a detached HEAD - first checkout a branch"</string>
+    <string name="clone">"Clone"</string>
+    <string name="cloning">"Cloning"</string>
+    <string name="cloning_repo">"Cloning %1$s"</string>
+    <string name="cloned_repo">"Cloned %1$s"</string>
+
+    <string name="pull">"Pull"</string>
+    <string name="pulling">"Pulling"</string>
+    <string name="pulling_repo">"Pulling %1$s"</string>
+    <string name="fetch">"Fetch"</string>
+    <string name="fetching">"Fetching"</string>
+    <string name="delete_repo">"Delete Repo"</string>
+
+
+    <string name="pulling_from_remote_on_repo">"Pulling from %1$s on %2$s"</string>
+    <string name="fetching_from_remote_on_repo">"Fetching from %1$s on %2$s"</string>
+    <string name="pulled_from_remote">"Pulled from %1$s"</string>
+    <string name="merge_status">"Merge status : %1$s"</string>
+
 
 </resources>

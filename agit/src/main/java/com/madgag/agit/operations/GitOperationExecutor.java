@@ -6,33 +6,25 @@ import com.google.inject.Injector;
 import com.madgag.agit.guice.OperationScope;
 import com.madgag.agit.guice.RepositoryScope;
 
+import java.util.concurrent.Callable;
+
 public class GitOperationExecutor {
 
     private static final String TAG = "GOE";
 
-	@Inject RepositoryScope repoScope;
-    @Inject OperationScope operationScope;
-    @Inject Injector injector;
+	@Inject GitOperationScopeExecutor gitOperationScopeExecutor;
+	@Inject Injector injector;
 
-    public OpNotification call(GitOperation operation, OperationUIContext operationUIContext, boolean interruptExistingOp) throws Exception {
-		repoScope.enterWithRepoGitdir(operation.getGitDir());
-
-		try {
-            if (!injector.getInstance(RepoOpRegistry.class).setCurrentOperation(operation, interruptExistingOp)) {
-                return null; // it all feels a bit bad
-            }
-
-            operationScope.enterWithUIContext(operation, operationUIContext);
-            try {
-			    injector.injectMembers(operation);
-			    return operation.executeAndRecordThread();
-            } finally {
-                Log.d(TAG, "Exiting op scope");
-                operationScope.exit();
-            }
-        } finally {
-            Log.d(TAG, "Exiting repo scope");
-			repoScope.exit();
-		}
+    public OpNotification call(final GitOperation operation,
+							   OperationUIContext operationUIContext,
+							   final boolean interruptExistingOp) throws Exception {
+		return gitOperationScopeExecutor.call(operation, operationUIContext, new Callable<OpNotification>() {
+			public OpNotification call() throws Exception {
+				if (!injector.getInstance(RepoOpRegistry.class).setCurrentOperation(operation, interruptExistingOp)) {
+					return null; // it all feels a bit bad
+				}
+				return operation.executeAndRecordThread();
+			}
+		});
 	}
 }

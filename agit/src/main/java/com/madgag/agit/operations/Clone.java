@@ -3,16 +3,23 @@ package com.madgag.agit.operations;
 import android.content.Context;
 import android.util.Log;
 import com.google.inject.Inject;
+import com.madgag.android.listviews.pinnedheader.R;
 import org.eclipse.jgit.api.TransportConfigCallback;
 import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.URIish;
+import roboguice.inject.InjectResource;
 
 import java.io.File;
 
 import static android.R.drawable.stat_sys_download;
 import static android.R.drawable.stat_sys_download_done;
-import static com.madgag.agit.operations.JGitAPIExceptions.throwExceptionWithFriendlyMessageFor;
+import static com.madgag.agit.R.string.cloned_repo;
+import static com.madgag.agit.R.string.cloning;
+import static com.madgag.agit.R.string.fetching;
+import static com.madgag.agit.operations.JGitAPIExceptions.exceptionWithFriendlyMessageFor;
+import static com.madgag.android.listviews.pinnedheader.R.string.clone;
+import static com.madgag.android.listviews.pinnedheader.R.string.cloning_repo;
 import static org.eclipse.jgit.api.Git.cloneRepository;
 import static org.eclipse.jgit.lib.Constants.*;
 
@@ -26,11 +33,11 @@ public class Clone extends GitOperation {
     private String branch = HEAD;
 
     @Inject ProgressListener<Progress> progressListener;
-    @Inject Context context;
     @Inject RepoUpdateBroadcaster repoUpdateBroadcaster;
 	@Inject MessagingProgressMonitor messagingProgressMonitor;
 	@Inject CredentialsProvider credentialsProvider;
 	@Inject TransportConfigCallback transportConfigCallback;
+	@InjectResource(clone) String opName;
 
     public Clone(boolean bare, URIish sourceUri, File directory) {
         super(bare ? directory : new File(directory, DOT_GIT));
@@ -58,13 +65,13 @@ public class Clone extends GitOperation {
 
 			Log.d(TAG, "Completed checkout!");
 		} catch (JGitInternalException e) {
-			throwExceptionWithFriendlyMessageFor(e);
+			throw exceptionWithFriendlyMessageFor(e);
 		} finally {
 			repoUpdateBroadcaster.broadcastUpdate();
 		}
 
-		return new OpNotification(stat_sys_download_done, "Cloned "
-				+ sourceUri.getHumanishName(), "Clone completed",
+		return new OpNotification(stat_sys_download_done, string(cloned_repo, sourceUri.getHumanishName()),
+				str_operationCompleted(),
 				sourceUri.toString());
 	}
 
@@ -81,24 +88,20 @@ public class Clone extends GitOperation {
 		return stat_sys_download;
 	}
 
-	public String getTickerText() {
-		return "Cloning " + sourceUri;
-	}
-
 	public String getName() {
-		return "Clone";
+		return opName;
 	}
 
-	public String getDescription() {
-		return "cloning " + sourceUri;
+	public String getTickerText() {
+		return string(cloning_repo, sourceUri.getHumanishName())+"...";
+	}
+
+	public String getActionTitle() {
+		return string(cloning);
 	}
 
 	public CharSequence getUrl() {
 		return sourceUri.toString();
-	}
-
-	public String getShortDescription() {
-		return "Cloning";
 	}
 
     public String toString() {
