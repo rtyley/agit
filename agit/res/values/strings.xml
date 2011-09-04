@@ -66,11 +66,12 @@
     <string name="pulling_repo">"Pulling %1$s"</string>
     <string name="fetch">"Fetch"</string>
     <string name="fetching">"Fetching"</string>
+    <string name="fetched_from_remote_on_repo">"Fetched from %1$s on %2$s"</string>
+    <string name="fetching_from_remote_on_repo">"Fetching from %1$s on %2$s"</string>
     <string name="delete_repo">"Delete Repo"</string>
 
 
     <string name="pulling_from_remote_on_repo">"Pulling from %1$s on %2$s"</string>
-    <string name="fetching_from_remote_on_repo">"Fetching from %1$s on %2$s"</string>
     <string name="pulled_from_remote">"Pulled from %1$s"</string>
     <string name="merge_status">"Merge status : %1$s"</string>
 

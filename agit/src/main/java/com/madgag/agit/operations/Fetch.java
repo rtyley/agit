@@ -15,9 +15,9 @@ import java.util.Collection;
 import static android.R.drawable.stat_sys_download;
 import static android.R.drawable.stat_sys_download_done;
 import static com.madgag.agit.R.string.*;
+import static com.madgag.agit.R.string.fetched_from_remote_on_repo;
 import static com.madgag.agit.git.Repos.niceNameFor;
 import static com.madgag.agit.git.Repos.uriForRemote;
-import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 
 public class Fetch extends GitOperation {
 		
@@ -50,7 +50,7 @@ public class Fetch extends GitOperation {
 	public OpNotification execute() {
 		Log.d(TAG, "start execute() : repository=" + repository+" remote="+remote);
 		FetchResult r = fetchService.fetch(remote, toFetch);
-		return new OpNotification(stat_sys_download_done,"Fetch complete", "Fetched "+remote, fetchUrl);
+		return new OpNotification(stat_sys_download_done, str_operationCompleted(), string(fetched_from_remote_on_repo, remote, niceNameFor(repository)), fetchUrl);
     }
 	
 	public String getName() {
