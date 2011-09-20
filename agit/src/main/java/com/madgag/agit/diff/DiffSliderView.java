@@ -79,14 +79,16 @@ public class DiffSliderView extends LinearLayout {
 		
 		public void onStopTrackingTouch(SeekBar seekBar) {
 			// TODO - should we animate this movement?
-			seekBar.setProgress(unitProgress(seekBar)<0.5?0:seekBar.getMax());
+			int sector=(int) (unitProgress(seekBar)*3); // 0 ,1 ,2
+			int progress= (sector * seekBar.getMax()) / 2;
+			seekBar.setProgress(progress);
 		}
 
 		public void onStartTrackingTouch(SeekBar seekBar) {}
 
 		public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            boolean before=progress==0, after=seekBar.getMax()==progress;
-			if (before || after) {
+            boolean before=progress==0, after=seekBar.getMax()==progress, middle = seekBar.getMax()/2==progress;
+			if (before || after || middle) {
 				vibrator.vibrate(17);
 			}
             // sadly makes the damn seekbar wiggle
