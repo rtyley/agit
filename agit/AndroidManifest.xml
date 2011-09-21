@@ -95,6 +95,16 @@
 			</intent-filter>
 		</activity>
 
+        <activity android:name=".weblaunchers.GitProtocolLaunchActivity" android:label="@string/app_name">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE"></category>
+                <action android:name="android.intent.action.VIEW"></action>
+                <data android:scheme="git" />
+                <data android:scheme="ssh" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".weblaunchers.GitHubWebLaunchActivity" android:label="@string/app_name">
 			<intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
