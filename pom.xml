@@ -24,8 +24,13 @@
 	<groupId>com.madgag</groupId>
 	<artifactId>agit-parent</artifactId>
 	<packaging>pom</packaging>
-	<name>Agit parent POM project</name>
-	<properties>
+    <name>Agit parent POM project</name>
+    <modules>
+        <module>agit-test-utils</module>
+        <module>agit</module>
+        <module>agit-integration-tests</module>
+    </modules>
+    <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<android.version>2.3.3</android.version>
         <maven.build.timestamp.format>yyMMdddHH</maven.build.timestamp.format>
@@ -89,19 +94,18 @@
     <build>
         <pluginManagement>
             <plugins>
-                  <plugin>
+                <plugin>
                     <artifactId>maven-release-plugin</artifactId>
                     <version>2.1</version>
                     <configuration>
-                      <!--
-                        During release:perform, enable the "release" profile
-                       -->
-                      <releaseProfiles>release</releaseProfiles>
-                      <goals>validate</goals>
+                        <!--
+                         During release:perform, enable the "release" profile
+                        -->
+                        <releaseProfiles>release</releaseProfiles>
+                        <goals>validate</goals>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
                     </configuration>
-                  </plugin>
-
-
+                </plugin>
 
                 <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
@@ -155,7 +159,8 @@
                         <maxMemory>512m</maxMemory>
                         <injar>android-classes</injar>
                         <libs>
-                            <lib>${java.home}/lib/rt.jar</lib>
+                            <lib>${rt.jar.path}</lib>
+                            <lib>${jsse.jar.path}</lib>
                         </libs>
                         <obfuscate>false</obfuscate>
                         <addMavenDescriptor>false</addMavenDescriptor>
@@ -238,18 +243,6 @@
     </build>
     <profiles>
         <profile>
-            <!-- the standard profile runs the instrumentation tests -->
-            <id>standard</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <modules>
-                <module>agit-test-utils</module>
-                <module>agit</module>
-                <module>agit-integration-tests</module>
-            </modules>
-        </profile>
-        <profile>
             <!-- the release profile does sign, proguard, zipalign ... but does not run instrumentation tests -->
             <id>release</id>
             <!-- via this activation the profile is automatically used when the release is done with the maven release
@@ -264,6 +257,50 @@
                 <module>agit-test-utils</module>
                 <module>agit</module>
             </modules>
+        </profile>
+                <!-- to avoid having to do symlinks to rt.jar like documented e.g. here
+            http://bruehlicke.blogspot.com/2009/11/missing-rtjar-mac-os-x-using-proguard.html
+            http://codebistro.com/2010/07/18/proguard-and-runtime-libraries-on-mac-os-x/
+            -->
+        <profile>
+            <id>linux</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <properties>
+                <rt.jar.path>${java.home}/jre/lib/rt.jar</rt.jar.path>
+                <jsse.jar.path>${java.home}/jre/lib/jsse.jar</jsse.jar.path>
+            </properties>
+        </profile>
+        <!-- mac profile has to be after unix since running on mac will trigger both -->
+        <profile>
+            <id>mac</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <properties>
+                <!-- absolute path -->
+                <!--<rt.jar.path>/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Classes/classes.jar</rt.jar.path>-->
+                <!-- or with JAVA_HOME /System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/ -->
+                <rt.jar.path>${java.home}/../Classes/classes.jar</rt.jar.path>
+                <jsse.jar.path>${java.home}/../Classes/jsse.jar</jsse.jar.path>
+            </properties>
+        </profile>
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <rt.jar.path>${java.home}/jre/lib/rt.jar</rt.jar.path>
+                <jsse.jar.path>${java.home}/jre/lib/jsse.jar</jsse.jar.path>
+            </properties>
         </profile>
     </profiles>
 </project>
