@@ -109,8 +109,8 @@
 
                 <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-                    <artifactId>maven-android-plugin</artifactId>
-                    <version>3.0.0-alpha-9</version>
+                    <artifactId>android-maven-plugin</artifactId>
+                    <version>3.0.0-alpha-11</version>
                     <extensions>true</extensions>
                     <configuration>
                         <jvmArguments>
