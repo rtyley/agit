@@ -19,8 +19,8 @@ import static com.madgag.agit.operations.OpPrompt.promptYesOrNo;
 import static com.madgag.agit.util.DigestUtils.encodeHex;
 import static com.madgag.agit.util.DigestUtils.md5;
 import static com.madgag.agit.views.TextUtil.centered;
-import static com.madgag.android.listviews.pinnedheader.R.string.ask_host_key_ok;
-import static com.madgag.android.listviews.pinnedheader.R.string.ask_host_key_ok_ticker;
+import static com.madgag.agit.R.string.ask_host_key_ok;
+import static com.madgag.agit.R.string.ask_host_key_ok_ticker;
 import static java.lang.Boolean.TRUE;
 
 @Singleton

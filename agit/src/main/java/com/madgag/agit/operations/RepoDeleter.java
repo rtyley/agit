@@ -21,7 +21,6 @@ package com.madgag.agit.operations;
 
 import android.util.Log;
 import com.google.inject.Inject;
-import com.madgag.agit.R;
 import org.eclipse.jgit.lib.Repository;
 import roboguice.inject.InjectResource;
 
@@ -32,7 +31,6 @@ import static android.R.drawable.stat_sys_download;
 import static android.R.drawable.stat_sys_download_done;
 import static com.madgag.agit.R.string.delete_repo;
 import static com.madgag.agit.git.Repos.topDirectoryFor;
-import static com.madgag.android.listviews.pinnedheader.R.string.clone;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
 
 public class RepoDeleter extends GitOperation {
