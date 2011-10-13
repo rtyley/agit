@@ -1,9 +1,7 @@
 package com.madgag.agit.operations;
 
-import android.content.Context;
 import android.util.Log;
 import com.google.inject.Inject;
-import com.madgag.android.listviews.pinnedheader.R;
 import org.eclipse.jgit.api.TransportConfigCallback;
 import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.transport.CredentialsProvider;
@@ -14,12 +12,11 @@ import java.io.File;
 
 import static android.R.drawable.stat_sys_download;
 import static android.R.drawable.stat_sys_download_done;
+import static com.madgag.agit.R.string.clone;
 import static com.madgag.agit.R.string.cloned_repo;
+import static com.madgag.agit.R.string.cloning_repo;
 import static com.madgag.agit.R.string.cloning;
-import static com.madgag.agit.R.string.fetching;
 import static com.madgag.agit.operations.JGitAPIExceptions.exceptionWithFriendlyMessageFor;
-import static com.madgag.android.listviews.pinnedheader.R.string.clone;
-import static com.madgag.android.listviews.pinnedheader.R.string.cloning_repo;
 import static org.eclipse.jgit.api.Git.cloneRepository;
 import static org.eclipse.jgit.lib.Constants.*;
 
