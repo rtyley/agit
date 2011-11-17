@@ -1,4 +1,3 @@
-
 Agit - Android Git Client
 -------------------------
 
@@ -129,6 +128,7 @@ And of course the entire system runs on Android, which uses a VM originally
 based on Harmony...
 
 The fix for [HARMONY-6637](https://issues.apache.org/jira/browse/HARMONY-6637) has now been accepted downstream in Android with issue #[11755](http://code.google.com/p/android/issues/detail?id=11755).
+
 
 
 
