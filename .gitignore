@@ -14,9 +14,9 @@ release.properties
 .project
 .settings
 gen
+gen-external-apklibs
 */seed.txt
 notes
 logs
 agit/artwork/rasters/
 agit/gravatars
-
