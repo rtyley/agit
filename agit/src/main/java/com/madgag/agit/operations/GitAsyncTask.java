@@ -25,18 +25,13 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
-import com.madgag.agit.R;
 import com.madgag.agit.operation.lifecycle.OperationLifecycleSupport;
 import com.madgag.android.blockingprompt.PromptBroker;
 import roboguice.util.RoboAsyncTask;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 import static android.R.drawable.stat_notify_error;
-import static com.madgag.agit.R.string.execute_clone_button_label;
-import static com.madgag.agit.R.string.operation_cancelled;
-import static com.madgag.agit.R.string.operation_failed;
 import static java.lang.System.currentTimeMillis;
 
 public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements ProgressListener<Progress> {
@@ -44,7 +39,6 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
 	public final static String TAG = "GAT";
 
     @Inject GitOperationExecutor operationExecutor;
-	@Inject GitOperationScopeExecutor gitOperationScopeExecutor;
     @Inject Provider<PromptBroker> promptBrokerProvider;
 	
 	private final GitOperation operation;
@@ -71,16 +65,7 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
     @Override
     protected void onPreExecute() {
     	Log.d(TAG, "Starting onPreExecute "+operation+" handler="+handler);
-		try {
-			OpNotification notification = gitOperationScopeExecutor.call(operation, new OperationUIContext(this, promptBrokerProvider), new Callable<OpNotification>() {
-				public OpNotification call() throws Exception {
-					return new OpNotification(operation.getOngoingIcon(), operation.getTickerText(), operation.getActionTitle(), operation.getUrl().toString());
-				}
-			});
-			lifecycleSupport.startedWith(notification);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+    	lifecycleSupport.startedWith(new OpNotification(operation.getOngoingIcon(), operation.getTickerText(), operation.getShortDescription(), operation.getUrl().toString()));
     	startTime = currentTimeMillis();
     }
 
@@ -96,17 +81,14 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
 		lifecycleSupport.completed(opResult);
 	}
 
-	private String string(int resId, java.lang.Object... formatArgs) {
-		return context.getString(resId, formatArgs);
-	}
-
     @Override
     protected void onException(Exception e) throws RuntimeException {
+        String opName = operation.getName();
         boolean cancelled = operation.isCancelled();
         Log.e(TAG, "Examining exception "+e+" op "+operation+" cancelled="+cancelled, e);
-		String headline = string(cancelled ? operation_cancelled : operation_failed, operation.getName());
         OpNotification notification =
-            new OpNotification(stat_notify_error, headline, cancelled?operation.getUrl().toString():e.getMessage());
+                cancelled ?new OpNotification(stat_notify_error, opName +" cancelled", operation.getUrl().toString()):
+                        new OpNotification(stat_notify_error, opName +" failed", e.getMessage());
         lifecycleSupport.error(notification);
         lifecycleSupport.completed(notification);
     }
