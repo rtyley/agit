@@ -24,12 +24,13 @@
 			<artifactId>agit</artifactId>
             <version>${project.version}</version>
 			<type>apk</type>
+            <scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.madgag</groupId>
 			<artifactId>agit</artifactId>
             <version>${project.version}</version>
-			<scope>compile</scope>
+            <scope>provided</scope>
 			<type>jar</type>
 		</dependency>
         <dependency>
