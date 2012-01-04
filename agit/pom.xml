@@ -9,20 +9,22 @@
 		<groupId>com.madgag</groupId>
 		<artifactId>agit-parent</artifactId>
 	</parent>
-
 	<packaging>apk</packaging>
 	<name>Agit - git client for Android</name>
+    <properties>
+        <pinned-header.version>0.2</pinned-header.version>
+    </properties>
 	<dependencies>
+        <dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>android-pinned-header-listviews</artifactId>
+            <version>${pinned-header.version}</version>
+            <type>apklib</type>
+        </dependency>
 		<dependency>
 			<groupId>com.madgag</groupId>
 			<artifactId>android-viewholder-listviews</artifactId>
 			<version>0.4</version>
-		</dependency>
-        <dependency>
-			<groupId>com.madgag</groupId>
-			<artifactId>android-pinned-header-listviews</artifactId>
-			<version>0.2</version>
-            <type>apklib</type>
 		</dependency>
         <dependency>
 			<groupId>com.madgag</groupId>
