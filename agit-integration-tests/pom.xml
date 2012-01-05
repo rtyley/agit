@@ -13,12 +13,13 @@
 	<packaging>apk</packaging>
 	<name>Agit integration tests</name>
     <dependencies>
-        <!--<dependency>
+        <dependency>
             <groupId>com.madgag</groupId>
-            <artifactId>toy-ssh-agent</artifactId>  Needs to come before Agit
+            <artifactId>toy-ssh-agent</artifactId>
             <version>1.4</version>
             <type>apk</type>
-        </dependency> -->
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>com.madgag</groupId>
             <artifactId>agit</artifactId>
