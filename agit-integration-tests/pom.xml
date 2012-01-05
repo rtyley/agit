@@ -37,6 +37,12 @@
             <groupId>com.madgag</groupId>
             <artifactId>agit-test-utils</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-io</artifactId>
+                    <groupId>commons-io</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -57,6 +63,7 @@
             <artifactId>mini-git-server-war</artifactId>
             <version>0.4</version>
             <type>war</type>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 	<build>
@@ -94,7 +101,7 @@
 			<plugin>
 				<groupId>org.codehaus.cargo</groupId>
 				<artifactId>cargo-maven2-plugin</artifactId>
-                <version>1.1.1</version>
+                <version>1.1.4</version>
 				<executions>
 					<execution>
 						<id>start-container</id>
