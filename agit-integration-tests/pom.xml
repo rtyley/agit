@@ -12,52 +12,61 @@
 
 	<packaging>apk</packaging>
 	<name>Agit integration tests</name>
-	<dependencies>
-		<dependency>
-			<groupId>com.madgag</groupId>
-			<artifactId>toy-ssh-agent</artifactId> <!-- Needs to come before Agit -->
-			<version>1.4</version>
-			<type>apk</type>
-		</dependency>
-		<dependency>
-			<groupId>com.madgag</groupId>
-			<artifactId>agit</artifactId>
-            <version>${project.version}</version>
-			<type>apk</type>
-		</dependency>
-		<dependency>
-			<groupId>com.madgag</groupId>
-			<artifactId>agit</artifactId>
-            <version>${project.version}</version>
-			<scope>compile</scope>
-			<type>jar</type>
-		</dependency>
+    <dependencies>
         <dependency>
-			<groupId>com.madgag</groupId>
-			<artifactId>agit-test-utils</artifactId>
+            <groupId>com.madgag</groupId>
+            <artifactId>toy-ssh-agent</artifactId>
+            <version>1.4</version>
+            <type>apk</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>agit</artifactId>
             <version>${project.version}</version>
-		</dependency>
+            <scope>provided</scope>
+            <type>apk</type>
+        </dependency>
+        <dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>agit</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>agit-test-utils</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-io</artifactId>
+                    <groupId>commons-io</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
         </dependency>
-		<dependency>
-			<groupId>com.madgag</groupId>
-			<artifactId>calculon</artifactId>
-			<version>1.0.5-UNOFFICIAL-BUILD</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.android</groupId>
-			<artifactId>android-test</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.madgag</groupId>
-			<artifactId>mini-git-server-war</artifactId>
-			<version>0.4</version>
-			<type>war</type>
-		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>calculon</artifactId>
+            <version>1.0.5-UNOFFICIAL-BUILD</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>android-test</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>mini-git-server-war</artifactId>
+            <version>0.4</version>
+            <type>war</type>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 	<build>
 		<plugins>
 			<plugin>
@@ -67,10 +76,6 @@
                         <extractDuplicates>true</extractDuplicates>
                 </configuration>
 			</plugin>
-            <plugin>
-                <groupId>com.pyx4me</groupId>
-                <artifactId>proguard-maven-plugin</artifactId>
-            </plugin>
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>2.5</version>
@@ -97,7 +102,7 @@
 			<plugin>
 				<groupId>org.codehaus.cargo</groupId>
 				<artifactId>cargo-maven2-plugin</artifactId>
-                <version>1.1.1</version>
+                <version>1.1.4</version>
 				<executions>
 					<execution>
 						<id>start-container</id>
