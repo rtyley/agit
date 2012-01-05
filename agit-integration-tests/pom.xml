@@ -13,12 +13,12 @@
 	<packaging>apk</packaging>
 	<name>Agit integration tests</name>
     <dependencies>
-        <dependency>
+        <!--<dependency>
             <groupId>com.madgag</groupId>
-            <artifactId>toy-ssh-agent</artifactId> <!-- Needs to come before Agit -->
+            <artifactId>toy-ssh-agent</artifactId>  Needs to come before Agit
             <version>1.4</version>
             <type>apk</type>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>com.madgag</groupId>
             <artifactId>agit</artifactId>
@@ -68,10 +68,6 @@
                         <extractDuplicates>true</extractDuplicates>
                 </configuration>
 			</plugin>
-            <plugin>
-                <groupId>com.pyx4me</groupId>
-                <artifactId>proguard-maven-plugin</artifactId>
-            </plugin>
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>2.5</version>
