@@ -120,12 +120,10 @@
                     <version>3.0.2</version>
                     <extensions>true</extensions>
                     <configuration>
-                        <!--
                         <proguard>
                             <skip>false</skip>
                             <config>../proguard.cfg</config>
                         </proguard>
-                        -->
                         <sdk>
                             <platform>10</platform>
                         </sdk>
