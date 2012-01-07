@@ -27,11 +27,10 @@ import static org.junit.Assert.assertThat;
 @RunWith(RobolectricTestRunner.class)
 public class CloneLauncherActivityRobolectricTest {
 
-    @Inject CloneLauncherActivity activity;
+    CloneLauncherActivity activity = new CloneLauncherActivity();
 
 	final String appleProjectSourceUri="/example/apple";
 	final String targetDir="/sdcard/tango";
-
 
     Checkable bareRepoCheckbox, defaultLocationCheckBox;
     TextView directoryEditText;
@@ -41,6 +40,8 @@ public class CloneLauncherActivityRobolectricTest {
     public void setup() {
         // Override the default RoboGuice module
         // RoboGuice.setBaseApplicationInjector(Robolectric.application, RoboGuice.DEFAULT_STAGE, Modules.override(RoboGuice.newDefaultRoboModule(Robolectric.application)).with(new AgitIntegrationTestModule()));
+        activity.onCreate(null);
+        RoboGuice.injectMembers(activity, this);
         clone = new GitIntentBuilder("");
         bareRepoCheckbox = checkable(R.id.BareRepo);
         defaultLocationCheckBox = checkable(UseDefaultGitDirLocation);
