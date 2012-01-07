@@ -4,7 +4,13 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Checkable;
 import android.widget.TextView;
+import roboguice.RoboGuice;
+
 import com.google.inject.Inject;
+import com.google.inject.util.Modules;
+import com.xtremelabs.robolectric.Robolectric;
+import com.xtremelabs.robolectric.RobolectricTestRunner;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +24,7 @@ import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
-@RunWith(InjectedTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class CloneLauncherActivityRobolectricTest {
 
     @Inject CloneLauncherActivity activity;
@@ -32,13 +38,22 @@ public class CloneLauncherActivityRobolectricTest {
     GitIntentBuilder clone;
 
     @Before
-    public void setUp() {
-		activity.onCreate(null);
+    public void setup() {
+        // Override the default RoboGuice module
+        // RoboGuice.setBaseApplicationInjector(Robolectric.application, RoboGuice.DEFAULT_STAGE, Modules.override(RoboGuice.newDefaultRoboModule(Robolectric.application)).with(new AgitIntegrationTestModule()));
         clone = new GitIntentBuilder("");
         bareRepoCheckbox = checkable(R.id.BareRepo);
         defaultLocationCheckBox = checkable(UseDefaultGitDirLocation);
         directoryEditText = textView(GitDirEditText);
     }
+
+    @After
+    public void teardown() {
+        // Don't forget to tear down our custom injector to avoid polluting other test classes
+        RoboGuice.util.reset();
+    }
+
+
 
 	@Test
 	public void shouldUseSpecifiedRepoUrlFromIntentIfSupplied() {

@@ -19,6 +19,16 @@
 
 package com.madgag.agit.views;
 
+import static com.madgag.agit.util.Time.timeSinceMS;
+import static com.madgag.agit.views.TextUtil.ITALIC_CLIPPING_BUFFER;
+import static com.madgag.android.lazydrawables.gravatar.Gravatars.gravatarIdFor;
+import static roboguice.RoboGuice.getInjector;
+
+import com.google.inject.Inject;
+import com.madgag.agit.R;
+import com.madgag.android.lazydrawables.ImageSession;
+import org.eclipse.jgit.lib.PersonIdent;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -30,15 +40,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.google.inject.Inject;
-import com.madgag.agit.R;
-import com.madgag.android.lazydrawables.ImageSession;
-import org.eclipse.jgit.lib.PersonIdent;
-import roboguice.inject.InjectorProvider;
-
-import static com.madgag.agit.util.Time.timeSinceMS;
-import static com.madgag.agit.views.TextUtil.ITALIC_CLIPPING_BUFFER;
-import static com.madgag.android.lazydrawables.gravatar.Gravatars.gravatarIdFor;
 
 public class PersonIdentView extends FrameLayout {
 	
@@ -52,7 +53,7 @@ public class PersonIdentView extends FrameLayout {
 
     public PersonIdentView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		((InjectorProvider)context).getInjector().injectMembers(this);
+        getInjector(context).injectMembers(this);
 		LayoutInflater.from(context).inflate(com.madgag.agit.R.layout.person_ident_view, this);
 		
 		titleView = (TextView) findViewById(R.id.person_ident_title);

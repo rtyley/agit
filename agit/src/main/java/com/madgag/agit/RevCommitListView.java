@@ -19,24 +19,24 @@
 
 package com.madgag.agit;
 
+import static com.madgag.agit.R.layout.rev_commit_list_item;
+import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
+import static roboguice.RoboGuice.getInjector;
+
+import com.google.common.base.Function;
+import com.google.inject.Inject;
+import com.madgag.android.listviews.ViewHoldingListAdapter;
+import com.markupartist.android.widget.PullToRefreshListView;
+import java.util.Collections;
+import java.util.List;
+import org.eclipse.jgit.revwalk.RevCommit;
+
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import com.google.common.base.Function;
-import com.google.inject.Inject;
-import com.madgag.android.listviews.ViewHoldingListAdapter;
-import com.markupartist.android.widget.PullToRefreshListView;
-import org.eclipse.jgit.revwalk.RevCommit;
-import roboguice.inject.InjectorProvider;
-
-import java.util.Collections;
-import java.util.List;
-
-import static com.madgag.agit.R.layout.rev_commit_list_item;
-import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 
 public class RevCommitListView extends PullToRefreshListView {
 
@@ -49,7 +49,7 @@ public class RevCommitListView extends PullToRefreshListView {
 
 	public RevCommitListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-        ((InjectorProvider) context).getInjector().injectMembers(this);
+        getInjector(context).injectMembers(this);
         adapter = new ViewHoldingListAdapter<RevCommit>(Collections.<RevCommit>emptyList(), viewInflatorFor(getContext(), rev_commit_list_item),
                 commitViewHolderFactory);
         setAdapter(adapter);

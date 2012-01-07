@@ -27,6 +27,8 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+
+import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Provides;
@@ -63,8 +65,7 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.SshSessionFactory;
-import roboguice.config.AbstractAndroidModule;
-import roboguice.inject.ContextScoped;
+import roboguice.inject.ContextSingleton;
 import roboguice.inject.InjectExtra;
 
 import java.io.File;
@@ -76,7 +77,7 @@ import static com.google.inject.name.Names.named;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoPendingIntent;
 import static java.lang.Thread.currentThread;
 
-public class AgitModule extends AbstractAndroidModule {
+public class AgitModule extends AbstractModule {
 
     private static final String TAG = "AgitMod";
 
@@ -128,7 +129,7 @@ public class AgitModule extends AbstractAndroidModule {
         return Git.wrap(repository);
     }
 
-	@ContextScoped
+	@ContextSingleton
     public static class BranchRefProvider implements Provider<Ref> {
 		@Inject Repository repository;
 		@InjectExtra(value="branch",optional=true) String branchName;
@@ -144,7 +145,7 @@ public class AgitModule extends AbstractAndroidModule {
 		}
 	}
 	
-	@ContextScoped
+	@ContextSingleton
     public static class ImageSessionProvider implements Provider<ImageSession<String, Bitmap>> {
 
         @Inject Resources resources;

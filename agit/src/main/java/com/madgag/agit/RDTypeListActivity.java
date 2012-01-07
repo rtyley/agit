@@ -42,6 +42,7 @@ import static com.madgag.agit.R.id.actionbar;
 import static com.madgag.agit.R.layout.list_activity_layout;
 import static com.madgag.agit.RepoScopedActivityBase.enterRepositoryScopeFor;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
+import static roboguice.RoboGuice.getInjector;
 
 public class RDTypeListActivity<E> extends RoboListActivity {
 	
@@ -78,7 +79,7 @@ public class RDTypeListActivity<E> extends RoboListActivity {
 	
 	private RepoDomainType<E> extractRDTFromIntent() {
 		String rdtName = getIntent().getAction().substring(OPEN_GIT_INTENT_PREFIX.length()).split("\\.")[0];
-        return getInjector().getInstance(Key.get(RepoDomainType.class, named(rdtName)));
+        return getInjector(this).getInstance(Key.get(RepoDomainType.class, named(rdtName)));
 	}
 
 	@Override

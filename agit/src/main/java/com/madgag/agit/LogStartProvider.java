@@ -1,19 +1,19 @@
 package com.madgag.agit;
 
-import android.util.Log;
+import static com.google.common.collect.Iterables.transform;
+import static java.util.Arrays.asList;
+import static org.eclipse.jgit.lib.Constants.R_REMOTES;
+
 import com.google.common.base.Function;
 import com.google.inject.Inject;
-import com.google.inject.internal.Nullable;
 import com.google.inject.name.Named;
+import javax.annotation.Nullable;
+import java.io.IOException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 
-import java.io.IOException;
-
-import static com.google.common.collect.Iterables.transform;
-import static java.util.Arrays.asList;
-import static org.eclipse.jgit.lib.Constants.R_REMOTES;
+import android.util.Log;
 
 public class LogStartProvider {
 
@@ -25,7 +25,8 @@ public class LogStartProvider {
     };
 
     @Inject Repository repository;
-    @Inject @Named("branch") @Nullable Ref branch;
+    @Inject @Named("branch") @Nullable
+    Ref branch;
 
     public Iterable<ObjectId> get() {
         Iterable<Ref> refs = getRefs();

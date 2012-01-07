@@ -19,19 +19,20 @@
 
 package com.madgag.agit.views;
 
+import static com.madgag.android.lazydrawables.gravatar.Gravatars.gravatarIdFor;
+import static roboguice.RoboGuice.getInjector;
+
+import com.google.inject.Inject;
+import com.madgag.agit.R;
+import com.madgag.android.lazydrawables.ImageSession;
+import org.eclipse.jgit.lib.PersonIdent;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.google.inject.Inject;
-import com.madgag.agit.R;
-import com.madgag.android.lazydrawables.ImageSession;
-import org.eclipse.jgit.lib.PersonIdent;
-import roboguice.inject.InjectorProvider;
-
-import static com.madgag.android.lazydrawables.gravatar.Gravatars.gravatarIdFor;
 
 public class PersonIdentDetailView extends FrameLayout {
 
@@ -45,7 +46,7 @@ public class PersonIdentDetailView extends FrameLayout {
 
     public PersonIdentDetailView(Context context) {
 		super(context);
-		((InjectorProvider)context).getInjector().injectMembers(this);
+        getInjector(context).injectMembers(this);
 		LayoutInflater.from(context).inflate(R.layout.person_ident_detail_view, this);
 
 		avatarView = (ImageView) findViewById(R.id.person_ident_avatar);

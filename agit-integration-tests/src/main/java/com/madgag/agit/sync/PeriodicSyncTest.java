@@ -22,7 +22,6 @@ package com.madgag.agit.sync;
 import android.os.Build;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.util.Log;
-import com.madgag.agit.AgitTestApplication;
 import roboguice.test.RoboUnitTestCase;
 
 import java.lang.reflect.Method;
