@@ -25,8 +25,7 @@ public class LogStartProvider {
     };
 
     @Inject Repository repository;
-    @Inject @Named("branch") @Nullable
-    Ref branch;
+    @Inject @Named("branch") @Nullable Ref branch;
 
     public Iterable<ObjectId> get() {
         Iterable<Ref> refs = getRefs();
