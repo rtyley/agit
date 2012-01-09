@@ -86,7 +86,7 @@ public class AgitModule extends AbstractModule {
 		install(RepositoryScope.module());
         install(OperationScope.module());
         bind(UserInfo.class).to(GUIUserInfo.class);
-    	bind(ImageSession.class).toProvider(ImageSessionProvider.class);
+    	bind(ImageSession.class).toProvider(ImageSessionProvider.class).in(ContextSingleton.class);
 
     	bind(Repository.class).toProvider(RepositoryProvider.class);
     	bind(Ref.class).annotatedWith(named("branch")).toProvider(BranchRefProvider.class);

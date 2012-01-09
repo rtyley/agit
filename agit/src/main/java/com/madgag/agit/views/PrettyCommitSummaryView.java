@@ -26,6 +26,9 @@ import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import roboguice.inject.ContextScopedProvider;
+import roboguice.inject.ContextSingleton;
+
 import com.google.inject.Inject;
 import com.madgag.agit.util.Time;
 import com.madgag.android.lazydrawables.ImageSession;
@@ -43,7 +46,7 @@ public class PrettyCommitSummaryView extends FrameLayout {
 
     private final TextView shortMessage,commit_date;
     private final ImageView gravatar;
-    @Inject ImageSession avatarSession;
+    @Inject @ContextSingleton ImageSession avatarSession;
 
     public PrettyCommitSummaryView(Context context, AttributeSet attrs) {
         super(context, attrs);
