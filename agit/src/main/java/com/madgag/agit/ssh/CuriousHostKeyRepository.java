@@ -1,5 +1,6 @@
 package com.madgag.agit.ssh;
 
+import android.app.Application;
 import android.content.Context;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -26,12 +27,12 @@ import static java.lang.Boolean.TRUE;
 @Singleton
 public class CuriousHostKeyRepository implements HostKeyRepository {
     Map<String, byte[]> knownKeys = newHashMap();
-    private final Context context;
+    private final Application application;
     private final Provider<BlockingPromptService> blockingPromptService;
 
     @Inject
-    public CuriousHostKeyRepository(Context context, Provider<BlockingPromptService> blockingPromptService) {
-        this.context = context;
+    public CuriousHostKeyRepository(Application application, Provider<BlockingPromptService> blockingPromptService) {
+        this.application = application;
         this.blockingPromptService = blockingPromptService;
     }
 
@@ -45,8 +46,8 @@ public class CuriousHostKeyRepository implements HostKeyRepository {
 
     private int userCheckKey(String host, byte[] key) {
         String keyFingerprint = "<small>"+code(encodeHex(md5(key)))+"</small><br />";
-        String ticker = context.getString(ask_host_key_ok_ticker, code(host));
-        String message = context.getString(ask_host_key_ok, code(host)+"<br />", keyFingerprint);
+        String ticker = application.getString(ask_host_key_ok_ticker, code(host));
+        String message = application.getString(ask_host_key_ok, code(host)+"<br />", keyFingerprint);
         boolean userConfirmKeyGood = TRUE == blockingPromptService.get().request(promptYesOrNo(alert(fromHtml(ticker), "SSH", centered(message))));
         if (userConfirmKeyGood) {
             knownKeys.put(host,key);
@@ -75,6 +76,6 @@ public class CuriousHostKeyRepository implements HostKeyRepository {
     }
 
     public HostKey[] getHostKey(String host, String type) {
-        return new HostKey[0];  //To change body of implemented methods use File | Settings | File Templates.
+        return new HostKey[0];
     }
 }
