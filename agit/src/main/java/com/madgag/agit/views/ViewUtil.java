@@ -10,6 +10,6 @@ public class ViewUtil {
     public static void injectFor(ViewGroup view, int layoutId) {
         Context context = view.getContext();
         LayoutInflater.from(context).inflate(layoutId, view);
-        getInjector(context).injectMembers(view);
+        // getInjector(context).injectMembers(view);
     }
 }

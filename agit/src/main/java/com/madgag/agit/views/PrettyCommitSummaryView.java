@@ -22,6 +22,7 @@ package com.madgag.agit.views;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -46,7 +47,14 @@ public class PrettyCommitSummaryView extends FrameLayout {
 
     public PrettyCommitSummaryView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        injectFor(this, commit_summary_view);
+        Log.d(TAG, "Zart Context = "+context);
+        try {
+            injectFor(this, commit_summary_view);
+        } catch (RuntimeException e) {
+            Log.e(TAG, "Bang", e);
+            throw e;
+        }
+        Log.d(TAG, "...finished doing inject");
 
         shortMessage = (TextView) findViewById(tv_commit_list_item_shortdesc);
         commit_date = (TextView) findViewById(tv_commit_list_item_commit_date);
