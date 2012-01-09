@@ -34,7 +34,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import static com.madgag.agit.R.id.*;
 import static com.madgag.agit.R.layout.commit_summary_view;
 import static com.madgag.agit.views.TextUtil.ITALIC_CLIPPING_BUFFER;
-import static com.madgag.agit.views.ViewUtil.injectFor;
+import static com.madgag.agit.views.ViewUtil.whileStillContextScopeInjectFor;
 import static com.madgag.android.lazydrawables.gravatar.Gravatars.gravatarIdFor;
 
 public class PrettyCommitSummaryView extends FrameLayout {
@@ -49,7 +49,7 @@ public class PrettyCommitSummaryView extends FrameLayout {
         super(context, attrs);
         Log.d(TAG, "Zart Context = "+context);
         try {
-            injectFor(this, commit_summary_view);
+            whileStillContextScopeInjectFor(this, commit_summary_view);
         } catch (RuntimeException e) {
             Log.e(TAG, "Bang", e);
             throw e;

@@ -35,7 +35,7 @@ import org.eclipse.jgit.revwalk.*;
 import static com.madgag.agit.R.id.*;
 import static com.madgag.agit.R.layout.object_summary_view;
 import static com.madgag.agit.git.GitObjects.evaluate;
-import static com.madgag.agit.views.ViewUtil.injectFor;
+import static com.madgag.agit.views.ViewUtil.whileStillContextScopeInjectFor;
 
 public class ObjectSummaryView extends LinearLayout {
 
@@ -52,7 +52,7 @@ public class ObjectSummaryView extends LinearLayout {
     public ObjectSummaryView(Context context, AttributeSet attrs) {
 		super(context, attrs);
         setOrientation(VERTICAL);
-        injectFor(this, object_summary_view);
+        whileStillContextScopeInjectFor(this, object_summary_view);
         objectTypeIcon = (ImageView) findViewById(osv_object_type_icon);
         objectIdView = (ObjectIdView) findViewById(osv_object_id_text);
         objectTypeTextView = (TextView) findViewById(osv_object_type_text);

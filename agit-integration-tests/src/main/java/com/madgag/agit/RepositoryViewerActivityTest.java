@@ -32,6 +32,7 @@ import org.eclipse.jgit.lib.Repository;
 import java.io.File;
 import java.util.List;
 
+import static com.madgag.agit.AndroidTestEnvironment.helper;
 import static com.madgag.agit.RDTypeListActivity.listIntent;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
 import static com.madgag.agit.matchers.CharSequenceMatcher.charSequence;
@@ -49,13 +50,10 @@ public class RepositoryViewerActivityTest extends ActivityInstrumentationTestCas
 	}
 	
 	public void testShouldShowRepoViewerPageWithoutExplosion() throws Exception {
-
-		GitTestHelper helper = AndroidTestEnvironment.helper(getInstrumentation());
-		Repository repoWithTags = helper.unpackRepo("small-repo.with-tags.zip");
-		
+        Repository repoWithTags = helper(getInstrumentation()).unpackRepo("small-repo.with-tags.zip");
 		setActivityIntent(manageRepoIntent(repoWithTags.getDirectory()));
 		
-		final RepositoryViewerActivity activity = getActivity(); // shouldn't crash
+		getActivity(); // shouldn't crash
 
 	}
 	
