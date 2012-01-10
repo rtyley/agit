@@ -21,18 +21,25 @@ package com.madgag.agit;
 
 import com.google.inject.Inject;
 import com.madgag.agit.git.model.RDTBranch;
+import com.madgag.agit.guice.ContextScopedViewInflator;
+import com.madgag.agit.guice.ContextScopedViewInflatorFactory;
 import com.madgag.android.listviews.ViewFactory;
 
 import static com.madgag.agit.R.layout.branch_list_item;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 
+import roboguice.inject.ContextScopedProvider;
+import roboguice.inject.ContextSingleton;
+
+@ContextSingleton
 public class RDTBranchListActivity extends RDTypeListActivity<RDTBranch.BranchSummary> {
 	
 	private static final String TAG = "RDTBranchL";
     @Inject BranchViewHolderFactory viewHolderFactory;
+    @Inject ContextScopedViewInflatorFactory inflatorFactory;
 
     @Override
     public ViewFactory<RDTBranch.BranchSummary> getViewFactory() {
-        return new ViewFactory<RDTBranch.BranchSummary>(viewInflatorFor(this, branch_list_item), viewHolderFactory);
+        return new ViewFactory<RDTBranch.BranchSummary>(inflatorFactory.creatorFor(this, branch_list_item), viewHolderFactory);
     }
 }

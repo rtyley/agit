@@ -42,6 +42,8 @@ import com.madgag.agit.git.model.RDTBranch;
 import com.madgag.agit.git.model.RDTRemote;
 import com.madgag.agit.git.model.RDTTag;
 import com.madgag.agit.git.model.RepoDomainType;
+import com.madgag.agit.guice.ContextScopedViewInflator;
+import com.madgag.agit.guice.ContextScopedViewInflatorFactory;
 import com.madgag.agit.guice.OperationScope;
 import com.madgag.agit.guice.RepositoryScope;
 import com.madgag.agit.guice.RepositoryScoped;
@@ -92,6 +94,7 @@ public class AgitModule extends AbstractModule {
     	bind(Ref.class).annotatedWith(named("branch")).toProvider(BranchRefProvider.class);
     	bind(AndroidAuthAgent.class).toProvider(AndroidAuthAgentProvider.class);
     	bind(GitAsyncTaskFactory.class).toProvider(newFactory(GitAsyncTaskFactory.class, GitAsyncTask.class));
+        bind(ContextScopedViewInflatorFactory.class).toProvider(newFactory(ContextScopedViewInflatorFactory.class, ContextScopedViewInflator.class));
 
         bind(SyncCampaignFactory.class).toProvider(newFactory(SyncCampaignFactory.class, SyncCampaign.class));
 
