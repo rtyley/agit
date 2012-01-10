@@ -25,6 +25,7 @@ import static roboguice.RoboGuice.getInjector;
 
 import com.google.common.base.Function;
 import com.google.inject.Inject;
+import com.madgag.agit.guice.ContextScopedViewInflatorFactory;
 import com.madgag.android.listviews.ViewHoldingListAdapter;
 import com.markupartist.android.widget.PullToRefreshListView;
 import java.util.Collections;
@@ -37,12 +38,15 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import roboguice.inject.ContextSingleton;
 
+@ContextSingleton
 public class RevCommitListView extends PullToRefreshListView {
 
     private static String TAG="RCLV";
 
     @Inject CommitViewHolderFactory commitViewHolderFactory;
+    @Inject ContextScopedViewInflatorFactory inflatorFactory;
 	private Function<RevCommit, Intent> commitViewerIntentCreator;
 
     private final ViewHoldingListAdapter<RevCommit> adapter;
@@ -50,7 +54,8 @@ public class RevCommitListView extends PullToRefreshListView {
 	public RevCommitListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
         getInjector(context).injectMembers(this);
-        adapter = new ViewHoldingListAdapter<RevCommit>(Collections.<RevCommit>emptyList(), viewInflatorFor(getContext(), rev_commit_list_item),
+        adapter = new ViewHoldingListAdapter<RevCommit>(Collections.<RevCommit>emptyList(),
+                inflatorFactory.creatorFor(getContext(), rev_commit_list_item),
                 commitViewHolderFactory);
         setAdapter(adapter);
 
