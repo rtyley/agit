@@ -5,8 +5,16 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.madgag.agit.guice.OperationScope;
 import com.madgag.agit.guice.RepositoryScope;
+import com.madgag.android.jgit.HarmonyFixInflater;
+import org.eclipse.jgit.lib.InflaterCache;
+
+import static com.madgag.android.jgit.HarmonyFixInflater.HARMONY_FIX_FACTORY;
 
 public class GitOperationExecutor {
+
+    static {
+        HarmonyFixInflater.establishHarmoniousRepose();
+    }
 
     private static final String TAG = "GOE";
 
