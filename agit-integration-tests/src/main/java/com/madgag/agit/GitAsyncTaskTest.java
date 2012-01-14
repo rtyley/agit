@@ -139,6 +139,18 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
         assertThat(readmeFile, exists());
 	}
 
+    @MediumTest
+    public void testNonBareCloneFromRepoWithFiveMBBlobForIssue47() throws Exception {
+        Clone cloneOp = new Clone(false, new URIish("git://github.com/rtyley/five-mb-file-test-repo.git"), helper().newFolder());
+        Repository repo = executeAndWaitFor(cloneOp);
+
+        assertThat(repo, hasGitObject("3995316735a53542acdf0d92e0b725fe296c0b49"));
+        assertThat(repo, not(hasGitObject("111111111111111111111111111111111111cafe")));
+
+        File bigFile= new File(repo.getWorkTree(), "5mb.zeros");
+        assertThat(bigFile, exists());
+    }
+
 //    @LargeTest
 //	public void testCanCloneAllSuggestedRepos() throws Exception {
 //        for (SuggestedRepo suggestedRepo : SUGGESTIONS) {
