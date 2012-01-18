@@ -18,6 +18,8 @@ public class HarmonyFixInflater extends Inflater {
 
     public static final InflaterFactory HARMONY_FIX_FACTORY = new InflaterFactory() {
         public Inflater create() { return new HarmonyFixInflater(); }
+
+        public void decommision(Inflater inflater) { inflater.end(); }
     };
 
     public static void establishHarmoniousRepose() {
