@@ -1,5 +1,6 @@
 package com.madgag.android.jgit;
 
+import android.util.Log;
 import org.eclipse.jgit.lib.InflaterCache;
 import org.eclipse.jgit.lib.InflaterFactory;
 
@@ -9,17 +10,34 @@ import java.util.zip.DataFormatException;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.Inflater;
 
-/*
- * See https://issues.apache.org/jira/browse/HARMONY-6637 - basically, Harmony JRE will not set finished()=true when you ask it
- * to inflate zero bytes of data, even if you are looking at a zero-length stream or just happened to have already inflated exactly the
- * amount of data you were already looking for. This causes problem for IndexPack.inflate() and other Inflater-users.
+/**
+ * This class is a fix for two separate issues with Android Inflater support:
+ *
+ * Inflater and the Zero-Byte Killer (pre-HoneyComb)
+ * https://issues.apache.org/jira/browse/HARMONY-6637 - basically, Harmony JRE will not set finished()=true when you ask
+ * it to inflate zero bytes of data, even if you are looking at a zero-length stream or just happened to have already
+ * inflated exactly the amount of data you were already looking for. This causes problem for IndexPack.inflate() and
+ * other Inflater-users.
+ *
+ * InflaterInputStream and This Is Not The End for my Inflater
+ * https://github.com/rtyley/agit/issues/47 - Calling InflaterInputStream.close() on Oracle Java doesn't call end() on
+ * its Inflater if you supplied the Inflater in the constructor - but Android, incorrectly, *does*. Inflaters can't be
+ * used after end() has been called, which means you can't re-use Inflaters after using them with an InflaterInputStream
+ * on Android - which is precisely what JGit tries to do with InflaterCache. This results in either NullPointerException
+ * or IllegalStateException depending on what version of Android you're using.
+ *
  */
 public class HarmonyFixInflater extends Inflater {
 
+    public static final String TAG = "HFI";
+    
     public static final InflaterFactory HARMONY_FIX_FACTORY = new InflaterFactory() {
         public Inflater create() { return new HarmonyFixInflater(); }
 
-        public void decommision(Inflater inflater) { inflater.end(); }
+        @Override
+        public void decommision(Inflater inflater) {
+            ((HarmonyFixInflater) inflater).decommision();
+        }
     };
 
     public static void establishHarmoniousRepose() {
@@ -46,7 +64,7 @@ public class HarmonyFixInflater extends Inflater {
 
     private static final byte[] oneByteArray = new byte[1];
 
-    public HarmonyFixInflater() {
+    private HarmonyFixInflater() {
         super(false);
     }
 
@@ -119,10 +137,19 @@ public class HarmonyFixInflater extends Inflater {
     }
 
     public void reset() {
+        //Log.d(TAG,this+" - reset()");
+        // Thread.dumpStack();
         super.reset();
     }
 
     public void end() {
+        // Log.d(TAG, this + " - end() called, will ignore");
+        // Thread.dumpStack();
+        // DO NOT call end method on wrapped inflater, because the InflaterCache will want to re-use it
+    }
+
+    private void decommision() {
+        Log.d(TAG,this+" - decommision(). See https://github.com/rtyley/agit/issues/47");
         super.end();
     }
 }
