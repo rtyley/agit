@@ -20,9 +20,9 @@
 package com.madgag.agit.sync;
 
 import android.os.Build;
+import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.util.Log;
-import com.madgag.agit.AgitTestApplication;
 import roboguice.test.RoboUnitTestCase;
 
 import java.lang.reflect.Method;
@@ -33,7 +33,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;
 
-public class PeriodicSyncTest extends RoboUnitTestCase<AgitTestApplication> {
+public class PeriodicSyncTest extends AndroidTestCase {
 
 	private static final String TAG = "PST";
 
