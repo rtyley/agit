@@ -78,7 +78,7 @@
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>r09</version>
+                <version>11.0.1</version>
             </dependency>
             <dependency>
                 <groupId>com.madgag</groupId>
@@ -121,11 +121,8 @@
                             </jvmArguments>
                         </dex>
                         <sdk>
-                            <platform>10</platform>
+                            <platform>14</platform>
                         </sdk>
-                        <emulator>
-                            <avd>22</avd>
-                        </emulator>
                         <zipalign>
                             <verbose>true</verbose>
                         </zipalign>
