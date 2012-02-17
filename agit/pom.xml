@@ -1,94 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.madgag</groupId>
-	<artifactId>agit</artifactId>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.madgag</groupId>
+    <artifactId>agit</artifactId>
 
-	<parent>
-		<version>1.28-SNAPSHOT</version>
-		<groupId>com.madgag</groupId>
-		<artifactId>agit-parent</artifactId>
-	</parent>
+    <parent>
+        <version>1.28-SNAPSHOT</version>
+        <groupId>com.madgag</groupId>
+        <artifactId>agit-parent</artifactId>
+    </parent>
 
-	<packaging>apk</packaging>
-	<name>Agit - git client for Android</name>
-	<dependencies>
-		<dependency>
-			<groupId>com.madgag</groupId>
-			<artifactId>android-viewholder-listviews</artifactId>
-			<version>0.4</version>
-		</dependency>
+    <packaging>apk</packaging>
+    <name>Agit - git client for Android</name>
+    <dependencies>
         <dependency>
-			<groupId>com.madgag</groupId>
-			<artifactId>android-pinned-header-listviews</artifactId>
-			<version>0.2</version>
+            <groupId>com.madgag</groupId>
+            <artifactId>android-viewholder-listviews</artifactId>
+            <version>0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>android-pinned-header-listviews</artifactId>
+            <version>0.2</version>
             <type>apklib</type>
-		</dependency>
+        </dependency>
         <dependency>
-			<groupId>com.madgag</groupId>
-			<artifactId>lazy-drawables</artifactId>
-			<version>0.9</version>
-		</dependency>
-		<dependency>
-			<groupId>com.madgag</groupId>
-			<artifactId>ssh-android</artifactId>
-			<version>1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.madgag</groupId>
-			<artifactId>org.eclipse.jgit</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
+            <groupId>com.madgag</groupId>
+            <artifactId>lazy-drawables</artifactId>
+            <version>0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>ssh-android</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.madgag</groupId>
-			<artifactId>agit-test-utils</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>agit-test-utils</artifactId>
             <version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
             <scope>test</scope>
         </dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.8.2</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.roboguice</groupId>
-			<artifactId>roboguice</artifactId>
-			<version>1.1.1</version>
-		</dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.roboguice</groupId>
+            <artifactId>roboguice</artifactId>
+            <version>1.1.1</version>
+        </dependency>
         <dependency>
             <groupId>com.pivotallabs</groupId>
             <artifactId>robolectric</artifactId>
             <version>1.0-RC1</version>
             <scope>test</scope>
         </dependency>
-		<dependency>
-			<groupId>com.google.inject</groupId>
-			<artifactId>guice</artifactId>
-			<version>2.0-no_aop</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.inject.extensions</groupId>
-			<artifactId>guice-assisted-inject</artifactId>
-			<version>2.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.madgag</groupId>
-			<artifactId>util-diff</artifactId>
-			<version>1.33</version>
-		</dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>2.0-no_aop</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-assisted-inject</artifactId>
+            <version>2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>util-diff</artifactId>
+            <version>1.33</version>
+        </dependency>
         <dependency>
             <groupId>net.schmizz</groupId>
             <artifactId>sshj</artifactId>
@@ -104,13 +105,15 @@
             <artifactId>markdownj-core</artifactId>
             <version>0.4.1</version>
         </dependency>
-	</dependencies>
-	<build>
+    </dependencies>
+    <build>
         <resources>
             <resource>
                 <directory>${basedir}/..</directory>
                 <targetPath>assets/</targetPath>
-                <includes><include>CREDITS.*</include></includes>
+                <includes>
+                    <include>CREDITS.*</include>
+                </includes>
             </resource>
             <resource>
                 <directory>${project.basedir}</directory>
@@ -121,7 +124,7 @@
                 </includes>
             </resource>
         </resources>
-		<plugins>
+        <plugins>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
@@ -133,21 +136,20 @@
                     </execution>
                 </executions>
             </plugin>
-			<plugin>
-				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
-				<artifactId>android-maven-plugin</artifactId>
+            <plugin>
+                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                <artifactId>android-maven-plugin</artifactId>
                 <configuration>
-                    <androidManifestFile>${project.build.directory}/filtered-manifest/AndroidManifest.xml</androidManifestFile>
+                    <androidManifestFile>${project.build.directory}/filtered-manifest/AndroidManifest.xml
+                    </androidManifestFile>
                 </configuration>
-			</plugin>
+            </plugin>
             <plugin>
                 <groupId>com.pyx4me</groupId>
                 <artifactId>proguard-maven-plugin</artifactId>
             </plugin>
-		</plugins>
-	</build>
-
-
+        </plugins>
+    </build>
 
 
     <profiles>
@@ -198,7 +200,7 @@
                                 <inherited>true</inherited>
                                 <configuration>
                                     <removeExistingSignatures>true</removeExistingSignatures>
-                                    <archiveDirectory />
+                                    <archiveDirectory/>
                                     <keystore>${sign.keystore}</keystore>
                                     <alias>${sign.alias}</alias>
                                     <storepass>${sign.storepass}</storepass>
@@ -219,7 +221,8 @@
                             </sign>
                             <zipalign>
                                 <verbose>true</verbose>
-                                <outputApk>${project.build.directory}/${project.artifactId}-signed-aligned.apk</outputApk>
+                                <outputApk>${project.build.directory}/${project.artifactId}-signed-aligned.apk
+                                </outputApk>
                             </zipalign>
                         </configuration>
                         <executions>

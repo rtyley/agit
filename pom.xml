@@ -18,12 +18,13 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses />.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<version>1.28-SNAPSHOT</version>
-	<groupId>com.madgag</groupId>
-	<artifactId>agit-parent</artifactId>
-	<packaging>pom</packaging>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <version>1.28-SNAPSHOT</version>
+    <groupId>com.madgag</groupId>
+    <artifactId>agit-parent</artifactId>
+    <packaging>pom</packaging>
     <name>Agit parent POM project</name>
     <modules>
         <module>agit-test-utils</module>
@@ -31,12 +32,12 @@
         <module>agit-integration-tests</module>
     </modules>
     <properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<android.version>2.3.3</android.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <android.version>2.3.3</android.version>
         <maven.build.timestamp.format>yyMMdddHH</maven.build.timestamp.format>
         <!-- Apparently necessary due to http://jira.codehaus.org/browse/MRESOURCES-99 and also more readable -->
         <versionCode>${maven.build.timestamp}</versionCode>
-	</properties>
+    </properties>
     <licenses>
         <license>
             <name>GPL v3</name>
@@ -49,14 +50,14 @@
         <developerConnection>scm:git:git@github.com:rtyley/agit.git</developerConnection>
         <url>git@github.com:rtyley/agit.git</url>
     </scm>
-	<dependencies>
-		<dependency>
-			<groupId>com.google.android</groupId>
-			<artifactId>android</artifactId>
-			<scope>provided</scope>
-			<version>${android.version}</version>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>android</artifactId>
+            <scope>provided</scope>
+            <version>${android.version}</version>
+        </dependency>
+    </dependencies>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -114,10 +115,10 @@
                     <extensions>true</extensions>
                     <configuration>
                         <dex>
-                          <jvmArguments>
-                            <jvmArgument>-Xms256m</jvmArgument>
-                            <jvmArgument>-Xmx512m</jvmArgument>
-                          </jvmArguments>
+                            <jvmArguments>
+                                <jvmArgument>-Xms256m</jvmArgument>
+                                <jvmArgument>-Xmx512m</jvmArgument>
+                            </jvmArguments>
                         </dex>
                         <sdk>
                             <platform>10</platform>
@@ -170,7 +171,8 @@
                         </libs>
                         <obfuscate>false</obfuscate>
                         <addMavenDescriptor>false</addMavenDescriptor>
-                        <proguardInclude>../proguard.cfg</proguardInclude> <!-- sadly, relative to sub-modules -->
+                        <proguardInclude>../proguard.cfg</proguardInclude>
+                        <!-- sadly, relative to sub-modules -->
                     </configuration>
                 </plugin>
             </plugins>
@@ -193,10 +195,10 @@
                 <module>agit</module>
             </modules>
         </profile>
-                <!-- to avoid having to do symlinks to rt.jar like documented e.g. here
-            http://bruehlicke.blogspot.com/2009/11/missing-rtjar-mac-os-x-using-proguard.html
-            http://codebistro.com/2010/07/18/proguard-and-runtime-libraries-on-mac-os-x/
-            -->
+        <!-- to avoid having to do symlinks to rt.jar like documented e.g. here
+        http://bruehlicke.blogspot.com/2009/11/missing-rtjar-mac-os-x-using-proguard.html
+        http://codebistro.com/2010/07/18/proguard-and-runtime-libraries-on-mac-os-x/
+        -->
         <profile>
             <id>linux</id>
             <activation>

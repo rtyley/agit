@@ -1,141 +1,143 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.madgag</groupId>
-	<artifactId>agit-integration-tests</artifactId>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.madgag</groupId>
+    <artifactId>agit-integration-tests</artifactId>
 
-	<parent>
-		<version>1.28-SNAPSHOT</version>
-		<groupId>com.madgag</groupId>
-		<artifactId>agit-parent</artifactId>
-	</parent>
+    <parent>
+        <version>1.28-SNAPSHOT</version>
+        <groupId>com.madgag</groupId>
+        <artifactId>agit-parent</artifactId>
+    </parent>
 
-	<packaging>apk</packaging>
-	<name>Agit integration tests</name>
-	<dependencies>
-		<dependency>
-			<groupId>com.madgag</groupId>
-			<artifactId>toy-ssh-agent</artifactId> <!-- Needs to come before Agit -->
-			<version>1.4</version>
-			<type>apk</type>
-		</dependency>
-		<dependency>
-			<groupId>com.madgag</groupId>
-			<artifactId>agit</artifactId>
-            <version>${project.version}</version>
-			<type>apk</type>
-		</dependency>
-		<dependency>
-			<groupId>com.madgag</groupId>
-			<artifactId>agit</artifactId>
-            <version>${project.version}</version>
-			<scope>compile</scope>
-			<type>jar</type>
-		</dependency>
+    <packaging>apk</packaging>
+    <name>Agit integration tests</name>
+    <dependencies>
         <dependency>
-			<groupId>com.madgag</groupId>
-			<artifactId>agit-test-utils</artifactId>
+            <groupId>com.madgag</groupId>
+            <artifactId>toy-ssh-agent</artifactId>
+            <!-- Needs to come before Agit -->
+            <version>1.4</version>
+            <type>apk</type>
+        </dependency>
+        <dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>agit</artifactId>
             <version>${project.version}</version>
-		</dependency>
+            <type>apk</type>
+        </dependency>
+        <dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>agit</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>agit-test-utils</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
         </dependency>
-		<dependency>
-			<groupId>com.madgag</groupId>
-			<artifactId>calculon</artifactId>
-			<version>1.0.5-UNOFFICIAL-BUILD</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.android</groupId>
-			<artifactId>android-test</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.madgag</groupId>
-			<artifactId>mini-git-server-war</artifactId>
-			<version>0.4</version>
-			<type>war</type>
-		</dependency>
-	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
-				<artifactId>android-maven-plugin</artifactId>
+        <dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>calculon</artifactId>
+            <version>1.0.5-UNOFFICIAL-BUILD</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>android-test</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>mini-git-server-war</artifactId>
+            <version>0.4</version>
+            <type>war</type>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                <artifactId>android-maven-plugin</artifactId>
                 <configuration>
-                        <extractDuplicates>true</extractDuplicates>
+                    <extractDuplicates>true</extractDuplicates>
                 </configuration>
-			</plugin>
+            </plugin>
             <plugin>
                 <groupId>com.pyx4me</groupId>
                 <artifactId>proguard-maven-plugin</artifactId>
             </plugin>
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.5</version>
-				<executions>
-					<execution>
-						<id>copy-git-server-resources</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/target/mini-git-server</outputDirectory>
-							<resources>
-								<resource>
-									<directory>src/main/mini-git-server</directory>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.5</version>
+                <executions>
+                    <execution>
+                        <id>copy-git-server-resources</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/mini-git-server</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/mini-git-server</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
 
-			<plugin>
-				<groupId>org.codehaus.cargo</groupId>
-				<artifactId>cargo-maven2-plugin</artifactId>
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven2-plugin</artifactId>
                 <version>1.2.0</version>
-				<executions>
-					<execution>
-						<id>start-container</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>start</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>stop-container</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>stop</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<container>
-						<containerId>jetty7x</containerId>
-						<type>embedded</type>
-						<systemProperties>
-							<gerrit.site_path>${basedir}/target/mini-git-server</gerrit.site_path>
-						</systemProperties>
-					</container>
-					<configuration>
-						<properties>
-							<cargo.servlet.port>18181</cargo.servlet.port>
-						</properties>
-						<deployables>
-							<deployable>
-								<groupId>com.madgag</groupId>
-								<artifactId>mini-git-server-war</artifactId>
-								<type>war</type>
-							</deployable>
-						</deployables>
-					</configuration>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+                <executions>
+                    <execution>
+                        <id>start-container</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stop-container</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <container>
+                        <containerId>jetty7x</containerId>
+                        <type>embedded</type>
+                        <systemProperties>
+                            <gerrit.site_path>${basedir}/target/mini-git-server</gerrit.site_path>
+                        </systemProperties>
+                    </container>
+                    <configuration>
+                        <properties>
+                            <cargo.servlet.port>18181</cargo.servlet.port>
+                        </properties>
+                        <deployables>
+                            <deployable>
+                                <groupId>com.madgag</groupId>
+                                <artifactId>mini-git-server-war</artifactId>
+                                <type>war</type>
+                            </deployable>
+                        </deployables>
+                    </configuration>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
