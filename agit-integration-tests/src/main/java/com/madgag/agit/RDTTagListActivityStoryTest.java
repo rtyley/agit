@@ -31,7 +31,6 @@ import org.eclipse.jgit.lib.Repository;
 
 import java.util.List;
 
-import static com.madgag.agit.AndroidTestEnvironment.helper;
 import static com.madgag.agit.RDTypeListActivity.listIntent;
 import static com.madgag.agit.matchers.CharSequenceMatcher.charSequence;
 import static org.hamcrest.CoreMatchers.is;
@@ -39,11 +38,11 @@ import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 
-public class RDTypeListActivityStoryTest extends ActivityInstrumentationTestCase2<RDTypeListActivity> {
+public class RDTTagListActivityStoryTest extends RDTTypeListActivityStoryTestBase<RDTypeListActivity> {
 	
-	private final static String TAG = RDTypeListActivityStoryTest.class.getSimpleName();
+	private final static String TAG = RDTTagListActivityStoryTest.class.getSimpleName();
 	
-	public RDTypeListActivityStoryTest() {
+	public RDTTagListActivityStoryTest() {
 		super("com.madgag.agit",RDTypeListActivity.class);
 	}
 	
@@ -80,22 +79,4 @@ public class RDTypeListActivityStoryTest extends ActivityInstrumentationTestCase
 		}
 	}
 
-	private void checkCanSelectEveryItemInNonEmpty(ListView listView) {
-		assertThat(listView.getCount()>0, is(true));
-		for (int index=0; index<listView.getCount(); ++index) {
-			View itemView=getItemViewBySelecting(listView, index);
-			Log.d(TAG, "view="+itemView);
-		}
-	}
-
-	private View getItemViewBySelecting(final ListView listView, final int index) {
-		getActivity().runOnUiThread(new Runnable() {
-		    public void run() {
-				listView.setSelection(index);
-		    }
-		});
-		getInstrumentation().waitForIdleSync();
-		return listView.getSelectedView();
-	}
-	
 }
