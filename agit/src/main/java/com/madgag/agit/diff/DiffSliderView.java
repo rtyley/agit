@@ -62,7 +62,7 @@ public class DiffSliderView extends LinearLayout {
 		SeekBar seekBar = (SeekBar) findViewById(DiffPlayerSeekBar);
 		DiffSeekBarChangeListener foo = new DiffSeekBarChangeListener((Vibrator) context.getSystemService(VIBRATOR_SERVICE));
 		seekBar.setOnSeekBarChangeListener(foo);
-		seekBar.setProgress(seekBar.getMax());
+		seekBar.setProgress(seekBar.getMax()/2);//This should correctly set the thumb to the middle in the diffview on open
 	}
 
 	public void setStateUpdateListener(OnStateUpdateListener stateUpdateListener) {
