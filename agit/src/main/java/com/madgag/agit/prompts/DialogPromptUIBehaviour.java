@@ -26,12 +26,12 @@ import android.content.DialogInterface;
 import android.util.Log;
 import android.widget.EditText;
 import com.google.inject.Inject;
+import com.madgag.agit.operations.OpNotification;
 import com.madgag.android.blockingprompt.PromptUI;
 import com.madgag.android.blockingprompt.PromptUIRegistry;
 import com.madgag.android.blockingprompt.ResponseInterface;
 
 public class DialogPromptUIBehaviour implements PromptUI {
-
 
     private final Activity activity;
     private final PromptUIRegistry promptUIRegistry;
@@ -39,6 +39,7 @@ public class DialogPromptUIBehaviour implements PromptUI {
     public static final int YES_NO_DIALOG=1,STRING_ENTRY_DIALOG=2;
     private final String TAG="DPM";
     private ResponseInterface responseInterface;
+    private EditText input;
 
     @Inject
     public DialogPromptUIBehaviour(Activity activity, PromptUIRegistry promptUIRegistry) {
@@ -55,7 +56,9 @@ public class DialogPromptUIBehaviour implements PromptUI {
                 .setNegativeButton("No", sendDialogResponseOf(false));
             break;
 		case STRING_ENTRY_DIALOG:
-			final EditText input = new EditText(activity);
+			input = new EditText(activity);
+            builder.setTitle("...");
+            //builder.setMessage("...");
 			builder.setView(input);
 			builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
@@ -91,9 +94,12 @@ public class DialogPromptUIBehaviour implements PromptUI {
 		case YES_NO_DIALOG:
         case STRING_ENTRY_DIALOG:
             if (responseInterface!=null) {
-                CharSequence msg = responseInterface.getOpPrompt().getOpNotification().getEventDetail();
+                OpNotification opNotification = responseInterface.getOpPrompt().getOpNotification();
+                alertDialog.setTitle(opNotification.getTickerText());
+                CharSequence msg = opNotification.getEventDetail();
                 Log.d(TAG, "Will prompt with: " + msg);
                 alertDialog.setMessage(msg);
+                input.setText("");
             }
 		default:
 		}

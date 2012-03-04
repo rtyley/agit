@@ -20,9 +20,7 @@
 package com.madgag.agit;
 
 import com.google.inject.Inject;
-import com.madgag.agit.guice.RepositoryScoped;
 import com.madgag.agit.operations.OpNotification;
-import com.madgag.agit.operations.OpPrompt;
 import com.madgag.android.blockingprompt.BlockingPromptService;
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
 import org.eclipse.jgit.transport.CredentialItem;
@@ -52,8 +50,10 @@ public class GUICredentialsProvider extends CredentialsProvider {
 		for (CredentialItem ci : items) {
 			if (ci instanceof CredentialItem.YesNoType) {
 				handle((CredentialItem.YesNoType) ci);
-			} else if (ci instanceof CredentialItem.CharArrayType) {
-				handle((CredentialItem.CharArrayType) ci);
+			} else if (ci instanceof CredentialItem.StringType) {
+                handle(uri, (CredentialItem.StringType) ci);
+            } else if (ci instanceof CredentialItem.CharArrayType) {
+                handle(uri, (CredentialItem.CharArrayType) ci);
 			} else {
 				return false;
 			}
@@ -61,11 +61,27 @@ public class GUICredentialsProvider extends CredentialsProvider {
 		return true;
 	}
 
-	private void handle(CredentialItem.CharArrayType ci) {
-		ci.setValue(blockingPrompt.request(prompt(String.class, alert(ci.getPromptText(), ci.getPromptText()))).toCharArray());
+    private void handle(URIish uri, CredentialItem.StringType ci) {
+        if (ci instanceof CredentialItem.Username && uri.getUser()!=null) {
+            ci.setValue(uri.getUser());
+        } else {
+            ci.setValue(blockingPrompt.request(prompt(String.class, uiNotificationFor(ci))));
+        }
+    }
+
+    private void handle(URIish uri, CredentialItem.CharArrayType ci) {
+        if (ci instanceof CredentialItem.Password && uri.getPass()!=null) {
+            ci.setValue(uri.getPass().toCharArray());
+        } else {
+            ci.setValue(blockingPrompt.request(prompt(String.class, uiNotificationFor(ci))).toCharArray());
+        }
 	}
 
 	private void handle(CredentialItem.YesNoType ci) {
-		ci.setValue(blockingPrompt.request(promptYesOrNo(alert(ci.getPromptText(), ci.getPromptText()))));
+		ci.setValue(blockingPrompt.request(promptYesOrNo(uiNotificationFor(ci))));
 	}
+
+    private OpNotification uiNotificationFor(CredentialItem ci) {
+        return alert(ci.getPromptText(), ci.getPromptText());
+    }
 }
