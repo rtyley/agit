@@ -92,21 +92,26 @@ public class DialogPromptUIBehaviour implements PromptUI {
         AlertDialog alertDialog = (AlertDialog) dialog;
 		switch (id) {
 		case YES_NO_DIALOG:
+            updateWithCurrentNotification(alertDialog);
+            break;
         case STRING_ENTRY_DIALOG:
-            if (responseInterface!=null) {
-                OpNotification opNotification = responseInterface.getOpPrompt().getOpNotification();
-                alertDialog.setTitle(opNotification.getTickerText());
-                CharSequence msg = opNotification.getEventDetail();
-                Log.d(TAG, "Will prompt with: " + msg);
-                alertDialog.setMessage(msg);
-                input.setText("");
-            }
+            updateWithCurrentNotification(alertDialog);
+            input.setText("");
+            break;
 		default:
 		}
 	}
 
+    private void updateWithCurrentNotification(AlertDialog alertDialog) {
+        OpNotification opNotification = responseInterface.getOpPrompt().getOpNotification();
+        alertDialog.setTitle(opNotification.getTickerText());
+        CharSequence msg = opNotification.getEventDetail();
+        Log.d(TAG, "Will prompt with: " + msg);
+        alertDialog.setMessage(msg);
+    }
 
-	public void updateUIToReflectServicePromptRequests() {
+
+    public void updateUIToReflectServicePromptRequests() {
 		if (responseInterface!=null && responseInterface.getOpPrompt()!=null) {
 			Class<?> requiredResponseType = responseInterface.getOpPrompt().getRequiredResponseType();
 			if (String.class.equals(requiredResponseType)) {
