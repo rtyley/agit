@@ -19,13 +19,17 @@
 
 package com.madgag.agit.prompts;
 
+import static com.madgag.agit.util.ContextUtil.wrapWithDialogContext;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.EditText;
 import com.google.inject.Inject;
+import com.madgag.agit.R;
 import com.madgag.agit.operations.OpNotification;
 import com.madgag.agit.operations.OpPrompt;
 import com.madgag.android.blockingprompt.PromptUI;
@@ -57,10 +61,12 @@ public class DialogPromptUIBehaviour implements PromptUI {
                 .setNegativeButton("No", sendDialogResponseOf(false));
             break;
 		case STRING_ENTRY_DIALOG:
-			input = new EditText(activity);
+            View textEntry = LayoutInflater.from(wrapWithDialogContext(activity)).inflate(R.layout.text_entry, null);
+            input = (EditText) textEntry.findViewById(R.id.text_entry_field);
+
             builder.setTitle("...");
             //builder.setMessage("...");
-			builder.setView(input);
+			builder.setView(textEntry);
 			builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
                     responseInterface.setResponse(input.getText().toString());

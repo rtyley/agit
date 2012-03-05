@@ -19,6 +19,7 @@
 
 package com.madgag.agit.views;
 
+import static com.madgag.agit.util.ContextUtil.wrapWithDialogContext;
 import static com.madgag.agit.util.Time.timeSinceMS;
 import static com.madgag.agit.views.TextUtil.ITALIC_CLIPPING_BUFFER;
 import static com.madgag.android.lazydrawables.gravatar.Gravatars.gravatarIdFor;
@@ -27,7 +28,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -76,11 +76,9 @@ public class PersonIdentView extends FrameLayout {
         setClickable(true);
         setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                // see http://stackoverflow.com/a/8547823/438886
-                Context themedContext = new ContextThemeWrapper(getContext(), android.R.style.Theme_Dialog);
                 Injector injector = ((InjectorProvider) getContext()).getInjector();
 
-                PersonIdentDetailView view = new PersonIdentDetailView(themedContext, injector);
+                PersonIdentDetailView view = new PersonIdentDetailView(wrapWithDialogContext(getContext()), injector);
                 view.setIdent(title, ident);
 
                 Dialog dialog = new AlertDialog.Builder(getContext()).setView(view).show();
