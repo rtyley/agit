@@ -19,63 +19,70 @@
 
 package com.madgag.agit.views;
 
+import static com.madgag.agit.util.Time.timeSinceMS;
+import static com.madgag.agit.views.TextUtil.ITALIC_CLIPPING_BUFFER;
+import static com.madgag.android.lazydrawables.gravatar.Gravatars.gravatarIdFor;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.madgag.agit.R;
 import com.madgag.android.lazydrawables.ImageSession;
+
 import org.eclipse.jgit.lib.PersonIdent;
+
 import roboguice.inject.InjectorProvider;
 
-import static com.madgag.agit.util.Time.timeSinceMS;
-import static com.madgag.agit.views.TextUtil.ITALIC_CLIPPING_BUFFER;
-import static com.madgag.android.lazydrawables.gravatar.Gravatars.gravatarIdFor;
-
 public class PersonIdentView extends FrameLayout {
-	
-	private static final String TAG = "PIV";
+
+    private static final String TAG = "PIV";
 
     private PersonIdent ident;
     private final ImageView avatarView;
-	private final TextView nameView, titleView, whenView;
-	
-	@Inject ImageSession avatarSession;
+    private final TextView nameView, titleView, whenView;
+
+    @Inject
+    ImageSession avatarSession;
 
     public PersonIdentView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		((InjectorProvider)context).getInjector().injectMembers(this);
-		LayoutInflater.from(context).inflate(com.madgag.agit.R.layout.person_ident_view, this);
-		
-		titleView = (TextView) findViewById(R.id.person_ident_title);
-		avatarView = (ImageView) findViewById(R.id.person_ident_avatar);
-		nameView = (TextView) findViewById(R.id.person_ident_name);
-		whenView = (TextView) findViewById(R.id.person_ident_when);
-	}
-	
-	
-	public void setIdent(final String title, final PersonIdent ident) {
+        super(context, attrs);
+        ((InjectorProvider) context).getInjector().injectMembers(this);
+        LayoutInflater.from(context).inflate(com.madgag.agit.R.layout.person_ident_view, this);
+
+        titleView = (TextView) findViewById(R.id.person_ident_title);
+        avatarView = (ImageView) findViewById(R.id.person_ident_avatar);
+        nameView = (TextView) findViewById(R.id.person_ident_name);
+        whenView = (TextView) findViewById(R.id.person_ident_when);
+    }
+
+
+    public void setIdent(final String title, final PersonIdent ident) {
         this.ident = ident;
         titleView.setText(title);
-		Drawable avatar = avatarSession.get(gravatarIdFor(ident.getEmailAddress()));
-		avatarView.setImageDrawable(avatar);
-		nameView.setText(ident.getName()+ ITALIC_CLIPPING_BUFFER);
-		whenView.setText(timeSinceMS(ident.getWhen().getTime())+ITALIC_CLIPPING_BUFFER);
+        Drawable avatar = avatarSession.get(gravatarIdFor(ident.getEmailAddress()));
+        avatarView.setImageDrawable(avatar);
+        nameView.setText(ident.getName() + ITALIC_CLIPPING_BUFFER);
+        whenView.setText(timeSinceMS(ident.getWhen().getTime()) + ITALIC_CLIPPING_BUFFER);
         setClickable(true);
         setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                
-                Log.d(TAG,"Clicked "+v);
-                final PersonIdentDetailView view = new PersonIdentDetailView(getContext());
+                // see http://stackoverflow.com/a/8547823/438886
+                Context themedContext = new ContextThemeWrapper(getContext(), android.R.style.Theme_Dialog);
+                Injector injector = ((InjectorProvider) getContext()).getInjector();
+
+                PersonIdentDetailView view = new PersonIdentDetailView(themedContext, injector);
                 view.setIdent(title, ident);
+
                 Dialog dialog = new AlertDialog.Builder(getContext()).setView(view).show();
                 view.setClickable(true);
                 view.setOnClickListener(close(dialog));
