@@ -3,10 +3,12 @@ target
 tmp
 *~
 lib
+bin
 */test-output
 temp-testng-customsuite.xml
 **pom.xml.releaseBackup
 release.properties
+project.properties
 *.iws
 *.iml
 *.ipr
@@ -14,9 +16,12 @@ release.properties
 .project
 .settings
 gen
-gen-external-apklibs
 */seed.txt
 notes
 logs
+gen-external-apklibs
+.idea
+out
+.DS_Store
 agit/artwork/rasters/
 agit/gravatars
