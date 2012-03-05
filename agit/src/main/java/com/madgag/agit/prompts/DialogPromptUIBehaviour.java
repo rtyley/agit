@@ -27,6 +27,7 @@ import android.util.Log;
 import android.widget.EditText;
 import com.google.inject.Inject;
 import com.madgag.agit.operations.OpNotification;
+import com.madgag.agit.operations.OpPrompt;
 import com.madgag.android.blockingprompt.PromptUI;
 import com.madgag.android.blockingprompt.PromptUIRegistry;
 import com.madgag.android.blockingprompt.ResponseInterface;
@@ -103,17 +104,21 @@ public class DialogPromptUIBehaviour implements PromptUI {
 	}
 
     private void updateWithCurrentNotification(AlertDialog alertDialog) {
-        OpNotification opNotification = responseInterface.getOpPrompt().getOpNotification();
-        alertDialog.setTitle(opNotification.getTickerText());
-        CharSequence msg = opNotification.getEventDetail();
-        Log.d(TAG, "Will prompt with: " + msg);
-        alertDialog.setMessage(msg);
+        OpPrompt opPrompt = getCurrentOpPrompt();
+        if (opPrompt!=null) {
+            OpNotification opNotification = responseInterface.getOpPrompt().getOpNotification();
+            alertDialog.setTitle(opNotification.getTickerText());
+            CharSequence msg = opNotification.getEventDetail();
+            Log.d(TAG, "Will prompt with: " + msg);
+            alertDialog.setMessage(msg);
+        }
     }
 
 
     public void updateUIToReflectServicePromptRequests() {
-		if (responseInterface!=null && responseInterface.getOpPrompt()!=null) {
-			Class<?> requiredResponseType = responseInterface.getOpPrompt().getRequiredResponseType();
+        OpPrompt opPrompt = getCurrentOpPrompt();
+		if (opPrompt!=null) {
+			Class<?> requiredResponseType = opPrompt.getRequiredResponseType();
 			if (String.class.equals(requiredResponseType)) {
 				activity.showDialog(STRING_ENTRY_DIALOG);
 			} else if(Boolean.class.equals(requiredResponseType)) {
@@ -124,6 +129,10 @@ public class DialogPromptUIBehaviour implements PromptUI {
 			}
 		}
 	}
+
+    private OpPrompt getCurrentOpPrompt() {
+        return (responseInterface==null)?null:responseInterface.getOpPrompt();
+    }
 
     public void acceptPrompt(ResponseInterface responseInterface) {
         this.responseInterface = responseInterface;
