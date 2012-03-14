@@ -16,7 +16,7 @@
             <groupId>com.madgag</groupId>
             <artifactId>toy-ssh-agent</artifactId>
             <!-- Needs to come before Agit -->
-            <version>1.4</version>
+            <version>1.5</version>
             <type>apk</type>
         </dependency>
         <dependency>
