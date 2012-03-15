@@ -19,35 +19,32 @@
 
 package com.madgag.agit.sync;
 
-import android.os.Build;
-import android.test.AndroidTestCase;
-import android.test.suitebuilder.annotation.SmallTest;
-import android.util.Log;
-import roboguice.test.RoboUnitTestCase;
-
-import java.lang.reflect.Method;
-
 import static android.os.Build.VERSION_CODES.FROYO;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;
+import android.os.Build;
+import android.test.AndroidTestCase;
+import android.test.suitebuilder.annotation.SmallTest;
+import android.util.Log;
+
+import java.lang.reflect.Method;
 
 public class PeriodicSyncTest extends AndroidTestCase {
 
-	private static final String TAG = "PST";
+    private static final String TAG = "PST";
 
     @SmallTest
-	public void testPeriodicSyncMethodAvailable() throws Exception {
+    public void testPeriodicSyncMethodAvailable() throws Exception {
         Method m = AccountAuthenticatorService.methodContentResolver_addPeriodicSync;
         boolean expectPeriodicSyncAvailable = Build.VERSION.SDK_INT >= FROYO;
-        Log.d(TAG,"Expect Periodic-Sync available : "+expectPeriodicSyncAvailable+" method="+m);
+        Log.d(TAG, "Expect Periodic-Sync available : " + expectPeriodicSyncAvailable + " method=" + m);
         if (expectPeriodicSyncAvailable) {
             assertThat("Required period sync method", m, notNullValue());
             assertThat(m.getName(), is("addPeriodicSync"));
         } else {
             assertThat(m, nullValue());
         }
-
-	}
+    }
 }
