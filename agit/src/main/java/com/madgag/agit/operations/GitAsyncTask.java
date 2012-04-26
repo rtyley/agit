@@ -34,12 +34,15 @@ import com.madgag.android.blockingprompt.PromptBroker;
 
 import java.util.concurrent.Future;
 
+import roboguice.inject.ContextScope;
 import roboguice.util.RoboAsyncTask;
 
 public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements ProgressListener<Progress> {
 
     public final static String TAG = "GAT";
 
+    @Inject
+    ContextScope contextScope;
     @Inject
     GitOperationExecutor operationExecutor;
     @Inject
@@ -79,7 +82,12 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
     }
 
     public OpNotification call() throws Exception {
-        return operationExecutor.call(operation, new OperationUIContext(this, promptBrokerProvider), true);
+        contextScope.enter(getContext());
+        try {
+            return operationExecutor.call(operation, new OperationUIContext(this, promptBrokerProvider), true);
+        } finally {
+            contextScope.exit(getContext());
+        }
     }
 
     @Override
