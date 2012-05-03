@@ -19,12 +19,10 @@
 
 package com.madgag.agit;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import android.os.Environment;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.lib.RepositoryCache;
-import org.eclipse.jgit.storage.file.FileRepository;
-import org.eclipse.jgit.transport.URIish;
-import org.eclipse.jgit.util.FS;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,27 +33,31 @@ import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.Properties;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.RepositoryCache;
+import org.eclipse.jgit.storage.file.FileRepository;
+import org.eclipse.jgit.transport.URIish;
+import org.eclipse.jgit.util.FS;
 
 public class GitTestUtils {
     public static final String RSA_USER = "rsa_user", DSA_USER = "dsa_user";
+    private static final String TAG = "GitTestUtils";
 
-	public static String gitServerHostAddress() throws IOException,
-			FileNotFoundException, UnknownHostException {
+    public static String gitServerHostAddress() throws IOException, UnknownHostException {
 		File bang = new File(Environment.getExternalStorageDirectory(),
 				"agit-integration-test.properties");
 		Properties properties = new Properties();
 		if (bang.exists()) {
 			properties.load(new FileReader(bang));
 		}
-		String hostAddress = properties.getProperty("gitserver.host.address",
-				"10.0.2.2");
-		InetAddress address = InetAddress.getByName(hostAddress);
-		assertThat("Test gitserver host " + hostAddress + " is reachable",
-				address.isReachable(1000), is(true));
-		return hostAddress;
+        String[] hostAddresses = properties.getProperty("gitserver.host.address", "10.0.2.2").split(",");
+        for (String hostAddress : hostAddresses) {
+            if (InetAddress.getByName(hostAddress).isReachable(1000)) {
+                Log.d(TAG, "Using git server host : "+hostAddress);
+                return hostAddress;
+            }
+        }
+        throw new RuntimeException("No reachable addresses in "+hostAddresses);
 	}
 
 	public static URIish integrationGitServerURIFor(String repoPath)

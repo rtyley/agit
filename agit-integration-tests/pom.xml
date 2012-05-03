@@ -68,6 +68,46 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>get-local-ip</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>script</goal>
+                        </goals>
+                        <configuration>
+                            <scalaVersion>2.9.1</scalaVersion>
+                            <script>
+                                import scala.collection.JavaConversions._
+                                import com.android.ddmlib._
+
+                                def run() {
+                                  val ipAddresses = java.net.NetworkInterface.getNetworkInterfaces().filter { !_.isLoopback }.flatMap { _.getInetAddresses }.map { _.getHostAddress }.mkString(",")
+                                  AndroidDebugBridge.init(false)
+                                  val androidDebugBridge = AndroidDebugBridge.createBridge
+                                  androidDebugBridge.getDevices.filter { !_.isEmulator } foreach { d =>
+                                    val command = "echo gitserver.host.address="+ipAddresses+" > "+d.getMountPoint(IDevice.MNT_EXTERNAL_STORAGE)+"/agit-integration-test.properties"
+
+                                    d.executeShellCommand(command, NullOutputReceiver.getReceiver)
+                                  }
+                                  println ("Provided host ip addresses : "+ipAddresses)
+                                }
+                            </script>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.android.ddmlib</groupId>
+                        <artifactId>ddmlib</artifactId>
+                        <version>r16</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
                 <groupId>com.pyx4me</groupId>
                 <artifactId>proguard-maven-plugin</artifactId>
             </plugin>
