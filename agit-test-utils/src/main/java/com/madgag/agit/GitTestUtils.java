@@ -25,6 +25,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -44,11 +45,10 @@ public class GitTestUtils {
     private static final String TAG = "GitTestUtils";
 
     public static String gitServerHostAddress() throws IOException, UnknownHostException {
-		File bang = new File(Environment.getExternalStorageDirectory(),
-				"agit-integration-test.properties");
+		File hostAddressFile = new File(Environment.getExternalStorageDirectory(), "agit-integration-test.properties");
 		Properties properties = new Properties();
-		if (bang.exists()) {
-			properties.load(new FileReader(bang));
+		if (hostAddressFile.exists()) {
+			properties.load(new FileInputStream(hostAddressFile));
 		}
         String[] hostAddresses = properties.getProperty("gitserver.host.address", "10.0.2.2").split(",");
         for (String hostAddress : hostAddresses) {
