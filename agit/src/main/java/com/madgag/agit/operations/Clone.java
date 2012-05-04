@@ -24,7 +24,6 @@ public class Clone extends GitOperation {
 	private final File directory;
     private String branch = HEAD;
 
-    @Inject ProgressListener<Progress> progressListener;
     @Inject RepoUpdateBroadcaster repoUpdateBroadcaster;
 	@Inject MessagingProgressMonitor messagingProgressMonitor;
 	@Inject CredentialsProvider credentialsProvider;

@@ -35,7 +35,6 @@ import com.google.inject.name.Named;
 import com.jcraft.jsch.HostKeyRepository;
 import com.jcraft.jsch.UserInfo;
 import com.madgag.agit.git.AgitTransportConfig;
-import com.madgag.agit.git.TransportFactory;
 import com.madgag.agit.git.model.RDTBranch;
 import com.madgag.agit.git.model.RDTRemote;
 import com.madgag.agit.git.model.RDTTag;
@@ -97,7 +96,6 @@ public class AgitModule extends AbstractAndroidModule {
 		bind(TransportConfigCallback.class).to(AgitTransportConfig.class);
 		bind(CredentialsProvider.class).to(GUICredentialsProvider.class);
     	bind(SshSessionFactory.class).to(AndroidSshSessionFactory.class);
-    	bind(TransportFactory.class);
     	bind(PromptUIRegistry.class);
 
         bind(HostKeyRepository.class).to(CuriousHostKeyRepository.class);
