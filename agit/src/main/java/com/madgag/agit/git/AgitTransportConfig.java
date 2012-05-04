@@ -22,31 +22,26 @@ package com.madgag.agit.git;
 import android.util.Log;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.madgag.agit.guice.RepositoryScoped;
 import org.eclipse.jgit.api.TransportConfigCallback;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.SshSessionFactory;
 import org.eclipse.jgit.transport.SshTransport;
 import org.eclipse.jgit.transport.Transport;
 
-import static java.lang.System.identityHashCode;
-
-@RepositoryScoped
 public class AgitTransportConfig implements TransportConfigCallback {
 
 	private final static String TAG = "ATC";
-	private final Provider<SshSessionFactory> sshSessionFactoryProvider;
+
+	private final SshSessionFactory sshSessionFactory;
 
 	@Inject
-	public AgitTransportConfig(Provider<SshSessionFactory> sshSessionFactoryProvider) {
-		this.sshSessionFactoryProvider = sshSessionFactoryProvider;
+	public AgitTransportConfig(SshSessionFactory sshSessionFactory) {
+		this.sshSessionFactory = sshSessionFactory;
 	}
 
 	public void configure(Transport tn) {
 		Log.d(TAG,"Configuring "+tn);
 		if (tn instanceof SshTransport) {
-			((SshTransport) tn).setSshSessionFactory(sshSessionFactoryProvider.get());
+			((SshTransport) tn).setSshSessionFactory(sshSessionFactory);
 		}
 	}
 }
