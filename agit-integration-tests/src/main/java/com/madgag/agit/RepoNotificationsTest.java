@@ -21,6 +21,7 @@ package com.madgag.agit;
 
 import static org.eclipse.jgit.lib.Constants.DOT_GIT;
 import android.content.Context;
+import android.test.InstrumentationTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.madgag.agit.matchers.GitTestHelper;
@@ -28,9 +29,7 @@ import com.madgag.agit.operation.lifecycle.RepoNotifications;
 
 import java.io.File;
 
-import roboguice.test.RoboUnitTestCase;
-
-public class RepoNotificationsTest extends RoboUnitTestCase<AgitTestApplication> {
+public class RepoNotificationsTest extends InstrumentationTestCase {
 
     private static final String TAG = "RNT";
     private final GitTestHelper helper = AndroidTestEnvironment.helper(getInstrumentation());

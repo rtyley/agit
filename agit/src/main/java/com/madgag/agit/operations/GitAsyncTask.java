@@ -21,7 +21,7 @@ package com.madgag.agit.operations;
 
 import static android.R.drawable.stat_notify_error;
 import static java.lang.System.currentTimeMillis;
-import android.content.Context;
+import android.app.Application;
 import android.os.Handler;
 import android.util.Log;
 
@@ -63,11 +63,11 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
 
     @Inject
     public GitAsyncTask(
-            Context context,
+            Application application,
             @Named("uiThread") Handler handler,
             @Assisted GitOperation operation,
             @Assisted OperationLifecycleSupport lifecycleSupport) {
-        super(context);
+        super(application);
         handler(handler);
         this.operation = operation;
         this.lifecycleSupport = lifecycleSupport;
