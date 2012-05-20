@@ -19,6 +19,7 @@
 
 package com.madgag.agit;
 
+import static com.google.inject.util.Modules.override;
 import static com.madgag.agit.GitTestUtils.DSA_USER;
 import static com.madgag.agit.GitTestUtils.RSA_USER;
 import static com.madgag.agit.GitTestUtils.integrationGitServerURIFor;
@@ -33,9 +34,14 @@ import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static roboguice.RoboGuice.newDefaultRoboModule;
+import android.app.Application;
+import android.os.Looper;
+import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.util.Log;
 
+import com.google.inject.Injector;
 import com.madgag.agit.matchers.GitTestHelper;
 import com.madgag.agit.operation.lifecycle.OperationLifecycleSupport;
 import com.madgag.agit.operations.Clone;
@@ -55,15 +61,33 @@ import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
 
-import roboguice.test.RoboUnitTestCase;
-import roboguice.util.RoboLooperThread;
+import roboguice.RoboGuice;
 
-public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
+public class GitAsyncTaskTest extends ActivityInstrumentationTestCase2<DashboardActivity> {
 
     private static final String TAG = "GitAsyncTaskTest";
 
+    private Injector injector;
+
+    public GitAsyncTaskTest() {
+        super(DashboardActivity.class);
+    }
+
     private GitTestHelper helper() {
         return AndroidTestEnvironment.helper(getInstrumentation());
+    }
+
+    @Override
+    public void setUp() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+        Application application = (Application) getInstrumentation().getTargetContext().getApplicationContext();
+        injector = RoboGuice.setBaseApplicationInjector(application, RoboGuice.DEFAULT_STAGE,
+                newDefaultRoboModule(application),
+                override(new AgitModule()).with(new AgitIntegrationTestModule()));
+    }
+
+    @Override
+    public void tearDown() {
+        RoboGuice.util.reset();
     }
 
     @MediumTest
@@ -174,8 +198,9 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
             throws InterruptedException, IOException {
         final CountDownLatch latch = new CountDownLatch(1);
         Log.d(TAG, "About to start " + operation);
-        new RoboLooperThread() {
+        new Thread() {
             public void run() {
+                Looper.prepare();
                 Log.d(TAG, "In run method for " + operation);
                 GitAsyncTask task = injector.getInstance(GitAsyncTaskFactory.class).createTaskFor(operation,
                         new OperationLifecycleSupport() {
@@ -200,6 +225,7 @@ public class GitAsyncTaskTest extends RoboUnitTestCase<AgitTestApplication> {
                         });
                 task.execute();
                 Log.d(TAG, "Called execute() on task for " + operation);
+                Looper.loop();
             }
         }.start();
         long startTime = currentTimeMillis();
