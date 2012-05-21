@@ -67,7 +67,6 @@ public class TagViewer extends RepoScopedActivityBase {
     @Inject
     private ImageSession avatarSession;
 
-    @InjectView(actionbar)
     ActionBar actionBar;
 
     @InjectView(tv_tag_ref_object)
@@ -88,6 +87,7 @@ public class TagViewer extends RepoScopedActivityBase {
             }
         });
 
+        actionBar = (ActionBar) findViewById(actionbar);
         actionBar.setTitle(tagName);
         actionBar.setHomeAction(new HomeAction(this));
     }
