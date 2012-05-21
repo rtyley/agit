@@ -19,6 +19,7 @@
 
 package com.madgag.agit;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import android.os.Environment;
@@ -56,7 +57,7 @@ public class GitTestUtils {
                 return hostAddress;
             }
         }
-        throw new RuntimeException("No reachable addresses in " + hostAddresses);
+        throw new RuntimeException("No reachable addresses in " + asList(hostAddresses));
     }
 
     public static URIish integrationGitServerURIFor(String repoPath)
