@@ -4,17 +4,17 @@ import android.content.Intent;
 import android.os.IBinder;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
+import roboguice.inject.ContextScopedProvider;
 import roboguice.service.RoboService;
 
 public class AgitSyncAdapterService extends RoboService {
 
     @Inject
-    Provider<SyncAdapter> syncAdapterProvider;
+    ContextScopedProvider<SyncAdapter> syncAdapterProvider;
 
     @Override
     public IBinder onBind(Intent intent) {
-        return syncAdapterProvider.get().getSyncAdapterBinder();
+        return syncAdapterProvider.get(this).getSyncAdapterBinder();
     }
 }

@@ -24,7 +24,7 @@ import static com.madgag.agit.R.id.tv_commit_list_item_commit_date;
 import static com.madgag.agit.R.id.tv_commit_list_item_shortdesc;
 import static com.madgag.agit.R.layout.commit_summary_view;
 import static com.madgag.agit.views.TextUtil.ITALIC_CLIPPING_BUFFER;
-import static com.madgag.agit.views.ViewUtil.injectFor;
+import static com.madgag.agit.views.ViewUtil.whileStillInContextScopeLayoutAndInject;
 import static com.madgag.android.lazydrawables.gravatar.Gravatars.gravatarIdFor;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -39,6 +39,8 @@ import com.madgag.android.lazydrawables.ImageSession;
 
 import org.eclipse.jgit.revwalk.RevCommit;
 
+import roboguice.inject.ContextSingleton;
+
 public class PrettyCommitSummaryView extends FrameLayout {
 
     private static final String TAG = "PCSV";
@@ -46,11 +48,12 @@ public class PrettyCommitSummaryView extends FrameLayout {
     private final TextView shortMessage, commit_date;
     private final ImageView gravatar;
     @Inject
+    @ContextSingleton
     ImageSession avatarSession;
 
     public PrettyCommitSummaryView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        injectFor(this, commit_summary_view);
+        whileStillInContextScopeLayoutAndInject(this, commit_summary_view);
 
         shortMessage = (TextView) findViewById(tv_commit_list_item_shortdesc);
         commit_date = (TextView) findViewById(tv_commit_list_item_commit_date);

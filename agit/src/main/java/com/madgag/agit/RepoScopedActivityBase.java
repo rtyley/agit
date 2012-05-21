@@ -21,6 +21,7 @@ package com.madgag.agit;
 
 import static com.madgag.agit.GitIntents.gitDirFrom;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -32,8 +33,8 @@ import java.io.File;
 
 import org.eclipse.jgit.lib.Repository;
 
+import roboguice.RoboGuice;
 import roboguice.activity.RoboActivity;
-import roboguice.inject.InjectorProvider;
 
 public abstract class RepoScopedActivityBase extends RoboActivity {
 
@@ -61,8 +62,8 @@ public abstract class RepoScopedActivityBase extends RoboActivity {
         }
     }
 
-    static RepositoryScope enterRepositoryScopeFor(InjectorProvider injectorProvider, Intent intent) {
-        RepositoryScope repositoryScope = injectorProvider.getInjector().getInstance(RepositoryScope.class);
+    static RepositoryScope enterRepositoryScopeFor(Context context, Intent intent) {
+        RepositoryScope repositoryScope = RoboGuice.getInjector(context).getInstance(RepositoryScope.class);
         repositoryScope.enterWithRepoGitdir(gitDirFrom(intent));
         return repositoryScope;
     }

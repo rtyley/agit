@@ -74,7 +74,8 @@ public class DiffText {
             if (diff.operation != Operation.EQUAL) {
                 boolean insertNotDelete = diff.operation == INSERT;
                 CharacterStyle deltaSpan = CharacterStyle.wrap(insertNotDelete ? insertSpan : deleteSpan);
-                spannableText.setSpan(deltaSpan, spannableText.length() - diff.text.length(), spannableText.length(), SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableText.setSpan(deltaSpan, spannableText.length() - diff.text.length(), spannableText.length(),
+                        SPAN_EXCLUSIVE_EXCLUSIVE);
                 (insertNotDelete ? insertSpans : deleteSpans).add(deltaSpan);
             }
         }

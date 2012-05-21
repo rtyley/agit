@@ -33,6 +33,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Provides;
@@ -45,6 +46,8 @@ import com.madgag.agit.git.model.RDTBranch;
 import com.madgag.agit.git.model.RDTRemote;
 import com.madgag.agit.git.model.RDTTag;
 import com.madgag.agit.git.model.RepoDomainType;
+import com.madgag.agit.guice.ContextScopedViewInflator;
+import com.madgag.agit.guice.ContextScopedViewInflatorFactory;
 import com.madgag.agit.guice.OperationScope;
 import com.madgag.agit.guice.RepositoryScope;
 import com.madgag.agit.guice.RepositoryScoped;
@@ -78,11 +81,10 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.SshSessionFactory;
 
-import roboguice.config.AbstractAndroidModule;
-import roboguice.inject.ContextScoped;
+import roboguice.inject.ContextSingleton;
 import roboguice.inject.InjectExtra;
 
-public class AgitModule extends AbstractAndroidModule {
+public class AgitModule extends AbstractModule {
 
     private static final String TAG = "AgitMod";
 
@@ -91,12 +93,14 @@ public class AgitModule extends AbstractAndroidModule {
         install(RepositoryScope.module());
         install(OperationScope.module());
         bind(UserInfo.class).to(GUIUserInfo.class);
-        bind(ImageSession.class).toProvider(ImageSessionProvider.class);
+        bind(ImageSession.class).toProvider(ImageSessionProvider.class).in(ContextSingleton.class);
 
         bind(Repository.class).toProvider(RepositoryProvider.class);
         bind(Ref.class).annotatedWith(named("branch")).toProvider(BranchRefProvider.class);
         bind(AndroidAuthAgent.class).toProvider(AndroidAuthAgentProvider.class);
         bind(GitAsyncTaskFactory.class).toProvider(newFactory(GitAsyncTaskFactory.class, GitAsyncTask.class));
+        bind(ContextScopedViewInflatorFactory.class).toProvider(newFactory(ContextScopedViewInflatorFactory.class,
+                ContextScopedViewInflator.class));
 
         bind(SyncCampaignFactory.class).toProvider(newFactory(SyncCampaignFactory.class, SyncCampaign.class));
 
@@ -140,7 +144,7 @@ public class AgitModule extends AbstractAndroidModule {
         return Git.wrap(repository);
     }
 
-    @ContextScoped
+    @ContextSingleton
     public static class BranchRefProvider implements Provider<Ref> {
         @Inject
         Repository repository;
@@ -158,7 +162,7 @@ public class AgitModule extends AbstractAndroidModule {
         }
     }
 
-    @ContextScoped
+    @ContextSingleton
     public static class ImageSessionProvider implements Provider<ImageSession<String, Bitmap>> {
 
         @Inject

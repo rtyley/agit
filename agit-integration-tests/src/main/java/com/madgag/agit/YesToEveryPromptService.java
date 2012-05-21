@@ -22,18 +22,17 @@ package com.madgag.agit;
 import static java.lang.Boolean.TRUE;
 import android.util.Log;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.madgag.agit.operations.OpPrompt;
 import com.madgag.android.blockingprompt.BlockingPromptService;
-
-import roboguice.config.AbstractAndroidModule;
 
 public final class YesToEveryPromptService implements BlockingPromptService {
 
     private static final String TAG = "YTEPS";
 
     public static Module module() {
-        return new AbstractAndroidModule() {
+        return new AbstractModule() {
             @Override
             protected void configure() {
                 bind(BlockingPromptService.class).toInstance(new YesToEveryPromptService());

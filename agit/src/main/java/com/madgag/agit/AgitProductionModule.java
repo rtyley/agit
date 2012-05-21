@@ -21,15 +21,14 @@ package com.madgag.agit;
 
 import android.content.ComponentName;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.name.Named;
 import com.madgag.agit.guice.OperationScoped;
 import com.madgag.android.blockingprompt.BlockingPromptService;
 import com.madgag.android.blockingprompt.PromptBroker;
 
-import roboguice.config.AbstractAndroidModule;
-
-public class AgitProductionModule extends AbstractAndroidModule {
+public class AgitProductionModule extends AbstractModule {
 
     @Override
     protected void configure() {

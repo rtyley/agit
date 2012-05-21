@@ -22,6 +22,7 @@ package com.madgag.agit.views;
 import static com.madgag.android.lazydrawables.gravatar.Gravatars.gravatarIdFor;
 import static java.text.DateFormat.FULL;
 import static java.text.DateFormat.getDateTimeInstance;
+import static roboguice.RoboGuice.getInjector;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -30,7 +31,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.madgag.agit.R;
 import com.madgag.android.lazydrawables.ImageSession;
 
@@ -47,9 +47,9 @@ public class PersonIdentDetailView extends FrameLayout {
     @Inject
     ImageSession avatarSession;
 
-    public PersonIdentDetailView(Context context, Injector injector) {
+    public PersonIdentDetailView(Context context) {
         super(context);
-        injector.injectMembers(this);
+        getInjector(context).injectMembers(this);
         LayoutInflater.from(context).inflate(R.layout.person_ident_detail_view, this);
 
         avatarView = (ImageView) findViewById(R.id.person_ident_avatar);

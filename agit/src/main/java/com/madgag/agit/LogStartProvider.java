@@ -7,9 +7,9 @@ import android.util.Log;
 
 import com.google.common.base.Function;
 import com.google.inject.Inject;
-import com.google.inject.internal.Nullable;
 import com.google.inject.name.Named;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 
 import org.eclipse.jgit.lib.ObjectId;

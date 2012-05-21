@@ -19,15 +19,16 @@
 
 package com.madgag.agit.views;
 
-import static com.madgag.agit.util.ContextUtil.wrapWithDialogContext;
 import static com.madgag.agit.util.Time.timeSinceMS;
 import static com.madgag.agit.views.TextUtil.ITALIC_CLIPPING_BUFFER;
 import static com.madgag.android.lazydrawables.gravatar.Gravatars.gravatarIdFor;
+import static roboguice.RoboGuice.getInjector;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -35,13 +36,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.madgag.agit.R;
 import com.madgag.android.lazydrawables.ImageSession;
 
 import org.eclipse.jgit.lib.PersonIdent;
-
-import roboguice.inject.InjectorProvider;
 
 public class PersonIdentView extends FrameLayout {
 
@@ -56,7 +54,7 @@ public class PersonIdentView extends FrameLayout {
 
     public PersonIdentView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        ((InjectorProvider) context).getInjector().injectMembers(this);
+        getInjector(context).injectMembers(this);
         LayoutInflater.from(context).inflate(com.madgag.agit.R.layout.person_ident_view, this);
 
         titleView = (TextView) findViewById(R.id.person_ident_title);
@@ -76,11 +74,10 @@ public class PersonIdentView extends FrameLayout {
         setClickable(true);
         setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                Injector injector = ((InjectorProvider) getContext()).getInjector();
 
-                PersonIdentDetailView view = new PersonIdentDetailView(wrapWithDialogContext(getContext()), injector);
+                Log.d(TAG, "Clicked " + v);
+                final PersonIdentDetailView view = new PersonIdentDetailView(getContext());
                 view.setIdent(title, ident);
-
                 Dialog dialog = new AlertDialog.Builder(getContext()).setView(view).show();
                 view.setClickable(true);
                 view.setOnClickListener(close(dialog));
