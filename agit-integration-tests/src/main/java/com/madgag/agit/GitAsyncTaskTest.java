@@ -70,7 +70,7 @@ public class GitAsyncTaskTest extends ActivityInstrumentationTestCase2<Dashboard
     private Injector injector;
 
     public GitAsyncTaskTest() {
-        super(DashboardActivity.class);
+        super("com.madgag.agit", DashboardActivity.class);
     }
 
     private GitTestHelper helper() {
