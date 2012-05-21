@@ -23,11 +23,11 @@ package com.madgag.agit.util;
 import android.text.format.DateUtils;
 
 public class Time {
-	public static CharSequence timeSinceSeconds(int epochTimeInSeconds) {
-		return timeSinceMS(epochTimeInSeconds*1000L); 
-	}
-	
-	public static CharSequence timeSinceMS(long epochTimeInMS) {
+    public static CharSequence timeSinceSeconds(int epochTimeInSeconds) {
+        return timeSinceMS(epochTimeInSeconds * 1000L);
+    }
+
+    public static CharSequence timeSinceMS(long epochTimeInMS) {
         return DateUtils.getRelativeTimeSpanString(epochTimeInMS);
-	}
+    }
 }

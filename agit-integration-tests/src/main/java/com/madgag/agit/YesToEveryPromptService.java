@@ -19,36 +19,37 @@
 
 package com.madgag.agit;
 
+import static java.lang.Boolean.TRUE;
 import android.util.Log;
+
 import com.google.inject.Module;
 import com.madgag.agit.operations.OpPrompt;
 import com.madgag.android.blockingprompt.BlockingPromptService;
-import roboguice.config.AbstractAndroidModule;
 
-import static java.lang.Boolean.TRUE;
+import roboguice.config.AbstractAndroidModule;
 
 public final class YesToEveryPromptService implements BlockingPromptService {
 
     private static final String TAG = "YTEPS";
 
-	public static Module module() {
-		return new AbstractAndroidModule() {
-			@Override
-			protected void configure() {
-				bind(BlockingPromptService.class).toInstance(new YesToEveryPromptService());
-			}
-		};
-	}
+    public static Module module() {
+        return new AbstractAndroidModule() {
+            @Override
+            protected void configure() {
+                bind(BlockingPromptService.class).toInstance(new YesToEveryPromptService());
+            }
+        };
+    }
 
     public <T> T request(OpPrompt<T> opPrompt) {
         if (opPrompt.getRequiredResponseType().equals(Boolean.class)) {
-            Log.e(TAG,"Returning true for "+opPrompt);
+            Log.e(TAG, "Returning true for " + opPrompt);
             return (T) TRUE;
         }
         try {
             return opPrompt.getRequiredResponseType().newInstance();
         } catch (Exception e) {
-            Log.e(TAG,"Whoops",e);
+            Log.e(TAG, "Whoops", e);
             return null;
         }
     }

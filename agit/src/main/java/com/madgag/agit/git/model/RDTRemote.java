@@ -19,53 +19,58 @@
 
 package com.madgag.agit.git.model;
 
+import static org.eclipse.jgit.transport.RemoteConfig.getAllRemoteConfigs;
+
 import com.google.inject.Inject;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.transport.RemoteConfig;
 
 import java.net.URISyntaxException;
 import java.util.List;
 
-import static org.eclipse.jgit.transport.RemoteConfig.getAllRemoteConfigs;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.transport.RemoteConfig;
 
 
 public class RDTRemote extends RepoDomainType<RemoteConfig> {
     @Inject
-	public RDTRemote(Repository repository) {
-		super(repository);
-	}
-    
-	@Override
-	public String name() { return "remote"; }
-	public List<RemoteConfig> getAll() {
-		try {
-			return getAllRemoteConfigs(repository.getConfig());
-		} catch (URISyntaxException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    public RDTRemote(Repository repository) {
+        super(repository);
+    }
 
-	@Override
-	CharSequence conciseSummary(RemoteConfig rc) {
-		return rc.getName()+": "+rc.getURIs().get(0);
-	}
+    @Override
+    public String name() {
+        return "remote";
+    }
 
-	@Override
-	String conciseSeparator() {
-		return "\n";
-	}
+    public List<RemoteConfig> getAll() {
+        try {
+            return getAllRemoteConfigs(repository.getConfig());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-	@Override
-	public CharSequence conciseSummaryTitle() {
-		return "Remotes";
-	}
-	@Override
+    @Override
+    CharSequence conciseSummary(RemoteConfig rc) {
+        return rc.getName() + ": " + rc.getURIs().get(0);
+    }
+
+    @Override
+    String conciseSeparator() {
+        return "\n";
+    }
+
+    @Override
+    public CharSequence conciseSummaryTitle() {
+        return "Remotes";
+    }
+
+    @Override
     public String idFor(RemoteConfig e) {
-		return e.getName();
-	}
-	
-	@Override
+        return e.getName();
+    }
+
+    @Override
     public CharSequence shortDescriptionOf(RemoteConfig rc) {
-		return rc.getURIs().get(0).toString();
-	}
+        return rc.getURIs().get(0).toString();
+    }
 }

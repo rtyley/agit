@@ -19,25 +19,25 @@
 
 package com.madgag.agit;
 
+import static com.madgag.agit.git.Repos.openRepoFor;
 import android.content.Intent;
 import android.util.Log;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Repository;
 
 import java.io.File;
 
-import static com.madgag.agit.git.Repos.openRepoFor;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
 
 public class GitIntents {
 
-	private static final String TAG="GitIntents";
+    private static final String TAG = "GitIntents";
 
     public static final String OPEN_GIT_INTENT_PREFIX = "org.openintents.git.";
 
     public static final String REPO_STATE_CHANGED_BROADCAST = "repo.UPDATED";
 
     public static String actionWithSuffix(String actionSuffix) {
-        return OPEN_GIT_INTENT_PREFIX+actionSuffix;
+        return OPEN_GIT_INTENT_PREFIX + actionSuffix;
     }
 
 
@@ -46,51 +46,51 @@ public class GitIntents {
     }
 
     public static final String
-            BARE="bare",
-            EXTRA_TARGET_DIR="target-dir",
-            EXTRA_SOURCE_URI="source-uri",
+            BARE = "bare",
+            EXTRA_TARGET_DIR = "target-dir",
+            EXTRA_SOURCE_URI = "source-uri",
             GITDIR = "gitdir";
 
     public static File directoryFrom(Intent intent) {
-		String directory = intent.getStringExtra("directory");
-		return new File(directory);
-	}
+        String directory = intent.getStringExtra("directory");
+        return new File(directory);
+    }
 
     public static String sourceUriFrom(Intent intent) {
-		return intent.getStringExtra(EXTRA_SOURCE_URI);
-	}
-	
-	public static File gitDirFrom(Intent intent) {
-		String gitdirString = intent.getStringExtra(GITDIR);
-		Log.i(TAG, "gitdirString = "+gitdirString);
-		File gitdir=new File(gitdirString);
-		Log.i(TAG, "gitdir for "+intent+" = "+gitdir.getAbsolutePath());
-		return gitdir;
-	}
+        return intent.getStringExtra(EXTRA_SOURCE_URI);
+    }
 
-	public static String branchNameFrom(Intent intent) {
-		return intent.getStringExtra("branch");
-	}
-	
-	public static String tagNameFrom(Intent intent) {
-		return intent.getStringExtra("tag");
-	}
+    public static File gitDirFrom(Intent intent) {
+        String gitdirString = intent.getStringExtra(GITDIR);
+        Log.i(TAG, "gitdirString = " + gitdirString);
+        File gitdir = new File(gitdirString);
+        Log.i(TAG, "gitdir for " + intent + " = " + gitdir.getAbsolutePath());
+        return gitdir;
+    }
 
-	public static void addDirectoryTo(Intent intent, File directory) {
-		intent.putExtra("directory", directory.getAbsolutePath());
-	}	
-	
-	public static void addGitDirTo(Intent intent, File gitdir) {
-		intent.putExtra(GITDIR, gitdir.getAbsolutePath());
-	}
-	
-	public static Repository repositoryFrom(Intent intent) {
-		return openRepoFor(gitDirFrom(intent));
-	}
+    public static String branchNameFrom(Intent intent) {
+        return intent.getStringExtra("branch");
+    }
 
-	public static ObjectId commitIdFrom(Intent intent) {
-		return ObjectId.fromString(intent.getStringExtra("commit"));
-	}
+    public static String tagNameFrom(Intent intent) {
+        return intent.getStringExtra("tag");
+    }
+
+    public static void addDirectoryTo(Intent intent, File directory) {
+        intent.putExtra("directory", directory.getAbsolutePath());
+    }
+
+    public static void addGitDirTo(Intent intent, File gitdir) {
+        intent.putExtra(GITDIR, gitdir.getAbsolutePath());
+    }
+
+    public static Repository repositoryFrom(Intent intent) {
+        return openRepoFor(gitDirFrom(intent));
+    }
+
+    public static ObjectId commitIdFrom(Intent intent) {
+        return ObjectId.fromString(intent.getStringExtra("commit"));
+    }
 
 
 }

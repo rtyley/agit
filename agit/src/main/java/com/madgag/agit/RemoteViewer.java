@@ -21,31 +21,32 @@ package com.madgag.agit;
 
 import android.content.Intent;
 import android.os.Bundle;
-import org.eclipse.jgit.transport.RemoteConfig;
 
 import java.io.File;
 import java.net.URISyntaxException;
 
-public class RemoteViewer extends RepoScopedActivityBase {
-    
-    public static Intent remoteViewerIntentFor(File gitdir, RemoteConfig remote) {
-		return new GitIntentBuilder("view.REMOTE").gitdir(gitdir).remote(remote).toIntent();
-	}
+import org.eclipse.jgit.transport.RemoteConfig;
 
-	private static final String TAG = "RemoteViewer";
-	
-	private RemoteConfig remote;
-	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.remote_view);
-		
-		try {
-			remote = new RemoteConfig(repo().getConfig(), getIntent().getStringExtra("remote"));
-		} catch (URISyntaxException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
+public class RemoteViewer extends RepoScopedActivityBase {
+
+    public static Intent remoteViewerIntentFor(File gitdir, RemoteConfig remote) {
+        return new GitIntentBuilder("view.REMOTE").gitdir(gitdir).remote(remote).toIntent();
+    }
+
+    private static final String TAG = "RemoteViewer";
+
+    private RemoteConfig remote;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.remote_view);
+
+        try {
+            remote = new RemoteConfig(repo().getConfig(), getIntent().getStringExtra("remote"));
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

@@ -20,5 +20,5 @@
 package com.madgag.agit.operations;
 
 public interface ProgressListener<P> {
-	void publish(P... values);
+    void publish(P... values);
 }

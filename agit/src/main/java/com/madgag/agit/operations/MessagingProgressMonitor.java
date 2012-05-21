@@ -20,85 +20,88 @@
 package com.madgag.agit.operations;
 
 import android.util.Log;
+
 import com.google.inject.Inject;
 import com.madgag.agit.guice.OperationScoped;
+
 import org.eclipse.jgit.lib.ProgressMonitor;
 
 @OperationScoped
 public class MessagingProgressMonitor implements ProgressMonitor {
 
-	public static final String TAG = "MessagingProgressMonitor";
-	
-	private boolean output;
+    public static final String TAG = "MessagingProgressMonitor";
 
-	private long taskBeganAt;
+    private boolean output;
 
-	private String msg;
+    private long taskBeganAt;
 
-	private int lastWorked;
+    private String msg;
 
-	private int totalWork;
-    
-	public Progress currentProgress;
+    private int lastWorked;
 
-	private final ProgressListener<Progress> progressListener;
+    private int totalWork;
+
+    public Progress currentProgress;
+
+    private final ProgressListener<Progress> progressListener;
     private final CancellationSignaller cancellationSignaller;
 
     public Progress getCurrentProgress() {
-		return currentProgress;
-	}
+        return currentProgress;
+    }
 
     @Inject
-	public MessagingProgressMonitor( ProgressListener<Progress> progressListener, CancellationSignaller cancellationSignaller) {
-		this.progressListener = progressListener;
+    public MessagingProgressMonitor(ProgressListener<Progress> progressListener,
+                                    CancellationSignaller cancellationSignaller) {
+        this.progressListener = progressListener;
         this.cancellationSignaller = cancellationSignaller;
     }
-	
-	public boolean isCancelled() {
-		return cancellationSignaller.isCancelled();
-	}
-	
-	public void beginTask(final String title, final int total) {
-		Log.d(TAG, "started "+title+" total="+total);
-		
-		endTask();
-		msg = title;
-		lastWorked = 0;
-		totalWork = total;
-	}
 
-	public void endTask() {
-		if (output) {
-			if (totalWork != UNKNOWN)
-				display(totalWork);
-			System.err.println();
-		}
-		output = false;
-		msg = null;
-	}
+    public boolean isCancelled() {
+        return cancellationSignaller.isCancelled();
+    }
+
+    public void beginTask(final String title, final int total) {
+        Log.d(TAG, "started " + title + " total=" + total);
+
+        endTask();
+        msg = title;
+        lastWorked = 0;
+        totalWork = total;
+    }
+
+    public void endTask() {
+        if (output) {
+            if (totalWork != UNKNOWN)
+                display(totalWork);
+            System.err.println();
+        }
+        output = false;
+        msg = null;
+    }
 
 
+    public void start(int arg0) {
+    }
 
-	public void start(int arg0) {}
+    public void update(int completed) {
+        final int cmp = lastWorked + completed;
+        //Log.d(TAG, "cmp "+cmp);
 
-	public void update(int completed) {
-		final int cmp = lastWorked + completed;
-		//Log.d(TAG, "cmp "+cmp);
-		
-		if (totalWork == UNKNOWN) {
-			display(cmp);
-		} else {
-			if ((cmp * 10 / totalWork) != (lastWorked * 10) / totalWork) {
-				display(cmp);
-			}
-		}
-		lastWorked = cmp;
-		output = true;
-	}
+        if (totalWork == UNKNOWN) {
+            display(cmp);
+        } else {
+            if ((cmp * 10 / totalWork) != (lastWorked * 10) / totalWork) {
+                display(cmp);
+            }
+        }
+        lastWorked = cmp;
+        output = true;
+    }
 
-	private void display(int cmp) {
-		currentProgress=new Progress(msg, totalWork, cmp);
-		progressListener.publish(currentProgress);
-	}
+    private void display(int cmp) {
+        currentProgress = new Progress(msg, totalWork, cmp);
+        progressListener.publish(currentProgress);
+    }
 
 }

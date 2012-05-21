@@ -19,102 +19,109 @@
 
 package com.madgag.agit.operations;
 
+import static android.R.drawable.stat_notify_error;
+import static java.lang.System.currentTimeMillis;
 import android.os.Handler;
 import android.util.Log;
+
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
 import com.madgag.agit.operation.lifecycle.OperationLifecycleSupport;
 import com.madgag.android.blockingprompt.PromptBroker;
-import roboguice.util.RoboAsyncTask;
 
 import java.util.concurrent.Future;
 
-import static android.R.drawable.stat_notify_error;
-import static java.lang.System.currentTimeMillis;
+import roboguice.util.RoboAsyncTask;
 
 public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements ProgressListener<Progress> {
 
-	public final static String TAG = "GAT";
+    public final static String TAG = "GAT";
 
-    @Inject GitOperationExecutor operationExecutor;
-    @Inject Provider<PromptBroker> promptBrokerProvider;
-	
-	private final GitOperation operation;
-	private final OperationLifecycleSupport lifecycleSupport;
-	
-	private long startTime;
+    @Inject
+    GitOperationExecutor operationExecutor;
+    @Inject
+    Provider<PromptBroker> promptBrokerProvider;
 
-	private Progress latestProgress;
+    private final GitOperation operation;
+    private final OperationLifecycleSupport lifecycleSupport;
+
+    private long startTime;
+
+    private Progress latestProgress;
 
     private final Runnable publishOnUIThreadRunnable = new Runnable() {
-        public void run() { publishLatestProgress(); }
+        public void run() {
+            publishLatestProgress();
+        }
     };
-	
-	@Inject
-	public GitAsyncTask(
+
+    @Inject
+    public GitAsyncTask(
             @Named("uiThread") Handler handler,
-			@Assisted GitOperation operation,
-			@Assisted OperationLifecycleSupport lifecycleSupport) {
+            @Assisted GitOperation operation,
+            @Assisted OperationLifecycleSupport lifecycleSupport) {
         handler(handler);
-		this.operation = operation;
-		this.lifecycleSupport = lifecycleSupport;
-	}
-	
-    @Override
-    protected void onPreExecute() {
-    	Log.d(TAG, "Starting onPreExecute "+operation+" handler="+handler);
-    	lifecycleSupport.startedWith(new OpNotification(operation.getOngoingIcon(), operation.getTickerText(), operation.getShortDescription(), operation.getUrl().toString()));
-    	startTime = currentTimeMillis();
+        this.operation = operation;
+        this.lifecycleSupport = lifecycleSupport;
     }
 
-	public OpNotification call() throws Exception {
+    @Override
+    protected void onPreExecute() {
+        Log.d(TAG, "Starting onPreExecute " + operation + " handler=" + handler);
+        lifecycleSupport.startedWith(new OpNotification(operation.getOngoingIcon(), operation.getTickerText(),
+                operation.getShortDescription(), operation.getUrl().toString()));
+        startTime = currentTimeMillis();
+    }
+
+    public OpNotification call() throws Exception {
         return operationExecutor.call(operation, new OperationUIContext(this, promptBrokerProvider), true);
-	}
-	
-	@Override
-	protected void onSuccess(OpNotification opResult) {
-		long duration=currentTimeMillis()-startTime;
-		Log.d(TAG, "Completed in "+duration+" ms");
+    }
+
+    @Override
+    protected void onSuccess(OpNotification opResult) {
+        long duration = currentTimeMillis() - startTime;
+        Log.d(TAG, "Completed in " + duration + " ms");
         lifecycleSupport.success(opResult);
-		lifecycleSupport.completed(opResult);
-	}
+        lifecycleSupport.completed(opResult);
+    }
 
     @Override
     protected void onException(Exception e) throws RuntimeException {
         String opName = operation.getName();
         boolean cancelled = operation.isCancelled();
-        Log.e(TAG, "Examining exception "+e+" op "+operation+" cancelled="+cancelled, e);
+        Log.e(TAG, "Examining exception " + e + " op " + operation + " cancelled=" + cancelled, e);
         OpNotification notification =
-                cancelled ?new OpNotification(stat_notify_error, opName +" cancelled", operation.getUrl().toString()):
-                        new OpNotification(stat_notify_error, opName +" failed", e.getMessage());
+                cancelled ? new OpNotification(stat_notify_error, opName + " cancelled",
+                        operation.getUrl().toString()) :
+                        new OpNotification(stat_notify_error, opName + " failed", e.getMessage());
         lifecycleSupport.error(notification);
         lifecycleSupport.completed(notification);
     }
 
     // Called on background thread
-	public void publish(Progress... values) {
-		latestProgress = values[values.length-1];
+    public void publish(Progress... values) {
+        latestProgress = values[values.length - 1];
         handler().post(publishOnUIThreadRunnable);
-		Log.d(TAG, "Posted "+latestProgress);
-	}
-	
-	protected void publishLatestProgress() {
-		lifecycleSupport.publish(latestProgress);
-		Log.d(TAG, "Called lifecycle publisher with "+latestProgress);
-	}
+        Log.d(TAG, "Posted " + latestProgress);
+    }
 
-	public GitOperation getOperation() {
-		return operation;
-	}
+    protected void publishLatestProgress() {
+        lifecycleSupport.publish(latestProgress);
+        Log.d(TAG, "Called lifecycle publisher with " + latestProgress);
+    }
 
-	public Future<Void> getFutureInUse() {
-		return future;
-	}
-	
-	@Override
-	public String toString() {
-		return getClass().getSimpleName()+"["+operation+"]";
-	}
+    public GitOperation getOperation() {
+        return operation;
+    }
+
+    public Future<Void> getFutureInUse() {
+        return future;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "[" + operation + "]";
+    }
 }

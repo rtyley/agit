@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
     <TextView
-        android:id="@+id/beforeText"
-		android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="5dip"
-		android:textSize="8dp"
-            android:text="@string/diff_seekbar_before" />
-	<SeekBar android:id="@+id/DiffPlayerSeekBar"
-		android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="4dip"
-        android:progressDrawable="@drawable/diff_seekbar"
-		android:minWidth="120dip" android:maxWidth="160dip" />
-	<TextView
-        android:id="@+id/afterText"
-		android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="8dip"
-        android:paddingRight="5dip"
-		android:text="@string/diff_seekbar_after" />
+            android:id="@+id/beforeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dip"
+            android:textSize="8dp"
+            android:text="@string/diff_seekbar_before"/>
+    <SeekBar android:id="@+id/DiffPlayerSeekBar"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:padding="4dip"
+             android:progressDrawable="@drawable/diff_seekbar"
+             android:minWidth="120dip" android:maxWidth="160dip"/>
+    <TextView
+            android:id="@+id/afterText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="8dip"
+            android:paddingRight="5dip"
+            android:text="@string/diff_seekbar_after"/>
 </merge>

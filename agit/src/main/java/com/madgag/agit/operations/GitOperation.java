@@ -1,11 +1,12 @@
 package com.madgag.agit.operations;
 
+import static com.madgag.agit.operations.GitOperation.Status.FINISHED;
+import static com.madgag.agit.operations.GitOperation.Status.NOT_STARTED;
+import static com.madgag.agit.operations.GitOperation.Status.RUNNING;
+import static java.lang.Thread.currentThread;
 import android.util.Log;
 
 import java.io.File;
-
-import static com.madgag.agit.operations.GitOperation.Status.*;
-import static java.lang.Thread.currentThread;
 
 public abstract class GitOperation implements CancellationSignaller {
 
@@ -16,7 +17,7 @@ public abstract class GitOperation implements CancellationSignaller {
     }
 
     private Status status = NOT_STARTED;
-    private boolean cancelled=false;
+    private boolean cancelled = false;
     protected final File gitdir;
     private Thread executionThread;
     private static final String TAG = "GO";
@@ -24,10 +25,10 @@ public abstract class GitOperation implements CancellationSignaller {
     public GitOperation(File gitdir) {
         this.gitdir = gitdir;
     }
-	
-	public abstract String getTickerText();
-	
-	public abstract int getOngoingIcon();
+
+    public abstract String getTickerText();
+
+    public abstract int getOngoingIcon();
 
     public OpNotification executeAndRecordThread() throws Exception {
         executionThread = currentThread();
@@ -43,28 +44,28 @@ public abstract class GitOperation implements CancellationSignaller {
         return status == FINISHED;
     }
 
-	protected abstract OpNotification execute() throws Exception;
+    protected abstract OpNotification execute() throws Exception;
 
-	public abstract String getName();
+    public abstract String getName();
 
-	public abstract String getShortDescription();
-	
-	public abstract String getDescription();
+    public abstract String getShortDescription();
 
-	public abstract CharSequence getUrl();
+    public abstract String getDescription();
 
-	public File getGitDir() {
+    public abstract CharSequence getUrl();
+
+    public File getGitDir() {
         return gitdir;
     }
 
     public void cancel() {
-        cancelled=true;
-        if (executionThread!=null) {
-            Log.d(TAG, "Interrupting "+executionThread+" due to cancel");
+        cancelled = true;
+        if (executionThread != null) {
+            Log.d(TAG, "Interrupting " + executionThread + " due to cancel");
             executionThread.interrupt();
         }
     }
-    
+
     public boolean isCancelled() {
         return cancelled;
     }

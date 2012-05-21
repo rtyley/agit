@@ -24,30 +24,30 @@ import com.github.calculon.CalculonStoryTest;
 import java.io.File;
 
 public class CloneLauncherActivityStoryTest extends CalculonStoryTest<CloneLauncherActivity> {
-	
-	private String existingFolder = File.listRoots()[0].getAbsolutePath();
 
-	public CloneLauncherActivityStoryTest() {
-		super("com.madgag.agit",CloneLauncherActivity.class);
-	}
-	
-	public void testDefaultsToUseDefaultGitDirLocation() {
-		assertThat(R.id.UseDefaultGitDirLocation).isChecked();
-	}
-	
+    private String existingFolder = File.listRoots()[0].getAbsolutePath();
+
+    public CloneLauncherActivityStoryTest() {
+        super("com.madgag.agit", CloneLauncherActivity.class);
+    }
+
+    public void testDefaultsToUseDefaultGitDirLocation() {
+        assertThat(R.id.UseDefaultGitDirLocation).isChecked();
+    }
+
     public void testCloneButtonDisabledAndWarningShownIfGitDirAlreadyExists() {
-    	setUp(R.id.UseDefaultGitDirLocation).setChecked(false).now();
+        setUp(R.id.UseDefaultGitDirLocation).setChecked(false).now();
         assertThat(R.id.GitDirEditText).setText(existingFolder).implies(R.id.GoCloneButton).isDisabled();
         assertThat(R.id.CloneReadinessMessage).isVisible();
     }
-    
+
     public void testDoesNotCrashDueToStackOverflow() {
-    	setUp(R.id.UseDefaultGitDirLocation).setChecked(false).now();
-    	setUp(R.id.CloneUrlEditText).setText("/example/project").now();
+        setUp(R.id.UseDefaultGitDirLocation).setChecked(false).now();
+        setUp(R.id.CloneUrlEditText).setText("/example/project").now();
         assertThat(R.id.UseDefaultGitDirLocation).setChecked(true).implies(R.id.UseDefaultGitDirLocation).isEnabled();
     }
-    
-    
+
+
 //    public void testCheckoutToCustomLocationWorks() {
 //        File customLocation = tempFolder();
 //        setUp(R.id.CloneUrlEditText).setText("git://github.com/agittest/small-project.git").now();

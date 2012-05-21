@@ -21,6 +21,7 @@ package com.madgag.android.blockingprompt;
 
 
 import android.util.Log;
+
 import com.madgag.agit.operations.OpPrompt;
 
 public class RejectBlockingPromptService implements BlockingPromptService {
@@ -29,6 +30,6 @@ public class RejectBlockingPromptService implements BlockingPromptService {
 
     public <T> T request(OpPrompt<T> opPrompt) {
         Log.d(TAG, "Going to reject prompt " + opPrompt);
-        throw new RuntimeException("Won't ask the user this: "+opPrompt.getOpNotification().getTickerText());
+        throw new RuntimeException("Won't ask the user this: " + opPrompt.getOpNotification().getTickerText());
     }
 }

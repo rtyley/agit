@@ -18,29 +18,28 @@
  */
 
 /**
- * 
+ *
  */
 package com.madgag.agit.diff;
 
+import static android.graphics.Typeface.MONOSPACE;
+import static android.widget.TextView.BufferType.EDITABLE;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.text.Editable;
 import android.util.Log;
 import android.widget.TextView;
 
-import static android.graphics.Typeface.MONOSPACE;
-import static android.widget.TextView.BufferType.EDITABLE;
-
 public class HunkDiffView extends TextView {
 
     private static final String TAG = "HDV";
-    
+
     private final DiffText diffText;
     private final DiffStateProvider diffStateProvider;
     private float state;
 
     public HunkDiffView(Context context, Hunk hunk, DiffStateProvider diffStateProvider) {
-		super(context);
+        super(context);
         this.diffStateProvider = diffStateProvider;
         setTypeface(MONOSPACE);
         diffText = new DiffText(getText());
@@ -57,14 +56,14 @@ public class HunkDiffView extends TextView {
 
     private void updateDiffTextStateIfRequired() {
         float requiredDiffState = diffStateProvider.getDiffState();
-        if (state!= requiredDiffState) {
+        if (state != requiredDiffState) {
             updateDiffTextStateTo(requiredDiffState);
         }
     }
 
     private void updateDiffTextStateTo(float requiredDiffState) {
         diffText.setTransitionProgress(requiredDiffState);
-        Log.d(TAG, "updated text state from "+state+" to "+requiredDiffState);
+        Log.d(TAG, "updated text state from " + state + " to " + requiredDiffState);
         state = requiredDiffState;
     }
 
@@ -72,7 +71,7 @@ public class HunkDiffView extends TextView {
     public void setText(CharSequence text, BufferType type) {
         super.setText(text, EDITABLE);
     }
-	
+
     @Override
     public Editable getText() {
         return (Editable) super.getText();

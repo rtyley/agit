@@ -19,12 +19,22 @@
 
 package com.madgag.agit;
 
+import static android.R.id.list;
+import static android.text.format.DateUtils.FORMAT_SHOW_TIME;
+import static android.text.format.DateUtils.formatDateTime;
+import static android.widget.Toast.LENGTH_SHORT;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.madgag.agit.CommitViewerActivity.commitViewerIntentCreatorFor;
+import static java.lang.System.currentTimeMillis;
+import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
+import static org.eclipse.jgit.lib.Repository.shortenRefName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
 import com.google.inject.Inject;
 import com.madgag.agit.operation.lifecycle.CasualShortTermLifetime;
 import com.madgag.agit.operations.Fetch;
@@ -32,54 +42,50 @@ import com.madgag.agit.operations.GitAsyncTaskFactory;
 import com.madgag.agit.operations.OpNotification;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.PullToRefreshListView;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
-import roboguice.inject.InjectExtra;
-import roboguice.inject.InjectView;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import static android.R.id.list;
-import static android.text.format.DateUtils.FORMAT_SHOW_TIME;
-import static android.text.format.DateUtils.formatDateTime;
-import static android.widget.Toast.LENGTH_SHORT;
-import static com.google.common.collect.Lists.newArrayList;
-import static com.madgag.agit.CommitViewerActivity.commitViewerIntentCreatorFor;
-import static com.madgag.agit.git.Repos.remoteConfigFor;
-import static java.lang.System.currentTimeMillis;
-import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
-import static org.eclipse.jgit.lib.Repository.shortenRefName;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+
+import roboguice.inject.InjectExtra;
+import roboguice.inject.InjectView;
 
 public class BranchViewer extends RepoScopedActivityBase {
-    
+
     public static Intent branchViewerIntentFor(File gitdir, Ref branch) {
-		return new GitIntentBuilder("branch.VIEW").gitdir(gitdir).branch(branch).toIntent();
-	}
-    
-	private final static int CHECKOUT_ID= Menu.FIRST;
+        return new GitIntentBuilder("branch.VIEW").gitdir(gitdir).branch(branch).toIntent();
+    }
 
-	private static final String TAG = "BranchViewer";
-	
-	@InjectView(R.id.actionbar) ActionBar actionBar;
-	
-	@InjectView(list) RevCommitListView revCommitListView;
+    private final static int CHECKOUT_ID = Menu.FIRST;
+
+    private static final String TAG = "BranchViewer";
+
+    @InjectView(R.id.actionbar)
+    ActionBar actionBar;
+
+    @InjectView(list)
+    RevCommitListView revCommitListView;
 
 
-    @Inject GitAsyncTaskFactory gitAsyncTaskFactory;
-	@Inject Repository repository;
-    @InjectExtra(value="branch") String branchName;
-	
-	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.branch_view);
-		
-		actionBar.setTitle(shortenRefName(branch().getName()));
+    @Inject
+    GitAsyncTaskFactory gitAsyncTaskFactory;
+    @Inject
+    Repository repository;
+    @InjectExtra(value = "branch")
+    String branchName;
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.branch_view);
+
+        actionBar.setTitle(shortenRefName(branch().getName()));
         actionBar.setHomeAction(new HomeAction(this));
         setCommits();
         revCommitListView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
@@ -88,21 +94,23 @@ public class BranchViewer extends RepoScopedActivityBase {
                 Fetch fetch = new Fetch(repository, DEFAULT_REMOTE_NAME);
                 gitAsyncTaskFactory.createTaskFor(fetch, new CasualShortTermLifetime() {
                     public void error(OpNotification errorNotification) {
-                        revCommitListView.onRefreshComplete("Last Fetch failed: "+errorNotification.getTickerText());
+                        revCommitListView.onRefreshComplete("Last Fetch failed: " + errorNotification.getTickerText());
                         Toast.makeText(BranchViewer.this, errorNotification.getTickerText(), LENGTH_SHORT).show();
                     }
+
                     public void success(OpNotification completionNotification) {
                         setCommits();
-                        revCommitListView.onRefreshComplete("Last Fetch: " + formatDateTime(BranchViewer.this, currentTimeMillis(), FORMAT_SHOW_TIME));
+                        revCommitListView.onRefreshComplete("Last Fetch: " + formatDateTime(BranchViewer.this,
+                                currentTimeMillis(), FORMAT_SHOW_TIME));
                     }
                 }).execute();
             }
         });
-	}
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-    	super.onCreateOptionsMenu(menu);
+        super.onCreateOptionsMenu(menu);
         // menu.add(0, CHECKOUT_ID, 0, checkout_commit_menu_option).setShortcut('0', 'c');
         return true;
     }
@@ -110,13 +118,13 @@ public class BranchViewer extends RepoScopedActivityBase {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case CHECKOUT_ID:
-        	try {
-                new Git(repo()).checkout().setName(branchName).call();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            return true;
+            case CHECKOUT_ID:
+                try {
+                    new Git(repo()).checkout().setName(branchName).call();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -130,22 +138,24 @@ public class BranchViewer extends RepoScopedActivityBase {
     }
 
     private void setCommits() {
-        revCommitListView.setCommits(commitViewerIntentCreatorFor(repository.getDirectory(), branch()), commitListForRepo());
+        revCommitListView.setCommits(commitViewerIntentCreatorFor(repository.getDirectory(), branch()),
+                commitListForRepo());
     }
 
     private List<RevCommit> commitListForRepo() {
-		Git git = new Git(repository);
-		try {
+        Git git = new Git(repository);
+        try {
             Ref branch = branch();
-            Log.d(TAG,"Calculating commitListForRepo based on "+ branch +" branch.getObjectId()="+ branch.getObjectId());
-			Iterable<RevCommit> logWaa = git.log().add(branch.getObjectId()).call();
-			List<RevCommit> sampleRevCommits = newArrayList(logWaa);
-			
-			Log.d(TAG, "Found "+sampleRevCommits.size()+" commits");
+            Log.d(TAG, "Calculating commitListForRepo based on " + branch + " branch.getObjectId()=" + branch
+                    .getObjectId());
+            Iterable<RevCommit> logWaa = git.log().add(branch.getObjectId()).call();
+            List<RevCommit> sampleRevCommits = newArrayList(logWaa);
 
-			return sampleRevCommits;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+            Log.d(TAG, "Found " + sampleRevCommits.size() + " commits");
+
+            return sampleRevCommits;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

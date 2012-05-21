@@ -10,6 +10,7 @@ import static com.madgag.agit.util.DigestUtils.encodeHex;
 import static com.madgag.agit.util.DigestUtils.md5;
 import static com.madgag.agit.views.TextUtil.centered;
 import static java.lang.Boolean.TRUE;
+import android.app.Application;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -18,10 +19,9 @@ import com.jcraft.jsch.HostKey;
 import com.jcraft.jsch.HostKeyRepository;
 import com.jcraft.jsch.UserInfo;
 import com.madgag.android.blockingprompt.BlockingPromptService;
+
 import java.util.Arrays;
 import java.util.Map;
-
-import android.app.Application;
 
 @Singleton
 public class CuriousHostKeyRepository implements HostKeyRepository {
@@ -37,19 +37,20 @@ public class CuriousHostKeyRepository implements HostKeyRepository {
 
     public int check(String host, byte[] key) {
         byte[] knownKey = knownKeys.get(host);
-        if (knownKey==null) {
+        if (knownKey == null) {
             return userCheckKey(host, key);
         }
-        return Arrays.equals(knownKey, key)? OK:CHANGED;
+        return Arrays.equals(knownKey, key) ? OK : CHANGED;
     }
 
     private int userCheckKey(String host, byte[] key) {
-        String keyFingerprint = "<small>"+code(encodeHex(md5(key)))+"</small><br />";
+        String keyFingerprint = "<small>" + code(encodeHex(md5(key))) + "</small><br />";
         String ticker = application.getString(ask_host_key_ok_ticker, code(host));
-        String message = application.getString(ask_host_key_ok, code(host)+"<br />", keyFingerprint);
-        boolean userConfirmKeyGood = TRUE == blockingPromptService.get().request(promptYesOrNo(alert(fromHtml(ticker), "SSH", centered(message))));
+        String message = application.getString(ask_host_key_ok, code(host) + "<br />", keyFingerprint);
+        boolean userConfirmKeyGood = TRUE == blockingPromptService.get().request(promptYesOrNo(alert(fromHtml(ticker)
+                , "SSH", centered(message))));
         if (userConfirmKeyGood) {
-            knownKeys.put(host,key);
+            knownKeys.put(host, key);
             return OK;
         } else {
             return NOT_INCLUDED;
@@ -57,14 +58,17 @@ public class CuriousHostKeyRepository implements HostKeyRepository {
     }
 
     private String code(String s) {
-        return "<b><tt>"+s+"</tt></b>";
+        return "<b><tt>" + s + "</tt></b>";
     }
 
-    public void add(HostKey hostkey, UserInfo ui) {}
+    public void add(HostKey hostkey, UserInfo ui) {
+    }
 
-    public void remove(String host, String type) {}
+    public void remove(String host, String type) {
+    }
 
-    public void remove(String host, String type, byte[] key) {}
+    public void remove(String host, String type, byte[] key) {
+    }
 
     public String getKnownHostsRepositoryID() {
         return null;

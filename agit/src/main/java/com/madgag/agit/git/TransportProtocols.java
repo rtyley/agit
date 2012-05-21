@@ -1,10 +1,10 @@
 package com.madgag.agit.git;
 
+import static org.eclipse.jgit.transport.Transport.getTransportProtocols;
+
 import org.eclipse.jgit.JGitText;
 import org.eclipse.jgit.transport.TransportProtocol;
 import org.eclipse.jgit.transport.URIish;
-
-import static org.eclipse.jgit.transport.Transport.getTransportProtocols;
 
 public class TransportProtocols {
     private static final String TAG = "TP";
@@ -19,7 +19,7 @@ public class TransportProtocols {
 
     public static String niceProtocolNameFor(URIish uri) {
         TransportProtocol p = protocolFor(uri);
-        if (p==null) {
+        if (p == null) {
             return null;
         }
         if (p.getSchemes().contains("file")) {

@@ -28,20 +28,20 @@ public abstract class ScopeBase implements Scope {
     }
 
     public <T> Provider<T> scope(final Key<T> key, final Provider<T> unscoped) {
-		return new Provider<T>() {
-			public T get() {
-				Map<Key<?>, Object> scopedObjects = getScopedObjectMap(key);
+        return new Provider<T>() {
+            public T get() {
+                Map<Key<?>, Object> scopedObjects = getScopedObjectMap(key);
 
-				@SuppressWarnings("unchecked")
-				T current = (T) scopedObjects.get(key);
-				if (current == null && !scopedObjects.containsKey(key)) {
-					current = unscoped.get();
-					scopedObjects.put(key, current);
-				}
-				return current;
-			}
-		};
-	}
+                @SuppressWarnings("unchecked")
+                T current = (T) scopedObjects.get(key);
+                if (current == null && !scopedObjects.containsKey(key)) {
+                    current = unscoped.get();
+                    scopedObjects.put(key, current);
+                }
+                return current;
+            }
+        };
+    }
 
     protected abstract <T> Map<Key<?>, Object> getScopedObjectMap(Key<T> key);
 }

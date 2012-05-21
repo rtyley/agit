@@ -19,6 +19,8 @@
 
 package com.madgag.agit.diff;
 
+import static com.madgag.agit.R.layout.file_change_header_expanded_view;
+import static com.madgag.agit.R.layout.file_change_header_view;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,19 +28,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+
 import com.madgag.agit.diff.DiffSliderView.OnStateUpdateListener;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.util.List;
 
-import static com.madgag.agit.R.layout.file_change_header_expanded_view;
-import static com.madgag.agit.R.layout.file_change_header_view;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
 
-public class CommitChangeListAdapter extends BaseExpandableListAdapter implements OnStateUpdateListener, DiffStateProvider {
+public class CommitChangeListAdapter extends BaseExpandableListAdapter implements OnStateUpdateListener,
+        DiffStateProvider {
 
     private static final String TAG = "CCLA";
-    
+
     // private final ViewCreator groupHeaderCreator;
     private LayoutInflater mInflater;
     private final DiffSliderView diffSlider;
@@ -47,10 +49,11 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
     private final RevCommit commit, parentCommit;
     private final Repository repository;
     private final List<FileDiff> fileDiffs;
-    
+
     private float state = 0.5f;
 
-    public CommitChangeListAdapter(Repository repository, RevCommit commit, RevCommit parentCommit, DiffSliderView diffSlider, ExpandableListView expandableList, Context context) {
+    public CommitChangeListAdapter(Repository repository, RevCommit commit, RevCommit parentCommit,
+                                   DiffSliderView diffSlider, ExpandableListView expandableList, Context context) {
         // groupHeaderCreator = ViewInflator.viewInflatorFor(context,file_change_header_view);
         this.repository = repository;
         this.commit = commit;
@@ -61,8 +64,10 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         diffSlider.setStateUpdateListener(this);
         try {
-            fileDiffs=new CommitDiffer().calculateCommitDiffs(repository, parentCommit, commit);
-        } catch (Exception e) { throw new RuntimeException(e); }
+            fileDiffs = new CommitDiffer().calculateCommitDiffs(repository, parentCommit, commit);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Object getChild(int groupPosition, int childPosition) {
@@ -77,9 +82,10 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
                              boolean isLastChild, View convertView, ViewGroup parent) {
         Hunk hunk = fileDiffs.get(groupPosition).getHunks().get(childPosition);
         HunkDiffView v;
-        // Disabling view re-use for Children - too unpredictable, can not easily tell when my difftext should be invalidated!
+        // Disabling view re-use for Children - too unpredictable, can not easily tell when my difftext should be
+        // invalidated!
 //			if (convertView==null || !(convertView instanceof HunkDiffView)) {
-        v=new HunkDiffView(context, hunk, this);
+        v = new HunkDiffView(context, hunk, this);
 //			} else {
 //				v=((HunkDiffView)convertView);
 //				v.setHunk(hunk);
@@ -113,13 +119,13 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
         }
 
         FileHeaderViewHolder viewHolder = (FileHeaderViewHolder) v.getTag();
-        if (viewHolder!=null && viewHolder.isExpanded()!=isExpanded) {
+        if (viewHolder != null && viewHolder.isExpanded() != isExpanded) {
             v = newGroupView(isExpanded, parent);
             viewHolder = null;
         }
 
-        if (viewHolder==null) {
-            v.setTag(viewHolder = new FileHeaderViewHolder(v,isExpanded));
+        if (viewHolder == null) {
+            v.setTag(viewHolder = new FileHeaderViewHolder(v, isExpanded));
         }
         viewHolder.updateViewFor(fileDiffs.get(groupPosition));
 
@@ -127,7 +133,8 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
     }
 
     private View newGroupView(boolean isExpanded, ViewGroup parent) {
-        return mInflater.inflate(isExpanded ? file_change_header_expanded_view : file_change_header_view, parent, false);
+        return mInflater.inflate(isExpanded ? file_change_header_expanded_view : file_change_header_view, parent,
+                false);
     }
 
     public boolean hasStableIds() {
@@ -146,7 +153,7 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
         this.state = state;
         expandableList.invalidate();
         expandableList.requestLayout();
-        Log.d(TAG,"list invalidated state="+state);
+        Log.d(TAG, "list invalidated state=" + state);
     }
 
     private long keyFor(int i, int j) {

@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:phl="com.madgag.android.listviews.pinnedheader"
-	android:id="@+id/rev_commit_layout_root"
-	android:orientation="vertical"
-	
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
+              android:id="@+id/rev_commit_layout_root"
+              android:orientation="vertical"
 
-	<LinearLayout android:layout_width="fill_parent"  android:layout_height="wrap_content"
-	android:background="@drawable/top_bar" android:orientation="horizontal"  android:gravity="right">
-	
-    <com.madgag.agit.diff.DiffSliderView android:id="@+id/RevCommitDiffSlider"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-	</LinearLayout>
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
+
+    <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+                  android:background="@drawable/top_bar" android:orientation="horizontal" android:gravity="right">
+
+        <com.madgag.agit.diff.DiffSliderView android:id="@+id/RevCommitDiffSlider"
+                                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    </LinearLayout>
 
     <com.madgag.android.listviews.pinnedheader.PinnedHeaderLayout
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent">
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
         <ExpandableListView android:fastScrollEnabled="true"
-		android:id="@android:id/list"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-        android:groupIndicator="@android:color/transparent"
-        android:cacheColorHint="#FFF" />
+                            android:id="@android:id/list"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:groupIndicator="@android:color/transparent"
+                            android:cacheColorHint="#FFF"/>
     </com.madgag.android.listviews.pinnedheader.PinnedHeaderLayout>
 
 

@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
-	<com.markupartist.android.widget.ActionBar
-	    android:id="@+id/actionbar"
-	    style="@style/ActionBar"
-        />
-    
+    <com.markupartist.android.widget.ActionBar
+            android:id="@+id/actionbar"
+            style="@style/ActionBar"
+            />
+
     <ListView android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fastScrollEnabled="true"
-        android:cacheColorHint="#FFF" />
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:fastScrollEnabled="true"
+              android:cacheColorHint="#FFF"/>
 
     <TextView android:id="@android:id/empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:textSize="36sp"
-        android:textColor="#999"
-        android:visibility="gone"
-        android:textStyle="italic"
-        android:text="@string/empty_list" />
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:textSize="36sp"
+              android:textColor="#999"
+              android:visibility="gone"
+              android:textStyle="italic"
+              android:text="@string/empty_list"/>
 </LinearLayout>

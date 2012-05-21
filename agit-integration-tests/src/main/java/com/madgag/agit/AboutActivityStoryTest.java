@@ -23,12 +23,12 @@ import com.github.calculon.CalculonStoryTest;
 
 public class AboutActivityStoryTest extends CalculonStoryTest<AboutActivity> {
 
-	public AboutActivityStoryTest() {
-		super("com.madgag.agit",AboutActivity.class);
-	}
-	
-	public void testDoesNotExplode() {
-		assertThat(R.id.webView).isVisible();
-	}
+    public AboutActivityStoryTest() {
+        super("com.madgag.agit", AboutActivity.class);
+    }
+
+    public void testDoesNotExplode() {
+        assertThat(R.id.webView).isVisible();
+    }
 
 }

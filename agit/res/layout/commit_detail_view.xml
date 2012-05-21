@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent" >
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1.0"
-        android:fadingEdgeLength="32dip">
-
-        <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="8dip" android:paddingRight="8dip"
-            android:paddingTop="6dip" android:paddingBottom="6dip" >
+            android:layout_weight="1.0"
+            android:fadingEdgeLength="32dip">
 
-            <com.madgag.agit.views.ObjectIdView android:id="@+id/commit_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:typeface="monospace"
-                android:textStyle="bold"
-                android:padding="4dip"
-                android:background="@drawable/single_line_frame"/>
-
-            <LinearLayout android:id="@+id/commit_people_group"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <LinearLayout android:id="@+id/commit_refs_group"
+        <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent"
+                android:paddingLeft="8dip" android:paddingRight="8dip"
+                android:paddingTop="6dip" android:paddingBottom="6dip">
+
+            <com.madgag.agit.views.ObjectIdView android:id="@+id/commit_id"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:typeface="monospace"
+                                                android:textStyle="bold"
+                                                android:padding="4dip"
+                                                android:background="@drawable/single_line_frame"/>
+
+            <LinearLayout android:id="@+id/commit_people_group"
+                          android:orientation="horizontal"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"/>
+
+            <LinearLayout android:id="@+id/commit_refs_group"
+                          android:orientation="vertical"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"/>
 
             <TextView android:id="@+id/commit_message_text"
-                android:layout_width="fill_parent"
-                android:layout_height="0px"
-                android:layout_weight="1"
-                style="@style/GitMessage" />
+                      android:layout_width="fill_parent"
+                      android:layout_height="0px"
+                      android:layout_weight="1"
+                      style="@style/GitMessage"/>
 
-            </LinearLayout>
+        </LinearLayout>
     </ScrollView>
 
-	<com.madgag.agit.CommitNavigationView
-		android:id="@+id/commit_navigation"
-		android:layout_width="fill_parent"
-		android:layout_height="100dip" />
+    <com.madgag.agit.CommitNavigationView
+            android:id="@+id/commit_navigation"
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"/>
 </LinearLayout>

@@ -19,19 +19,6 @@
 
 package com.madgag.agit.git.model;
 
-import com.google.common.base.Function;
-import com.google.inject.Inject;
-import com.madgag.agit.git.GitObjectFunction;
-import com.madgag.agit.git.model.RDTTag.TagSummary;
-import org.eclipse.jgit.lib.PersonIdent;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.*;
-
-import java.io.IOException;
-import java.util.Comparator;
-import java.util.List;
-
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.git.GitObjects.evaluate;
@@ -39,117 +26,140 @@ import static com.madgag.agit.git.model.RDTTag.TagSummary.SORT_BY_TIME_AND_NAME;
 import static java.util.Collections.sort;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;
 
+import com.google.common.base.Function;
+import com.google.inject.Inject;
+import com.madgag.agit.git.GitObjectFunction;
+import com.madgag.agit.git.model.RDTTag.TagSummary;
+
+import java.io.IOException;
+import java.util.Comparator;
+import java.util.List;
+
+import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevBlob;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevObject;
+import org.eclipse.jgit.revwalk.RevTag;
+import org.eclipse.jgit.revwalk.RevTree;
+import org.eclipse.jgit.revwalk.RevWalk;
+
 public class RDTTag extends RepoDomainType<TagSummary> {
 
     @Inject
-	public RDTTag(Repository repository) {
-		super(repository);
-	}
+    public RDTTag(Repository repository) {
+        super(repository);
+    }
 
-	@Override
-	public String name() { return "tag"; }
-	
-	public List<TagSummary> getAll() {
-		final RevWalk revWalk = new RevWalk(repository);
-		List<TagSummary> tagSummaries = newArrayList(transform(repository.getTags().values(), new TagSummaryFactory(revWalk)));
-		sort(tagSummaries, SORT_BY_TIME_AND_NAME);
-		return tagSummaries;
-		
-	}
-	
-	@Override
-	String conciseSeparator() {
-		return " • ";
-	}
+    @Override
+    public String name() {
+        return "tag";
+    }
 
-	@Override
-	CharSequence conciseSummary(TagSummary tagRef) {
-		return idFor(tagRef);
-	}
+    public List<TagSummary> getAll() {
+        final RevWalk revWalk = new RevWalk(repository);
+        List<TagSummary> tagSummaries = newArrayList(transform(repository.getTags().values(),
+                new TagSummaryFactory(revWalk)));
+        sort(tagSummaries, SORT_BY_TIME_AND_NAME);
+        return tagSummaries;
 
-	@Override
+    }
+
+    @Override
+    String conciseSeparator() {
+        return " • ";
+    }
+
+    @Override
+    CharSequence conciseSummary(TagSummary tagRef) {
+        return idFor(tagRef);
+    }
+
+    @Override
     public String idFor(TagSummary tagSummary) {
-		return shortenRefName(tagSummary.getRef().getName());
-	}
-	
-	@Override
-	public CharSequence conciseSummaryTitle() {
-		return "Tags";
-	}
-	
-	@Override
+        return shortenRefName(tagSummary.getRef().getName());
+    }
+
+    @Override
+    public CharSequence conciseSummaryTitle() {
+        return "Tags";
+    }
+
+    @Override
     public CharSequence shortDescriptionOf(TagSummary tagSummary) {
-		//ObjectId peeledObjectId = repository.peel(tagSummary.getRef()).getPeeledObjectId();
-		//ObjectId taggedId = peeledObjectId==null?ref.getObjectId():peeledObjectId;
-		return evaluate(tagSummary.getTaggedObject(), GIT_OBJECT_SHORT_DESCRIPTION);
-	}
+        //ObjectId peeledObjectId = repository.peel(tagSummary.getRef()).getPeeledObjectId();
+        //ObjectId taggedId = peeledObjectId==null?ref.getObjectId():peeledObjectId;
+        return evaluate(tagSummary.getTaggedObject(), GIT_OBJECT_SHORT_DESCRIPTION);
+    }
 
 
+    public static class TagSummary {
+        public final static Comparator<TagSummary> SORT_BY_TIME_AND_NAME = new Comparator<TagSummary>() {
+            public int compare(TagSummary t1, TagSummary t2) {
+                long timeDiff = t1.getTime() - t2.getTime();
+                if (timeDiff != 0) {
+                    return (int) timeDiff;
+                }
+                return t1.name.compareTo(t2.name);
+            }
+        };
 
-	public static class TagSummary {
-		public final static Comparator<TagSummary> SORT_BY_TIME_AND_NAME = new Comparator<TagSummary>() {
-			public int compare(TagSummary t1, TagSummary t2) {
-				long timeDiff = t1.getTime() - t2.getTime();
-				if (timeDiff!=0) {
-					return (int) timeDiff;
-				}
-				return t1.name.compareTo(t2.name);
-			}
-		};
-
-		private final String name;
-		private final Ref tagRef;
-		private final RevTag tagObject;
-		private final RevObject taggedObject;
+        private final String name;
+        private final Ref tagRef;
+        private final RevTag tagObject;
+        private final RevObject taggedObject;
         private final long time;
 
-		public TagSummary(Ref tagRef, RevTag tagObject, RevObject taggedObject, long time) {
-			this.tagRef = tagRef;
+        public TagSummary(Ref tagRef, RevTag tagObject, RevObject taggedObject, long time) {
+            this.tagRef = tagRef;
             this.time = time;
             name = shortenRefName(tagRef.getName());
-			this.tagObject = tagObject;
-			this.taggedObject = taggedObject;
-		}
-		
-		public CharSequence getName() {
-			return name;
-		}
-		
-		@Override
-		public String toString() {
-			return name;
-		}
+            this.tagObject = tagObject;
+            this.taggedObject = taggedObject;
+        }
 
-		public RevObject getTaggedObject() {
-			return taggedObject;
-		}
+        public CharSequence getName() {
+            return name;
+        }
 
-		public Ref getRef() {
-			return tagRef;
-		}
-		
-		public boolean isLightweight() {
-			return tagObject==null;
-		}
+        @Override
+        public String toString() {
+            return name;
+        }
 
-		public long getTime() {
+        public RevObject getTaggedObject() {
+            return taggedObject;
+        }
+
+        public Ref getRef() {
+            return tagRef;
+        }
+
+        public boolean isLightweight() {
+            return tagObject == null;
+        }
+
+        public long getTime() {
             return time;
         }
 
     }
 
-	
-	static GitObjectFunction.Base<String> GIT_OBJECT_SHORT_DESCRIPTION = new GitObjectFunction.Base<String>() {
-		public String apply(RevCommit commit) {
-			return "Commit: "+commit.abbreviate(4).name()+" "+commit.getShortMessage();
-		}
-		public String apply(RevTree tree) {
-			return "Tree: "+tree.abbreviate(4).name()+" "+tree;
-		}
-		public String applyDefault(RevObject revObject) {
-			return "...";
-		}
-	};
+
+    static GitObjectFunction.Base<String> GIT_OBJECT_SHORT_DESCRIPTION = new GitObjectFunction.Base<String>() {
+        public String apply(RevCommit commit) {
+            return "Commit: " + commit.abbreviate(4).name() + " " + commit.getShortMessage();
+        }
+
+        public String apply(RevTree tree) {
+            return "Tree: " + tree.abbreviate(4).name() + " " + tree;
+        }
+
+        public String applyDefault(RevObject revObject) {
+            return "...";
+        }
+    };
 
     private static class TagSummaryFactory implements Function<Ref, TagSummary> {
         private final RevWalk revWalk;
@@ -158,15 +168,22 @@ public class RDTTag extends RepoDomainType<TagSummary> {
             this.revWalk = revWalk;
         }
 
-        public GitObjectFunction<Long> gitObjectTime =  new GitObjectFunction<Long>() {
+        public GitObjectFunction<Long> gitObjectTime = new GitObjectFunction<Long>() {
             public Long apply(RevCommit commit) {
                 return (long) commit.getCommitTime();
             }
-            public Long apply(RevTree tree) { return 0L; }
-            public Long apply(RevBlob blob) { return 0L; }
+
+            public Long apply(RevTree tree) {
+                return 0L;
+            }
+
+            public Long apply(RevBlob blob) {
+                return 0L;
+            }
+
             public Long apply(RevTag tag) {
                 PersonIdent taggerIdent = tag.getTaggerIdent();
-                if (taggerIdent!=null) {
+                if (taggerIdent != null) {
                     return taggerIdent.getWhen().getTime();
                 }
 

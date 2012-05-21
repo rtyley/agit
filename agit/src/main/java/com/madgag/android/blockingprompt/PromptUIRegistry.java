@@ -21,20 +21,25 @@ package com.madgag.android.blockingprompt;
 
 import android.os.Handler;
 import android.util.Log;
+
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.madgag.agit.guice.RepositoryScoped;
 
 
 /*
-- ALL GATs for a single Repo should share the same PromptBroker, which blocks on showing a prompt until the current prompt has returned.
-- When the handler receives a prompt request, it needs to know if an RMA is currently displaying. If it is, then it can poke the RMA to display, otherwise show the notification.
-- When an RMA starts, it needs to be able to get a reference to the current data required by the BlockingPromptService, e.g. the ResponseInterface
-- When an RMA ends, it needs to be able to tell someone that it's died. (because the handler thing needs to be able to route display requests properly)
+- ALL GATs for a single Repo should share the same PromptBroker, which blocks on showing a prompt until the current
+prompt has returned.
+- When the handler receives a prompt request, it needs to know if an RMA is currently displaying. If it is,
+then it can poke the RMA to display, otherwise show the notification.
+- When an RMA starts, it needs to be able to get a reference to the current data required by the
+BlockingPromptService, e.g. the ResponseInterface
+- When an RMA ends, it needs to be able to tell someone that it's died. (because the handler thing needs to be able
+to route display requests properly)
 */
 @RepositoryScoped
 public class PromptUIRegistry {
-    
+
     private final PromptUI statusBarUI;
     private PromptUI activityPromptUI;
     private String TAG = "PromptUIRegistry";
@@ -48,7 +53,7 @@ public class PromptUIRegistry {
             PromptBroker promptBroker) {
         this.uiThreadHandler = uiThreadHandler;
         this.promptBroker = promptBroker;
-        Log.d(TAG,"uiThreadHandler="+uiThreadHandler);
+        Log.d(TAG, "uiThreadHandler=" + uiThreadHandler);
         this.statusBarUI = statusBarUI;
     }
 
@@ -62,15 +67,15 @@ public class PromptUIRegistry {
 
     private void uiThreadBroadcastOfPrompt() {
         PromptUI activeUI = activeUI();
-        Log.d(TAG, "Broadcasting to activeUI="+activeUI);
-        if (activeUI!= statusBarUI) {
+        Log.d(TAG, "Broadcasting to activeUI=" + activeUI);
+        if (activeUI != statusBarUI) {
             statusBarUI.clearPrompt();
         }
         activeUI.acceptPrompt(promptBroker);
     }
 
     private PromptUI activeUI() {
-        return activityPromptUI ==null? statusBarUI : activityPromptUI;
+        return activityPromptUI == null ? statusBarUI : activityPromptUI;
     }
 
     public void setActivityPromptUI(PromptUI activityPromptUI) {

@@ -19,58 +19,59 @@
 
 package com.madgag.agit.ssh.jsch;
 
-import android.util.Log;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.jcraft.jsch.UserInfo;
-import com.madgag.agit.guice.RepositoryScoped;
-import com.madgag.android.blockingprompt.BlockingPromptService;
-
 import static com.madgag.agit.operations.OpNotification.alert;
 import static com.madgag.agit.operations.OpPrompt.prompt;
 import static com.madgag.agit.operations.OpPrompt.promptYesOrNo;
+import android.util.Log;
+
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.jcraft.jsch.UserInfo;
+import com.madgag.android.blockingprompt.BlockingPromptService;
 
 public class GUIUserInfo implements UserInfo {
-	private final static String TAG="GUIUI";
-	
-	private final Provider<BlockingPromptService> blockingPrompt;
+    private final static String TAG = "GUIUI";
 
-	@Inject
-	public GUIUserInfo(Provider<BlockingPromptService> blockingPrompt) {
-		this.blockingPrompt = blockingPrompt;
-	}
-	
-	private String password, passphrase;
-	
-	public String getPassphrase() {
-		return passphrase;
-	}
+    private final Provider<BlockingPromptService> blockingPrompt;
 
-	public String getPassword() {
-		return password;
-	}
+    @Inject
+    public GUIUserInfo(Provider<BlockingPromptService> blockingPrompt) {
+        this.blockingPrompt = blockingPrompt;
+    }
 
-	public boolean promptPassphrase(String msg) {
-		Log.d(TAG, "promptPassphrase : "+msg);
-		passphrase = blockingPrompt.get().request(prompt(String.class, alert("Passphrase required", "Please enter your passphrase", msg)));
-		return passphrase!=null;
-	}
+    private String password, passphrase;
+
+    public String getPassphrase() {
+        return passphrase;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public boolean promptPassphrase(String msg) {
+        Log.d(TAG, "promptPassphrase : " + msg);
+        passphrase = blockingPrompt.get().request(prompt(String.class, alert("Passphrase required",
+                "Please enter your passphrase", msg)));
+        return passphrase != null;
+    }
 
 
     public boolean promptPassword(String msg) {
-		Log.d(TAG, "promptPassword : "+msg);
-		password = blockingPrompt.get().request(prompt(String.class, alert("Password required", "Please enter your password", msg)));
-        return password!=null;
-	}
+        Log.d(TAG, "promptPassword : " + msg);
+        password = blockingPrompt.get().request(prompt(String.class, alert("Password required",
+                "Please enter your password", msg)));
+        return password != null;
+    }
 
-	public boolean promptYesNo(String msg) {
-		Log.d(TAG, "promptYesNo : "+msg);
-		Boolean bool = blockingPrompt.get().request(promptYesOrNo(alert("SSH", msg)));
-		return bool!=null?bool:false;
-	}
-	
-	public void showMessage(String msg) {
-		Log.i(TAG, "Should show this: "+msg);
-	}
+    public boolean promptYesNo(String msg) {
+        Log.d(TAG, "promptYesNo : " + msg);
+        Boolean bool = blockingPrompt.get().request(promptYesOrNo(alert("SSH", msg)));
+        return bool != null ? bool : false;
+    }
+
+    public void showMessage(String msg) {
+        Log.i(TAG, "Should show this: " + msg);
+    }
 
 }

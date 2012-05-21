@@ -21,7 +21,7 @@ package com.madgag.android.blockingprompt;
 
 public interface PromptUI {
 
-	public void acceptPrompt(ResponseInterface responseInterface);
+    public void acceptPrompt(ResponseInterface responseInterface);
 
     public void clearPrompt();
 

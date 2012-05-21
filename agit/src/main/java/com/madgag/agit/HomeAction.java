@@ -1,12 +1,12 @@
 package com.madgag.agit;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
+
 import com.google.inject.Inject;
 import com.markupartist.android.widget.ActionBar;
-
-import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
 public class HomeAction implements ActionBar.Action {
     private final Activity activity;
@@ -25,5 +25,5 @@ public class HomeAction implements ActionBar.Action {
         intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
         activity.startActivity(intent);
     }
-    
+
 }

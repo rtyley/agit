@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent" android:paddingLeft="5dp"
-	android:orientation="vertical">
+              android:layout_width="fill_parent" android:layout_height="fill_parent" android:paddingLeft="5dp"
+              android:orientation="vertical">
 
-	<LinearLayout android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:orientation="vertical">
-		<TextView android:id="@+id/operation_description"
-			android:layout_width="fill_parent" android:textStyle="bold"
-			android:layout_height="wrap_content" android:layout_alignParentTop="true"
-			android:textColor="#000" />
-		<TextView android:id="@+id/operation_long_url"
-			android:layout_width="fill_parent" android:layout_height="wrap_content"
-            android:singleLine="true" android:ellipsize="middle"
-            android:textColor="#777"
-			android:layout_alignParentBottom="true" />
-	</LinearLayout>
-	<LinearLayout 
-		android:layout_width="fill_parent" android:layout_height="wrap_content" 
-		android:orientation="horizontal">
-		<ProgressBar
-            android:id="@+id/status_progress"
-            android:layout_weight="1"
-			android:layout_width="160dp"
-            android:layout_height="wrap_content"
-			style="?android:attr/progressBarStyleHorizontal"
-			android:progressDrawable="@android:drawable/progress_horizontal"
-			android:indeterminate="false"
-            android:indeterminateOnly="false"
-            android:paddingRight="5dp" />
-		<TextView
-            android:id="@+id/status_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:textColor="#000"
-            android:ellipsize="middle"
-            android:singleLine="true"
-			android:layout_below="@id/status_progress" />
-	</LinearLayout>
+    <LinearLayout android:layout_width="fill_parent"
+                  android:layout_height="wrap_content" android:orientation="vertical">
+        <TextView android:id="@+id/operation_description"
+                  android:layout_width="fill_parent" android:textStyle="bold"
+                  android:layout_height="wrap_content" android:layout_alignParentTop="true"
+                  android:textColor="#000"/>
+        <TextView android:id="@+id/operation_long_url"
+                  android:layout_width="fill_parent" android:layout_height="wrap_content"
+                  android:singleLine="true" android:ellipsize="middle"
+                  android:textColor="#777"
+                  android:layout_alignParentBottom="true"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="fill_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <ProgressBar
+                android:id="@+id/status_progress"
+                android:layout_weight="1"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:progressDrawable="@android:drawable/progress_horizontal"
+                android:indeterminate="false"
+                android:indeterminateOnly="false"
+                android:paddingRight="5dp"/>
+        <TextView
+                android:id="@+id/status_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:textColor="#000"
+                android:ellipsize="middle"
+                android:singleLine="true"
+                android:layout_below="@id/status_progress"/>
+    </LinearLayout>
 </LinearLayout>

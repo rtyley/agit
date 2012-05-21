@@ -1,6 +1,7 @@
 package com.madgag.agit.operation.lifecycle;
 
 import android.widget.RemoteViews;
+
 import com.madgag.agit.R;
 import com.madgag.agit.operations.Progress;
 import com.madgag.agit.operations.ProgressListener;
@@ -14,8 +15,8 @@ public class StatusBarProgressView implements ProgressListener<Progress> {
     }
 
     public void publish(Progress... values) {
-        Progress p = values[values.length-1];
+        Progress p = values[values.length - 1];
         view.setProgressBar(R.id.status_progress, p.totalWork, p.totalCompleted, p.isIndeterminate());
-		view.setTextViewText(R.id.status_text, p.msg);
+        view.setTextViewText(R.id.status_text, p.msg);
     }
 }

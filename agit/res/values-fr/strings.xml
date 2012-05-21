@@ -12,10 +12,18 @@
     <string name="clone_target_folder_label">Répertoire cible</string>
     <string name="clone_url_hint">Url du dépôt</string>
     <string name="clone_directory_hint">Copie de travail</string>
-    <string name="clone_readiness_needs_user_to_enter_a_url">Entrer l’Url d’un dépôt - ou choisissez à partir de quelques #suggest_repo[exemples].</string>
-    <string name="clone_readiness_folder_already_exists">Le répertoire existe déjà- #specify_target_dir[choisir un autre] endroit?</string>
-    <string name="clone_readiness_repository_folder_already_exists">Le répertoire existe déjà localement- voir #view_existing_repo[le dépôt existant]?</string>
-    <string name="ssh_agent_not_correctly_installed">Aucun SSH-agent disponible - voir #view_ssh_instructions[le guide d’installation SSH]?</string>
+    <string name="clone_readiness_needs_user_to_enter_a_url">Entrer l’Url d’un dépôt - ou choisissez à partir de
+        quelques #suggest_repo[exemples].
+    </string>
+    <string name="clone_readiness_folder_already_exists">Le répertoire existe déjà- #specify_target_dir[choisir un
+        autre] endroit?
+    </string>
+    <string name="clone_readiness_repository_folder_already_exists">Le répertoire existe déjà localement- voir
+        #view_existing_repo[le dépôt existant]?
+    </string>
+    <string name="ssh_agent_not_correctly_installed">Aucun SSH-agent disponible - voir #view_ssh_instructions[le guide
+        d’installation SSH]?
+    </string>
 
     <string name="repo_list_title">Dépôt locaux</string>
 
@@ -37,8 +45,8 @@
 
     <string name="clone_launcher_farewell_due_to_clone_launched">Clone démarré..!</string>
     <string name="object_id_copied">dans le presse-papier!</string>
-    <string name="ask_host_key_ok_ticker" >"Empreinte de la clé %1$s ..."</string>
-    <string name="ask_host_key_ok" >"Empreinte de la clé %1$s: %2$s OK?"</string>
+    <string name="ask_host_key_ok_ticker">"Empreinte de la clé %1$s ..."</string>
+    <string name="ask_host_key_ok">"Empreinte de la clé %1$s: %2$s OK?"</string>
 
     <string name="diff_seekbar_before">AVANT</string>
     <string name="diff_seekbar_after">APRÈS</string>

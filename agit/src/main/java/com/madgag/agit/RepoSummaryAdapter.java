@@ -1,20 +1,24 @@
 package com.madgag.agit;
 
+import static java.util.Arrays.asList;
 import android.view.View;
 import android.widget.AdapterView;
+
 import com.commonsware.cwac.sacklist.SackOfViewsAdapter;
 import com.google.inject.Inject;
-import com.madgag.agit.views.*;
-
-import static java.util.Arrays.asList;
+import com.madgag.agit.views.BranchesSummaryView;
+import com.madgag.agit.views.EnabledListItem;
+import com.madgag.agit.views.LatestCommitView;
+import com.madgag.agit.views.RemotesSummaryView;
+import com.madgag.agit.views.TagsSummaryView;
 
 public class RepoSummaryAdapter extends SackOfViewsAdapter {
     @Inject
-    RepoSummaryAdapter( LatestCommitView latestCommitView,
-                        RemotesSummaryView remotesSummaryView,
-                        BranchesSummaryView branchesSummaryView,
-                        TagsSummaryView tagsSummaryView) {
-        super(asList((View)remotesSummaryView,latestCommitView, branchesSummaryView, tagsSummaryView));
+    RepoSummaryAdapter(LatestCommitView latestCommitView,
+                       RemotesSummaryView remotesSummaryView,
+                       BranchesSummaryView branchesSummaryView,
+                       TagsSummaryView tagsSummaryView) {
+        super(asList((View) remotesSummaryView, latestCommitView, branchesSummaryView, tagsSummaryView));
     }
 
     @Override

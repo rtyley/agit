@@ -20,10 +20,11 @@
 package com.madgag.agit.diff;
 
 import android.util.Log;
-import org.eclipse.jgit.diff.DiffEntry;
 
 import java.io.IOException;
 import java.util.List;
+
+import org.eclipse.jgit.diff.DiffEntry;
 
 public class FileDiff {
     private static final String TAG = "FD";
@@ -32,23 +33,23 @@ public class FileDiff {
     private final DiffEntry diffEntry;
     private List<Hunk> hunks;
 
-    public FileDiff(LineContextDiffer lineContextDiffer,DiffEntry diffEntry) {
-		this.lineContextDiffer = lineContextDiffer;
-		this.diffEntry = diffEntry;
-	}
-	
-	public List<Hunk> getHunks() {
-        if (hunks==null) {
+    public FileDiff(LineContextDiffer lineContextDiffer, DiffEntry diffEntry) {
+        this.lineContextDiffer = lineContextDiffer;
+        this.diffEntry = diffEntry;
+    }
+
+    public List<Hunk> getHunks() {
+        if (hunks == null) {
             hunks = calculateHunks();
         }
-		return hunks;
-	}
+        return hunks;
+    }
 
     private List<Hunk> calculateHunks() {
         List<Hunk> h;
         try {
             h = lineContextDiffer.format(diffEntry);
-            Log.d(TAG, "Calculated "+h.size()+" hunks for "+diffEntry);
+            Log.d(TAG, "Calculated " + h.size() + " hunks for " + diffEntry);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -56,6 +57,6 @@ public class FileDiff {
     }
 
     public DiffEntry getDiffEntry() {
-		return diffEntry;
-	}
+        return diffEntry;
+    }
 }

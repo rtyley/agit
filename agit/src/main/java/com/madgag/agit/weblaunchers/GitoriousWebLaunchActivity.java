@@ -1,9 +1,8 @@
 package com.madgag.agit.weblaunchers;
 
+import static com.madgag.agit.CloneLauncherActivity.cloneLauncherIntentFor;
 import android.content.Intent;
 import android.net.Uri;
-
-import static com.madgag.agit.CloneLauncherActivity.cloneLauncherIntentFor;
 
 
 public class GitoriousWebLaunchActivity extends WebLaunchActivity {
@@ -12,6 +11,6 @@ public class GitoriousWebLaunchActivity extends WebLaunchActivity {
 
     Intent cloneLauncherForWebBrowseIntent(Uri uri) {
         // git://gitorious.org/yr-api/mainline.git
-        return cloneLauncherIntentFor("git://gitorious.org"+ uri.getPath() +".git");
+        return cloneLauncherIntentFor("git://gitorious.org" + uri.getPath() + ".git");
     }
 }

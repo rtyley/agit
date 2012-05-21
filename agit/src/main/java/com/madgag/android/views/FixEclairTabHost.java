@@ -17,7 +17,7 @@ public class FixEclairTabHost extends TabHost {
 
     @Override
     public void dispatchWindowFocusChanged(boolean hasFocus) {
-        if (getCurrentView()!=null) {
+        if (getCurrentView() != null) {
             super.dispatchWindowFocusChanged(hasFocus);
         }
     }

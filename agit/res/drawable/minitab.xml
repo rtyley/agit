@@ -16,25 +16,25 @@
 -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:state_pressed="true"
-        android:drawable="@drawable/minitab_pressed"
-        />
+            android:state_pressed="true"
+            android:drawable="@drawable/minitab_pressed"
+            />
     <item
-        android:state_selected="false"
-        android:state_focused="false"
-        android:state_pressed="false"
-        android:drawable="@drawable/minitab_unselected"
-        />
+            android:state_selected="false"
+            android:state_focused="false"
+            android:state_pressed="false"
+            android:drawable="@drawable/minitab_unselected"
+            />
     <item
-        android:state_selected="true"
-        android:state_focused="false"
-        android:state_pressed="false"
-        android:drawable="@drawable/minitab_default"
-        />
+            android:state_selected="true"
+            android:state_focused="false"
+            android:state_pressed="false"
+            android:drawable="@drawable/minitab_default"
+            />
     <item
-        android:state_focused="true"
-        android:state_selected="true"
-        android:state_pressed="false"
-        android:drawable="@drawable/minitab_selected"
-        />
+            android:state_focused="true"
+            android:state_selected="true"
+            android:state_pressed="false"
+            android:drawable="@drawable/minitab_selected"
+            />
 </selector>

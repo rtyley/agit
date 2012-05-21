@@ -1,8 +1,6 @@
 package com.madgag.android.jgit;
 
 import android.util.Log;
-import org.eclipse.jgit.lib.InflaterCache;
-import org.eclipse.jgit.lib.InflaterFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -10,29 +8,33 @@ import java.util.zip.DataFormatException;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.Inflater;
 
+import org.eclipse.jgit.lib.InflaterCache;
+import org.eclipse.jgit.lib.InflaterFactory;
+
 /**
  * This class is a fix for two separate issues with Android Inflater support:
- *
+ * <p/>
  * Inflater and the Zero-Byte Killer (pre-HoneyComb)
  * https://issues.apache.org/jira/browse/HARMONY-6637 - basically, Harmony JRE will not set finished()=true when you ask
  * it to inflate zero bytes of data, even if you are looking at a zero-length stream or just happened to have already
  * inflated exactly the amount of data you were already looking for. This causes problem for IndexPack.inflate() and
  * other Inflater-users.
- *
+ * <p/>
  * InflaterInputStream and This Is Not The End for my Inflater
  * https://github.com/rtyley/agit/issues/47 - Calling InflaterInputStream.close() on Oracle Java doesn't call end() on
  * its Inflater if you supplied the Inflater in the constructor - but Android, incorrectly, *does*. Inflaters can't be
  * used after end() has been called, which means you can't re-use Inflaters after using them with an InflaterInputStream
  * on Android - which is precisely what JGit tries to do with InflaterCache. This results in either NullPointerException
  * or IllegalStateException depending on what version of Android you're using.
- *
  */
 public class HarmonyFixInflater extends Inflater {
 
     public static final String TAG = "HFI";
-    
+
     public static final InflaterFactory HARMONY_FIX_FACTORY = new InflaterFactory() {
-        public Inflater create() { return new HarmonyFixInflater(); }
+        public Inflater create() {
+            return new HarmonyFixInflater();
+        }
 
         @Override
         public void decommision(Inflater inflater) {
@@ -45,7 +47,7 @@ public class HarmonyFixInflater extends Inflater {
     }
 
     public static boolean checkHarmoniousRepose() {
-        Inflater inflater=new Inflater();
+        Inflater inflater = new Inflater();
         try {
             inflater.setInput(demoDeflatedZeroBytes());
             inflater.inflate(new byte[0], 0, 0);
@@ -56,7 +58,7 @@ public class HarmonyFixInflater extends Inflater {
     }
 
     private static byte[] demoDeflatedZeroBytes() throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         DeflaterOutputStream deflaterOutputStream = new DeflaterOutputStream(byteArrayOutputStream);
         deflaterOutputStream.close();
         return byteArrayOutputStream.toByteArray();
@@ -101,13 +103,15 @@ public class HarmonyFixInflater extends Inflater {
     }
 
     public int inflate(byte[] b, int off, int len) throws DataFormatException {
-        if (len!=0) {
+        if (len != 0) {
             return super.inflate(b, off, len);
         }
 
-        int bytesInflated=super.inflate(oneByteArray, 0, 1); // have to pretend to want at least one byte so that the finished flag is correctly set
-        if (bytesInflated>0) {
-            throw new RuntimeException("The Harmony-Fix hack has served you ill, we were not supposed to read any data...");
+        int bytesInflated = super.inflate(oneByteArray, 0, 1); // have to pretend to want at least one byte so that
+        // the finished flag is correctly set
+        if (bytesInflated > 0) {
+            throw new RuntimeException("The Harmony-Fix hack has served you ill, we were not supposed to read any " +
+                    "data...");
         }
         return 0;
     }
@@ -149,7 +153,7 @@ public class HarmonyFixInflater extends Inflater {
     }
 
     private void decommision() {
-        Log.d(TAG,this+" - decommision(). See https://github.com/rtyley/agit/issues/47");
+        Log.d(TAG, this + " - decommision(). See https://github.com/rtyley/agit/issues/47");
         super.end();
     }
 }

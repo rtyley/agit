@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
     <RelativeLayout
             android:layout_width="fill_parent"
@@ -11,43 +11,43 @@
             android:padding="8dip"
             android:gravity="right">
         <Button
-            android:id="@+id/GoCloneButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Clone..."
-            android:gravity="center"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="8dip"
-            style="@style/BigButton"
-            android:drawableTop="@drawable/clone_picture"
-            android:onClick="startCloneLaunchActivity"/>
+                android:id="@+id/GoCloneButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Clone..."
+                android:gravity="center"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="8dip"
+                style="@style/BigButton"
+                android:drawableTop="@drawable/clone_picture"
+                android:onClick="startCloneLaunchActivity"/>
         <ImageView
-            android:id="@+id/dashboard_logo_iv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@id/GoCloneButton"
-            android:src="@drawable/agit_dashboard_logo" />
+                android:id="@+id/dashboard_logo_iv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@id/GoCloneButton"
+                android:src="@drawable/agit_dashboard_logo"/>
         <TextView
-            android:id="@+id/agit_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/GoCloneButton"
-            android:layout_alignParentLeft="true"
-            android:gravity="center"
-            android:textColor="#FFF"
-            android:shadowColor="#FF000000"
-            android:shadowDx="0"
-            android:shadowDy="1"
-            android:shadowRadius="0.2"
-            android:textSize="20dip"
-            android:layout_alignBottom="@id/GoCloneButton"
-            android:text="@string/app_strap" />
+                android:id="@+id/agit_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/GoCloneButton"
+                android:layout_alignParentLeft="true"
+                android:gravity="center"
+                android:textColor="#FFF"
+                android:shadowColor="#FF000000"
+                android:shadowDx="0"
+                android:shadowDy="1"
+                android:shadowRadius="0.2"
+                android:textSize="20dip"
+                android:layout_alignBottom="@id/GoCloneButton"
+                android:text="@string/app_strap"/>
     </RelativeLayout>
 
     <ListView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:cacheColorHint="#FFF"/>
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="#FFF"/>
 </LinearLayout>

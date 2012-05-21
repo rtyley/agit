@@ -19,14 +19,13 @@
 
 package com.madgag.agit.weblaunchers;
 
+import static com.madgag.agit.CloneLauncherActivity.cloneLauncherIntentFor;
+import static java.util.regex.Pattern.compile;
 import android.content.Intent;
 import android.net.Uri;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.madgag.agit.CloneLauncherActivity.cloneLauncherIntentFor;
-import static java.util.regex.Pattern.compile;
 
 
 public class GoogleCodeWebLaunchActivity extends WebLaunchActivity {
@@ -37,7 +36,7 @@ public class GoogleCodeWebLaunchActivity extends WebLaunchActivity {
         Matcher matcher = projectPathPattern.matcher(uri.getPath());
         matcher.find();
         // https://roberto.tyley@code.google.com/p/test-for-agit/
-        String sourceUri = "https://code.google.com"+matcher.group(); // Read-only while Agit is read-only
+        String sourceUri = "https://code.google.com" + matcher.group(); // Read-only while Agit is read-only
         return cloneLauncherIntentFor(sourceUri);
     }
 

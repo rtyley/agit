@@ -12,10 +12,18 @@
     <string name="clone_target_folder_label">Zielordner</string>
     <string name="clone_url_hint">Repository URL</string>
     <string name="clone_directory_hint">Ordner für den Checkout</string>
-    <string name="clone_readiness_needs_user_to_enter_a_url">Bitte Repository URL eingeben - oder hier auswählen #suggest_repo[Beispiele].</string>
-    <string name="clone_readiness_folder_already_exists">Ordner bereits vorhanden- #specify_target_dir[alternativer] Speicherplatz?</string>
-    <string name="clone_readiness_repository_folder_already_exists">Ordner existiert bereits lokal- Ansicht #view_existing_repo[existierendes Repository]?</string>
-    <string name="ssh_agent_not_correctly_installed">Kein SSH-Agent verfügbar- view #view_ssh_instructions[SSH Installationshilfe]?</string>
+    <string name="clone_readiness_needs_user_to_enter_a_url">Bitte Repository URL eingeben - oder hier auswählen
+        #suggest_repo[Beispiele].
+    </string>
+    <string name="clone_readiness_folder_already_exists">Ordner bereits vorhanden- #specify_target_dir[alternativer]
+        Speicherplatz?
+    </string>
+    <string name="clone_readiness_repository_folder_already_exists">Ordner existiert bereits lokal- Ansicht
+        #view_existing_repo[existierendes Repository]?
+    </string>
+    <string name="ssh_agent_not_correctly_installed">Kein SSH-Agent verfügbar- view #view_ssh_instructions[SSH
+        Installationshilfe]?
+    </string>
 
     <string name="repo_list_title">Lokale Repositories</string>
 
@@ -29,7 +37,7 @@
 
     <string name="latest_commit_title">Letzter Commit</string>
     <string name="empty_list">« leer »</string>
-    
+
     <string name="tag_name_label">Name:</string>
     <string name="tag_message_label">Nachricht (optional):</string>
     <string name="checkout_commit_menu_option">Checkout...</string>
@@ -38,8 +46,8 @@
     <string name="clone_launcher_farewell_due_to_clone_launched">Clone gestartet!</string>
     <string name="object_id_copied">In die Zwischenablage kopiert!</string>
 
-    <string name="ask_host_key_ok_ticker" >"SSH Fingerabdruck von Host %1$s..."</string>
-    <string name="ask_host_key_ok" >"Fingerabdruck des Schlüssels von %1$s: %2$s OK?"</string>
+    <string name="ask_host_key_ok_ticker">"SSH Fingerabdruck von Host %1$s..."</string>
+    <string name="ask_host_key_ok">"Fingerabdruck des Schlüssels von %1$s: %2$s OK?"</string>
 
     <string name="diff_seekbar_before">VORHER</string>
     <string name="diff_seekbar_after">NACHHER</string>

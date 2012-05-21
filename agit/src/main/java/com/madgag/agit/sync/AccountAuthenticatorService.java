@@ -1,6 +1,16 @@
 package com.madgag.agit.sync;
 
-import android.accounts.*;
+import static android.content.ContentResolver.setIsSyncable;
+import static android.content.ContentResolver.setSyncAutomatically;
+import static com.madgag.agit.sync.Constants.AGIT_ACCOUNT_NAME;
+import static com.madgag.agit.sync.Constants.AGIT_ACCOUNT_TYPE;
+import static com.madgag.agit.sync.Constants.AGIT_PROVIDER_AUTHORITY;
+import static com.madgag.agit.sync.Constants.AUTHTOKEN_TYPE;
+import android.accounts.AbstractAccountAuthenticator;
+import android.accounts.Account;
+import android.accounts.AccountAuthenticatorResponse;
+import android.accounts.AccountManager;
+import android.accounts.NetworkErrorException;
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -11,10 +21,6 @@ import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import static android.content.ContentResolver.setIsSyncable;
-import static android.content.ContentResolver.setSyncAutomatically;
-import static com.madgag.agit.sync.Constants.*;
 
 /**
  * Authenticator service that returns a subclass of AbstractAccountAuthenticator in onBind()
@@ -27,12 +33,14 @@ public class AccountAuthenticatorService extends Service {
 
     static {
         initCompatibility();
-    };
+    }
+
+    ;
 
     private static void initCompatibility() {
         try {
             methodContentResolver_addPeriodicSync = ContentResolver.class.getMethod(
-                    "addPeriodicSync", new Class[] { Account.class, String.class, Bundle.class, Long.TYPE } );
+                    "addPeriodicSync", new Class[] { Account.class, String.class, Bundle.class, Long.TYPE });
         } catch (NoSuchMethodException nsme) {
             Log.w(TAG, "Periodic sync not available - addPeriodicSync() method not found.", nsme);
         }
@@ -76,11 +84,12 @@ public class AccountAuthenticatorService extends Service {
     }
 
     private static void addPeriodicSyncIfSupported(Account account, long pollPeriodInSeconds) {
-        if (methodContentResolver_addPeriodicSync==null) {
+        if (methodContentResolver_addPeriodicSync == null) {
             return;
         }
         try {
-            methodContentResolver_addPeriodicSync.invoke(null, account, AGIT_PROVIDER_AUTHORITY, new Bundle(), pollPeriodInSeconds);
+            methodContentResolver_addPeriodicSync.invoke(null, account, AGIT_PROVIDER_AUTHORITY, new Bundle(),
+                    pollPeriodInSeconds);
         } catch (InvocationTargetException ite) {
             /* unpack original exception when possible */
             Throwable cause = ite.getCause();
@@ -93,7 +102,7 @@ public class AccountAuthenticatorService extends Service {
                 throw new RuntimeException(ite);
             }
         } catch (IllegalAccessException ie) {
-            Log.e(TAG,"Unexpected exception adding periodic sync",ie);
+            Log.e(TAG, "Unexpected exception adding periodic sync", ie);
         }
     }
 
@@ -107,13 +116,15 @@ public class AccountAuthenticatorService extends Service {
 
 
         /*
-        *  The user has requested to add a new account to the system.  We return an intent that will launch our login screen if the user has not logged in yet,
+        *  The user has requested to add a new account to the system.  We return an intent that will launch our login
+         *  screen if the user has not logged in yet,
         *  otherwise our activity will just pass the user's credentials on to the account manager.
         */
         @Override
-        public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options)
+        public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType,
+                                 String[] requiredFeatures, Bundle options)
                 throws NetworkErrorException {
-            Log.d(TAG,"addAccount "+accountType+" authTokenType="+authTokenType);
+            Log.d(TAG, "addAccount " + accountType + " authTokenType=" + authTokenType);
             return null;
         }
 
@@ -128,7 +139,8 @@ public class AccountAuthenticatorService extends Service {
         }
 
         @Override
-        public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws NetworkErrorException {
+        public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account, String authTokenType,
+                                   Bundle options) throws NetworkErrorException {
             return null;
         }
 
@@ -141,7 +153,8 @@ public class AccountAuthenticatorService extends Service {
         }
 
         @Override
-        public Bundle hasFeatures(AccountAuthenticatorResponse response, Account account, String[] features) throws NetworkErrorException {
+        public Bundle hasFeatures(AccountAuthenticatorResponse response, Account account,
+                                  String[] features) throws NetworkErrorException {
             final Bundle result = new Bundle();
             result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, false);
             return result;

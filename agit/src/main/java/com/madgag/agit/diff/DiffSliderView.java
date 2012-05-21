@@ -19,6 +19,14 @@
 
 package com.madgag.agit.diff;
 
+import static android.content.Context.VIBRATOR_SERVICE;
+import static android.graphics.Typeface.BOLD;
+import static android.graphics.Typeface.create;
+import static android.view.Gravity.CENTER;
+import static com.madgag.agit.R.id.DiffPlayerSeekBar;
+import static com.madgag.agit.R.id.afterText;
+import static com.madgag.agit.R.id.beforeText;
+import static com.madgag.agit.R.layout.diff_seekbar_view;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Vibrator;
@@ -30,86 +38,84 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-import static android.content.Context.VIBRATOR_SERVICE;
-import static android.graphics.Typeface.BOLD;
-import static android.graphics.Typeface.create;
-import static android.view.Gravity.CENTER;
-import static com.madgag.agit.R.id.*;
-import static com.madgag.agit.R.layout.diff_seekbar_view;
-
 public class DiffSliderView extends LinearLayout {
 
-    private String TAG="DSV";
+    private String TAG = "DSV";
 
     public static interface OnStateUpdateListener {
-		void onStateChanged (DiffSliderView diffSliderView, float state);
-	}
-	
-	private OnStateUpdateListener stateUpdateListener;
-	private final TextView beforeTextView,afterTextView;
+        void onStateChanged(DiffSliderView diffSliderView, float state);
+    }
+
+    private OnStateUpdateListener stateUpdateListener;
+    private final TextView beforeTextView, afterTextView;
     private final Typeface defaultTypeface, boldTypeFace;
-	public DiffSliderView(Context context, AttributeSet attrs) {
-		super(context, attrs);
+
+    public DiffSliderView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         setOrientation(HORIZONTAL);
         setGravity(CENTER);
-		LayoutInflater.from(context).inflate(diff_seekbar_view, this);
+        LayoutInflater.from(context).inflate(diff_seekbar_view, this);
 
         beforeTextView = (TextView) findViewById(beforeText);
         afterTextView = (TextView) findViewById(afterText);
         defaultTypeface = beforeTextView.getTypeface();
         boldTypeFace = create(defaultTypeface, BOLD);
 
-		SeekBar seekBar = (SeekBar) findViewById(DiffPlayerSeekBar);
-		DiffSeekBarChangeListener foo = new DiffSeekBarChangeListener((Vibrator) context.getSystemService(VIBRATOR_SERVICE));
-		seekBar.setOnSeekBarChangeListener(foo);
-		seekBar.setProgress(seekBar.getMax()/2);//This should correctly set the thumb to the middle in the diffview on open
-	}
+        SeekBar seekBar = (SeekBar) findViewById(DiffPlayerSeekBar);
+        DiffSeekBarChangeListener foo = new DiffSeekBarChangeListener((Vibrator) context.getSystemService
+                (VIBRATOR_SERVICE));
+        seekBar.setOnSeekBarChangeListener(foo);
+        seekBar.setProgress(seekBar.getMax() / 2);//This should correctly set the thumb to the middle in the diffview
+        // on open
+    }
 
-	public void setStateUpdateListener(OnStateUpdateListener stateUpdateListener) {
-		this.stateUpdateListener=stateUpdateListener;
-	}
-	
+    public void setStateUpdateListener(OnStateUpdateListener stateUpdateListener) {
+        this.stateUpdateListener = stateUpdateListener;
+    }
 
-	class DiffSeekBarChangeListener implements OnSeekBarChangeListener {
-		private final Vibrator vibrator;
-		
-		public DiffSeekBarChangeListener(Vibrator vibrator) {
-			this.vibrator = vibrator;
-		}
-		
-		public void onStopTrackingTouch(SeekBar seekBar) {
-			// TODO - should we animate this movement?
-			int sector=(int) (unitProgress(seekBar)*3); // 0 ,1 ,2
-			int progress= (sector * seekBar.getMax()) / 2;
-			seekBar.setProgress(progress);
-		}
 
-		public void onStartTrackingTouch(SeekBar seekBar) {}
+    class DiffSeekBarChangeListener implements OnSeekBarChangeListener {
+        private final Vibrator vibrator;
 
-		public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            boolean before=progress==0, after=seekBar.getMax()==progress, middle = seekBar.getMax()/2==progress;
-			if (before || after || middle) {
-				vibrator.vibrate(17);
-			}
+        public DiffSeekBarChangeListener(Vibrator vibrator) {
+            this.vibrator = vibrator;
+        }
+
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            // TODO - should we animate this movement?
+            int sector = (int) (unitProgress(seekBar) * 3); // 0 ,1 ,2
+            int progress = (sector * seekBar.getMax()) / 2;
+            seekBar.setProgress(progress);
+        }
+
+        public void onStartTrackingTouch(SeekBar seekBar) {
+        }
+
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            boolean before = progress == 0, after = seekBar.getMax() == progress, middle = seekBar.getMax() / 2 ==
+                    progress;
+            if (before || after || middle) {
+                vibrator.vibrate(17);
+            }
             // sadly makes the damn seekbar wiggle
 //            beforeTextView.setTypeface(before?boldTypeFace:defaultTypeface);
 //            afterTextView.setTypeface(after?boldTypeFace:defaultTypeface);
-	        float unitProgress = unitProgress(seekBar);
+            float unitProgress = unitProgress(seekBar);
 
-			notifyTheOthers(unitProgress);
-			
-		}
+            notifyTheOthers(unitProgress);
+
+        }
 
 
-		private float unitProgress(SeekBar seekBar) {
-			return ((float)seekBar.getProgress())/seekBar.getMax();
-		}
-	}
+        private float unitProgress(SeekBar seekBar) {
+            return ((float) seekBar.getProgress()) / seekBar.getMax();
+        }
+    }
 
-	private void notifyTheOthers(float unitProgress) {
-        Log.d(TAG, "notifyTheOthers stateUpdateListener="+stateUpdateListener);
-		if (stateUpdateListener!=null) {
-			stateUpdateListener.onStateChanged(this, unitProgress);
-		}
-	}
+    private void notifyTheOthers(float unitProgress) {
+        Log.d(TAG, "notifyTheOthers stateUpdateListener=" + stateUpdateListener);
+        if (stateUpdateListener != null) {
+            stateUpdateListener.onStateChanged(this, unitProgress);
+        }
+    }
 }

@@ -2,11 +2,12 @@ package com.madgag.agit;
 
 import android.view.View;
 import android.widget.TextView;
+
 import com.madgag.agit.git.model.RepoDomainType;
 import com.madgag.android.listviews.ViewHolder;
 
 public class RDTypeInstanceViewHolder<B> implements ViewHolder<B> {
-    private final TextView title,detail;
+    private final TextView title, detail;
     private final RepoDomainType<B> rdt;
 
     public RDTypeInstanceViewHolder(RepoDomainType<B> rdt, View v) {

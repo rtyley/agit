@@ -19,17 +19,17 @@
 
 package com.madgag.agit;
 
+import static com.google.common.collect.Lists.newArrayList;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+
 import com.madgag.android.listviews.ViewCreator;
 import com.madgag.android.listviews.ViewFactory;
 import com.madgag.android.listviews.ViewHolderFactory;
 
 import java.util.Iterator;
 import java.util.List;
-
-import static com.google.common.collect.Lists.newArrayList;
 
 public class ViewHoldingIterableAdapter<T> extends BaseAdapter {
 
@@ -42,31 +42,31 @@ public class ViewHoldingIterableAdapter<T> extends BaseAdapter {
     public ViewHoldingIterableAdapter(Iterator<T> itemIterator, ViewFactory<T> viewFactory) {
         this.itemIterator = itemIterator;
         this.viewFactory = viewFactory;
-        fetchMoreData(BUFFER_SIZE*2);
+        fetchMoreData(BUFFER_SIZE * 2);
     }
 
     public static <T> ViewHoldingIterableAdapter<T> create(
             Iterator<T> itemIterator,
             ViewCreator c,
             ViewHolderFactory<T> vhf) {
-        return new ViewHoldingIterableAdapter<T>(itemIterator, new ViewFactory<T>(c,vhf));
+        return new ViewHoldingIterableAdapter<T>(itemIterator, new ViewFactory<T>(c, vhf));
     }
 
-	@Override
-	public boolean hasStableIds() {
-		return true;
-	}
+    @Override
+    public boolean hasStableIds() {
+        return true;
+    }
 
-	public int getCount() {
-		return itemList.size();
-	}
+    public int getCount() {
+        return itemList.size();
+    }
 
-	public T getItem(int index) {
+    public T getItem(int index) {
         if (index + BUFFER_SIZE > itemList.size() && itemIterator.hasNext()) {
-            fetchMoreData(index + (BUFFER_SIZE*2));
+            fetchMoreData(index + (BUFFER_SIZE * 2));
         }
-		return itemList.get(index);
-	}
+        return itemList.get(index);
+    }
 
     private void fetchMoreData(int targetBufferEnd) {
         while (itemIterator.hasNext() && targetBufferEnd > itemList.size()) {
@@ -76,10 +76,10 @@ public class ViewHoldingIterableAdapter<T> extends BaseAdapter {
     }
 
     public long getItemId(int i) {
-		return getItem(i).hashCode();
-	}
-	
-	public View getView(int index, View view, ViewGroup parent) {
+        return getItem(i).hashCode();
+    }
+
+    public View getView(int index, View view, ViewGroup parent) {
         return viewFactory.getView(view, getItem(index));
-	}
+    }
 }

@@ -19,14 +19,29 @@
 
 package com.madgag.agit.git;
 
+import static android.os.Environment.getExternalStorageDirectory;
+import static com.google.common.collect.Lists.newArrayList;
+import static java.lang.System.identityHashCode;
+import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
+import static org.eclipse.jgit.lib.Constants.DOT_GIT;
+import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
+import static org.eclipse.jgit.lib.Constants.R_HEADS;
+import static org.eclipse.jgit.lib.Constants.R_REMOTES;
+import static org.eclipse.jgit.storage.file.WindowCacheConfig.MB;
 import android.util.Log;
+
 import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
 import com.madgag.agit.git.model.HasLatestCommit;
 import com.madgag.agit.operations.Fetch;
 import com.madgag.agit.operations.GitOperation;
 import com.madgag.agit.operations.Pull;
-import org.eclipse.jgit.ignore.IgnoreNode;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.List;
+
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.lib.RepositoryCache.FileKey;
@@ -38,17 +53,6 @@ import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.util.FS;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.List;
-
-import static android.os.Environment.getExternalStorageDirectory;
-import static com.google.common.collect.Lists.newArrayList;
-import static java.lang.System.identityHashCode;
-import static org.eclipse.jgit.lib.Constants.*;
-import static org.eclipse.jgit.storage.file.WindowCacheConfig.MB;
 
 public class Repos {
 
@@ -63,34 +67,34 @@ public class Repos {
         WindowCache.reconfigure(cfg);
     }
 
-	public static List<File> knownRepos() {
-		File reposDir = new File(getExternalStorageDirectory(),"git-repos");
-		if (!reposDir.exists() && !reposDir.mkdirs()) {
-			throw new IllegalStateException("Can't find or create the default it repos dir : "+reposDir);
-		}
+    public static List<File> knownRepos() {
+        File reposDir = new File(getExternalStorageDirectory(), "git-repos");
+        if (!reposDir.exists() && !reposDir.mkdirs()) {
+            throw new IllegalStateException("Can't find or create the default it repos dir : " + reposDir);
+        }
         List<File> repos = newArrayList();
-		for (File repoDir : reposDir.listFiles()) {
+        for (File repoDir : reposDir.listFiles()) {
             File gitdir = RepositoryCache.FileKey.resolve(repoDir, FS.detect());
-			if (gitdir!=null) {
-				repos.add(gitdir);
-			}
-		}
-        Log.d(TAG, "Found "+repos.size()+" repos in "+reposDir);
-		return repos;
-	}
+            if (gitdir != null) {
+                repos.add(gitdir);
+            }
+        }
+        Log.d(TAG, "Found " + repos.size() + " repos in " + reposDir);
+        return repos;
+    }
 
-	public static Repository openRepoFor(File gitdir) {
-		try {
-			Repository repo = RepositoryCache.open(FileKey.lenient(gitdir, FS.DETECTED),false);
-			Log.d("REPO", "Opened "+describe(repo));
-			return repo;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+    public static Repository openRepoFor(File gitdir) {
+        try {
+            Repository repo = RepositoryCache.open(FileKey.lenient(gitdir, FS.DETECTED), false);
+            Log.d("REPO", "Opened " + describe(repo));
+            return repo;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static String niceNameFor(File gitdir) {
-        return niceNameFromNameDirectory(gitdir.getName().equals(DOT_GIT)?gitdir.getParentFile():gitdir);
+        return niceNameFromNameDirectory(gitdir.getName().equals(DOT_GIT) ? gitdir.getParentFile() : gitdir);
     }
 
     public static String niceNameFor(Repository repo) {
@@ -98,52 +102,52 @@ public class Repos {
     }
 
     public static File topDirectoryFor(Repository repo) {
-        return repo.isBare()? repo.getDirectory(): repo.getWorkTree();
+        return repo.isBare() ? repo.getDirectory() : repo.getWorkTree();
     }
 
     private static String niceNameFromNameDirectory(File directoryWithName) {
         String name = directoryWithName.getName();
         if (name.endsWith(DOT_GIT_EXT)) {
-            name=name.substring(0, name.length()-DOT_GIT_EXT.length());
+            name = name.substring(0, name.length() - DOT_GIT_EXT.length());
         }
         return name;
     }
 
     public static String describe(Repository repository) {
-		return repository+" #"+identityHashCode(repository);
-	}
+        return repository + " #" + identityHashCode(repository);
+    }
 
-	public static GitOperation refreshOperationFor(Repository repository) {
-		return repository.isBare()?new Fetch(repository,DEFAULT_REMOTE_NAME):new Pull(repository);
-	}
+    public static GitOperation refreshOperationFor(Repository repository) {
+        return repository.isBare() ? new Fetch(repository, DEFAULT_REMOTE_NAME) : new Pull(repository);
+    }
 
 
-	public static RemoteConfig remoteConfigFor(Repository repository, String remoteName) {
-		try {
-			return new RemoteConfig(repository.getConfig(), remoteName);
-		} catch (Exception e) {
-			throw new RuntimeException("Couldn't parse config for "+remoteName , e);
-		}
-	}
+    public static RemoteConfig remoteConfigFor(Repository repository, String remoteName) {
+        try {
+            return new RemoteConfig(repository.getConfig(), remoteName);
+        } catch (Exception e) {
+            throw new RuntimeException("Couldn't parse config for " + remoteName, e);
+        }
+    }
 
-	public static URIish uriForRemote(Repository repository, String remoteName) {
-		RemoteConfig remoteConfig = remoteConfigFor(repository, remoteName);
-		if (doesNotExist(remoteConfig)) {
-			try {
-				return new URIish(remoteName);
-			} catch (URISyntaxException e) {
-				throw new RuntimeException("Couldn't parse uri "+remoteName, e);
-			}
-		}
-		return remoteConfig.getURIs().get(0);
-	}
+    public static URIish uriForRemote(Repository repository, String remoteName) {
+        RemoteConfig remoteConfig = remoteConfigFor(repository, remoteName);
+        if (doesNotExist(remoteConfig)) {
+            try {
+                return new URIish(remoteName);
+            } catch (URISyntaxException e) {
+                throw new RuntimeException("Couldn't parse uri " + remoteName, e);
+            }
+        }
+        return remoteConfig.getURIs().get(0);
+    }
 
-	private static boolean doesNotExist(RemoteConfig cfg) {
-		return cfg.getURIs().isEmpty() && cfg.getPushURIs().isEmpty();
-	}
+    private static boolean doesNotExist(RemoteConfig cfg) {
+        return cfg.getURIs().isEmpty() && cfg.getPushURIs().isEmpty();
+    }
 
-	public static RemoteConfig addRemoteTo(Repository repository, String remoteName, URIish sourceUri)
-			throws IOException {
+    public static RemoteConfig addRemoteTo(Repository repository, String remoteName, URIish sourceUri)
+            throws IOException {
         StoredConfig config = repository.getConfig();
         RemoteConfig remote;
         try {
@@ -158,20 +162,20 @@ public class Repos {
                         R_REMOTES + remoteName + "/*"));
         remote.update(config);
 
-		Log.d(TAG, "About to save config...");
-		repository.getConfig().save();
-		return remote;
-	}
+        Log.d(TAG, "About to save config...");
+        repository.getConfig().save();
+        return remote;
+    }
 
     public final static Function<RevCommit, Integer> COMMIT_TIME = new Function<RevCommit, Integer>() {
         public Integer apply(RevCommit commit) {
-            return commit==null?0:commit.getCommitTime();
+            return commit == null ? 0 : commit.getCommitTime();
         }
     };
 
     public final static Function<HasLatestCommit, RevCommit> LATEST_COMMIT = new Function<HasLatestCommit, RevCommit>() {
         public RevCommit apply(HasLatestCommit branch) {
-            return branch==null?null:branch.getLatestCommit();
+            return branch == null ? null : branch.getLatestCommit();
         }
     };
 

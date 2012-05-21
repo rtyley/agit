@@ -1,22 +1,24 @@
 package com.madgag.agit.diff;
 
 import android.util.Log;
-import name.fraser.neil.plaintext.StandardBreakScorer;
-import name.fraser.neil.plaintext.diff_match_patch;
 
 import java.util.LinkedList;
+
+import name.fraser.neil.plaintext.StandardBreakScorer;
+import name.fraser.neil.plaintext.diff_match_patch;
 
 /**
  * A 'hunk' is a diff chunk that includes context lines around one or more edits.
  */
 public class Hunk {
     public static final String TAG = "HUNK";
-    
+
     public final String before, after;
     private LinkedList<diff_match_patch.Diff> diffs;
 
     public Hunk(String before, String after) {
-        this.before=before;this.after=after;
+        this.before = before;
+        this.after = after;
     }
 
     public LinkedList<diff_match_patch.Diff> diffs() {

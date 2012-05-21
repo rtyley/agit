@@ -11,10 +11,18 @@
     <string name="clone_target_folder_label">Folder docelowy</string>
     <string name="clone_url_hint">Adres repozytorium</string>
     <string name="clone_directory_hint">Folder, w którym zostanie zapisane repozytorium</string>
-    <string name="clone_readiness_needs_user_to_enter_a_url">Podaj adres repozytorium - lub wybierz jedno z #suggest_repo[przykładowych].</string>
-    <string name="clone_readiness_folder_already_exists">Folder już istnieje - czy chcesz #specify_target_dir[określić alternatywną] lokalizację?</string>
-    <string name="clone_readiness_repository_folder_already_exists">Folder istnieje lokalnie - czy chcesz zobaczyć #view_existing_repo[istniejące repozytorium]?</string>
-    <string name="ssh_agent_not_correctly_installed">Niedostępny żaden klient SSH - sprawdź #view_ssh_instructions[podręcznik instalacji SSH]</string>
+    <string name="clone_readiness_needs_user_to_enter_a_url">Podaj adres repozytorium - lub wybierz jedno z
+        #suggest_repo[przykładowych].
+    </string>
+    <string name="clone_readiness_folder_already_exists">Folder już istnieje - czy chcesz #specify_target_dir[określić
+        alternatywną] lokalizację?
+    </string>
+    <string name="clone_readiness_repository_folder_already_exists">Folder istnieje lokalnie - czy chcesz zobaczyć
+        #view_existing_repo[istniejące repozytorium]?
+    </string>
+    <string name="ssh_agent_not_correctly_installed">Niedostępny żaden klient SSH - sprawdź
+        #view_ssh_instructions[podręcznik instalacji SSH]
+    </string>
 
     <string name="repo_list_title">Repozytoria lokalne</string>
 
@@ -35,10 +43,18 @@
     <string name="tag_commit_menu_option">Tag...</string>
 
     <string name="clone_launcher_farewell_due_to_clone_launched">Klonowanie rozpoczęte!</string>
-    <string name="object_id_copied">Obiekt o id<br /><small><b><tt>%s</tt></b></small><br />skopiowany do schowka!</string>
+    <string name="object_id_copied">Obiekt o id
+        <br/>
+        <small>
+            <b>
+                <tt>%s</tt>
+            </b>
+        </small>
+        <br/>skopiowany do schowka!
+    </string>
 
-    <string name="ask_host_key_ok_ticker" >"Odcisk klucza SSH z hosta %1$s..."</string>
-	<string name="ask_host_key_ok" >"%1$s ma odcisk klucza SSH: %2$s OK?"</string>
+    <string name="ask_host_key_ok_ticker">"Odcisk klucza SSH z hosta %1$s..."</string>
+    <string name="ask_host_key_ok">"%1$s ma odcisk klucza SSH: %2$s OK?"</string>
 
     <string name="diff_seekbar_before">PRZED</string>
     <string name="diff_seekbar_after">PO</string>

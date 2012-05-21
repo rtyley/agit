@@ -19,70 +19,80 @@
 
 package com.madgag.agit.operations;
 
+import static android.R.drawable.stat_sys_download;
+import static android.R.drawable.stat_sys_download_done;
+import static com.madgag.agit.R.string.missing_configuration_for_key;
+import static com.madgag.agit.R.string.pull_cancelled;
+import static com.madgag.agit.operations.JGitAPIExceptions.exceptionWithFriendlyMessageFor;
+import static org.eclipse.jgit.lib.ConfigConstants.CONFIG_BRANCH_SECTION;
+import static org.eclipse.jgit.lib.ConfigConstants.CONFIG_KEY_REBASE;
+import static org.eclipse.jgit.lib.Constants.R_HEADS;
 import android.content.Context;
+
 import com.google.inject.Inject;
 import com.madgag.agit.R;
-import org.eclipse.jgit.JGitText;
-import org.eclipse.jgit.api.*;
-import org.eclipse.jgit.api.errors.*;
-import org.eclipse.jgit.lib.*;
-import org.eclipse.jgit.transport.CredentialsProvider;
-import org.eclipse.jgit.transport.FetchResult;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 
-import static android.R.drawable.stat_sys_download;
-import static android.R.drawable.stat_sys_download_done;
-import static com.google.common.collect.Lists.newArrayList;
-import static com.madgag.agit.R.string.*;
-import static com.madgag.agit.operations.JGitAPIExceptions.exceptionWithFriendlyMessageFor;
-import static org.eclipse.jgit.lib.ConfigConstants.*;
-import static org.eclipse.jgit.lib.ConfigConstants.CONFIG_KEY_REBASE;
-import static org.eclipse.jgit.lib.Constants.R_HEADS;
+import org.eclipse.jgit.JGitText;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.TransportConfigCallback;
+import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.eclipse.jgit.lib.AnyObjectId;
+import org.eclipse.jgit.lib.Config;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.FetchResult;
 
 public class Pull extends GitOperation {
 
-	public static final String TAG = "Pull";
+    public static final String TAG = "Pull";
     private final Repository repo;
 
-	@Inject Git git;
-    @Inject MessagingProgressMonitor messagingProgressMonitor;
-	@Inject CredentialsProvider credentialsProvider;
-	@Inject	TransportConfigCallback transportConfigCallback;
-    @Inject Context context;
+    @Inject
+    Git git;
+    @Inject
+    MessagingProgressMonitor messagingProgressMonitor;
+    @Inject
+    CredentialsProvider credentialsProvider;
+    @Inject
+    TransportConfigCallback transportConfigCallback;
+    @Inject
+    Context context;
 
     public Pull(Repository repository) {
         super(repository.getDirectory());
         this.repo = repository;
     }
 
-	public int getOngoingIcon() {
-		return stat_sys_download;
-	}
+    public int getOngoingIcon() {
+        return stat_sys_download;
+    }
 
-	public String getTickerText() {
-		return "Pulling!";
-	}
+    public String getTickerText() {
+        return "Pulling!";
+    }
 
-    
+
     public RuntimeException exceptionMessage(int resId, java.lang.Object... formatArgs) {
         return new RuntimeException(context.getString(resId, formatArgs));
     }
 
-	public OpNotification execute() {
-		try {
-			git.pull().setProgressMonitor(messagingProgressMonitor)
-				.setTransportConfigCallback(transportConfigCallback)
-				.setCredentialsProvider(credentialsProvider)
-				.call();
-		} catch (Exception e) {
-			throw exceptionWithFriendlyMessageFor(e);
-		}
+    public OpNotification execute() {
+        try {
+            git.pull().setProgressMonitor(messagingProgressMonitor)
+                    .setTransportConfigCallback(transportConfigCallback)
+                    .setCredentialsProvider(credentialsProvider)
+                    .call();
+        } catch (Exception e) {
+            throw exceptionWithFriendlyMessageFor(e);
+        }
 
 
-        return new OpNotification(stat_sys_download_done,"Pull complete", "Pulled");
+        return new OpNotification(stat_sys_download_done, "Pull complete", "Pulled");
     }
 
     private AnyObjectId commitToMergeFor(FetchResult fetchRes, String remoteBranchName, boolean remote) {
@@ -134,22 +144,22 @@ public class Pull extends GitOperation {
     }
 
     public String getName() {
-		return "Pull";
-	}
+        return "Pull";
+    }
 
-	public String getDescription() {
-		return "Pulling!";
-	}
+    public String getDescription() {
+        return "Pulling!";
+    }
 
-	public CharSequence getUrl() {
-		return "Arrgg";
-	}
+    public CharSequence getUrl() {
+        return "Arrgg";
+    }
 
-	public String getShortDescription() {
-		return "Pulling";
-	}
+    public String getShortDescription() {
+        return "Pulling";
+    }
 
-	public File getGitDir() {
-		return repo.getDirectory();
-	}
+    public File getGitDir() {
+        return repo.getDirectory();
+    }
 }

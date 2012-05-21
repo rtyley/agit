@@ -10,9 +10,9 @@
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:text="@string/latest_commit_title"/>
-	<com.madgag.agit.views.PrettyCommitSummaryView
-         android:id="@+id/latest_commit"
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content"
-         android:padding="20dip" />
+    <com.madgag.agit.views.PrettyCommitSummaryView
+            android:id="@+id/latest_commit"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dip"/>
 </LinearLayout>

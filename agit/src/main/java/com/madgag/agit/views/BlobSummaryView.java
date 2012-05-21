@@ -19,23 +19,23 @@
 
 package com.madgag.agit.views;
 
-import android.view.View;
-import android.widget.TextView;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevBlob;
-
-import java.io.IOException;
-
 import static com.madgag.agit.R.drawable.blob_icon;
 import static com.madgag.agit.R.id.blob_size;
 import static com.madgag.agit.R.layout.osv_blob_summary_view;
+import android.view.View;
+import android.widget.TextView;
+
+import java.io.IOException;
+
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevBlob;
 
 public class BlobSummaryView extends OSV<RevBlob> {
 
-	public void setObject(RevBlob blob, View view, Repository repo) {
+    public void setObject(RevBlob blob, View view, Repository repo) {
         try {
             long size = repo.open(blob).getSize();
-            ((TextView)view.findViewById(blob_size)).setText(size+" bytes");
+            ((TextView) view.findViewById(blob_size)).setText(size + " bytes");
         } catch (IOException e) {
             e.printStackTrace();
         }

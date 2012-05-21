@@ -19,38 +19,43 @@
 
 package com.madgag.agit.sync;
 
+import static com.madgag.agit.git.Repos.knownRepos;
+import static com.madgag.agit.git.Repos.refreshOperationFor;
+import static java.util.Arrays.asList;
+import static org.eclipse.jgit.lib.RepositoryCache.close;
 import android.content.SyncResult;
 import android.util.Log;
+
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.assistedinject.Assisted;
 import com.madgag.agit.git.Repos;
-import com.madgag.agit.operations.*;
+import com.madgag.agit.operations.CancellationSignaller;
+import com.madgag.agit.operations.GitOperation;
+import com.madgag.agit.operations.GitOperationExecutor;
+import com.madgag.agit.operations.OperationUIContext;
+import com.madgag.agit.operations.Progress;
+import com.madgag.agit.operations.ProgressListener;
 import com.madgag.android.blockingprompt.RejectBlockingPromptService;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.transport.RemoteConfig;
 
 import java.io.File;
 
-import static com.madgag.agit.git.Repos.knownRepos;
-import static com.madgag.agit.git.Repos.refreshOperationFor;
-import static com.madgag.agit.git.Repos.remoteConfigFor;
-import static java.util.Arrays.asList;
-import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
-import static org.eclipse.jgit.lib.RepositoryCache.close;
+import org.eclipse.jgit.lib.Repository;
 
 public class SyncCampaign implements CancellationSignaller, Runnable {
     private static final String TAG = "SyncCampaign";
 
-    @Inject Provider<RejectBlockingPromptService> rejectPrompts;
-    @Inject GitOperationExecutor operationExecutor;
+    @Inject
+    Provider<RejectBlockingPromptService> rejectPrompts;
+    @Inject
+    GitOperationExecutor operationExecutor;
 
     private final SyncResult syncResult;
     private GitOperation currentOperation;
     private boolean cancelled = false;
 
     @Inject
-	public SyncCampaign(@Assisted SyncResult syncResult) {
+    public SyncCampaign(@Assisted SyncResult syncResult) {
         this.syncResult = syncResult;
     }
 
@@ -75,13 +80,13 @@ public class SyncCampaign implements CancellationSignaller, Runnable {
             repository = Repos.openRepoFor(gitdir);
 
             currentOperation = refreshOperationFor(repository);
-            if (operationExecutor.call(currentOperation, operationUIContext, false)!=null) { //feels bery bad
+            if (operationExecutor.call(currentOperation, operationUIContext, false) != null) { //feels bery bad
                 syncResult.stats.numUpdates++;
             }
         } catch (Exception e) {
             Log.w(TAG, "Problem with " + gitdir, e);
         } finally {
-            if (repository!=null)
+            if (repository != null)
                 close(repository);
         }
     }
@@ -89,8 +94,8 @@ public class SyncCampaign implements CancellationSignaller, Runnable {
 
     public void cancel() {
         cancelled = true;
-        Log.d(TAG, "Cancelled campaign - currentOperation="+currentOperation);
-        if (currentOperation!=null) {
+        Log.d(TAG, "Cancelled campaign - currentOperation=" + currentOperation);
+        if (currentOperation != null) {
             currentOperation.cancel();
         }
     }

@@ -19,40 +19,39 @@
 
 package com.madgag.agit.diff;
 
+import static java.lang.Math.max;
+import static java.lang.Math.round;
 import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
 
-import static java.lang.Math.max;
-import static java.lang.Math.round;
-
 public class DeltaSpan extends MetricAffectingSpan {
 
-	private final static int insertColour = 0x00c2ffc2,	deleteColour = 0x00FFE6E6;
+    private final static int insertColour = 0x00c2ffc2, deleteColour = 0x00FFE6E6;
 
-	private final float magnitude;
-	private final int alpha;
-	private final boolean insertNotDelete;
+    private final float magnitude;
+    private final int alpha;
+    private final boolean insertNotDelete;
 
-	public DeltaSpan(boolean insertNotDelete, float progress) {
-		this.insertNotDelete = insertNotDelete;
-		this.magnitude = max(0.01f,(insertNotDelete ? progress : (1 - progress))); // TODO max is HACK!
+    public DeltaSpan(boolean insertNotDelete, float progress) {
+        this.insertNotDelete = insertNotDelete;
+        this.magnitude = max(0.01f, (insertNotDelete ? progress : (1 - progress))); // TODO max is HACK!
 
-		alpha = round(magnitude * 0xff);
-	}
+        alpha = round(magnitude * 0xff);
+    }
 
-	public int describeContents() {
-		return 0;
-	}
+    public int describeContents() {
+        return 0;
+    }
 
-	@Override
-	public void updateDrawState(TextPaint textPaint) {
-		textPaint.setTextSize(textPaint.getTextSize() * magnitude);
-		textPaint.setAlpha(alpha);
-		textPaint.bgColor = (insertNotDelete ? insertColour : deleteColour)	+ (alpha << 24);
-	}
+    @Override
+    public void updateDrawState(TextPaint textPaint) {
+        textPaint.setTextSize(textPaint.getTextSize() * magnitude);
+        textPaint.setAlpha(alpha);
+        textPaint.bgColor = (insertNotDelete ? insertColour : deleteColour) + (alpha << 24);
+    }
 
-	@Override
-	public void updateMeasureState(TextPaint ds) {
-		ds.setTextSize(ds.getTextSize() * magnitude);
-	}
+    @Override
+    public void updateMeasureState(TextPaint ds) {
+        ds.setTextSize(ds.getTextSize() * magnitude);
+    }
 }

@@ -19,23 +19,25 @@
 
 package com.madgag.agit.operations;
 
-import android.util.Log;
-import com.google.inject.Inject;
-import org.eclipse.jgit.lib.Repository;
-
-import java.io.File;
-import java.io.IOException;
-
 import static android.R.drawable.stat_sys_download;
 import static android.R.drawable.stat_sys_download_done;
 import static com.madgag.agit.git.Repos.topDirectoryFor;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
+import android.util.Log;
+
+import com.google.inject.Inject;
+
+import java.io.File;
+import java.io.IOException;
+
+import org.eclipse.jgit.lib.Repository;
 
 public class RepoDeleter extends GitOperation {
-	
-	public static final String TAG = "RepoDeleter";
 
-    @Inject RepoUpdateBroadcaster repoUpdateBroadcaster;
+    public static final String TAG = "RepoDeleter";
+
+    @Inject
+    RepoUpdateBroadcaster repoUpdateBroadcaster;
     private final File topFolderToDelete;
 
     public RepoDeleter(Repository repository) {
@@ -44,46 +46,46 @@ public class RepoDeleter extends GitOperation {
     }
 
     public OpNotification execute() {
-    	try {
-    		Log.d(TAG, "Deleting : "+topFolderToDelete);
-			deleteDirectory(topFolderToDelete);
-			Log.d(TAG, "Deleted : "+topFolderToDelete);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        
+        try {
+            Log.d(TAG, "Deleting : " + topFolderToDelete);
+            deleteDirectory(topFolderToDelete);
+            Log.d(TAG, "Deleted : " + topFolderToDelete);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         repoUpdateBroadcaster.broadcastUpdate();
-		return new OpNotification(stat_sys_download_done, "Deleted", "Delete completed", gitdir.getAbsolutePath());
+        return new OpNotification(stat_sys_download_done, "Deleted", "Delete completed", gitdir.getAbsolutePath());
     }
 
 
     public int getOngoingIcon() {
-		return stat_sys_download;
-	}
-
-	@Override
-    public String getTickerText() {
-		return "Deleting " + gitdir;
-	}
-
-	public String getName() {
-		return "Delete Repo";
-	}
-
-	public String getDescription() {
-		return "deleting " + gitdir;
-	}
+        return stat_sys_download;
+    }
 
     @Override
-	public CharSequence getUrl() {
-		return "";
-	}
+    public String getTickerText() {
+        return "Deleting " + gitdir;
+    }
 
-	public String getShortDescription() {
-		return "Deleting Repo";
-	}
+    public String getName() {
+        return "Delete Repo";
+    }
+
+    public String getDescription() {
+        return "deleting " + gitdir;
+    }
+
+    @Override
+    public CharSequence getUrl() {
+        return "";
+    }
+
+    public String getShortDescription() {
+        return "Deleting Repo";
+    }
 
     public String toString() {
-        return getClass().getSimpleName()+"["+gitdir+"]";
+        return getClass().getSimpleName() + "[" + gitdir + "]";
     }
 }

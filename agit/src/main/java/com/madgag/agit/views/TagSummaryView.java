@@ -19,33 +19,35 @@
 
 package com.madgag.agit.views;
 
+import static com.madgag.agit.R.drawable.tag_icon;
+import static com.madgag.agit.R.id.message_text;
+import static com.madgag.agit.R.id.tagged_object;
+import static com.madgag.agit.R.id.tagger_ident;
+import static com.madgag.agit.R.layout.osv_tag_summary_view;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import java.io.IOException;
+
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevObject;
 import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevWalk;
 
-import java.io.IOException;
-
-import static com.madgag.agit.R.drawable.tag_icon;
-import static com.madgag.agit.R.id.*;
-import static com.madgag.agit.R.layout.osv_tag_summary_view;
-
 public class TagSummaryView extends OSV<RevTag> {
 
-    private final static String TAG="TSV";
+    private final static String TAG = "TSV";
 
-	public void setObject(RevTag tag, View view, Repository repo) {
+    public void setObject(RevTag tag, View view, Repository repo) {
         ((PersonIdentView) view.findViewById(tagger_ident)).setIdent("Tagger", tag.getTaggerIdent());
         ((TextView) view.findViewById(message_text)).setText(tag.getFullMessage());
         try {
             RevObject taggedObject = new RevWalk(repo).parseAny(tag.getObject());
             ((ObjectSummaryView) view.findViewById(tagged_object)).setObject(taggedObject);
-            Log.d(TAG,"Successfully set taggedObject="+taggedObject);
+            Log.d(TAG, "Successfully set taggedObject=" + taggedObject);
         } catch (IOException e) {
-            Log.e(TAG,"Couldn't set the tagged object...",e);
+            Log.e(TAG, "Couldn't set the tagged object...", e);
             e.printStackTrace();
         }
     }

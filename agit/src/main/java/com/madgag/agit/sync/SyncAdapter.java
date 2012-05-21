@@ -25,16 +25,20 @@ import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
 import roboguice.inject.ContextScope;
 
 @Singleton
 class SyncAdapter extends AbstractThreadedSyncAdapter {
     private static final String TAG = "AgitSync";
 
-    @Inject ContextScope contextScope;
-    @Inject SyncCampaignFactory syncCampaignFactory;
+    @Inject
+    ContextScope contextScope;
+    @Inject
+    SyncCampaignFactory syncCampaignFactory;
 
     private SyncCampaign currentSyncCampaign = null;
 
@@ -44,7 +48,8 @@ class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     @Override
-    public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
+    public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider,
+                              SyncResult syncResult) {
         cancelAnyCurrentCampaign();
         contextScope.enter(getContext());
         try {
@@ -61,7 +66,7 @@ class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private void cancelAnyCurrentCampaign() {
-        if (currentSyncCampaign!=null) {
+        if (currentSyncCampaign != null) {
             currentSyncCampaign.cancel();
         }
     }

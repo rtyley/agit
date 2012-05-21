@@ -1,59 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical" android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
+              android:orientation="vertical" android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
 
-    <com.markupartist.android.widget.ActionBar android:id="@+id/actionbar" style="@style/ActionBar" />
+    <com.markupartist.android.widget.ActionBar android:id="@+id/actionbar" style="@style/ActionBar"/>
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1.0"
-        android:fadingEdgeLength="32dip">
-
-        <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="14dip" android:paddingRight="14dip"
-            android:paddingTop="6dip" android:paddingBottom="6dip" >
+            android:layout_weight="1.0"
+            android:fadingEdgeLength="32dip">
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="14dip" android:paddingRight="14dip"
+                android:paddingTop="6dip" android:paddingBottom="6dip">
 
             <TextView android:layout_width="fill_parent"
-                android:layout_height="wrap_content" android:text="@string/enter_clone_url" />
+                      android:layout_height="wrap_content" android:text="@string/enter_clone_url"/>
             <EditText
-                android:id="@+id/CloneUrlEditText"
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:hint="@string/clone_url_hint"
-                android:inputType="textUri" />
+                    android:id="@+id/CloneUrlEditText"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:hint="@string/clone_url_hint"
+                    android:inputType="textUri"/>
 
             <TextView
-                android:id="@+id/ProtocolLabel"
-                android:layout_gravity="right"
-                android:background="@drawable/label_background"
-                android:textStyle="bold"
-                android:textSize="8dip"
-                android:textColor="@android:color/white"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                    android:id="@+id/ProtocolLabel"
+                    android:layout_gravity="right"
+                    android:background="@drawable/label_background"
+                    android:textStyle="bold"
+                    android:textSize="8dip"
+                    android:textColor="@android:color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
             <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/clone_target_folder_label" />
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/clone_target_folder_label"/>
             <EditText
-                android:id="@+id/GitDirEditText"
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:hint="@string/clone_directory_hint"
-                android:inputType="textUri" />
+                    android:id="@+id/GitDirEditText"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:hint="@string/clone_directory_hint"
+                    android:inputType="textUri"/>
             <CheckBox android:id="@+id/UseDefaultGitDirLocation"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="@string/use_default_target_directory_checkbox_label"
-                android:checked="true" />
+                      android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:text="@string/use_default_target_directory_checkbox_label"
+                      android:checked="true"/>
             <CheckBox android:id="@+id/BareRepo"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="@string/bare_repo_checkbox_label"
-                android:checked="true" />
+                      android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:text="@string/bare_repo_checkbox_label"
+                      android:checked="true"/>
         </LinearLayout>
     </ScrollView>
     <RelativeLayout style="@style/ExecutionBar" android:gravity="right">
@@ -64,13 +64,13 @@
                 android:layout_centerInParent="true"
                 android:textSize="20dip"
                 android:padding="8dip"
-                android:text="@string/execute_clone_button_label" />
+                android:text="@string/execute_clone_button_label"/>
         <TextView android:id="@+id/CloneReadinessMessage"
-                android:visibility="invisible"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@id/GoCloneButton"
-                android:layout_centerInParent="true"
-                android:layout_alignParentLeft="true"/>
+                  android:visibility="invisible"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_toLeftOf="@id/GoCloneButton"
+                  android:layout_centerInParent="true"
+                  android:layout_alignParentLeft="true"/>
     </RelativeLayout>
 </LinearLayout>

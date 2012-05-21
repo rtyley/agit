@@ -5,21 +5,24 @@ import com.madgag.agit.operations.Progress;
 
 public class CasualShortTermLifetime implements OperationLifecycleSupport {
 
-	public void startedWith(OpNotification startNotification) {
-		// start some kind of animation in the RMA
-	}
+    public void startedWith(OpNotification startNotification) {
+        // start some kind of animation in the RMA
+    }
 
-	public void publish(Progress progress) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void publish(Progress progress) {
+        // TODO Auto-generated method stub
 
-    public void error(OpNotification completionNotification) {}
-    public void success(OpNotification completionNotification) {}
+    }
 
-	public void completed(OpNotification completionNotification) {
-		// stop the animation, I guess
-	}
+    public void error(OpNotification completionNotification) {
+    }
+
+    public void success(OpNotification completionNotification) {
+    }
+
+    public void completed(OpNotification completionNotification) {
+        // stop the animation, I guess
+    }
 
 
 }

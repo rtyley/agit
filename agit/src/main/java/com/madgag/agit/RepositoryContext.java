@@ -22,6 +22,7 @@ package com.madgag.agit;
 import android.app.Activity;
 import android.app.Dialog;
 import android.util.Log;
+
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.madgag.agit.guice.RepositoryScope;
@@ -30,41 +31,46 @@ import com.madgag.agit.prompts.DialogPromptUIBehaviour;
 import java.io.File;
 
 public class RepositoryContext
-      //  implements IndexChangedListener, RefsChangedListener
+        //  implements IndexChangedListener, RefsChangedListener
 {
-    private @Inject RepositoryScope scope;
-    private @Inject
+    private
+    @Inject
+    RepositoryScope scope;
+    private
+    @Inject
     DialogPromptUIBehaviour dialogPromptUIBehaviour;
-    private @Inject @Named("gitdir") File gitdir;
+    private
+    @Inject
+    @Named("gitdir")
+    File gitdir;
     private final Activity activity;
-	private final String tag;
+    private final String tag;
 
     @Inject
-	public RepositoryContext(Activity activity) {
+    public RepositoryContext(Activity activity) {
         this.activity = activity;
         //this.rsa = (RepoScopedActivityLifecycle) activity;
-		this.tag = activity.getClass().getSimpleName();
-	}
-	
-	public void onResume() {
-		if (!gitdir.exists()) {
-			Log.d(tag, "Finishing activity as gitdir gone : "+ gitdir);
-			activity.finish();
-			return;
-		}
+        this.tag = activity.getClass().getSimpleName();
+    }
+
+    public void onResume() {
+        if (!gitdir.exists()) {
+            Log.d(tag, "Finishing activity as gitdir gone : " + gitdir);
+            activity.finish();
+            return;
+        }
         enterScope();
         try {
             dialogPromptUIBehaviour.registerReceiverForServicePromptRequests();
             //addListeners();
-		    activity.onContentChanged();
+            activity.onContentChanged();
             dialogPromptUIBehaviour.updateUIToReflectServicePromptRequests();
 
             //rsa.onRepoScopedResume();
         } finally {
             exitScope();
         }
-	}
-
+    }
 
 
     public void onPause() {
@@ -76,9 +82,9 @@ public class RepositoryContext
         } finally {
             exitScope();
         }
-	}
+    }
 
-	public void onDestroy() {
+    public void onDestroy() {
         enterScope();
         try {
             //RepositoryCache.close(repository);
@@ -86,11 +92,12 @@ public class RepositoryContext
         } finally {
             exitScope();
         }
-	}
+    }
 
     private void enterScope() {
         //scope.enterWithUIContext(gitdir);
     }
+
     private void exitScope() {
         // scope.exit();
     }
@@ -118,7 +125,7 @@ public class RepositoryContext
 //		}
 //		listeners.clear();
 //	}
-	
+
 //	private void addListeners() {
 //		removeListeners();
 //		Log.d(tag, "Adding listeners for "+describe(repository));

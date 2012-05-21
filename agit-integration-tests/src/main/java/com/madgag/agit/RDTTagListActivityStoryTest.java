@@ -19,64 +19,64 @@
 
 package com.madgag.agit;
 
-import android.test.ActivityInstrumentationTestCase2;
-import android.util.Log;
-import android.view.View;
-import android.widget.ListView;
-import android.widget.TextView;
-import com.madgag.agit.git.model.RDTTag;
-import com.madgag.agit.git.model.RDTTag.TagSummary;
-import com.madgag.agit.matchers.GitTestHelper;
-import org.eclipse.jgit.lib.Repository;
-
-import java.util.List;
-
 import static com.madgag.agit.RDTypeListActivity.listIntent;
 import static com.madgag.agit.matchers.CharSequenceMatcher.charSequence;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import android.util.Log;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.madgag.agit.git.model.RDTTag;
+import com.madgag.agit.git.model.RDTTag.TagSummary;
+import com.madgag.agit.matchers.GitTestHelper;
+
+import java.util.List;
+
+import org.eclipse.jgit.lib.Repository;
 
 public class RDTTagListActivityStoryTest extends RDTTypeListActivityStoryTestBase<RDTypeListActivity> {
-	
-	private final static String TAG = RDTTagListActivityStoryTest.class.getSimpleName();
-	
-	public RDTTagListActivityStoryTest() {
-		super("com.madgag.agit",RDTypeListActivity.class);
-	}
-	
-	public void testShouldShowAllTags() throws Exception {
 
-		GitTestHelper helper = AndroidTestEnvironment.helper(getInstrumentation());
-		Repository repoWithTags = helper.unpackRepo("small-repo.with-tags.zip");
-		
-		setActivityIntent(listIntent(repoWithTags, "tag"));
-		
-		final RDTypeListActivity activity = getActivity();
-		
-		ListView listView = activity.getListView();
+    private final static String TAG = RDTTagListActivityStoryTest.class.getSimpleName();
 
-		checkCanSelectEveryItemInNonEmpty(listView);
+    public RDTTagListActivityStoryTest() {
+        super("com.madgag.agit", RDTypeListActivity.class);
+    }
 
-		RDTTag tagDomainType= new RDTTag(repoWithTags);
-		List<TagSummary> summaries = tagDomainType.getAll();
-		Log.i(TAG, "Should be "+summaries.size()+" elements in the list.. there are "+listView.getCount());
-		assertThat(listView.getCount(), is(summaries.size()));
-		for (int index=0; index<summaries.size(); ++index) {
-			TagSummary summary = summaries.get(index);
-			View itemView=getItemViewBySelecting(listView, index);
-			Log.d(TAG, "summary="+summary+" view="+itemView);
-			TextView itemTitleTextView = (TextView) itemView.findViewById(android.R.id.text1);
-			assertThat(itemTitleTextView.getText(), is(summary.getName()));
-			
-			if (summary.getName().equals("annotated-tag-of-2nd-commit")) {
-				CharSequence dt = ((TextView) itemView.findViewById(android.R.id.text2)).getText();
-				Log.i(TAG, "Looking... "+ dt);
-				assertThat(dt, charSequence(startsWith("Commit")));
-				assertThat(dt, charSequence(containsString("Adding my happy folder with it's tags")));
-			}
-		}
-	}
+    public void testShouldShowAllTags() throws Exception {
+
+        GitTestHelper helper = AndroidTestEnvironment.helper(getInstrumentation());
+        Repository repoWithTags = helper.unpackRepo("small-repo.with-tags.zip");
+
+        setActivityIntent(listIntent(repoWithTags, "tag"));
+
+        final RDTypeListActivity activity = getActivity();
+
+        ListView listView = activity.getListView();
+
+        checkCanSelectEveryItemInNonEmpty(listView);
+
+        RDTTag tagDomainType = new RDTTag(repoWithTags);
+        List<TagSummary> summaries = tagDomainType.getAll();
+        Log.i(TAG, "Should be " + summaries.size() + " elements in the list.. there are " + listView.getCount());
+        assertThat(listView.getCount(), is(summaries.size()));
+        for (int index = 0; index < summaries.size(); ++index) {
+            TagSummary summary = summaries.get(index);
+            View itemView = getItemViewBySelecting(listView, index);
+            Log.d(TAG, "summary=" + summary + " view=" + itemView);
+            TextView itemTitleTextView = (TextView) itemView.findViewById(android.R.id.text1);
+            assertThat(itemTitleTextView.getText(), is(summary.getName()));
+
+            if (summary.getName().equals("annotated-tag-of-2nd-commit")) {
+                CharSequence dt = ((TextView) itemView.findViewById(android.R.id.text2)).getText();
+                Log.i(TAG, "Looking... " + dt);
+                assertThat(dt, charSequence(startsWith("Commit")));
+                assertThat(dt, charSequence(containsString("Adding my happy folder with it's tags")));
+            }
+        }
+    }
 
 }

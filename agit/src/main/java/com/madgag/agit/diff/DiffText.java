@@ -19,64 +19,64 @@
 
 package com.madgag.agit.diff;
 
+import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
+import static com.google.common.collect.Lists.newArrayList;
+import static name.fraser.neil.plaintext.diff_match_patch.Operation.INSERT;
 import android.text.Editable;
 import android.text.style.CharacterStyle;
-import name.fraser.neil.plaintext.diff_match_patch.Diff;
-import name.fraser.neil.plaintext.diff_match_patch.Operation;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
-import static com.google.common.collect.Lists.newArrayList;
-import static name.fraser.neil.plaintext.diff_match_patch.Operation.INSERT;
+import name.fraser.neil.plaintext.diff_match_patch.Diff;
+import name.fraser.neil.plaintext.diff_match_patch.Operation;
 
 public class DiffText {
-	
-	private List<CharacterStyle> insertSpans,deleteSpans;
-	
-	private final Editable spannableText;
 
-	public DiffText(Editable spannableText) {
-		this.spannableText = spannableText;
-	}
+    private List<CharacterStyle> insertSpans, deleteSpans;
 
-	public void setTransitionProgress(float proportion) {
-		updateDisplayWith(proportion);
-	}
+    private final Editable spannableText;
 
-	void updateDisplayWith(float proportion) {
-		DeltaSpan insertSpan = new DeltaSpan(true, proportion);
-		DeltaSpan deleteSpan = new DeltaSpan(false, proportion);
-		replace(insertSpans, insertSpan);
-		replace(deleteSpans, deleteSpan);
-	}
+    public DiffText(Editable spannableText) {
+        this.spannableText = spannableText;
+    }
 
-	private void replace(List<CharacterStyle> deltaSpans, CharacterStyle spanStyle) {
-		for (int i=0;i<deltaSpans.size() ; ++i) {
-			CharacterStyle oldSpanStyle = deltaSpans.get(i);
-			int start=spannableText.getSpanStart(oldSpanStyle ),end=spannableText.getSpanEnd(oldSpanStyle);
-			spannableText.removeSpan(oldSpanStyle);
-			CharacterStyle mySpanStyle = CharacterStyle.wrap(spanStyle);
-			spannableText.setSpan(mySpanStyle, start, end, SPAN_EXCLUSIVE_EXCLUSIVE);
-			deltaSpans.set(i, mySpanStyle);
-		}
-	}
-	
-	public void initWith(LinkedList<Diff> diffs, float state) {
-		DeltaSpan insertSpan = new DeltaSpan(true, state);
-		DeltaSpan deleteSpan = new DeltaSpan(false, state);
-		insertSpans = newArrayList();
-		deleteSpans = newArrayList();
-		spannableText.clear();
-		for (Diff diff : diffs) {
-			spannableText.append(diff.text);
-			if (diff.operation!=Operation.EQUAL) {
-				boolean insertNotDelete = diff.operation==INSERT;
-				CharacterStyle deltaSpan = CharacterStyle.wrap(insertNotDelete?insertSpan:deleteSpan);
-				spannableText.setSpan(deltaSpan, spannableText.length()-diff.text.length(), spannableText.length(), SPAN_EXCLUSIVE_EXCLUSIVE);
-				(insertNotDelete?insertSpans:deleteSpans).add(deltaSpan);
-			}
-		}
-	}
+    public void setTransitionProgress(float proportion) {
+        updateDisplayWith(proportion);
+    }
+
+    void updateDisplayWith(float proportion) {
+        DeltaSpan insertSpan = new DeltaSpan(true, proportion);
+        DeltaSpan deleteSpan = new DeltaSpan(false, proportion);
+        replace(insertSpans, insertSpan);
+        replace(deleteSpans, deleteSpan);
+    }
+
+    private void replace(List<CharacterStyle> deltaSpans, CharacterStyle spanStyle) {
+        for (int i = 0; i < deltaSpans.size(); ++i) {
+            CharacterStyle oldSpanStyle = deltaSpans.get(i);
+            int start = spannableText.getSpanStart(oldSpanStyle), end = spannableText.getSpanEnd(oldSpanStyle);
+            spannableText.removeSpan(oldSpanStyle);
+            CharacterStyle mySpanStyle = CharacterStyle.wrap(spanStyle);
+            spannableText.setSpan(mySpanStyle, start, end, SPAN_EXCLUSIVE_EXCLUSIVE);
+            deltaSpans.set(i, mySpanStyle);
+        }
+    }
+
+    public void initWith(LinkedList<Diff> diffs, float state) {
+        DeltaSpan insertSpan = new DeltaSpan(true, state);
+        DeltaSpan deleteSpan = new DeltaSpan(false, state);
+        insertSpans = newArrayList();
+        deleteSpans = newArrayList();
+        spannableText.clear();
+        for (Diff diff : diffs) {
+            spannableText.append(diff.text);
+            if (diff.operation != Operation.EQUAL) {
+                boolean insertNotDelete = diff.operation == INSERT;
+                CharacterStyle deltaSpan = CharacterStyle.wrap(insertNotDelete ? insertSpan : deleteSpan);
+                spannableText.setSpan(deltaSpan, spannableText.length() - diff.text.length(), spannableText.length(), SPAN_EXCLUSIVE_EXCLUSIVE);
+                (insertNotDelete ? insertSpans : deleteSpans).add(deltaSpan);
+            }
+        }
+    }
 }

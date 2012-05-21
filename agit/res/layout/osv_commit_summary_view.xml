@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android" >
-	<com.madgag.agit.views.PersonIdentView
-         android:id="@+id/author_ident"
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content"/>
-	<TextView android:id="@+id/short_message_text"
-		android:layout_width="fill_parent"
-		android:layout_height="0px"
-		android:layout_weight="1"
-		style="@style/GitMessage" />
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.madgag.agit.views.PersonIdentView
+            android:id="@+id/author_ident"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
+    <TextView android:id="@+id/short_message_text"
+              android:layout_width="fill_parent"
+              android:layout_height="0px"
+              android:layout_weight="1"
+              style="@style/GitMessage"/>
 </merge>

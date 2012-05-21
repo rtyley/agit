@@ -1,12 +1,12 @@
 package com.madgag.agit.weblaunchers;
 
 
+import static com.madgag.agit.GitIntents.sourceUriFrom;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
-import roboguice.activity.RoboActivity;
 
-import static com.madgag.agit.GitIntents.sourceUriFrom;
+import roboguice.activity.RoboActivity;
 
 public abstract class WebLaunchActivity extends RoboActivity {
 
@@ -14,7 +14,7 @@ public abstract class WebLaunchActivity extends RoboActivity {
 
     @Override
     protected void onStart() {
-    	super.onStart();
+        super.onStart();
         Uri webUrl = getIntent().getData();
         Intent cloneIntent = cloneLauncherForWebBrowseIntent(webUrl);
 

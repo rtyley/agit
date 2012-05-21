@@ -8,6 +8,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="6dp"
             android:inputType="textPassword"
-            android:password="true" />
+            android:password="true"/>
 </FrameLayout>
 

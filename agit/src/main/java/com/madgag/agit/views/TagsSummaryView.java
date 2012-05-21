@@ -1,18 +1,19 @@
 package com.madgag.agit.views;
 
+import static com.madgag.agit.R.drawable.tag_icon;
+import static com.madgag.agit.R.layout.simple_summary_list_item;
+import static com.madgag.agit.RDTypeListActivity.listIntent;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.google.inject.Inject;
 import com.madgag.agit.R;
 import com.madgag.agit.git.model.RDTTag;
-import org.eclipse.jgit.lib.Repository;
 
-import static com.madgag.agit.R.drawable.tag_icon;
-import static com.madgag.agit.R.layout.simple_summary_list_item;
-import static com.madgag.agit.RDTypeListActivity.listIntent;
+import org.eclipse.jgit.lib.Repository;
 
 public class TagsSummaryView extends RelativeLayout implements EnabledListItem {
     private final TextView detail, title;

@@ -1,5 +1,6 @@
 package com.madgag.android;
 
+import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import android.text.Editable;
 import android.text.style.ClickableSpan;
 import android.util.Log;
@@ -7,8 +8,6 @@ import android.view.View;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 
 public class ClickableText {
 
@@ -19,17 +18,17 @@ public class ClickableText {
         // SpannableStringBuilder builder = new SpannableStringBuilder();
         //Log.d(TAG,"spannable="+spannable);
         Matcher matcher;
-        while ((matcher=markup.matcher(spannable)).find()) {
-            final String action=matcher.group(1);
+        while ((matcher = markup.matcher(spannable)).find()) {
+            final String action = matcher.group(1);
             spannable.setSpan(new ClickableSpan() {
                 @Override
                 public void onClick(View widget) {
-                    Log.d(TAG,"Clicked "+action);
+                    Log.d(TAG, "Clicked " + action);
                     listener.onClick(action, widget);
                 }
-            },  matcher.start(2), matcher.end(2), SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannable.delete(matcher.end(2),matcher.end());
-            spannable.delete(matcher.start(),matcher.start(2));
+            }, matcher.start(2), matcher.end(2), SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.delete(matcher.end(2), matcher.end());
+            spannable.delete(matcher.start(), matcher.start(2));
         }
     }
 

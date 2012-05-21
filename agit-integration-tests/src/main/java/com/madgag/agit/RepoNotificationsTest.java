@@ -19,30 +19,31 @@
 
 package com.madgag.agit;
 
+import static org.eclipse.jgit.lib.Constants.DOT_GIT;
 import android.content.Context;
 import android.test.suitebuilder.annotation.SmallTest;
+
 import com.madgag.agit.matchers.GitTestHelper;
 import com.madgag.agit.operation.lifecycle.RepoNotifications;
-import roboguice.test.RoboUnitTestCase;
 
 import java.io.File;
 
-import static org.eclipse.jgit.lib.Constants.DOT_GIT;
+import roboguice.test.RoboUnitTestCase;
 
 public class RepoNotificationsTest extends RoboUnitTestCase<AgitTestApplication> {
-	
-	private static final String TAG="RNT";
-	private final GitTestHelper helper = AndroidTestEnvironment.helper(getInstrumentation());
-	
-	@SmallTest
-	public void testShouldHaveDifferentOngoingNotificationIds() throws Exception {
-		File gitdir1=new File(helper.newFolder(), DOT_GIT),gitdir2=new File(helper.newFolder(), DOT_GIT);
+
+    private static final String TAG = "RNT";
+    private final GitTestHelper helper = AndroidTestEnvironment.helper(getInstrumentation());
+
+    @SmallTest
+    public void testShouldHaveDifferentOngoingNotificationIds() throws Exception {
+        File gitdir1 = new File(helper.newFolder(), DOT_GIT), gitdir2 = new File(helper.newFolder(), DOT_GIT);
 
         Context c = getInstrumentation().getContext();
         RepoNotifications roc1a = new RepoNotifications(c, gitdir1, null);
-		RepoNotifications roc1b = new RepoNotifications(c, gitdir1, null);
-		RepoNotifications roc2 = new RepoNotifications(c, gitdir2, null);
-		assertTrue(roc1a.getOngoingNotificationId()==roc1b.getOngoingNotificationId());
-		assertFalse(roc1a.getOngoingNotificationId()==roc2.getOngoingNotificationId());
-	}
+        RepoNotifications roc1b = new RepoNotifications(c, gitdir1, null);
+        RepoNotifications roc2 = new RepoNotifications(c, gitdir2, null);
+        assertTrue(roc1a.getOngoingNotificationId() == roc1b.getOngoingNotificationId());
+        assertFalse(roc1a.getOngoingNotificationId() == roc2.getOngoingNotificationId());
+    }
 }

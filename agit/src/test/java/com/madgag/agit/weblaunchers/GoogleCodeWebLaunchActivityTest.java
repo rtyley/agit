@@ -1,19 +1,21 @@
 package com.madgag.agit.weblaunchers;
 
-import android.net.Uri;
-import com.google.inject.Inject;
-import com.madgag.agit.InjectedTestRunner;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import static com.madgag.agit.GitIntents.sourceUriFrom;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import android.net.Uri;
+
+import com.google.inject.Inject;
+import com.madgag.agit.InjectedTestRunner;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 @RunWith(InjectedTestRunner.class)
 public class GoogleCodeWebLaunchActivityTest {
 
-    @Inject GoogleCodeWebLaunchActivity activity;
+    @Inject
+    GoogleCodeWebLaunchActivity activity;
 
     @Test
     public void shouldSupplyCloneSourceFromGoogleCodeProjectPage() {
@@ -29,7 +31,8 @@ public class GoogleCodeWebLaunchActivityTest {
 
     @Test
     public void shouldSupplyCloneSourceFromEclipseLabsCheckoutPage() {
-        String sourceUri = sourceUriDerivedFrom("http://code.google.com/a/eclipselabs.org/p/code-recommenders/source/checkout");
+        String sourceUri = sourceUriDerivedFrom("http://code.google.com/a/eclipselabs" +
+                ".org/p/code-recommenders/source/checkout");
         assertThat(sourceUri, is("https://code.google.com/a/eclipselabs.org/p/code-recommenders/"));
     }
 

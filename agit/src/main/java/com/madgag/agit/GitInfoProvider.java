@@ -26,63 +26,64 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
-import org.eclipse.jgit.lib.RepositoryCache;
-import org.eclipse.jgit.util.FS;
 
 import java.io.File;
 
+import org.eclipse.jgit.lib.RepositoryCache;
+import org.eclipse.jgit.util.FS;
+
 public class GitInfoProvider extends ContentProvider {
-	public static final Uri CONTENT_URI  = Uri.parse("content://com.madgag.agit.gitinfoprovider/repos");
-	
-	public static final String TAG = "RepoInfoProvider";
+    public static final Uri CONTENT_URI = Uri.parse("content://com.madgag.agit.gitinfoprovider/repos");
 
-	private File reposDir;
+    public static final String TAG = "RepoInfoProvider";
 
-	@Override
-	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		return 0;
-	}
+    private File reposDir;
 
-	@Override
-	public String getType(Uri uri) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+        return 0;
+    }
 
-	@Override
-	public Uri insert(Uri uri, ContentValues values) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String getType(Uri uri) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public boolean onCreate() {
-		reposDir = new File(Environment.getExternalStorageDirectory(),"git-repos");
-		if (!reposDir.exists() && !reposDir.mkdirs()) {
-			Log.e(TAG, "Could not create default repos dir : "+reposDir.getAbsolutePath());
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public Uri insert(Uri uri, ContentValues values) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public Cursor query(Uri uri, String[] projection, String selection,
-			String[] selectionArgs, String sortOrder) {
-		MatrixCursor matrixCursor=new MatrixCursor(new String[]{"_id","gitdir"});
-		for (File repoDir : reposDir.listFiles()) {
+    @Override
+    public boolean onCreate() {
+        reposDir = new File(Environment.getExternalStorageDirectory(), "git-repos");
+        if (!reposDir.exists() && !reposDir.mkdirs()) {
+            Log.e(TAG, "Could not create default repos dir : " + reposDir.getAbsolutePath());
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public Cursor query(Uri uri, String[] projection, String selection,
+                        String[] selectionArgs, String sortOrder) {
+        MatrixCursor matrixCursor = new MatrixCursor(new String[] { "_id", "gitdir" });
+        for (File repoDir : reposDir.listFiles()) {
             File gitdir = RepositoryCache.FileKey.resolve(repoDir, FS.detect());
-			if (gitdir!=null) {
-				matrixCursor.newRow().add(gitdir.hashCode()).add(gitdir);
-			}
-		}
-		return matrixCursor;
-	}
+            if (gitdir != null) {
+                matrixCursor.newRow().add(gitdir.hashCode()).add(gitdir);
+            }
+        }
+        return matrixCursor;
+    }
 
-	@Override
-	public int update(Uri uri, ContentValues values, String selection,
-			String[] selectionArgs) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public int update(Uri uri, ContentValues values, String selection,
+                      String[] selectionArgs) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
 }

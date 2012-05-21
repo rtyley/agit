@@ -19,66 +19,68 @@
 
 package com.madgag.agit;
 
+import static com.madgag.agit.GitIntents.EXTRA_SOURCE_URI;
+import static com.madgag.agit.GitIntents.EXTRA_TARGET_DIR;
+import static com.madgag.agit.GitIntents.actionWithSuffix;
 import android.content.Intent;
+
+import java.io.File;
+
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.RemoteConfig;
 
-import java.io.File;
-
-import static com.madgag.agit.GitIntents.*;
-
 public class GitIntentBuilder {
 
-	private final Intent intent;
+    private final Intent intent;
 
-	public GitIntentBuilder(String actionSuffix) {
-		intent = new Intent(actionWithSuffix(actionSuffix));
-	}
+    public GitIntentBuilder(String actionSuffix) {
+        intent = new Intent(actionWithSuffix(actionSuffix));
+    }
 
     public GitIntentBuilder gitdir(File gitdir) {
-		return add("gitdir", gitdir.getAbsolutePath());
-	}
-	
-	public GitIntentBuilder branch(Ref branch) {
-		return add("branch", branch.getName());
-	}
-	
-	public GitIntentBuilder remote(RemoteConfig remoteConfig) {
-		return add("remote",remoteConfig.getName());
-	}
-	
-	public GitIntentBuilder tag(String tagName) {
-		return add("tag", tagName);
-	}
+        return add("gitdir", gitdir.getAbsolutePath());
+    }
+
+    public GitIntentBuilder branch(Ref branch) {
+        return add("branch", branch.getName());
+    }
+
+    public GitIntentBuilder remote(RemoteConfig remoteConfig) {
+        return add("remote", remoteConfig.getName());
+    }
+
+    public GitIntentBuilder tag(String tagName) {
+        return add("tag", tagName);
+    }
 
     public GitIntentBuilder sourceUri(String sourceUri) {
-		return add(EXTRA_SOURCE_URI, sourceUri);
-	}
+        return add(EXTRA_SOURCE_URI, sourceUri);
+    }
 
     public GitIntentBuilder targetDir(String targetDir) {
-	    return add(EXTRA_TARGET_DIR, targetDir);
-	}
-	
-	public GitIntentBuilder add(String fieldName, String value) {
-		intent.putExtra(fieldName, value);
-		return this;
-	}
+        return add(EXTRA_TARGET_DIR, targetDir);
+    }
 
-	public GitIntentBuilder repository(Repository repository) {
-		return gitdir(repository.getDirectory());
-	}
+    public GitIntentBuilder add(String fieldName, String value) {
+        intent.putExtra(fieldName, value);
+        return this;
+    }
 
-	public GitIntentBuilder commit(RevCommit revCommit) {
-		return commit(revCommit.name());
-	}
+    public GitIntentBuilder repository(Repository repository) {
+        return gitdir(repository.getDirectory());
+    }
 
-	public GitIntentBuilder commit(String commitId) {
-		return add("commit", commitId);
-	}
+    public GitIntentBuilder commit(RevCommit revCommit) {
+        return commit(revCommit.name());
+    }
 
-	public Intent toIntent() {
-		return intent;
-	}
+    public GitIntentBuilder commit(String commitId) {
+        return add("commit", commitId);
+    }
+
+    public Intent toIntent() {
+        return intent;
+    }
 }

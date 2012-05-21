@@ -1,14 +1,18 @@
 package com.madgag.agit.diff;
 
+import static com.madgag.agit.R.drawable.diff_changetype_add;
+import static com.madgag.agit.R.drawable.diff_changetype_delete;
+import static com.madgag.agit.R.drawable.diff_changetype_modify;
+import static com.madgag.agit.R.drawable.diff_changetype_rename;
+import static com.madgag.agit.R.id.commit_file_diff_type;
+import static com.madgag.agit.R.id.commit_file_textview;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.madgag.android.listviews.ViewHolder;
-import org.eclipse.jgit.diff.DiffEntry;
 
-import static com.madgag.agit.R.drawable.*;
-import static com.madgag.agit.R.id.commit_file_diff_type;
-import static com.madgag.agit.R.id.commit_file_textview;
+import com.madgag.android.listviews.ViewHolder;
+
+import org.eclipse.jgit.diff.DiffEntry;
 
 public class FileHeaderViewHolder implements ViewHolder<FileDiff> {
 

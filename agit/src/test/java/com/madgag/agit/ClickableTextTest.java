@@ -1,7 +1,9 @@
 package com.madgag.agit;
 
 import android.text.Spannable;
+
 import com.xtremelabs.robolectric.RobolectricTestRunner;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -10,11 +12,12 @@ public class ClickableTextTest {
 
     @Test
     public void shouldBeGood() {
-        //ClickableText.addLinks(new SpannableStringBuilder("Enter a url to clone from- or use a #suggest_repo[suggestion]?"));
+        //ClickableText.addLinks(new SpannableStringBuilder("Enter a url to clone from- or use a
+        // #suggest_repo[suggestion]?"));
     }
 
     private class Boo implements Spannable {
-           private final CharSequence delegate;
+        private final CharSequence delegate;
 
         public Boo(CharSequence delegate) {
             this.delegate = delegate;
@@ -54,11 +57,13 @@ public class ClickableTextTest {
         }
 
         public char charAt(int index) {
-            return delegate.charAt(index);  //To change body of implemented methods use File | Settings | File Templates.
+            return delegate.charAt(index);  //To change body of implemented methods use File | Settings | File
+            // Templates.
         }
 
         public CharSequence subSequence(int start, int end) {
-            return delegate.subSequence(start,end);  //To change body of implemented methods use File | Settings | File Templates.
+            return delegate.subSequence(start, end);  //To change body of implemented methods use File | Settings |
+            // File Templates.
         }
     }
 }

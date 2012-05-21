@@ -21,31 +21,27 @@ package com.madgag.agit;
 
 import static com.madgag.agit.AndroidTestEnvironment.helper;
 import static com.madgag.agit.RDTypeListActivity.listIntent;
-import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
+import android.widget.ListView;
 
 import org.eclipse.jgit.lib.Repository;
 
-import android.content.Intent;
-import android.test.ActivityInstrumentationTestCase2;
-import android.widget.ListView;
-
 public class RDTBranchListActivityTest extends RDTTypeListActivityStoryTestBase<RDTBranchListActivity> {
 
-	// private final static String TAG = RDTBranchListActivityTest.class.getSimpleName();
+    // private final static String TAG = RDTBranchListActivityTest.class.getSimpleName();
 
-	public RDTBranchListActivityTest() {
-		super("com.madgag.agit", RDTBranchListActivity.class);
-	}
-	
-	public void testShouldShowBranchListWithoutExplosion() throws Exception {
+    public RDTBranchListActivityTest() {
+        super("com.madgag.agit", RDTBranchListActivity.class);
+    }
+
+    public void testShouldShowBranchListWithoutExplosion() throws Exception {
         Repository repository = helper(getInstrumentation()).unpackRepo("small-repo.with-branches.zip");
-		setActivityIntent(listIntent(repository, "branch"));
-		
+        setActivityIntent(listIntent(repository, "branch"));
+
         final RDTBranchListActivity activity = getActivity();
 
         ListView listView = activity.getListView();
 
         checkCanSelectEveryItemInNonEmpty(listView);
-	}
-	
+    }
+
 }

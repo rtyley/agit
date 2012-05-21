@@ -1,5 +1,10 @@
 package com.madgag.agit.views;
 
+import static com.madgag.agit.OracleJVMTestEnvironment.helper;
+import static org.eclipse.jgit.lib.FileMode.TREE;
+
+import java.io.IOException;
+
 import org.eclipse.jgit.lib.AnyObjectId;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
@@ -9,11 +14,6 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
-
-import static com.madgag.agit.OracleJVMTestEnvironment.helper;
-import static org.eclipse.jgit.lib.FileMode.TREE;
 
 public class TreeSummaryViewTest {
     private static Repository repo;
@@ -47,21 +47,22 @@ public class TreeSummaryViewTest {
 
         while (tw.next()) {
             ObjectId newObjectId = tw.getObjectId(nth);
-            String rawPath= new String(tw.getRawPath());
-            System.out.println(newObjectId+" rawPath="+rawPath+" subTree="+ tw.isSubtree());
+            String rawPath = new String(tw.getRawPath());
+            System.out.println(newObjectId + " rawPath=" + rawPath + " subTree=" + tw.isSubtree());
         }
     }
 
 
     private void useCanonicalTreeParser(ObjectId id) throws IOException {
         CanonicalTreeParser treeParser = new CanonicalTreeParser();
-        RevTree tree=new RevWalk(repo).lookupTree(id);
+        RevTree tree = new RevWalk(repo).lookupTree(id);
         treeParser.reset(repo.getObjectDatabase().newReader(), tree);
         System.out.println("CanonicalTreeParser");
-        for (;!treeParser.eof();treeParser=treeParser.next()) {
+        for (; !treeParser.eof(); treeParser = treeParser.next()) {
             ObjectId newObjectId = treeParser.getEntryObjectId();
-            String entryPath= treeParser.getEntryPathString();
-            System.out.println(newObjectId + " entryPath=" + entryPath + " subTree=" + TREE.equals(treeParser.getEntryFileMode()));
+            String entryPath = treeParser.getEntryPathString();
+            System.out.println(newObjectId + " entryPath=" + entryPath + " subTree=" + TREE.equals(treeParser
+                    .getEntryFileMode()));
         }
     }
 

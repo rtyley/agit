@@ -20,24 +20,21 @@
 package com.madgag.agit.operations;
 
 
-import android.util.Log;
-import com.google.common.base.Throwables;
-import com.jcraft.jsch.JSchException;
-import org.eclipse.jgit.api.errors.JGitInternalException;
-
 import static com.google.common.base.Throwables.getRootCause;
+
+import com.jcraft.jsch.JSchException;
 
 public class JGitAPIExceptions {
 
-	public static RuntimeException exceptionWithFriendlyMessageFor(Exception e) {
-		Throwable cause = getRootCause(e);
-		String message = cause.getMessage();
-		if (message == null) {
-			message = cause.getClass().getSimpleName();
-		}
-		if (cause instanceof JSchException) {
-			message = "SSH: "+message;
-		}
-		return new RuntimeException(message,cause);
-	}
+    public static RuntimeException exceptionWithFriendlyMessageFor(Exception e) {
+        Throwable cause = getRootCause(e);
+        String message = cause.getMessage();
+        if (message == null) {
+            message = cause.getClass().getSimpleName();
+        }
+        if (cause instanceof JSchException) {
+            message = "SSH: " + message;
+        }
+        return new RuntimeException(message, cause);
+    }
 }

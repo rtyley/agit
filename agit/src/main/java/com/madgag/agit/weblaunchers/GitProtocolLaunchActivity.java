@@ -1,9 +1,8 @@
 package com.madgag.agit.weblaunchers;
 
+import static com.madgag.agit.CloneLauncherActivity.cloneLauncherIntentFor;
 import android.content.Intent;
 import android.net.Uri;
-
-import static com.madgag.agit.CloneLauncherActivity.cloneLauncherIntentFor;
 
 public class GitProtocolLaunchActivity extends WebLaunchActivity {
 

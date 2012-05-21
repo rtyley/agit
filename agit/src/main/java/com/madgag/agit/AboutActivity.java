@@ -19,9 +19,9 @@
 
 package com.madgag.agit;
 
-import com.markupartist.android.widget.ActionBar;
-
 import static com.madgag.agit.R.string.about_activity_title;
+
+import com.markupartist.android.widget.ActionBar;
 
 public class AboutActivity extends MarkdownActivityBase {
 

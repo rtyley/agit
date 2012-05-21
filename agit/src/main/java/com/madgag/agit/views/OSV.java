@@ -20,12 +20,13 @@
 package com.madgag.agit.views;
 
 import android.view.View;
+
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevObject;
 
 public abstract class OSV<T extends RevObject> {
 
-	public abstract void setObject(T obj, View view, Repository repo);
+    public abstract void setObject(T obj, View view, Repository repo);
 
     public abstract int iconId();
 

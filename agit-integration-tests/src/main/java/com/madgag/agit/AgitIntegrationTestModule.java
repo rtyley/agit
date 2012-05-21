@@ -20,18 +20,20 @@
 package com.madgag.agit;
 
 import android.content.ComponentName;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.name.Named;
 
 public class AgitIntegrationTestModule extends AbstractModule {
 
-	@Override
+    @Override
     protected void configure() {
-		install(YesToEveryPromptService.module());
+        install(YesToEveryPromptService.module());
     }
 
-    @Provides @Named("authAgent")
+    @Provides
+    @Named("authAgent")
     ComponentName authAgentComponentName() {
         return new ComponentName("com.madgag.ssh.toysshagent", "com.madgag.ssh.toysshagent.ToyAuthAgentService");
     }

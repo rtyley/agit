@@ -2,10 +2,11 @@ package com.madgag.agit;
 
 import android.view.View;
 import android.widget.TextView;
+
 import com.madgag.android.listviews.ViewHolder;
 
 public class SuggestedRepoViewHolder implements ViewHolder<SuggestedRepo> {
-    private final TextView title,detail;
+    private final TextView title, detail;
 
     public SuggestedRepoViewHolder(View v) {
         title = (TextView) v.findViewById(android.R.id.text1);

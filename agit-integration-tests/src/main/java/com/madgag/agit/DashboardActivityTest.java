@@ -25,14 +25,14 @@ import java.io.File;
 
 public class DashboardActivityTest extends CalculonStoryTest<DashboardActivity> {
 
-	private String existingFolder = File.listRoots()[0].getAbsolutePath();
+    private String existingFolder = File.listRoots()[0].getAbsolutePath();
 
-	public DashboardActivityTest() {
-		super("com.madgag.agit",DashboardActivity.class);
-	}
+    public DashboardActivityTest() {
+        super("com.madgag.agit", DashboardActivity.class);
+    }
 
     public void testClickingCloneButtonStartsCloneLauncherActivity() {
-    	assertThat(R.id.GoCloneButton).click().starts(CloneLauncherActivity.class);
+        assertThat(R.id.GoCloneButton).click().starts(CloneLauncherActivity.class);
     }
-    
+
 }

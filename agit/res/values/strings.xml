@@ -12,10 +12,18 @@
     <string name="clone_target_folder_label">Target Folder</string>
     <string name="clone_url_hint">Repository url</string>
     <string name="clone_directory_hint">Folder for checkout</string>
-    <string name="clone_readiness_needs_user_to_enter_a_url">Enter a repository url - or choose from some #suggest_repo[example repos].</string>
-    <string name="clone_readiness_folder_already_exists">Folder already exists- #specify_target_dir[specify an alternative] location?</string>
-    <string name="clone_readiness_repository_folder_already_exists">Folder already exists locally- view #view_existing_repo[existing repo]?</string>
-    <string name="ssh_agent_not_correctly_installed">No SSH-agent available - view #view_ssh_instructions[SSH setup guide]?</string>
+    <string name="clone_readiness_needs_user_to_enter_a_url">Enter a repository url - or choose from some
+        #suggest_repo[example repos].
+    </string>
+    <string name="clone_readiness_folder_already_exists">Folder already exists- #specify_target_dir[specify an
+        alternative] location?
+    </string>
+    <string name="clone_readiness_repository_folder_already_exists">Folder already exists locally- view
+        #view_existing_repo[existing repo]?
+    </string>
+    <string name="ssh_agent_not_correctly_installed">No SSH-agent available - view #view_ssh_instructions[SSH setup
+        guide]?
+    </string>
 
     <string name="repo_list_title">Local Repositories</string>
 
@@ -29,7 +37,7 @@
 
     <string name="latest_commit_title">Latest Commit</string>
     <string name="empty_list">« none »</string>
-    
+
     <string name="tag_name_label">Name:</string>
     <string name="tag_message_label">Message (optional):</string>
     <string name="checkout_commit_menu_option">Checkout...</string>
@@ -38,8 +46,8 @@
     <string name="clone_launcher_farewell_due_to_clone_launched">Clone started..!</string>
     <string name="object_id_copied">copied to clipboard!</string>
 
-    <string name="ask_host_key_ok_ticker" >"Host %1$s SSH fingerprint..."</string>
-    <string name="ask_host_key_ok" >"%1$s has key fingerprint: %2$s OK?"</string>
+    <string name="ask_host_key_ok_ticker">"Host %1$s SSH fingerprint..."</string>
+    <string name="ask_host_key_ok">"%1$s has key fingerprint: %2$s OK?"</string>
 
     <string name="diff_seekbar_before">BEFORE</string>
     <string name="diff_seekbar_after">AFTER</string>
@@ -77,8 +85,12 @@
     <string name="pull_cancelled">"Pull cancelled"</string>
     <string name="ref_not_resolved">"Ref {0} can not be resolved"</string>
 
-    <string name="missing_configuration_for_key">"No value for section '%1$s', subsection '%2$s', name '%3$s' found in configuration"</string>
+    <string name="missing_configuration_for_key">"No value for section '%1$s', subsection '%2$s', name '%3$s' found in
+        configuration"
+    </string>
     <string name="can_not_pull_on_a_repo_with_state">"Cannot pull into a repository with state: %1$s"</string>
-    <string name="can_not_pull_on_a_repo_with_detached_head">"Cannot pull into a repository with a detached HEAD - first checkout a branch"</string>
+    <string name="can_not_pull_on_a_repo_with_detached_head">"Cannot pull into a repository with a detached HEAD - first
+        checkout a branch"
+    </string>
 
 </resources>

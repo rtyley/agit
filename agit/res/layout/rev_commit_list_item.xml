@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:padding="10dip">
-	<ImageView
-		android:id="@+id/iv_commit_list_item_icon"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginLeft="20dip"
-		android:layout_marginBottom="5dip"
-		android:src="@drawable/commit_icon_small" />
-	<TextView
-		android:id="@+id/tv_commit_list_item_commit_date"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/iv_commit_list_item_icon"
-		android:layout_marginLeft="7.5dip"
-		android:textStyle="italic"
-		android:text="24 hours ago" />
-	<ImageView
-		android:id="@+id/iv_commit_list_item_gravatar"
-		android:layout_width="36dip"
-		android:layout_height="36dip"
-		android:layout_below="@id/iv_commit_list_item_icon"
-		android:layout_alignRight="@id/iv_commit_list_item_icon"
-		android:scaleType="center"
-		android:background="@drawable/gravatar_border" />
-	<TextView
-		android:id="@+id/tv_commit_list_item_shortdesc"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/tv_commit_list_item_commit_date"
-		android:layout_alignLeft="@id/tv_commit_list_item_commit_date"
-		android:textSize="16dip"
-		android:textColor="@color/textColor"
-		android:ellipsize="end"
-		android:maxLines="2" />
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:padding="10dip">
+    <ImageView
+            android:id="@+id/iv_commit_list_item_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dip"
+            android:layout_marginBottom="5dip"
+            android:src="@drawable/commit_icon_small"/>
+    <TextView
+            android:id="@+id/tv_commit_list_item_commit_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/iv_commit_list_item_icon"
+            android:layout_marginLeft="7.5dip"
+            android:textStyle="italic"
+            android:text="24 hours ago"/>
+    <ImageView
+            android:id="@+id/iv_commit_list_item_gravatar"
+            android:layout_width="36dip"
+            android:layout_height="36dip"
+            android:layout_below="@id/iv_commit_list_item_icon"
+            android:layout_alignRight="@id/iv_commit_list_item_icon"
+            android:scaleType="center"
+            android:background="@drawable/gravatar_border"/>
+    <TextView
+            android:id="@+id/tv_commit_list_item_shortdesc"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_commit_list_item_commit_date"
+            android:layout_alignLeft="@id/tv_commit_list_item_commit_date"
+            android:textSize="16dip"
+            android:textColor="@color/textColor"
+            android:ellipsize="end"
+            android:maxLines="2"/>
 </RelativeLayout>

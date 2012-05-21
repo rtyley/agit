@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:padding="10dip">
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:padding="10dip">
     <ImageView
-        android:id="@+id/repo_icon"
-		android:layout_width="32dip"
-		android:layout_height="32dip"
-		android:src="@drawable/repo_icon" />
-	<TextView
-		android:id="@+id/repo_name"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-        android:layout_marginTop="6dip"
-        android:layout_toRightOf="@id/repo_icon"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-    <ImageView
-		android:id="@+id/commit_icon"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-        android:layout_below="@id/repo_name"
-        android:layout_alignRight="@id/repo_icon"
-        android:paddingLeft="1dip"
-        android:paddingRight="4dip"
-		android:src="@drawable/commit_icon_small" />
-	<TextView
-		android:id="@+id/commit_subject"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-        android:layout_below="@id/repo_name"
-		android:layout_toRightOf="@id/commit_icon"
-		android:textSize="16dip"
-		android:textColor="@color/textColor"
-		android:ellipsize="end"
-		android:singleLine="true" />
+            android:id="@+id/repo_icon"
+            android:layout_width="32dip"
+            android:layout_height="32dip"
+            android:src="@drawable/repo_icon"/>
     <TextView
-		android:id="@+id/commit_time"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-		android:layout_above="@id/commit_subject"
-        android:textStyle="italic"
-        android:textAppearance="?android:attr/textAppearanceSmall"  />
+            android:id="@+id/repo_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dip"
+            android:layout_toRightOf="@id/repo_icon"
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+    <ImageView
+            android:id="@+id/commit_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/repo_name"
+            android:layout_alignRight="@id/repo_icon"
+            android:paddingLeft="1dip"
+            android:paddingRight="4dip"
+            android:src="@drawable/commit_icon_small"/>
+    <TextView
+            android:id="@+id/commit_subject"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/repo_name"
+            android:layout_toRightOf="@id/commit_icon"
+            android:textSize="16dip"
+            android:textColor="@color/textColor"
+            android:ellipsize="end"
+            android:singleLine="true"/>
+    <TextView
+            android:id="@+id/commit_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_above="@id/commit_subject"
+            android:textStyle="italic"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
 </RelativeLayout>

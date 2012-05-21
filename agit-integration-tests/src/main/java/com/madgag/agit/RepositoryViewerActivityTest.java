@@ -21,25 +21,24 @@ package com.madgag.agit;
 
 import static com.madgag.agit.AndroidTestEnvironment.helper;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
+import android.test.ActivityInstrumentationTestCase2;
 
 import org.eclipse.jgit.lib.Repository;
 
-import android.test.ActivityInstrumentationTestCase2;
-
 public class RepositoryViewerActivityTest extends ActivityInstrumentationTestCase2<RepositoryViewerActivity> {
 
-	private final static String TAG = RepositoryViewerActivityTest.class.getSimpleName();
+    private final static String TAG = RepositoryViewerActivityTest.class.getSimpleName();
 
-	public RepositoryViewerActivityTest() {
-		super("com.madgag.agit",RepositoryViewerActivity.class);
-	}
-	
-	public void testShouldShowRepoViewerPageWithoutExplosion() throws Exception {
+    public RepositoryViewerActivityTest() {
+        super("com.madgag.agit", RepositoryViewerActivity.class);
+    }
+
+    public void testShouldShowRepoViewerPageWithoutExplosion() throws Exception {
         Repository repoWithTags = helper(getInstrumentation()).unpackRepo("small-repo.with-tags.zip");
-		
-		setActivityIntent(manageRepoIntent(repoWithTags.getDirectory()));
-		
-		getActivity(); // shouldn't crash
-	}
-	
+
+        setActivityIntent(manageRepoIntent(repoWithTags.getDirectory()));
+
+        getActivity(); // shouldn't crash
+    }
+
 }

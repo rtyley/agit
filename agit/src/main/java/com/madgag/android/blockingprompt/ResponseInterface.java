@@ -22,9 +22,9 @@ package com.madgag.android.blockingprompt;
 import com.madgag.agit.operations.OpPrompt;
 
 public interface ResponseInterface {
-	
-	public OpPrompt<?> getOpPrompt();
-	
-	public void setResponse(Object value);
-	
+
+    public OpPrompt<?> getOpPrompt();
+
+    public void setResponse(Object value);
+
 }

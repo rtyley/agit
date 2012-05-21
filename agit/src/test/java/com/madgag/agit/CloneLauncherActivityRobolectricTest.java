@@ -1,15 +1,8 @@
 package com.madgag.agit;
 
-import android.content.Intent;
-import android.view.View;
-import android.widget.Checkable;
-import android.widget.TextView;
-import com.google.inject.Inject;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import static com.madgag.agit.R.id.*;
+import static com.madgag.agit.R.id.CloneUrlEditText;
+import static com.madgag.agit.R.id.GitDirEditText;
+import static com.madgag.agit.R.id.UseDefaultGitDirLocation;
 import static com.madgag.agit.matchers.CharSequenceMatcher.charSequence;
 import static com.madgag.agit.matchers.IsCheckedMatcher.checked;
 import static com.madgag.agit.matchers.IsCheckedMatcher.unchecked;
@@ -17,14 +10,25 @@ import static com.xtremelabs.robolectric.matchers.TextViewHasTextMatcher.hasText
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
+import android.content.Intent;
+import android.view.View;
+import android.widget.Checkable;
+import android.widget.TextView;
+
+import com.google.inject.Inject;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 @RunWith(InjectedTestRunner.class)
 public class CloneLauncherActivityRobolectricTest {
 
-    @Inject CloneLauncherActivity activity;
+    @Inject
+    CloneLauncherActivity activity;
 
-	final String appleProjectSourceUri="/example/apple";
-	final String targetDir="/sdcard/tango";
+    final String appleProjectSourceUri = "/example/apple";
+    final String targetDir = "/sdcard/tango";
 
 
     Checkable bareRepoCheckbox, defaultLocationCheckBox;
@@ -33,29 +37,29 @@ public class CloneLauncherActivityRobolectricTest {
 
     @Before
     public void setUp() {
-		activity.onCreate(null);
+        activity.onCreate(null);
         clone = new GitIntentBuilder("");
         bareRepoCheckbox = checkable(R.id.BareRepo);
         defaultLocationCheckBox = checkable(UseDefaultGitDirLocation);
         directoryEditText = textView(GitDirEditText);
     }
 
-	@Test
-	public void shouldUseSpecifiedRepoUrlFromIntentIfSupplied() {
+    @Test
+    public void shouldUseSpecifiedRepoUrlFromIntentIfSupplied() {
         startActivityWith(clone.sourceUri(appleProjectSourceUri).toIntent());
 
         assertThat(textView(CloneUrlEditText), hasText(appleProjectSourceUri));
         assertThat(defaultLocationCheckBox, checked());
-	}
+    }
 
     @Test
     public void shouldUseSpecifiedRepoDirLocationFromIntentIfSupplied() {
         startActivityWith(clone.sourceUri(appleProjectSourceUri).targetDir(targetDir).toIntent());
 
-		assertThat(textView(GitDirEditText), hasText(targetDir));
-		assertThat(defaultLocationCheckBox, unchecked());
-		assertThat(textView(CloneUrlEditText), hasText(appleProjectSourceUri));
-	}
+        assertThat(textView(GitDirEditText), hasText(targetDir));
+        assertThat(defaultLocationCheckBox, unchecked());
+        assertThat(textView(CloneUrlEditText), hasText(appleProjectSourceUri));
+    }
 
 //    @Test
 //    public void shouldShowHelpfulMessageIfSourceUriTextBoxIsBlank() {
@@ -70,7 +74,7 @@ public class CloneLauncherActivityRobolectricTest {
 
         bareRepoCheckbox.setChecked(true);
         assertThat(textOfView(GitDirEditText), charSequence(endsWith(".git")));
-        
+
         bareRepoCheckbox.setChecked(false);
         assertThat(textOfView(GitDirEditText), not(charSequence(endsWith(".git"))));
     }

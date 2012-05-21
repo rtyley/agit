@@ -19,17 +19,18 @@
 
 package com.madgag.agit;
 
+import static com.madgag.agit.R.layout.branch_list_item;
+import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
+
 import com.google.inject.Inject;
 import com.madgag.agit.git.model.RDTBranch;
 import com.madgag.android.listviews.ViewFactory;
 
-import static com.madgag.agit.R.layout.branch_list_item;
-import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
-
 public class RDTBranchListActivity extends RDTypeListActivity<RDTBranch.BranchSummary> {
-	
-	private static final String TAG = "RDTBranchL";
-    @Inject BranchViewHolderFactory viewHolderFactory;
+
+    private static final String TAG = "RDTBranchL";
+    @Inject
+    BranchViewHolderFactory viewHolderFactory;
 
     @Override
     public ViewFactory<RDTBranch.BranchSummary> getViewFactory() {

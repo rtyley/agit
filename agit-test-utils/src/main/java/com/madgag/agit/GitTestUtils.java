@@ -27,7 +27,6 @@ import android.util.Log;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URISyntaxException;
@@ -45,35 +44,35 @@ public class GitTestUtils {
     private static final String TAG = "GitTestUtils";
 
     public static String gitServerHostAddress() throws IOException, UnknownHostException {
-		File hostAddressFile = new File(Environment.getExternalStorageDirectory(), "agit-integration-test.properties");
-		Properties properties = new Properties();
-		if (hostAddressFile.exists()) {
-			properties.load(new FileInputStream(hostAddressFile));
-		}
+        File hostAddressFile = new File(Environment.getExternalStorageDirectory(), "agit-integration-test.properties");
+        Properties properties = new Properties();
+        if (hostAddressFile.exists()) {
+            properties.load(new FileInputStream(hostAddressFile));
+        }
         String[] hostAddresses = properties.getProperty("gitserver.host.address", "10.0.2.2").split(",");
         for (String hostAddress : hostAddresses) {
             if (InetAddress.getByName(hostAddress).isReachable(1000)) {
-                Log.d(TAG, "Using git server host : "+hostAddress);
+                Log.d(TAG, "Using git server host : " + hostAddress);
                 return hostAddress;
             }
         }
-        throw new RuntimeException("No reachable addresses in "+hostAddresses);
-	}
+        throw new RuntimeException("No reachable addresses in " + hostAddresses);
+    }
 
-	public static URIish integrationGitServerURIFor(String repoPath)
-			throws URISyntaxException, IOException, FileNotFoundException,
-			UnknownHostException {
+    public static URIish integrationGitServerURIFor(String repoPath)
+            throws URISyntaxException, IOException, FileNotFoundException,
+            UnknownHostException {
         return new URIish()
                 .setScheme("ssh")
                 .setUser(RSA_USER) // use RSA user by default - mini-git-server currently requires publickey auth
                 .setHost(gitServerHostAddress())
                 .setPort(29418)
                 .setPath(repoPath);
-	}
+    }
 
     public static Repository repoFor(File folder) throws IOException {
         File resolvedGitDir = resolveGitDirFor(folder);
-        assertThat("gitdir "+resolvedGitDir+" exists",resolvedGitDir, notNullValue());
+        assertThat("gitdir " + resolvedGitDir + " exists", resolvedGitDir, notNullValue());
         return new FileRepository(resolvedGitDir);
     }
 

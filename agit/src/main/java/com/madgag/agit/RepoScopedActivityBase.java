@@ -19,36 +19,47 @@
 
 package com.madgag.agit;
 
+import static com.madgag.agit.GitIntents.gitDirFrom;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.madgag.agit.guice.RepositoryScope;
-import org.eclipse.jgit.lib.Repository;
-import roboguice.activity.RoboActivity;
-import roboguice.inject.InjectorProvider;
 
 import java.io.File;
 
-import static com.madgag.agit.GitIntents.gitDirFrom;
+import org.eclipse.jgit.lib.Repository;
+
+import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectorProvider;
 
 public abstract class RepoScopedActivityBase extends RoboActivity {
 
-    private @Inject @Named("gitdir") File gitdir;
-    private @Inject RepositoryContext rc;
-    private @Inject Repository repository;
-    protected @Inject RepositoryScope repositoryScope;
-	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-        RepositoryScope repositoryScope = enterRepositoryScopeFor(this,getIntent());
-		try {
+    private
+    @Inject
+    @Named("gitdir")
+    File gitdir;
+    private
+    @Inject
+    RepositoryContext rc;
+    private
+    @Inject
+    Repository repository;
+    protected
+    @Inject
+    RepositoryScope repositoryScope;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        RepositoryScope repositoryScope = enterRepositoryScopeFor(this, getIntent());
+        try {
             super.onCreate(savedInstanceState);
         } finally {
             repositoryScope.exit();
         }
-	}
+    }
 
     static RepositoryScope enterRepositoryScopeFor(InjectorProvider injectorProvider, Intent intent) {
         RepositoryScope repositoryScope = injectorProvider.getInjector().getInstance(RepositoryScope.class);
@@ -57,32 +68,32 @@ public abstract class RepoScopedActivityBase extends RoboActivity {
     }
 
     @Override
-	protected void onResume() {
-		super.onResume();
-		rc.onResume();
-	}
+    protected void onResume() {
+        super.onResume();
+        rc.onResume();
+    }
 
     @Override
     protected Dialog onCreateDialog(int id) {
-	    return rc.onCreateDialog(id);
-	}
+        return rc.onCreateDialog(id);
+    }
 
     @Override
     protected void onPrepareDialog(int id, Dialog dialog) {
-	    rc.onPrepareDialog(id, dialog);
-	}
+        rc.onPrepareDialog(id, dialog);
+    }
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-		rc.onPause();
-	}
+    @Override
+    protected void onPause() {
+        super.onPause();
+        rc.onPause();
+    }
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		rc.onDestroy();
-	}
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        rc.onDestroy();
+    }
 
     protected Repository repo() {
         return repository;
@@ -99,5 +110,6 @@ public abstract class RepoScopedActivityBase extends RoboActivity {
     public void onRepoScopedPause() {
     }
 
-    public void onRepoScopedDestroy() {}
+    public void onRepoScopedDestroy() {
+    }
 }

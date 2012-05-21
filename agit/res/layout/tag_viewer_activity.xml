@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
 
-	<com.markupartist.android.widget.ActionBar
-	    android:id="@+id/actionbar"
-	    style="@style/ActionBar"
-        />
+    <com.markupartist.android.widget.ActionBar
+            android:id="@+id/actionbar"
+            style="@style/ActionBar"
+            />
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1.0"
-        android:fadingEdgeLength="32dip">
-        <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="14dip" android:paddingRight="14dip"
-            android:paddingTop="6dip" android:paddingBottom="6dip" >
+            android:layout_weight="1.0"
+            android:fadingEdgeLength="32dip">
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="14dip" android:paddingRight="14dip"
+                android:paddingTop="6dip" android:paddingBottom="6dip">
 
             <com.madgag.agit.views.ObjectSummaryView
-                 android:id="@+id/tv_tag_ref_object"
-                 android:layout_width="fill_parent"
-                 android:layout_height="wrap_content"/>
+                    android:id="@+id/tv_tag_ref_object"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

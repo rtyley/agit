@@ -10,8 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
-import android.widget.*;
+import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import com.madgag.agit.R;
 
 import java.lang.reflect.InvocationTargetException;
@@ -87,13 +94,13 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
                 R.layout.pull_to_refresh_header, null);
 
         mRefreshViewText =
-            (TextView) mRefreshView.findViewById(R.id.pull_to_refresh_text);
+                (TextView) mRefreshView.findViewById(R.id.pull_to_refresh_text);
         mRefreshViewImage =
-            (ImageView) mRefreshView.findViewById(R.id.pull_to_refresh_image);
+                (ImageView) mRefreshView.findViewById(R.id.pull_to_refresh_image);
         mRefreshViewProgress =
-            (ProgressBar) mRefreshView.findViewById(R.id.pull_to_refresh_progress);
+                (ProgressBar) mRefreshView.findViewById(R.id.pull_to_refresh_progress);
         mRefreshViewLastUpdated =
-            (TextView) mRefreshView.findViewById(R.id.pull_to_refresh_updated_at);
+                (TextView) mRefreshView.findViewById(R.id.pull_to_refresh_updated_at);
 
         mRefreshViewImage.setMinimumHeight(50);
         mRefreshView.setOnClickListener(new OnClickRefreshListener());
@@ -124,8 +131,8 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
     /**
      * Set the listener that will receive notifications every time the list
      * scrolls.
-     * 
-     * @param l The scroll listener. 
+     *
+     * @param l The scroll listener.
      */
     @Override
     public void setOnScrollListener(AbsListView.OnScrollListener l) {
@@ -134,7 +141,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 
     /**
      * Register a callback to be invoked when this list should be refreshed.
-     * 
+     *
      * @param onRefreshListener The callback to run.
      */
     public void setOnRefreshListener(OnRefreshListener onRefreshListener) {
@@ -142,7 +149,8 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
     }
 
     /**
-     * Set a text to represent when the list was last updated. 
+     * Set a text to represent when the list was last updated.
+     *
      * @param lastUpdated Last updated at.
      */
     public void setLastUpdated(CharSequence lastUpdated) {
@@ -156,10 +164,10 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 
     /**
      * Smoothly scroll by distance pixels over duration milliseconds.
-     * 
+     * <p/>
      * <p>Using reflection internally to call smoothScrollBy for API Level 8
      * otherwise scrollBy is called.
-     * 
+     *
      * @param distance Distance to scroll in pixels.
      * @param duration Duration of the scroll animation in milliseconds.
      */
@@ -170,7 +178,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
             method.invoke(this, distance + 1, duration);
         } catch (NoSuchMethodException e) {
             // If smoothScrollBy is not available (< 2.2)
-        	setSelection(1);
+            setSelection(1);
         } catch (IllegalArgumentException e) {
             throw e;
         } catch (IllegalAccessException e) {
@@ -223,7 +231,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
         int pointerCount = 1;
         try {
             Method method = MotionEvent.class.getMethod("getPointerCount");
-            pointerCount = (Integer)method.invoke(ev);
+            pointerCount = (Integer) method.invoke(ev);
         } catch (NoSuchMethodException e) {
             pointerCount = 1;
         } catch (IllegalArgumentException e) {
@@ -326,7 +334,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
     }
 
     public void onScroll(AbsListView view, int firstVisibleItem,
-            int visibleItemCount, int totalItemCount) {
+                         int visibleItemCount, int totalItemCount) {
         // When the refresh view is completely visible, change the text to say
         // "Release to refresh..." and flip the arrow drawable.
         if (mCurrentScrollState == SCROLL_STATE_TOUCH_SCROLL
@@ -397,6 +405,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 
     /**
      * Resets the list to a normal state after a refresh.
+     *
      * @param lastUpdated Last updated at.
      */
     public void onRefreshComplete(CharSequence lastUpdated) {
@@ -407,7 +416,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
     /**
      * Resets the list to a normal state after a refresh.
      */
-    public void onRefreshComplete() {        
+    public void onRefreshComplete() {
         Log.d(TAG, "onRefreshComplete");
 
         resetHeader();
@@ -443,7 +452,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
     public interface OnRefreshListener {
         /**
          * Called when the list should be refreshed.
-         * <p>
+         * <p/>
          * A call to {@link PullToRefreshListView #onRefreshComplete()} is
          * expected to indicate that the refresh has completed.
          */

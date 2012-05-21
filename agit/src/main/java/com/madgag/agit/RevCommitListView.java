@@ -19,53 +19,58 @@
 
 package com.madgag.agit;
 
+import static com.madgag.agit.R.layout.rev_commit_list_item;
+import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+
 import com.google.common.base.Function;
 import com.google.inject.Inject;
 import com.madgag.android.listviews.ViewHoldingListAdapter;
 import com.markupartist.android.widget.PullToRefreshListView;
-import org.eclipse.jgit.revwalk.RevCommit;
-import roboguice.inject.InjectorProvider;
 
 import java.util.Collections;
 import java.util.List;
 
-import static com.madgag.agit.R.layout.rev_commit_list_item;
-import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
+import org.eclipse.jgit.revwalk.RevCommit;
+
+import roboguice.inject.InjectorProvider;
 
 public class RevCommitListView extends PullToRefreshListView {
 
-    private static String TAG="RCLV";
+    private static String TAG = "RCLV";
 
-    @Inject CommitViewHolderFactory commitViewHolderFactory;
-	private Function<RevCommit, Intent> commitViewerIntentCreator;
+    @Inject
+    CommitViewHolderFactory commitViewHolderFactory;
+    private Function<RevCommit, Intent> commitViewerIntentCreator;
 
     private final ViewHoldingListAdapter<RevCommit> adapter;
 
-	public RevCommitListView(Context context, AttributeSet attrs) {
-		super(context, attrs);
+    public RevCommitListView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         ((InjectorProvider) context).getInjector().injectMembers(this);
-        adapter = new ViewHoldingListAdapter<RevCommit>(Collections.<RevCommit>emptyList(), viewInflatorFor(getContext(), rev_commit_list_item),
+        adapter = new ViewHoldingListAdapter<RevCommit>(Collections.<RevCommit>emptyList(),
+                viewInflatorFor(getContext(), rev_commit_list_item),
                 commitViewHolderFactory);
         setAdapter(adapter);
 
-		setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				RevCommit commit = (RevCommit) getAdapter().getItem(position);
-				getContext().startActivity( commitViewerIntentCreator.apply(commit) );
-			}
-		});
-	}
+        setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                RevCommit commit = (RevCommit) getAdapter().getItem(position);
+                getContext().startActivity(commitViewerIntentCreator.apply(commit));
+            }
+        });
+    }
 
-	public void setCommits(Function<RevCommit, Intent> commitViewerIntentCreator, List<RevCommit> commits) {
-        Log.d(TAG, "Setting commits: "+commits.get(0).toObjectId()+" .. "+commits.get(commits.size()-1).toObjectId());
-		this.commitViewerIntentCreator = commitViewerIntentCreator;
+    public void setCommits(Function<RevCommit, Intent> commitViewerIntentCreator, List<RevCommit> commits) {
+        Log.d(TAG, "Setting commits: " + commits.get(0).toObjectId() + " .. " + commits.get(commits.size() - 1)
+                .toObjectId());
+        this.commitViewerIntentCreator = commitViewerIntentCreator;
 
         adapter.setList(commits);
-	}
+    }
 }

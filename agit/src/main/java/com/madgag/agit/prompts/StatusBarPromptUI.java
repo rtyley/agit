@@ -27,7 +27,8 @@ import com.madgag.android.blockingprompt.ResponseInterface;
 
 @RepositoryScoped
 public class StatusBarPromptUI implements PromptUI {
-    @Inject RepoNotifications repoNotifications;
+    @Inject
+    RepoNotifications repoNotifications;
 
     public void acceptPrompt(ResponseInterface responseInterface) {
         repoNotifications.notifyPromptWith(responseInterface.getOpPrompt().getOpNotification());

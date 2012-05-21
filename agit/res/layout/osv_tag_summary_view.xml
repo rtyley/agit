@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android" >
-	<com.madgag.agit.views.PersonIdentView
-         android:id="@+id/tagger_ident"
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content"/>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.madgag.agit.views.PersonIdentView
+            android:id="@+id/tagger_ident"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
     <TextView android:id="@+id/message_text"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-        style="@style/GitMessage" />
-	<com.madgag.agit.views.ObjectSummaryView
-         android:id="@+id/tagged_object"
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content"/>
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              style="@style/GitMessage"/>
+    <com.madgag.agit.views.ObjectSummaryView
+            android:id="@+id/tagged_object"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
 </merge>

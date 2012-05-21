@@ -19,28 +19,29 @@
 
 package com.madgag.agit.views;
 
+import static com.madgag.agit.R.drawable.tree_icon;
 import android.view.View;
 import android.widget.TextView;
+
 import com.madgag.agit.R;
+
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.treewalk.TreeWalk;
 
-import static com.madgag.agit.R.drawable.tree_icon;
-
 public class TreeSummaryView extends OSV<RevTree> {
 
     TextView treeTextView;
 
-	public void setObject(RevTree tree, View view, Repository repo) {
+    public void setObject(RevTree tree, View view, Repository repo) {
         TreeWalk treeWalk = new TreeWalk(repo);
         StringBuilder sb = new StringBuilder();
         try {
             int treeIndex = treeWalk.addTree(tree);
             while (treeWalk.next()) {
                 ObjectId newObjectId = treeWalk.getObjectId(treeIndex);
-                String rawPath= new String(treeWalk.getRawPath());
+                String rawPath = new String(treeWalk.getRawPath());
                 sb.append(rawPath).append(" - ");
                 //System.out.println(newObjectId+" rawPath="+rawPath+" subTree="+ tw.isSubtree());
             }
