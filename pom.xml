@@ -110,18 +110,13 @@
                 <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>android-maven-plugin</artifactId>
-                    <version>3.0.0-alpha-14</version>
+                    <version>3.2.0</version>
                     <extensions>true</extensions>
                     <configuration>
-                        <dex>
-                            <jvmArguments>
-                                <jvmArgument>-Xms256m</jvmArgument>
-                                <jvmArgument>-Xmx512m</jvmArgument>
-                            </jvmArguments>
-                        </dex>
                         <sdk>
                             <platform>14</platform>
                         </sdk>
+                        <proguardConfig>../proguard.cfg</proguardConfig>
                         <zipalign>
                             <verbose>true</verbose>
                         </zipalign>
@@ -134,41 +129,6 @@
                     <configuration>
                         <source>1.6</source>
                         <target>1.6</target>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>com.pyx4me</groupId>
-                    <artifactId>proguard-maven-plugin</artifactId>
-                    <version>2.0.4</version>
-                    <executions>
-                        <execution>
-                            <phase>process-classes</phase>
-                            <goals>
-                                <goal>proguard</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <!-- we need to override the dependency of the plugin to get a newer version of proguard -->
-                    <dependencies>
-                        <dependency>
-                            <groupId>net.sf.proguard</groupId>
-                            <artifactId>proguard</artifactId>
-                            <version>4.4</version>
-                            <scope>runtime</scope>
-                        </dependency>
-                    </dependencies>
-                    <configuration>
-                        <proguardVersion>4.4</proguardVersion>
-                        <maxMemory>512m</maxMemory>
-                        <injar>android-classes</injar>
-                        <libs>
-                            <lib>${rt.jar.path}</lib>
-                            <lib>${jsse.jar.path}</lib>
-                        </libs>
-                        <obfuscate>false</obfuscate>
-                        <addMavenDescriptor>false</addMavenDescriptor>
-                        <proguardInclude>../proguard.cfg</proguardInclude>
-                        <!-- sadly, relative to sub-modules -->
                     </configuration>
                 </plugin>
             </plugins>

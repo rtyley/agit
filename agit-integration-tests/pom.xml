@@ -18,25 +18,37 @@
             <artifactId>toy-ssh-agent</artifactId>
             <!-- Needs to come before Agit -->
             <version>1.6</version>
+            <scope>provided</scope>
             <type>apk</type>
         </dependency>
         <dependency>
             <groupId>com.madgag</groupId>
             <artifactId>agit</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
             <type>apk</type>
         </dependency>
         <dependency>
             <groupId>com.madgag</groupId>
             <artifactId>agit</artifactId>
             <version>${project.version}</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>com.madgag</groupId>
             <artifactId>agit-test-utils</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.madgag</groupId>
+                    <artifactId>org.eclipse.jgit</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -107,10 +119,6 @@
                         <version>r16</version>
                     </dependency>
                 </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>com.pyx4me</groupId>
-                <artifactId>proguard-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
