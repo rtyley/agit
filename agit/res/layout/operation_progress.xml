@@ -5,7 +5,7 @@
 
     <LinearLayout android:layout_width="fill_parent"
                   android:layout_height="wrap_content" android:orientation="vertical">
-        <TextView android:id="@+id/operation_description"
+        <TextView android:id="@android:id/title"
                   android:layout_width="fill_parent" android:textStyle="bold"
                   android:layout_height="wrap_content" android:layout_alignParentTop="true"
                   android:textColor="#000"/>
@@ -19,7 +19,7 @@
             android:layout_width="fill_parent" android:layout_height="wrap_content"
             android:orientation="horizontal">
         <ProgressBar
-                android:id="@+id/status_progress"
+                android:id="@android:id/progress"
                 android:layout_weight="1"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
@@ -36,6 +36,6 @@
                 android:textColor="#000"
                 android:ellipsize="middle"
                 android:singleLine="true"
-                android:layout_below="@id/status_progress"/>
+                android:layout_below="@android:id/progress"/>
     </LinearLayout>
 </LinearLayout>
