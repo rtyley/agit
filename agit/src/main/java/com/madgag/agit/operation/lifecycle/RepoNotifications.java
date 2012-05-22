@@ -2,17 +2,22 @@ package com.madgag.agit.operation.lifecycle;
 
 import static android.app.Notification.FLAG_AUTO_CANCEL;
 import static android.content.Context.NOTIFICATION_SERVICE;
+import static android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 import static java.lang.System.currentTimeMillis;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import com.madgag.agit.R;
 import com.madgag.agit.guice.RepositoryScoped;
 import com.madgag.agit.operations.OpNotification;
+import com.madgag.android.notifications.StatusBarNotificationStyles;
 
 import java.io.File;
 
@@ -24,7 +29,7 @@ public class RepoNotifications {
     private final Context context;
     private final NotificationManager notificationManager;
     private final int ongoingOpNotificationId, promptNotificationId, completionNotificationId;
-    private final PendingIntent manageGitRepo;
+    public final PendingIntent manageGitRepo;
 
     @Inject
     public RepoNotifications(Context context, @Named("gitdir") File gitdir, PendingIntent manageGitRepo) {

@@ -2,13 +2,18 @@ package com.madgag.agit.operation.lifecycle;
 
 import static android.app.Notification.FLAG_ONGOING_EVENT;
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.util.Log;
-import android.widget.RemoteViews;
+import android.view.View;
+import android.widget.TextView;
 
+import com.google.common.base.Predicate;
 import com.madgag.agit.R;
 import com.madgag.agit.operations.OpNotification;
 import com.madgag.agit.operations.Progress;
+import com.madgag.android.notifications.NotificationViewSearcher;
+import com.madgag.android.notifications.ProgressNotification;
 
 // Stateful? Relates to a specific operation?
 public class LongRunningServiceLifetime implements OperationLifecycleSupport {
@@ -27,10 +32,14 @@ public class LongRunningServiceLifetime implements OperationLifecycleSupport {
     }
 
     public void startedWith(OpNotification startNotification) {
-        ongoingNotification = repoNotifications.createNotificationWith(startNotification);
+        ProgressNotification.TextViewIds backupLayoutViewIds = new ProgressNotification.TextViewIds(android.R.id.title, R.id.operation_long_url, R.id.status_text);
+        ProgressNotification pn = new ProgressNotification.Builder(service)
+                .generateRawProgressNotification(startNotification, R.layout.operation_progress, backupLayoutViewIds);
+
+        ongoingNotification = pn.notification;
+        ongoingNotification.contentIntent = repoNotifications.manageGitRepo;
         ongoingNotification.flags = ongoingNotification.flags | FLAG_ONGOING_EVENT;
-        ongoingNotification.contentView = notificationView(startNotification);
-        statusBarProgressView = new StatusBarProgressView(ongoingNotification.contentView);
+        statusBarProgressView = new StatusBarProgressView(ongoingNotification.contentView, pn.textViewIds.info);
         foregroundServiceWith(ongoingNotification); //definitely the job of this class, right?!
     }
 
@@ -50,19 +59,6 @@ public class LongRunningServiceLifetime implements OperationLifecycleSupport {
         removeServiceFromForeground();
         repoNotifications.cancelOngoingNotification();
         repoNotifications.notifyCompletionWith(completionNotification);
-    }
-
-    private RemoteViews notificationView(OpNotification startNotification) {
-        RemoteViews v = remoteViewWithLayout(R.layout.operation_progress);
-        v.setTextViewText(android.R.id.title, startNotification.getEventTitle()); // TO-DO more suitable text?
-        v.setTextViewText(R.id.operation_long_url, startNotification.getEventDetail());
-        v.setTextViewText(R.id.status_text, "Please wait...");
-        v.setProgressBar(android.R.id.progress, 1, 0, true);
-        return v;
-    }
-
-    private RemoteViews remoteViewWithLayout(int layoutId) {
-        return new RemoteViews(service.getApplicationContext().getPackageName(), layoutId);
     }
 
     private void foregroundServiceWith(Notification ongoingNotification) {
