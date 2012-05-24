@@ -19,6 +19,6 @@ public class BitBucketWebLaunchActivity extends WebLaunchActivity {
     Intent cloneLauncherForWebBrowseIntent(Uri uri) {
         Matcher matcher = projectPathPattern.matcher(uri.getPath());
         matcher.find();
-        return cloneLauncherIntentFor("git@bitbucket.org:"+ matcher.group(1) +".git");
+        return cloneLauncherIntentFor("https://bitbucket.org/"+ matcher.group(1) +".git");
     }
 }
