@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- package name must be unique so suffix with "tests" so package loader doesn't ignore us --><manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="preferExternal" android:versionCode="1290" android:versionName="1.29-SNAPSHOT" package="com.madgag.agit.tests">
+<!-- package name must be unique so suffix with "tests" so package loader doesn't ignore us --><manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="preferExternal" android:versionCode="1" android:versionName="1.30-SNAPSHOT" package="com.madgag.agit.tests">
 
     <!-- We add an application tag here just so that we can indicate that
          this package needs to link against the android.test library,

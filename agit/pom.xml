@@ -120,6 +120,14 @@
                     <include>CREDITS.*</include>
                 </includes>
             </resource>
+            <resource>
+                <directory>${project.basedir}</directory>
+                <filtering>true</filtering>
+                <targetPath>${project.build.directory}/filtered-manifest</targetPath>
+                <includes>
+                    <include>AndroidManifest.xml</include>
+                </includes>
+            </resource>
         </resources>
         <plugins>
             <plugin>
@@ -136,6 +144,10 @@
             <plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
+                <configuration>
+                    <androidManifestFile>${project.build.directory}/filtered-manifest/AndroidManifest.xml
+                    </androidManifestFile>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -143,7 +155,28 @@
 
     <profiles>
         <profile>
-            <id>release-to-market</id>
+            <id>development</id>
+            <!-- using this since activeByDefault does not work well with multiple profiles -->
+            <activation>
+                <property>
+                    <name>environment</name>
+                    <value>!production</value>
+                </property>
+            </activation>
+            <properties>
+                <deployment.stage>In Development</deployment.stage>
+                <android.debuggable>true</android.debuggable>
+            </properties>
+        </profile>
+        <profile>
+            <id>production</id>
+            <properties>
+                <deployment.stage>In Production</deployment.stage>
+                <android.debuggable>false</android.debuggable>
+            </properties>
+        </profile>
+        <profile>
+            <id>release</id>
             <!-- via this activation the profile is automatically used when the release is done with the maven release
             plugin -->
             <activation>
@@ -201,6 +234,33 @@
                                 <phase>package</phase>
                                 <goals>
                                     <goal>zipalign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>${project.build.directory}/${project.artifactId}-signed-aligned.apk</file>
+                                    <type>apk</type>
+                                    <classifier>signed-aligned</classifier>
+                                </artifact>
+                                <artifact>
+                                    <file>${project.build.directory}/proguard_map.txt</file>
+                                    <type>map</type>
+                                    <classifier>release</classifier>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-signed-aligned</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>attach-artifact</goal>
                                 </goals>
                             </execution>
                         </executions>

@@ -33,6 +33,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <android.version>4.0.1.2</android.version>
+        <maven.build.timestamp.format>yyMMdddHH</maven.build.timestamp.format>
+        <!-- Apparently necessary due to http://jira.codehaus.org/browse/MRESOURCES-99 and also more readable -->
+        <versionCode>${maven.build.timestamp}</versionCode>
     </properties>
     <licenses>
         <license>
@@ -120,7 +123,6 @@
                         </proguard>
                         <manifest>
                             <versionName />
-                            <versionCodeUpdateFromVersion>true</versionCodeUpdateFromVersion>
                             <debuggable>true</debuggable>
                         </manifest>
                     </configuration>
