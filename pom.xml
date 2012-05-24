@@ -110,11 +110,14 @@
                         <sdk>
                             <platform>14</platform>
                         </sdk>
-                        <proguardConfig>../proguard.cfg</proguardConfig>
                         <zipalign>
                             <verbose>true</verbose>
                         </zipalign>
                         <undeployBeforeDeploy>true</undeployBeforeDeploy>
+                        <proguard>
+                            <skip>false</skip>
+                            <config>../proguard.cfg</config>
+                        </proguard>
                         <manifest>
                             <versionName />
                             <versionCodeUpdateFromVersion>true</versionCodeUpdateFromVersion>
