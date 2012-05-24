@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>agit-integration-tests</artifactId>
 
     <parent>
-        <version>1.29-SNAPSHOT</version>
+        <version>1.29</version>
         <groupId>com.madgag</groupId>
         <artifactId>agit-parent</artifactId>
     </parent>
@@ -102,8 +101,8 @@
                                   val ipAddresses = java.net.NetworkInterface.getNetworkInterfaces().filter { !_.isLoopback }.flatMap { _.getInetAddresses }.map { _.getHostAddress }.mkString(",")
                                   AndroidDebugBridge.init(false)
                                   val androidDebugBridge = AndroidDebugBridge.createBridge
-                                  androidDebugBridge.getDevices.filter { !_.isEmulator } foreach { d =>
-                                    val command = "echo gitserver.host.address="+ipAddresses+" > "+d.getMountPoint(IDevice.MNT_EXTERNAL_STORAGE)+"/agit-integration-test.properties"
+                                  androidDebugBridge.getDevices.filter { !_.isEmulator } foreach { d =&gt;
+                                    val command = "echo gitserver.host.address="+ipAddresses+" &gt; "+d.getMountPoint(IDevice.MNT_EXTERNAL_STORAGE)+"/agit-integration-test.properties"
 
                                     d.executeShellCommand(command, NullOutputReceiver.getReceiver)
                                   }
