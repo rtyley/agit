@@ -6,9 +6,11 @@ import static com.madgag.agit.TagViewer.tagViewerIntentFor;
 import java.io.File;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+@Ignore
 @RunWith(InjectedTestRunner.class)
 public class TagViewerRobolectricTest {
     private static File gitdirForSmallRepo;
