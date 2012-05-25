@@ -25,12 +25,12 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.madgag.agit.GitIntents.REPO_STATE_CHANGED_BROADCAST;
 import static com.madgag.agit.GitIntents.actionWithSuffix;
 import static com.madgag.agit.GitIntents.gitDirFrom;
-import static com.madgag.agit.R.drawable.ic_title_fetch;
 import static com.madgag.agit.R.string.button_no;
 import static com.madgag.agit.R.string.button_yes;
 import static com.madgag.agit.R.string.repo_deletion_dialog_confirmation_message;
 import static com.madgag.agit.R.string.repo_deletion_dialog_confirmation_title;
 import static com.madgag.agit.git.Repos.niceNameFor;
+import static com.madgag.android.ActionBarUtil.homewardsWith;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
@@ -42,20 +42,21 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.ListView;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 import com.madgag.agit.operation.lifecycle.CasualShortTermLifetime;
 import com.madgag.agit.operations.GitAsyncTaskFactory;
 import com.madgag.agit.operations.GitOperationExecutor;
 import com.madgag.agit.operations.RepoDeleter;
-import com.markupartist.android.widget.ActionBar;
-import com.markupartist.android.widget.ActionBar.Action;
 
 import java.io.File;
+
+import org.eclipse.jgit.lib.Repository;
 
 import roboguice.inject.InjectView;
 
@@ -63,6 +64,11 @@ import roboguice.inject.InjectView;
 public class RepositoryViewerActivity extends RepoScopedActivityBase {
 
     public static final String TAG = "RMA";
+
+
+    public static Intent manageRepoIntent(Repository repository) {
+        return manageRepoIntent(repository.getDirectory());
+    }
 
     public static Intent manageRepoIntent(File gitdir) {
         return new GitIntentBuilder("repo.VIEW").gitdir(gitdir).toIntent();
@@ -84,8 +90,6 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
     @Inject
     GitAsyncTaskFactory gitAsyncTaskFactory;
 
-    @InjectView(R.id.actionbar)
-    ActionBar actionBar;
     @InjectView(android.R.id.list)
     ListView listView;
 
@@ -99,17 +103,9 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.repo_management_activity);
 
-        actionBar.setHomeAction(new HomeAction(this));
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(niceNameFor(repo()));
-        actionBar.addAction(new Action() {
-            public void performAction(View view) {
-                startService(new GitIntentBuilder("repo.SYNC").repository(repo()).toIntent());
-            }
-
-            public int getDrawable() {
-                return ic_title_fetch;
-            }
-        });
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         listView.setOnItemClickListener(summaryAdapter.getOnItemClickListener());
     }
@@ -117,15 +113,20 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        menu.add(0, DELETE_ID, 0, R.string.delete_repo_menu_option).setShortcut('0', 'd').setIcon(ic_menu_delete);
+        getSupportMenuInflater().inflate(R.menu.repo, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case DELETE_ID:
+            case android.R.id.home:
+                return homewardsWith(this, new Intent(this, DashboardActivity.class));
+            case R.id.delete_repo:
                 showDialog(DELETION_CONFIRMATION_DIALOG);
+                return true;
+            case R.id.sync_repo:
+                startService(new GitIntentBuilder("repo.SYNC").repository(repo()).toIntent());
                 return true;
         }
         return super.onOptionsItemSelected(item);

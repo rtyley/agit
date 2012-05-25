@@ -5,7 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.webkit.WebView;
 
-import com.markupartist.android.widget.ActionBar;
+import com.actionbarsherlock.app.ActionBar;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import com.petebevin.markdown.MarkdownProcessor;
 
 import org.apache.commons.io.IOUtils;
@@ -13,12 +14,10 @@ import org.apache.commons.io.IOUtils;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 
-public abstract class MarkdownActivityBase extends RoboActivity {
+public abstract class MarkdownActivityBase extends RoboSherlockActivity {
 
     private final static String TAG = "MA";
 
-    @InjectView(R.id.actionbar)
-    ActionBar actionBar;
     @InjectView(R.id.webView)
     WebView webView;
 
@@ -29,7 +28,8 @@ public abstract class MarkdownActivityBase extends RoboActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(about_activity);
-        actionBar.setHomeAction(new HomeAction(this));
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         configureActionBar(actionBar);
 
         MarkdownProcessor m = new MarkdownProcessor();

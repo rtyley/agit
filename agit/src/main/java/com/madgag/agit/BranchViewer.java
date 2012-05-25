@@ -25,14 +25,19 @@ import static android.text.format.DateUtils.formatDateTime;
 import static android.widget.Toast.LENGTH_SHORT;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.CommitViewerActivity.commitViewerIntentCreatorFor;
+import static com.madgag.agit.RDTypeListActivity.listIntent;
+import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
+import static com.madgag.android.ActionBarUtil.homewardsWith;
 import static java.lang.System.currentTimeMillis;
 import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
@@ -40,7 +45,6 @@ import com.madgag.agit.operation.lifecycle.CasualShortTermLifetime;
 import com.madgag.agit.operations.Fetch;
 import com.madgag.agit.operations.GitAsyncTaskFactory;
 import com.madgag.agit.operations.OpNotification;
-import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.PullToRefreshListView;
 
 import java.io.File;
@@ -65,9 +69,6 @@ public class BranchViewer extends RepoScopedActivityBase {
 
     private static final String TAG = "BranchViewer";
 
-    @InjectView(R.id.actionbar)
-    ActionBar actionBar;
-
     @InjectView(list)
     RevCommitListView revCommitListView;
 
@@ -85,8 +86,9 @@ public class BranchViewer extends RepoScopedActivityBase {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.branch_view);
 
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(shortenRefName(branch().getName()));
-        actionBar.setHomeAction(new HomeAction(this));
+        actionBar.setDisplayHomeAsUpEnabled(true);
         setCommits();
         revCommitListView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
             public void onRefresh() {
@@ -118,6 +120,8 @@ public class BranchViewer extends RepoScopedActivityBase {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                return homewardsWith(this, listIntent(repository, "branch"));
             case CHECKOUT_ID:
                 try {
                     new Git(repo()).checkout().setName(branchName).call();

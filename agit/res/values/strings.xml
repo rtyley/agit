@@ -32,6 +32,7 @@
 
 
     <string name="execute_clone_button_label">Clone!</string>
+    <string name="delete_menu_option">Delete</string>
     <string name="delete_repo_menu_option">Delete Repo</string>
     <string name="delete_tag_menu_option">Delete Tag</string>
 
@@ -43,6 +44,7 @@
     <string name="checkout_commit_menu_option">Checkout...</string>
     <string name="tag_commit_menu_option">Tag...</string>
 
+    <string name="clone_menu_option">Clone</string>
     <string name="clone_launcher_farewell_due_to_clone_launched">Clone started..!</string>
     <string name="object_id_copied">copied to clipboard!</string>
 

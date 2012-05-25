@@ -19,19 +19,20 @@
 
 package com.madgag.agit;
 
-import static com.madgag.agit.R.id.actionbar;
 import static com.madgag.agit.R.id.tv_tag_ref_object;
+import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
+import static com.madgag.android.ActionBarUtil.homewardsWith;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 import com.madgag.agit.views.ObjectSummaryView;
 import com.madgag.android.lazydrawables.ImageSession;
-import com.markupartist.android.widget.ActionBar;
 
 import java.io.File;
 import java.io.IOException;
@@ -67,8 +68,6 @@ public class TagViewer extends RepoScopedActivityBase {
     @Inject
     private ImageSession avatarSession;
 
-    ActionBar actionBar;
-
     @InjectView(tv_tag_ref_object)
     ObjectSummaryView objectSummaryView;
 
@@ -87,9 +86,9 @@ public class TagViewer extends RepoScopedActivityBase {
             }
         });
 
-        actionBar = (ActionBar) findViewById(actionbar);
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(tagName);
-        actionBar.setHomeAction(new HomeAction(this));
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -103,6 +102,8 @@ public class TagViewer extends RepoScopedActivityBase {
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.i(TAG, "onOptionsItemSelected " + item);
         switch (item.getItemId()) {
+            case android.R.id.home:
+                return homewardsWith(this, manageRepoIntent(repo()));
             case DELETE_ID:
                 try {
                     RefUpdate update = repo().updateRef(tagRef.getName());
@@ -131,7 +132,7 @@ public class TagViewer extends RepoScopedActivityBase {
         }
 
         if (tagRef == null) {
-            actionBar.setTitle("unknown tag");
+            getSupportActionBar().setTitle("unknown tag");
         } else {
             ObjectId peeledObjectId = repo().peel(tagRef).getPeeledObjectId();
             ObjectId taggedId = peeledObjectId == null ? tagRef.getObjectId() : peeledObjectId;
@@ -150,7 +151,7 @@ public class TagViewer extends RepoScopedActivityBase {
 
                 if (immediateTagRefObject instanceof RevTag) {
                     revTag = revWalk.parseTag(tagId);
-                    actionBar.setTitle(revTag.getTagName());
+                    getSupportActionBar().setTitle(revTag.getTagName());
                 }
 
             } catch (IOException e) {

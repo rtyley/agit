@@ -3,6 +3,7 @@ package com.madgag.agit;
 import static roboguice.RoboGuice.getInjector;
 import android.app.Application;
 
+import com.madgag.agit.shadow.ShadowSherlockActivity;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
@@ -16,12 +17,17 @@ public class InjectedTestRunner extends RobolectricTestRunner {
 
     public InjectedTestRunner(Class<?> testClass) throws InitializationError {
         super(testClass);
+        addClassOrPackageToInstrument("com.actionbarsherlock.app.SherlockActivity");
     }
 
     @Override
     public void prepareTest(Object test) {
-        Application application = Robolectric.application;
-
         getInjector(new RoboActivity()).injectMembers(test);
+    }
+
+    @Override
+    protected void bindShadowClasses() {
+        super.bindShadowClasses();
+        Robolectric.bindShadowClass(ShadowSherlockActivity.class);
     }
 }

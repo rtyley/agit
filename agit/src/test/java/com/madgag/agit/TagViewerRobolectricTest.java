@@ -3,6 +3,8 @@ package com.madgag.agit;
 import static com.madgag.agit.OracleJVMTestEnvironment.helper;
 import static com.madgag.agit.TagViewer.tagViewerIntentFor;
 
+import com.actionbarsherlock.ActionBarSherlock;
+
 import java.io.File;
 
 import org.junit.BeforeClass;

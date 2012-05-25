@@ -84,10 +84,6 @@ The distributed Agit binary contains software from the following projects:
     Originally by Alex Coles, I made a Maven-Central release version of
     [enr's fork](https://github.com/enr/markdownj).
 
-*   [android-actionbar](https://github.com/johannilsson/android-actionbar)
-
-    License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
-
 *   [android-pulltorefresh](https://github.com/johannilsson/android-pulltorefresh)
 
     License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)

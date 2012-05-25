@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
-import roboguice.activity.RoboActivity;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 
-public abstract class WebLaunchActivity extends RoboActivity {
+public abstract class WebLaunchActivity extends RoboSherlockActivity {
 
     private static final String TAG = "WL";
 

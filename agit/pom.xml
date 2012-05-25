@@ -8,6 +8,9 @@
         <groupId>com.madgag</groupId>
         <artifactId>agit-parent</artifactId>
     </parent>
+    <properties>
+        <abs.version>4.1.0</abs.version>
+    </properties>
 
     <packaging>apk</packaging>
     <name>Agit - git client for Android</name>
@@ -65,7 +68,7 @@
         <dependency>
             <groupId>com.pivotallabs</groupId>
             <artifactId>robolectric</artifactId>
-            <version>1.0</version>
+            <version>1.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -109,6 +112,24 @@
             <groupId>com.madgag</groupId>
             <artifactId>markdownj-core</artifactId>
             <version>0.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.actionbarsherlock</groupId>
+            <artifactId>library</artifactId>
+            <version>${abs.version}</version>
+            <type>apklib</type>
+        </dependency>
+        <dependency>
+            <groupId>com.actionbarsherlock</groupId>
+            <artifactId>library</artifactId>
+            <version>${abs.version}</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.rtyley</groupId>
+            <artifactId>roboguice-sherlock</artifactId>
+            <version>1.4</version>
         </dependency>
     </dependencies>
     <build>

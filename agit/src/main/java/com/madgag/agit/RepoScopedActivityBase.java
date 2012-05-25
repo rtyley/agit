@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.madgag.agit.guice.RepositoryScope;
@@ -36,7 +37,7 @@ import org.eclipse.jgit.lib.Repository;
 import roboguice.RoboGuice;
 import roboguice.activity.RoboActivity;
 
-public abstract class RepoScopedActivityBase extends RoboActivity {
+public abstract class RepoScopedActivityBase extends RoboSherlockActivity {
 
     private
     @Inject

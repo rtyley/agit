@@ -33,6 +33,7 @@ import static com.madgag.agit.R.string.clone_readiness_repository_folder_already
 import static com.madgag.agit.R.string.ssh_agent_not_correctly_installed;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
 import static com.madgag.agit.git.TransportProtocols.niceProtocolNameFor;
+import static com.madgag.android.ActionBarUtil.homewardsWith;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
 import android.content.Intent;
 import android.os.Build;
@@ -54,8 +55,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.MenuItem;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import com.madgag.android.ClickableText;
-import com.markupartist.android.widget.ActionBar;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,7 +71,7 @@ import org.eclipse.jgit.util.FS;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 
-public class CloneLauncherActivity extends RoboActivity {
+public class CloneLauncherActivity extends RoboSherlockActivity {
     private final static String TAG = "CloneLauncherActivity";
 
     public static Intent cloneLauncherIntentFor(String sourceUri) {
@@ -96,9 +99,6 @@ public class CloneLauncherActivity extends RoboActivity {
     @InjectView(R.id.CloneUrlEditText)
     EditText cloneUrlEditText;
 
-    @InjectView(R.id.actionbar)
-    ActionBar actionBar;
-
     /**
      * Called when the activity is first created.
      */
@@ -106,7 +106,8 @@ public class CloneLauncherActivity extends RoboActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.clone_launcher);
-        actionBar.setHomeAction(new HomeAction(this));
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(clone_launcher_activity_title);
 
 
@@ -131,6 +132,15 @@ public class CloneLauncherActivity extends RoboActivity {
         };
         cloneUrlEditText.addTextChangedListener(watcher);
         gitDirEditText.addTextChangedListener(watcher);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                return homewardsWith(this, new Intent(this, DashboardActivity.class));
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     protected void updateUIWithValidation() {

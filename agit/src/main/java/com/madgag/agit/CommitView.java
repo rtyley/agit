@@ -41,12 +41,12 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.madgag.agit.CommitNavigationView.CommitSelectedListener;
 import com.madgag.agit.diff.CommitChangeListAdapter;
 import com.madgag.agit.diff.DiffSliderView;
 import com.madgag.agit.views.ObjectIdView;
 import com.madgag.agit.views.PersonIdentView;
-import com.markupartist.android.widget.ActionBar;
 
 import java.io.IOException;
 import java.util.Map;
@@ -67,7 +67,6 @@ public class CommitView extends LinearLayout {
 
     private final LayoutInflater layoutInflater;
     private final TabHost tabHost;
-    final ActionBar actionBar;
     private final TabWidget tabWidget;
 
     private CommitNavigationView commitNavigationView;
@@ -85,8 +84,9 @@ public class CommitView extends LinearLayout {
         layoutInflater = LayoutInflater.from(context);
 
         layoutInflater.inflate(R.layout.commit_view, this);
-        actionBar = (ActionBar) findViewById(R.id.actionbar);
-        actionBar.setHomeAction(new HomeAction((Activity) context));
+
+//        actionBar = (ActionBar) findViewById(R.id.actionbar);
+//        actionBar.setHomeAction(new HomeAction((Activity) context));
         tabHost = (TabHost) findViewById(android.R.id.tabhost);
         tabWidget = (TabWidget) findViewById(android.R.id.tabs);
         tabHost.setup();
@@ -102,11 +102,10 @@ public class CommitView extends LinearLayout {
         //this.commit = (PlotCommit<PlotLane>) revWalk.parseCommit(c);
         this.commit = c;
         Log.d(TAG, "setCommit : " + commit);
-        Log.d(TAG, "actionBar : " + actionBar);
         SpannableStringBuilder title = new SpannableStringBuilder(commit.name().substring(0,
                 4) + " " + commit.getShortMessage());
         title.setSpan(MONOSPACE_SPAN, 0, 4, SPAN_EXCLUSIVE_EXCLUSIVE);
-        actionBar.setTitle(title);
+        ((SherlockActivity) getContext()).getSupportActionBar().setTitle(title);
 
         Log.d(TAG, "About to clearAllTabs() on " + tabHost);
         tabHost.clearAllTabs();

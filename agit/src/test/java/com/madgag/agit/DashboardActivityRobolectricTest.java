@@ -18,8 +18,5 @@ public class DashboardActivityRobolectricTest {
     @Test
     public void shouldBeCool() {
         dashboardActivity.onCreate(null);
-
-        Button injectedTextView = (Button) dashboardActivity.findViewById(R.id.GoCloneButton);
-        assertThat(injectedTextView.getText().toString(), equalTo("Clone..."));
     }
 }

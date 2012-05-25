@@ -22,9 +22,11 @@ package com.madgag.agit;
 import static android.R.layout.simple_list_item_2;
 import static com.google.inject.name.Names.named;
 import static com.madgag.agit.GitIntents.OPEN_GIT_INTENT_PREFIX;
-import static com.madgag.agit.R.id.actionbar;
 import static com.madgag.agit.R.layout.list_activity_layout;
 import static com.madgag.agit.RepoScopedActivityBase.enterRepositoryScopeFor;
+import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
+import static com.madgag.agit.git.Repos.niceNameFor;
+import static com.madgag.android.ActionBarUtil.homewardsWith;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 import static roboguice.RoboGuice.getInjector;
 import android.content.Intent;
@@ -32,6 +34,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.MenuItem;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockListActivity;
 import com.google.inject.Inject;
 import com.google.inject.Key;
 import com.madgag.agit.git.model.RepoDomainType;
@@ -40,13 +45,11 @@ import com.madgag.android.listviews.ViewFactory;
 import com.madgag.android.listviews.ViewHolder;
 import com.madgag.android.listviews.ViewHolderFactory;
 import com.madgag.android.listviews.ViewHoldingListAdapter;
-import com.markupartist.android.widget.ActionBar;
 
+import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Repository;
 
-import roboguice.activity.RoboListActivity;
-
-public class RDTypeListActivity<E> extends RoboListActivity {
+public class RDTypeListActivity<E> extends RoboSherlockListActivity {
 
     public static Intent listIntent(Repository repository, String typeName) {
         return new GitIntentBuilder(typeName + ".LIST").repository(repository).toIntent();
@@ -72,9 +75,10 @@ public class RDTypeListActivity<E> extends RoboListActivity {
         }
 
         setContentView(list_activity_layout);
-        ActionBar actionBar = (ActionBar) findViewById(actionbar);
-        actionBar.setHomeAction(new HomeAction(this));
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(rdt.conciseSummaryTitle());
+        actionBar.setSubtitle(niceNameFor(repository));
         setListAdapter(new ViewHoldingListAdapter<E>(rdt.getAll(), getViewFactory()));
     }
 
@@ -106,6 +110,14 @@ public class RDTypeListActivity<E> extends RoboListActivity {
         rc.onDestroy();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                return homewardsWith(this, manageRepoIntent(repository));
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     public ViewFactory<E> getViewFactory() {
         return new ViewFactory<E>(viewInflatorFor(this, simple_list_item_2), new ViewHolderFactory<E>() {

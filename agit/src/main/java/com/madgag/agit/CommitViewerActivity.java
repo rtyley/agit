@@ -27,8 +27,10 @@ import static com.madgag.agit.R.anim.pull_child_in;
 import static com.madgag.agit.R.anim.pull_parent_in;
 import static com.madgag.agit.R.anim.push_child_out;
 import static com.madgag.agit.R.anim.push_parent_out;
+import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
 import static com.madgag.agit.git.model.Relation.CHILD;
 import static com.madgag.agit.git.model.Relation.PARENT;
+import static com.madgag.android.ActionBarUtil.homewardsWith;
 import static java.lang.System.currentTimeMillis;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -37,8 +39,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.TextView;
@@ -197,6 +199,8 @@ public class CommitViewerActivity extends RepoScopedActivityBase {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                return homewardsWith(this, manageRepoIntent(gitdir())); // TODO should actually be to branch, not repo
             case TAG_ID:
                 showDialog(CREATE_TAG_DIALOG);
                 return true;

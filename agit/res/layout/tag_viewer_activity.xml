@@ -4,10 +4,6 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
 
-    <com.markupartist.android.widget.ActionBar
-            android:id="@+id/actionbar"
-            style="@style/ActionBar"
-            />
     <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -19,7 +19,11 @@
 
 package com.madgag.agit;
 
-import com.markupartist.android.widget.ActionBar;
+import static com.madgag.android.ActionBarUtil.homewardsWith;
+import android.content.Intent;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.MenuItem;
 
 public class AboutUsingSshActivity extends MarkdownActivityBase {
 
@@ -31,5 +35,14 @@ public class AboutUsingSshActivity extends MarkdownActivityBase {
     @Override
     protected void configureActionBar(ActionBar actionBar) {
         actionBar.setTitle(R.string.using_ssh_activity_title);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                return homewardsWith(this, new Intent(this, CloneLauncherActivity.class));
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -15,8 +15,6 @@ import android.view.View;
 import android.widget.Checkable;
 import android.widget.TextView;
 
-import com.xtremelabs.robolectric.RobolectricTestRunner;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +22,7 @@ import org.junit.runner.RunWith;
 
 import roboguice.RoboGuice;
 
-@RunWith(RobolectricTestRunner.class)
+@RunWith(InjectedTestRunner.class)
 public class CloneLauncherActivityRobolectricTest {
 
     CloneLauncherActivity activity = new CloneLauncherActivity();

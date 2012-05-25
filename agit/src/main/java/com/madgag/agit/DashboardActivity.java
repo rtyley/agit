@@ -19,13 +19,14 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import com.madgag.android.listviews.ViewHolder;
 import com.madgag.android.listviews.ViewHolderFactory;
 import com.madgag.android.listviews.ViewHoldingListAdapter;
@@ -33,10 +34,8 @@ import com.madgag.android.listviews.ViewHoldingListAdapter;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 
-public class DashboardActivity extends RoboActivity {
+public class DashboardActivity extends RoboSherlockActivity {
     private static final String TAG = "DA";
-
-    private final static int MENU_ABOUT_ID = Menu.FIRST;
 
     @InjectView(android.R.id.list)
     ListView listView;
@@ -100,14 +99,17 @@ public class DashboardActivity extends RoboActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        menu.add(0, MENU_ABOUT_ID, 0, about_app_menu_option).setShortcut('0', 'a').setIcon(ic_menu_info_details);
+        getSupportMenuInflater().inflate(R.menu.dashboard, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case MENU_ABOUT_ID:
+            case R.id.clone:
+                startActivity(new Intent(this, CloneLauncherActivity.class));
+                return true;
+            case R.id.about_app:
                 startActivity(new Intent(this, AboutActivity.class));
                 return true;
         }
@@ -128,10 +130,5 @@ public class DashboardActivity extends RoboActivity {
 
     private void updateRepoList() {
         listAdapter.setList(RepoSummary.getAllReposOrderChronologically());
-    }
-
-    // used by dashboard.xml
-    public void startCloneLaunchActivity(View v) {
-        startActivity(new Intent(this, CloneLauncherActivity.class));
     }
 }

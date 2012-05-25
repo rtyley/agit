@@ -5,10 +5,6 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
 
-    <com.markupartist.android.widget.ActionBar
-            android:id="@+id/actionbar"
-            style="@style/ActionBar"
-            />
     <com.madgag.android.views.FixEclairTabHost
             android:id="@android:id/tabhost"
             android:layout_width="match_parent"

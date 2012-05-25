@@ -20,8 +20,12 @@
 package com.madgag.agit;
 
 import static com.madgag.agit.R.string.about_activity_title;
+import static com.madgag.android.ActionBarUtil.homewardsWith;
 
-import com.markupartist.android.widget.ActionBar;
+import android.content.Intent;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.MenuItem;
 
 public class AboutActivity extends MarkdownActivityBase {
 
@@ -33,5 +37,14 @@ public class AboutActivity extends MarkdownActivityBase {
     @Override
     protected void configureActionBar(ActionBar actionBar) {
         actionBar.setTitle(about_activity_title);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                return homewardsWith(this, new Intent(this, DashboardActivity.class));
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
