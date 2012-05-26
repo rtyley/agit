@@ -14,6 +14,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:animateLayoutChanges="true"
                 android:paddingLeft="14dip" android:paddingRight="14dip"
                 android:paddingTop="6dip" android:paddingBottom="6dip">
 
@@ -28,6 +29,7 @@
 
             <TextView
                     android:id="@+id/ProtocolLabel"
+                    android:visibility="invisible"
                     android:layout_gravity="right"
                     android:background="@drawable/label_background"
                     android:textStyle="bold"
@@ -36,24 +38,31 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
-            <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/clone_target_folder_label"/>
-            <EditText
-                    android:id="@+id/GitDirEditText"
-                    android:layout_height="wrap_content"
-                    android:layout_width="fill_parent"
-                    android:hint="@string/clone_directory_hint"
-                    android:inputType="textUri"/>
-            <CheckBox android:id="@+id/UseDefaultGitDirLocation"
-                      android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="@string/use_default_target_directory_checkbox_label"
-                      android:checked="true"/>
-            <CheckBox android:id="@+id/BareRepo"
-                      android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="@string/bare_repo_checkbox_label"
-                      android:checked="true"/>
+            <LinearLayout android:id="@+id/secondary_details"
+                    android:visibility="invisible"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/clone_target_folder_label"/>
+                <EditText
+                        android:id="@+id/GitDirEditText"
+                        android:layout_height="wrap_content"
+                        android:layout_width="fill_parent"
+                        android:hint="@string/clone_directory_hint"
+                        android:inputType="textUri"/>
+                <CheckBox android:id="@+id/UseDefaultGitDirLocation"
+                          android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="@string/use_default_target_directory_checkbox_label"
+                          android:checked="true"/>
+                <CheckBox android:id="@+id/BareRepo"
+                          android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="@string/bare_repo_checkbox_label"
+                          android:checked="true"/>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
     <RelativeLayout style="@style/ExecutionBar" android:gravity="right">

@@ -20,6 +20,7 @@
 package com.madgag.agit;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static android.os.Build.VERSION_CODES.HONEYCOMB;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_LONG;
@@ -34,6 +35,7 @@ import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
 import static com.madgag.agit.git.TransportProtocols.niceProtocolNameFor;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
@@ -43,6 +45,7 @@ import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -72,6 +75,8 @@ public class CloneLauncherActivity extends RoboActivity {
         return new GitIntentBuilder("clone.PREPARE").sourceUri(sourceUri).toIntent();
     }
 
+    private final boolean layoutTransitionAvailable = Build.VERSION.SDK_INT >= HONEYCOMB;
+
     @InjectView(R.id.BareRepo)
     CheckBox bareRepoCheckbox;
     @InjectView(R.id.GoCloneButton)
@@ -80,6 +85,10 @@ public class CloneLauncherActivity extends RoboActivity {
     CheckBox useDefaultGitDirLocationButton;
     @InjectView(R.id.ProtocolLabel)
     TextView protocolLabel;
+
+    @InjectView(R.id.secondary_details)
+    ViewGroup secondaryDetailsGroup;
+
     @InjectView(R.id.CloneReadinessMessage)
     TextView cloneReadinessMessageView;
     @InjectView(R.id.GitDirEditText)
@@ -130,9 +139,17 @@ public class CloneLauncherActivity extends RoboActivity {
         String cloneUriText = getCloneUriText();
         Log.d(TAG, "cloneUriText=" + cloneUriText);
         CharSequence message = null;
-        if (cloneUriText.length() <= 3) {
+
+        boolean cloneUrlPopulated = cloneUriText.length() > 3;
+
+        // GONE causes jerky animation with the 1st layout transition here, I think because of the initial resize
+        secondaryDetailsGroup.setVisibility((cloneUrlPopulated || !layoutTransitionAvailable)?VISIBLE:INVISIBLE);
+
+        if (!cloneUrlPopulated) {
+            enableClone = false;
             message = getString(R.string.clone_readiness_needs_user_to_enter_a_url);
         }
+
         URIish cloneUri = null;
         String transportProtocol = null;
         try {
