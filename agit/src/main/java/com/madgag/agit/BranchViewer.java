@@ -27,7 +27,9 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.CommitViewerActivity.commitViewerIntentCreatorFor;
 import static com.madgag.agit.RDTypeListActivity.listIntent;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
+import static com.madgag.agit.git.Repos.niceNameFor;
 import static com.madgag.android.ActionBarUtil.homewardsWith;
+import static com.madgag.android.ActionBarUtil.setPrefixedTitleOn;
 import static java.lang.System.currentTimeMillis;
 import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;
@@ -87,7 +89,7 @@ public class BranchViewer extends RepoScopedActivityBase {
         setContentView(R.layout.branch_view);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(shortenRefName(branch().getName()));
+        setPrefixedTitleOn(actionBar, niceNameFor(repo()), shortenRefName(branch().getName()));
         actionBar.setDisplayHomeAsUpEnabled(true);
         setCommits();
         revCommitListView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {

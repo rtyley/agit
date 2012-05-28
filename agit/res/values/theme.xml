@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.App" parent="@style/Theme.Sherlock.Light.DarkActionBar.ForceOverflow">
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
+        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+    </style>
+
+    <style name="Theme.App.SuperTitle" parent="@style/Theme.App">
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.SuperTitle</item>
+        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar.SuperTitle</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+    </style>
+
+    <style name="Widget.Styled.ActionBar.SuperTitle" parent="Widget.Styled.ActionBar">
+        <item name="displayOptions">showHome|useLogo|showCustom</item>
+        <item name="android:displayOptions">showHome|useLogo|showCustom</item>
+        <item name="customNavigationLayout">@layout/actionbar_custom_title</item>
+        <item name="android:customNavigationLayout">@layout/actionbar_custom_title</item>
+    </style>
+</resources>

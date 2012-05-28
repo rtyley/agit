@@ -23,7 +23,8 @@ import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
-import android.app.Activity;
+import static com.madgag.agit.git.Repos.niceNameFor;
+import static com.madgag.android.ActionBarUtil.setPrefixedTitleOn;
 import android.content.Context;
 import android.text.SpannableStringBuilder;
 import android.text.style.CharacterStyle;
@@ -41,6 +42,7 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.madgag.agit.CommitNavigationView.CommitSelectedListener;
 import com.madgag.agit.diff.CommitChangeListAdapter;
@@ -102,10 +104,11 @@ public class CommitView extends LinearLayout {
         //this.commit = (PlotCommit<PlotLane>) revWalk.parseCommit(c);
         this.commit = c;
         Log.d(TAG, "setCommit : " + commit);
-        SpannableStringBuilder title = new SpannableStringBuilder(commit.name().substring(0,
-                4) + " " + commit.getShortMessage());
-        title.setSpan(MONOSPACE_SPAN, 0, 4, SPAN_EXCLUSIVE_EXCLUSIVE);
-        ((SherlockActivity) getContext()).getSupportActionBar().setTitle(title);
+        SpannableStringBuilder prefixTitle = new SpannableStringBuilder(commit.name().substring(0, 4));
+        prefixTitle.setSpan(MONOSPACE_SPAN, 0, 4, SPAN_EXCLUSIVE_EXCLUSIVE);
+        prefixTitle.insert(0, niceNameFor(repository) + " • ");
+        ActionBar supportActionBar = ((SherlockActivity) getContext()).getSupportActionBar();
+        setPrefixedTitleOn(supportActionBar, prefixTitle, commit.getShortMessage());
 
         Log.d(TAG, "About to clearAllTabs() on " + tabHost);
         tabHost.clearAllTabs();

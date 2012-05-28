@@ -27,6 +27,7 @@ import static com.madgag.agit.RepoScopedActivityBase.enterRepositoryScopeFor;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
 import static com.madgag.agit.git.Repos.niceNameFor;
 import static com.madgag.android.ActionBarUtil.homewardsWith;
+import static com.madgag.android.ActionBarUtil.setPrefixedTitleOn;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 import static roboguice.RoboGuice.getInjector;
 import android.content.Intent;
@@ -46,7 +47,6 @@ import com.madgag.android.listviews.ViewHolder;
 import com.madgag.android.listviews.ViewHolderFactory;
 import com.madgag.android.listviews.ViewHoldingListAdapter;
 
-import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Repository;
 
 public class RDTypeListActivity<E> extends RoboSherlockListActivity {
@@ -76,9 +76,8 @@ public class RDTypeListActivity<E> extends RoboSherlockListActivity {
 
         setContentView(list_activity_layout);
         ActionBar actionBar = getSupportActionBar();
+        setPrefixedTitleOn(actionBar, niceNameFor(repository), rdt.conciseSummaryTitle());
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(rdt.conciseSummaryTitle());
-        actionBar.setSubtitle(niceNameFor(repository));
         setListAdapter(new ViewHoldingListAdapter<E>(rdt.getAll(), getViewFactory()));
     }
 
