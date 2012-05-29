@@ -25,6 +25,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 import static com.madgag.agit.git.Repos.niceNameFor;
 import static com.madgag.android.ActionBarUtil.setPrefixedTitleOn;
+import static org.eclipse.jgit.lib.Repository.shortenRefName;
 import android.content.Context;
 import android.text.SpannableStringBuilder;
 import android.text.style.CharacterStyle;
@@ -56,6 +57,7 @@ import java.util.Map;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revplot.PlotCommit;
 import org.eclipse.jgit.revplot.PlotLane;
@@ -103,11 +105,17 @@ public class CommitView extends LinearLayout {
             IOException {
         //this.commit = (PlotCommit<PlotLane>) revWalk.parseCommit(c);
         this.commit = c;
+        CommitViewerActivity commitViewerActivity = (CommitViewerActivity) getContext();
         Log.d(TAG, "setCommit : " + commit);
         SpannableStringBuilder prefixTitle = new SpannableStringBuilder(commit.name().substring(0, 4));
         prefixTitle.setSpan(MONOSPACE_SPAN, 0, 4, SPAN_EXCLUSIVE_EXCLUSIVE);
-        prefixTitle.insert(0, niceNameFor(repository) + " • ");
-        ActionBar supportActionBar = ((SherlockActivity) getContext()).getSupportActionBar();
+        String pathPrefix = niceNameFor(repository) + " • ";
+        Ref currentRef = commitViewerActivity.logStartProvider.getCurrentRef();
+        if (currentRef!=null) {
+            pathPrefix = pathPrefix + shortenRefName(currentRef.getName()) + " • ";
+        }
+        prefixTitle.insert(0, pathPrefix);
+        ActionBar supportActionBar = commitViewerActivity.getSupportActionBar();
         setPrefixedTitleOn(supportActionBar, prefixTitle, commit.getShortMessage());
 
         Log.d(TAG, "About to clearAllTabs() on " + tabHost);

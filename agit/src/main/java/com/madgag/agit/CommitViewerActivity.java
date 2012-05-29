@@ -23,6 +23,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static android.view.animation.AnimationUtils.loadAnimation;
 import static com.google.common.collect.Maps.newEnumMap;
+import static com.madgag.agit.BranchViewer.branchViewerIntentFor;
 import static com.madgag.agit.R.anim.pull_child_in;
 import static com.madgag.agit.R.anim.pull_parent_in;
 import static com.madgag.agit.R.anim.push_child_out;
@@ -47,9 +48,11 @@ import android.widget.TextView;
 
 import com.google.common.base.Function;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.madgag.agit.CommitNavigationView.CommitSelectedListener;
 import com.madgag.agit.git.model.Relation;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -115,6 +118,7 @@ public class CommitViewerActivity extends RepoScopedActivityBase {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.commit_navigation_animation_layout);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         relationAnimations.put(PARENT, new RelationAnimations(push_child_out, pull_parent_in));
         relationAnimations.put(CHILD, new RelationAnimations(push_parent_out, pull_child_in));
@@ -200,7 +204,9 @@ public class CommitViewerActivity extends RepoScopedActivityBase {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                return homewardsWith(this, manageRepoIntent(gitdir())); // TODO should actually be to branch, not repo
+                Ref ref = logStartProvider.getCurrentRef();
+                Intent intent = (ref == null) ? manageRepoIntent(gitdir()) : branchViewerIntentFor(gitdir(), ref);
+                return homewardsWith(this, intent);
             case TAG_ID:
                 showDialog(CREATE_TAG_DIALOG);
                 return true;

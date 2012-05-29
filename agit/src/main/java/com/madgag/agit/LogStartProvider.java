@@ -32,10 +32,16 @@ public class LogStartProvider {
     @Nullable
     Ref branch;
 
+
+
     public Iterable<ObjectId> get() {
         Iterable<Ref> refs = getRefs();
         Log.d(TAG, "Using refs " + refs);
         return transform(refs, OBJECT_IDS_FOR_REFS);
+    }
+
+    public Ref getCurrentRef() {
+        return branch;
     }
 
     private Iterable<Ref> getRefs() {
