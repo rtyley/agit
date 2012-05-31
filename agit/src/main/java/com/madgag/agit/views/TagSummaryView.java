@@ -44,7 +44,7 @@ public class TagSummaryView extends OSV<RevTag> {
         ((TextView) view.findViewById(message_text)).setText(tag.getFullMessage());
         try {
             RevObject taggedObject = new RevWalk(repo).parseAny(tag.getObject());
-            ((ObjectSummaryView) view.findViewById(tagged_object)).setObject(taggedObject);
+            ((ObjectSummaryView) view.findViewById(tagged_object)).setObject(taggedObject, repo);
             Log.d(TAG, "Successfully set taggedObject=" + taggedObject);
         } catch (IOException e) {
             Log.e(TAG, "Couldn't set the tagged object...", e);

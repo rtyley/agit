@@ -125,9 +125,11 @@ public class TagViewer extends RepoScopedActivityBase {
 
     @Override
     public void onContentChanged() {
+        super.onContentChanged();
         Log.d(TAG, "updateUI called");
         tagRef = repo().getTags().get(tagName);
         if (objectSummaryView == null) {
+            Log.d(TAG, "onContentChanged() : objectSummaryView is null");
             return;
         }
 
@@ -140,14 +142,9 @@ public class TagViewer extends RepoScopedActivityBase {
 
             ObjectId tagId = tagRef.getObjectId();
             try {
-                // objectSummaryView.setObject(revWalk.parseAny(taggedId));
-
                 final RevObject immediateTagRefObject = revWalk.parseAny(tagId);
-                repositoryScope.doWith(repo(), new Runnable() {
-                    public void run() {
-                        objectSummaryView.setObject(immediateTagRefObject);
-                    }
-                });
+
+                objectSummaryView.setObject(immediateTagRefObject, repo());
 
                 if (immediateTagRefObject instanceof RevTag) {
                     revTag = revWalk.parseTag(tagId);

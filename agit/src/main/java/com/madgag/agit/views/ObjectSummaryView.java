@@ -25,7 +25,8 @@ import static com.madgag.agit.R.id.osv_object_type_text;
 import static com.madgag.agit.R.id.osv_type_specific_data_frame;
 import static com.madgag.agit.R.layout.object_summary_view;
 import static com.madgag.agit.git.GitObjects.evaluate;
-import static com.madgag.agit.views.ViewUtil.whileStillInContextScopeLayoutAndInject;
+import static roboguice.RoboGuice.getBaseApplicationInjector;
+import android.app.Application;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -35,7 +36,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.inject.Inject;
 import com.madgag.agit.git.GitObjectFunction;
 
 import org.eclipse.jgit.lib.Repository;
@@ -49,10 +49,6 @@ public class ObjectSummaryView extends LinearLayout {
 
     private static final String TAG = "OSV";
 
-    private RevObject gitObject;
-
-    @Inject
-    Repository repo;
     ImageView objectTypeIcon;
     ObjectIdView objectIdView;
     TextView objectTypeTextView;
@@ -61,15 +57,14 @@ public class ObjectSummaryView extends LinearLayout {
     public ObjectSummaryView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setOrientation(VERTICAL);
-        whileStillInContextScopeLayoutAndInject(this, object_summary_view);
+        LayoutInflater.from(context).inflate(object_summary_view, this);
         objectTypeIcon = (ImageView) findViewById(osv_object_type_icon);
         objectIdView = (ObjectIdView) findViewById(osv_object_id_text);
         objectTypeTextView = (TextView) findViewById(osv_object_type_text);
         typeSpecificFrame = (ViewGroup) findViewById(osv_type_specific_data_frame);
     }
 
-    public void setObject(RevObject gitObject) {
-        this.gitObject = gitObject;
+    public void setObject(RevObject gitObject, Repository repository) {
         OSV osv = evaluate(gitObject, new GitObjectFunction<OSV<?>>() {
             public OSV<?> apply(RevCommit commit) {
                 return new CommitSummaryView();
@@ -94,6 +89,6 @@ public class ObjectSummaryView extends LinearLayout {
         typeSpecificFrame.removeAllViews();
         LayoutInflater.from(getContext()).inflate(osv.layoutId(), typeSpecificFrame);
         Log.d(TAG, "About to set type-specific info for gitObject=" + gitObject);
-        osv.setObject(gitObject, typeSpecificFrame, repo);
+        osv.setObject(gitObject, typeSpecificFrame, repository);
     }
 }

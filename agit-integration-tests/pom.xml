@@ -70,6 +70,16 @@
             <scope>provided</scope>
             <type>war</type>
         </dependency>
+        <dependency>
+            <groupId>com.jayway.android.robotium</groupId>
+            <artifactId>robotium-solo</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.rtyley</groupId>
+            <artifactId>android-screenshot-celebrity</artifactId>
+            <version>1.8</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
