@@ -4,6 +4,7 @@ import static android.R.layout.simple_list_item_2;
 import static com.madgag.agit.CloneLauncherActivity.cloneLauncherIntentFor;
 import static com.madgag.agit.SuggestedRepo.SUGGESTIONS;
 import static com.madgag.android.ActionBarUtil.homewardsWith;
+import static com.madgag.android.listviews.ReflectiveHolderFactory.reflectiveFactoryFor;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockListActivity;
+import com.madgag.android.listviews.ReflectiveHolderFactory;
 import com.madgag.android.listviews.ViewHolder;
 import com.madgag.android.listviews.ViewHolderFactory;
 import com.madgag.android.listviews.ViewHoldingListAdapter;
@@ -34,11 +36,7 @@ public class SuggestRepoActivity extends RoboSherlockListActivity {
         actionBar.setTitle("Some example repos...");
 
         adapter = new ViewHoldingListAdapter<SuggestedRepo>(SUGGESTIONS, viewInflatorFor(this, simple_list_item_2),
-                new ViewHolderFactory<SuggestedRepo>() {
-            public ViewHolder<SuggestedRepo> createViewHolderFor(View view) {
-                return new SuggestedRepoViewHolder(view);
-            }
-        });
+                reflectiveFactoryFor(SuggestedRepoViewHolder.class));
         setListAdapter(adapter);
     }
 
