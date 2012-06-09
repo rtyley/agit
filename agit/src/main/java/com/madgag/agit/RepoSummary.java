@@ -20,7 +20,7 @@ import org.eclipse.jgit.storage.file.FileRepository;
 
 public class RepoSummary implements HasLatestCommit {
 
-    private final static Function<File, RepoSummary> REPO_SUMMARY_FOR_GITDIR = new Function<File, RepoSummary>() {
+    public final static Function<File, RepoSummary> REPO_SUMMARY_FOR_GITDIR = new Function<File, RepoSummary>() {
         public RepoSummary apply(File gitdir) {
             try {
                 Repository repo = new FileRepository(gitdir);
@@ -40,7 +40,11 @@ public class RepoSummary implements HasLatestCommit {
     };
 
     public static List<RepoSummary> getAllReposOrderChronologically() {
-        return COMMIT_TIME_ORDERING.sortedCopy(filter(transform(knownRepos(), REPO_SUMMARY_FOR_GITDIR), NON_NULL_REPO));
+        return sortReposByLatestCommit(transform(knownRepos(), REPO_SUMMARY_FOR_GITDIR));
+    }
+
+    public static List<RepoSummary> sortReposByLatestCommit(List<RepoSummary> repoSummaries) {
+        return COMMIT_TIME_ORDERING.sortedCopy(filter(repoSummaries, NON_NULL_REPO));
     }
 
 

@@ -19,7 +19,6 @@
 
 package com.madgag.agit.sync;
 
-import static com.madgag.agit.git.Repos.knownRepos;
 import static com.madgag.agit.git.Repos.refreshOperationFor;
 import static java.util.Arrays.asList;
 import static org.eclipse.jgit.lib.RepositoryCache.close;
@@ -29,6 +28,8 @@ import android.util.Log;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.assistedinject.Assisted;
+import com.madgag.agit.db.RepoRecord;
+import com.madgag.agit.db.ReposDataSource;
 import com.madgag.agit.git.Repos;
 import com.madgag.agit.operations.CancellationSignaller;
 import com.madgag.agit.operations.GitOperation;
@@ -49,6 +50,8 @@ public class SyncCampaign implements CancellationSignaller, Runnable {
     Provider<RejectBlockingPromptService> rejectPrompts;
     @Inject
     GitOperationExecutor operationExecutor;
+    @Inject
+    ReposDataSource reposDataSource;
 
     private final SyncResult syncResult;
     private GitOperation currentOperation;
@@ -67,10 +70,10 @@ public class SyncCampaign implements CancellationSignaller, Runnable {
         };
         OperationUIContext operationUIContext = new OperationUIContext(progressListener, rejectPrompts);
 
-        for (File gitdir : knownRepos()) {
+        for (RepoRecord repoRecord : reposDataSource.getAllRepos()) {
             if (cancelled)
                 return;
-            syncRepo(gitdir, operationUIContext);
+            syncRepo(repoRecord.gitdir, operationUIContext);
         }
     }
 
