@@ -49,6 +49,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
+import com.madgag.agit.db.ReposDataSource;
 import com.madgag.agit.operation.lifecycle.CasualShortTermLifetime;
 import com.madgag.agit.operations.GitAsyncTaskFactory;
 import com.madgag.agit.operations.GitOperationExecutor;
@@ -74,7 +75,6 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
         return new GitIntentBuilder("repo.VIEW").gitdir(gitdir).toIntent();
     }
 
-    private final static int DELETE_ID = Menu.FIRST;
     private final int DELETION_IN_PROGRESS_DIALOG = 3;
     private final int DELETION_CONFIRMATION_DIALOG = DELETION_IN_PROGRESS_DIALOG + 1;
 
@@ -98,6 +98,9 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
     @Inject
     GitOperationExecutor gitOperationExecutor;
 
+    @Inject
+    ReposDataSource reposDataSource;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,6 +111,8 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         listView.setOnItemClickListener(summaryAdapter.getOnItemClickListener());
+
+        reposDataSource.registerRepo(gitdir());
     }
 
     @Override

@@ -32,6 +32,7 @@
 
 
     <string name="execute_clone_button_label">Clone!</string>
+    <string name="open_menu_option">Open...</string>
     <string name="delete_menu_option">Delete</string>
     <string name="delete_repo_menu_option">Delete Repo</string>
     <string name="delete_tag_menu_option">Delete Tag</string>
@@ -51,6 +52,11 @@
     <string name="ask_host_key_ok_ticker">"Host %1$s SSH fingerprint..."</string>
     <string name="ask_host_key_ok">"%1$s has key fingerprint: %2$s OK?"</string>
 
+    <string name="open_git_repository">"Open Git repository"</string>
+    <string name="install_file_manager">"To open a Git repository already stored on your device, install OI File Manager to enable file browsing."</string>
+    <string name="can_not_open_non_git_folder">"Can't open %1$s - doesn't appear to be a Git repository?"</string>
+    <string name="market_button">"Google Play..."</string>
+
     <string name="diff_seekbar_before">BEFORE</string>
     <string name="diff_seekbar_after">AFTER</string>
 
@@ -58,6 +64,7 @@
     <string name="button_yes">"Yes"</string>
     <!-- Button label to answer "No" to a yes/no prompt -->
     <string name="button_no">"No"</string>
+    <string name="button_cancel">"Cancel"</string>
 
     <string name="repo_deletion_dialog_confirmation_title">"Delete repo..."</string>
     <string name="repo_deletion_dialog_confirmation_message">"Are you sure want to delete this Git repository?"</string>

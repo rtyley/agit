@@ -9,6 +9,7 @@ import static com.madgag.agit.operations.OpPrompt.promptYesOrNo;
 import static com.madgag.agit.util.DigestUtils.encodeHex;
 import static com.madgag.agit.util.DigestUtils.md5;
 import static com.madgag.agit.views.TextUtil.centered;
+import static com.madgag.android.ToastUtil.code;
 import static java.lang.Boolean.TRUE;
 import android.app.Application;
 
@@ -55,10 +56,6 @@ public class CuriousHostKeyRepository implements HostKeyRepository {
         } else {
             return NOT_INCLUDED;
         }
-    }
-
-    private String code(String s) {
-        return "<b><tt>" + s + "</tt></b>";
     }
 
     public void add(HostKey hostkey, UserInfo ui) {
