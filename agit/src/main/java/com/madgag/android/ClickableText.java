@@ -4,6 +4,7 @@ import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import android.text.Editable;
 import android.text.style.ClickableSpan;
 import android.util.Log;
+import android.view.SoundEffectConstants;
 import android.view.View;
 
 import java.util.regex.Matcher;
@@ -23,6 +24,7 @@ public class ClickableText {
             spannable.setSpan(new ClickableSpan() {
                 @Override
                 public void onClick(View widget) {
+                    widget.playSoundEffect(SoundEffectConstants.CLICK);
                     Log.d(TAG, "Clicked " + action);
                     listener.onClick(action, widget);
                 }
