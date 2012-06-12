@@ -31,6 +31,7 @@ import static com.madgag.agit.R.anim.push_parent_out;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
 import static com.madgag.agit.git.model.Relation.CHILD;
 import static com.madgag.agit.git.model.Relation.PARENT;
+import static com.madgag.android.ActionBarUtil.fixImageTilingOn;
 import static com.madgag.android.ActionBarUtil.homewardsWith;
 import static java.lang.System.currentTimeMillis;
 import android.app.AlertDialog;
@@ -48,11 +49,9 @@ import android.widget.TextView;
 
 import com.google.common.base.Function;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import com.madgag.agit.CommitNavigationView.CommitSelectedListener;
 import com.madgag.agit.git.model.Relation;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -117,6 +116,7 @@ public class CommitViewerActivity extends RepoScopedActivityBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fixImageTilingOn(getSupportActionBar());
         setContentView(R.layout.commit_navigation_animation_layout);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

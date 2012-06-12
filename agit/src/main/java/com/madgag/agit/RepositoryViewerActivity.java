@@ -30,6 +30,7 @@ import static com.madgag.agit.R.string.button_yes;
 import static com.madgag.agit.R.string.repo_deletion_dialog_confirmation_message;
 import static com.madgag.agit.R.string.repo_deletion_dialog_confirmation_title;
 import static com.madgag.agit.git.Repos.niceNameFor;
+import static com.madgag.android.ActionBarUtil.fixImageTilingOn;
 import static com.madgag.android.ActionBarUtil.homewardsWith;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -104,6 +105,7 @@ public class RepositoryViewerActivity extends RepoScopedActivityBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fixImageTilingOn(getSupportActionBar());
         setContentView(R.layout.repo_management_activity);
 
         ActionBar actionBar = getSupportActionBar();

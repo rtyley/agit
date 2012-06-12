@@ -3,6 +3,7 @@ package com.madgag.agit;
 import static android.R.layout.simple_list_item_2;
 import static com.madgag.agit.CloneLauncherActivity.cloneLauncherIntentFor;
 import static com.madgag.agit.SuggestedRepo.SUGGESTIONS;
+import static com.madgag.android.ActionBarUtil.fixImageTilingOn;
 import static com.madgag.android.ActionBarUtil.homewardsWith;
 import static com.madgag.android.listviews.ReflectiveHolderFactory.reflectiveFactoryFor;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
@@ -30,6 +31,7 @@ public class SuggestRepoActivity extends RoboSherlockListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fixImageTilingOn(getSupportActionBar());
         setContentView(R.layout.list_activity_layout);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);

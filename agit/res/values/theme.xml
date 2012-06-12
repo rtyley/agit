@@ -12,6 +12,8 @@
     </style>
 
     <style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="background">@drawable/actionbar_background</item>
+        <item name="android:background">@drawable/actionbar_background</item>
     </style>
 
     <style name="Widget.Styled.ActionBar.SuperTitle" parent="Widget.Styled.ActionBar">

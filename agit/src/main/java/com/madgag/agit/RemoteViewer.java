@@ -19,6 +19,7 @@
 
 package com.madgag.agit;
 
+import static com.madgag.android.ActionBarUtil.fixImageTilingOn;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -40,6 +41,7 @@ public class RemoteViewer extends RepoScopedActivityBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fixImageTilingOn(getSupportActionBar());
         setContentView(R.layout.remote_view);
 
         try {

@@ -33,6 +33,7 @@ import static com.madgag.agit.R.string.clone_readiness_repository_folder_already
 import static com.madgag.agit.R.string.ssh_agent_not_correctly_installed;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
 import static com.madgag.agit.git.TransportProtocols.niceProtocolNameFor;
+import static com.madgag.android.ActionBarUtil.fixImageTilingOn;
 import static com.madgag.android.ActionBarUtil.homewardsWith;
 import static com.madgag.android.ClickableText.BOLD_LINK_STYLE;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
@@ -105,6 +106,7 @@ public class CloneLauncherActivity extends RoboSherlockActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fixImageTilingOn(getSupportActionBar());
         setContentView(R.layout.clone_launcher);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);

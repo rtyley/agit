@@ -1,6 +1,7 @@
 package com.madgag.agit;
 
 import static com.madgag.agit.R.layout.about_activity;
+import static com.madgag.android.ActionBarUtil.fixImageTilingOn;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.WebView;
@@ -27,6 +28,7 @@ public abstract class MarkdownActivityBase extends RoboSherlockActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fixImageTilingOn(getSupportActionBar());
         setContentView(about_activity);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);

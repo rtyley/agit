@@ -26,6 +26,7 @@ import static com.madgag.agit.R.layout.list_activity_layout;
 import static com.madgag.agit.RepoScopedActivityBase.enterRepositoryScopeFor;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
 import static com.madgag.agit.git.Repos.niceNameFor;
+import static com.madgag.android.ActionBarUtil.fixImageTilingOn;
 import static com.madgag.android.ActionBarUtil.homewardsWith;
 import static com.madgag.android.ActionBarUtil.setPrefixedTitleOn;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
@@ -73,6 +74,7 @@ public class RDTypeListActivity<E> extends RoboSherlockListActivity {
         } finally {
             repositoryScope.exit();
         }
+        fixImageTilingOn(getSupportActionBar());
 
         setContentView(list_activity_layout);
         ActionBar actionBar = getSupportActionBar();

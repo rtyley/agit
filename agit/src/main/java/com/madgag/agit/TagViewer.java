@@ -21,6 +21,7 @@ package com.madgag.agit;
 
 import static com.madgag.agit.R.id.tv_tag_ref_object;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
+import static com.madgag.android.ActionBarUtil.fixImageTilingOn;
 import static com.madgag.android.ActionBarUtil.homewardsWith;
 import android.content.Intent;
 import android.os.Bundle;
@@ -80,6 +81,7 @@ public class TagViewer extends RepoScopedActivityBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fixImageTilingOn(getSupportActionBar());
         repositoryScope.doWith(repo(), new Runnable() {
             public void run() {
                 setContentView(R.layout.tag_viewer_activity);

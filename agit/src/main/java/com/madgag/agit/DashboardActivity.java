@@ -7,6 +7,7 @@ import static com.madgag.agit.R.string.install_file_manager;
 import static com.madgag.agit.R.string.open_git_repository;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
 import static com.madgag.agit.sync.AccountAuthenticatorService.addAccount;
+import static com.madgag.android.ActionBarUtil.fixImageTilingOn;
 import static com.madgag.android.ToastUtil.code;
 import static com.madgag.android.jgit.HarmonyFixInflater.checkHarmoniousRepose;
 import static com.madgag.android.util.store.InstallAppDialogFragment.isIntentAvailable;
@@ -37,6 +38,7 @@ public class DashboardActivity extends RoboSherlockFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fixImageTilingOn(getSupportActionBar());
         Log.i(TAG, "Inflater zero-byte inflation (HARMONY-6637/Android #11755) fixed: " + checkHarmoniousRepose());
         try {
             addAccount(this);

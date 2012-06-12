@@ -28,6 +28,7 @@ import static com.madgag.agit.CommitViewerActivity.commitViewerIntentCreatorFor;
 import static com.madgag.agit.RDTypeListActivity.listIntent;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
 import static com.madgag.agit.git.Repos.niceNameFor;
+import static com.madgag.android.ActionBarUtil.fixImageTilingOn;
 import static com.madgag.android.ActionBarUtil.homewardsWith;
 import static com.madgag.android.ActionBarUtil.setPrefixedTitleOn;
 import static java.lang.System.currentTimeMillis;
@@ -86,6 +87,7 @@ public class BranchViewer extends RepoScopedActivityBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fixImageTilingOn(getSupportActionBar());
         setContentView(R.layout.branch_view);
 
         ActionBar actionBar = getSupportActionBar();

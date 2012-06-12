@@ -20,6 +20,7 @@
 package com.madgag.agit;
 
 import static com.madgag.agit.GitIntents.gitDirFrom;
+import static com.madgag.android.ActionBarUtil.fixImageTilingOn;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -61,6 +62,7 @@ public abstract class RepoScopedActivityBase extends RoboSherlockActivity {
         } finally {
             repositoryScope.exit();
         }
+        fixImageTilingOn(getSupportActionBar());
     }
 
     static RepositoryScope enterRepositoryScopeFor(Context context, Intent intent) {
