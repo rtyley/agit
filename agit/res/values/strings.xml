@@ -5,6 +5,7 @@
     <string name="suggest_repos_button">Suggest repos...</string>
     <string name="about_app_menu_option">About</string>
     <string name="about_activity_title">About...</string>
+    <string name="welcome_message">"Welcome to Agit.\nGet started by #clone[cloning] a repository."</string>
     <string name="using_ssh_activity_title">SSH Install Guide</string>
     <string name="clone_launcher_activity_title">Clone...</string>
     <string name="clone_menu_option">Clone...</string>

@@ -27,6 +27,11 @@
         <item name="android:typeface">monospace</item>
     </style>
 
+    <style name="WelcomeText" parent="@android:style/TextAppearance">
+        <item name="android:textSize">36sp</item>
+        <item name="android:textColor">#cc000000</item>
+    </style>
+
     <style name="addedText" parent="@style/code">
         <item name="android:textColor">@color/addedText</item>
     </style>

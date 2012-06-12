@@ -34,6 +34,7 @@ import static com.madgag.agit.R.string.ssh_agent_not_correctly_installed;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
 import static com.madgag.agit.git.TransportProtocols.niceProtocolNameFor;
 import static com.madgag.android.ActionBarUtil.homewardsWith;
+import static com.madgag.android.ClickableText.BOLD_LINK_STYLE;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
 import android.content.Intent;
 import android.os.Build;
@@ -68,7 +69,6 @@ import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.util.FS;
 
-import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 
 public class CloneLauncherActivity extends RoboSherlockActivity {
@@ -213,7 +213,7 @@ public class CloneLauncherActivity extends RoboSherlockActivity {
         cloneReadinessMessageView.setVisibility(message == null ? INVISIBLE : VISIBLE);
         if (message != null) {
             Editable spana = new SpannableStringBuilder(message);
-            ClickableText.addLinks(spana, new ClickableText.Listener() {
+            ClickableText.addLinks(spana, BOLD_LINK_STYLE, new ClickableText.Listener() {
                 public void onClick(String command, View widget) {
                     if (command.equals("specify_target_dir")) {
                         useDefaultGitDirLocationButton.setChecked(false);
