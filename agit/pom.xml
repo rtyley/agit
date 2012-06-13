@@ -228,6 +228,12 @@
                                     <storepass>${sign.storepass}</storepass>
                                     <keypass>${sign.keypass}</keypass>
                                     <verbose>true</verbose>
+                                    <arguments>
+                                        <argument>-sigalg</argument>
+                                        <argument>MD5withRSA</argument>
+                                        <argument>-digestalg</argument>
+                                        <argument>SHA1</argument>
+                                    </arguments>
                                 </configuration>
                             </execution>
                         </executions>
