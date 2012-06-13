@@ -4,7 +4,7 @@
     <artifactId>agit</artifactId>
 
     <parent>
-        <version>1.32-SNAPSHOT</version>
+        <version>1.32</version>
         <groupId>com.madgag</groupId>
         <artifactId>agit-parent</artifactId>
     </parent>
