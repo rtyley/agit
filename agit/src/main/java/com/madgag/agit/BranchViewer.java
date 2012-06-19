@@ -26,7 +26,6 @@ import static android.widget.Toast.LENGTH_SHORT;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.CommitViewerActivity.commitViewerIntentCreatorFor;
 import static com.madgag.agit.RDTypeListActivity.listIntent;
-import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
 import static com.madgag.agit.git.Repos.niceNameFor;
 import static com.madgag.android.ActionBarUtil.fixImageTilingOn;
 import static com.madgag.android.ActionBarUtil.homewardsWith;
@@ -37,18 +36,17 @@ import static org.eclipse.jgit.lib.Repository.shortenRefName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import android.widget.Toast;
-
 import com.google.inject.Inject;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.madgag.agit.operation.lifecycle.CasualShortTermLifetime;
 import com.madgag.agit.operations.Fetch;
 import com.madgag.agit.operations.GitAsyncTaskFactory;
 import com.madgag.agit.operations.OpNotification;
-import com.markupartist.android.widget.PullToRefreshListView;
 
 import java.io.File;
 import java.io.IOException;
@@ -72,7 +70,7 @@ public class BranchViewer extends RepoScopedActivityBase {
 
     private static final String TAG = "BranchViewer";
 
-    @InjectView(list)
+    @InjectView(R.id.pull_to_refresh_list_wrapper)
     RevCommitListView revCommitListView;
 
 
@@ -94,20 +92,21 @@ public class BranchViewer extends RepoScopedActivityBase {
         setPrefixedTitleOn(actionBar, niceNameFor(repo()), shortenRefName(branch().getName()));
         actionBar.setDisplayHomeAsUpEnabled(true);
         setCommits();
-        revCommitListView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
+        revCommitListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener() {
             public void onRefresh() {
-                revCommitListView.setLastUpdated("");
                 Fetch fetch = new Fetch(repository, DEFAULT_REMOTE_NAME);
                 gitAsyncTaskFactory.createTaskFor(fetch, new CasualShortTermLifetime() {
                     public void error(OpNotification errorNotification) {
-                        revCommitListView.onRefreshComplete("Last Fetch failed: " + errorNotification.getTickerText());
+                        revCommitListView.setLastUpdatedLabel("Last Fetch failed: " + errorNotification.getTickerText());
+                        revCommitListView.onRefreshComplete();
                         Toast.makeText(BranchViewer.this, errorNotification.getTickerText(), LENGTH_SHORT).show();
                     }
 
                     public void success(OpNotification completionNotification) {
                         setCommits();
-                        revCommitListView.onRefreshComplete("Last Fetch: " + formatDateTime(BranchViewer.this,
+                        revCommitListView.setLastUpdatedLabel("Last Fetch: " + formatDateTime(BranchViewer.this,
                                 currentTimeMillis(), FORMAT_SHOW_TIME));
+                        revCommitListView.onRefreshComplete();
                     }
                 }).execute();
             }

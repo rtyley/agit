@@ -7,7 +7,7 @@
               android:layout_height="fill_parent">
 
     <com.madgag.agit.RevCommitListView
-            android:id="@android:id/list"
+            android:id="@+id/pull_to_refresh_list_wrapper"
             android:fastScrollEnabled="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:cacheColorHint="#FFF"/>

@@ -27,12 +27,13 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.google.common.base.Function;
 import com.google.inject.Inject;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.madgag.agit.guice.ContextScopedViewInflatorFactory;
 import com.madgag.android.listviews.ViewHoldingListAdapter;
-import com.markupartist.android.widget.PullToRefreshListView;
 
 import java.util.Collections;
 import java.util.List;
@@ -57,14 +58,18 @@ public class RevCommitListView extends PullToRefreshListView {
     public RevCommitListView(Context context, AttributeSet attrs) {
         super(context, attrs);
         getInjector(context).injectMembers(this);
+        setShowIndicator(false); // TODO - show indicator if refs indicate more commits available
         adapter = new ViewHoldingListAdapter<RevCommit>(Collections.<RevCommit>emptyList(),
                 inflatorFactory.creatorFor(getContext(), rev_commit_list_item),
                 commitViewHolderFactory);
-        setAdapter(adapter);
+        configureListView(getRefreshableView());
+    }
 
-        setOnItemClickListener(new OnItemClickListener() {
+    private void configureListView(ListView listView) {
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                RevCommit commit = (RevCommit) getAdapter().getItem(position);
+                RevCommit commit = (RevCommit) adapter.getItem(position);
                 getContext().startActivity(commitViewerIntentCreator.apply(commit));
             }
         });
