@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.util.Log;
+import android.widget.ListAdapter;
 
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
 import com.madgag.android.listviews.ViewHoldingListAdapter;
@@ -31,10 +32,11 @@ import java.util.List;
 
 public abstract class ListLoadingFragment<E> extends RoboSherlockListFragment implements LoaderCallbacks<List<E>> {
 
+    private static final String TAG = "ListLoadingFragment";
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setListShown(false);
         getLoaderManager().initLoader(0, null, this);
     }
 
@@ -52,13 +54,12 @@ public abstract class ListLoadingFragment<E> extends RoboSherlockListFragment im
 
     public void onLoadFinished(Loader<List<E>> loader, List<E> items) {
         setList(items);
-
-        if (isResumed())
+        if (shouldAnimateShowingList()) {
             setListShown(true);
-        else
+        } else {
             setListShownNoAnimation(true);
+        }
     }
-
 
     private void setList(List<E> items) {
         @SuppressWarnings("unchecked")
@@ -68,6 +69,23 @@ public abstract class ListLoadingFragment<E> extends RoboSherlockListFragment im
         } else {
             listAdapter.setList(items);
         }
+    }
+
+    public void setListAdapter(ListAdapter adapter) {
+        if (!shouldAnimateShowingList()) {
+            // anticipates and negates the animation that the default setListAdapter() implementation always does
+            setListShownNoAnimation(true);
+        }
+        super.setListAdapter(adapter);
+    }
+
+    /**
+     * List-Shown-Fade-Transition animation causes jerkyness in ViewPager swipe on ICS 4.0.4 Galaxy Nexus, so
+     * don't do the animation if the fragment isn't visible. Note that FragmentPagerAdapter currently updates
+     * 'userVisibleHint' but FragmentStatePagerAdapter currently does not.
+     */
+    private boolean shouldAnimateShowingList() {
+        return isResumed() && getUserVisibleHint();
     }
 
     protected abstract ViewHoldingListAdapter<E> adapterFor(List<E> items);
