@@ -340,11 +340,15 @@ public class CloneLauncherActivity extends RoboSherlockActivity {
 
     private File defaultRepoDirFor(URIish uri) {
         File reposDir = new File(Environment.getExternalStorageDirectory(), "git-repos");
+        String suffix = bareRepoCheckbox.isChecked() ? DOT_GIT_EXT : "";
+        return new File(reposDir, defaultRepoNameFor(uri) + suffix);
+    }
+
+    private String defaultRepoNameFor(URIish uri) {
         try {
-            String suffix = bareRepoCheckbox.isChecked() ? DOT_GIT_EXT : "";
-            return new File(reposDir, uri.getHumanishName() + suffix);
-        } catch (IllegalArgumentException e) {
-            return new File(reposDir, "repo");
+            return uri.getHumanishName();
+        } catch (Exception e) {
+            return "repo";
         }
     }
 

@@ -47,6 +47,10 @@ public class CloneLauncherActivityStoryTest extends CalculonStoryTest<CloneLaunc
         assertThat(R.id.UseDefaultGitDirLocation).setChecked(true).implies(R.id.UseDefaultGitDirLocation).isEnabled();
     }
 
+    public void testDoesNotCrashDueToCloneUrlBeingJustDotGit() {
+        setUp(R.id.UseDefaultGitDirLocation).setChecked(true).now();
+        setUp(R.id.CloneUrlEditText).setText(".git").now();
+    }
 
 //    public void testCheckoutToCustomLocationWorks() {
 //        File customLocation = tempFolder();
