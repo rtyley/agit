@@ -37,7 +37,7 @@ public class ReposDataSource {
 
 
     public void registerReposInStandardDir() {
-        for (File gitdir : Repos.knownRepos()) {
+        for (File gitdir : Repos.reposInDefaultRepoDir()) {
             registerRepo(gitdir);
         }
     }

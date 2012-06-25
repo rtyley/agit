@@ -67,12 +67,14 @@ public class Repos {
         WindowCache.reconfigure(cfg);
     }
 
-    public static List<File> knownRepos() {
+    public static List<File> reposInDefaultRepoDir() {
         File reposDir = new File(getExternalStorageDirectory(), "git-repos");
-        if (!reposDir.exists() && !reposDir.mkdirs()) {
-            throw new IllegalStateException("Can't find or create the default it repos dir : " + reposDir);
-        }
+
         List<File> repos = newArrayList();
+        if (!reposDir.exists() && !reposDir.mkdirs()) {
+            Log.d(TAG, "Could not create default repos dir  " + reposDir);
+            return repos;
+        }
         for (File repoDir : reposDir.listFiles()) {
             File gitdir = RepositoryCache.FileKey.resolve(repoDir, FS.detect());
             if (gitdir != null) {
