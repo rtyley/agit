@@ -20,6 +20,7 @@
 package com.madgag.agit;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static android.os.Build.VERSION_CODES.GINGERBREAD;
 import static android.os.Build.VERSION_CODES.HONEYCOMB;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -29,6 +30,7 @@ import static com.madgag.agit.GitIntents.EXTRA_TARGET_DIR;
 import static com.madgag.agit.GitIntents.sourceUriFrom;
 import static com.madgag.agit.GitOperationsService.cloneOperationIntentFor;
 import static com.madgag.agit.R.string.clone_launcher_activity_title;
+import static com.madgag.agit.R.string.clone_readiness_not_enough_room_on_partition;
 import static com.madgag.agit.R.string.clone_readiness_repository_folder_already_exists;
 import static com.madgag.agit.R.string.ssh_agent_not_correctly_installed;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
@@ -36,6 +38,7 @@ import static com.madgag.agit.git.TransportProtocols.niceProtocolNameFor;
 import static com.madgag.android.ActionBarUtil.fixImageTilingOn;
 import static com.madgag.android.ActionBarUtil.homewardsWith;
 import static com.madgag.android.ClickableText.BOLD_LINK_STYLE;
+import static org.apache.commons.io.FileUtils.byteCountToDisplaySize;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
 import android.content.Intent;
 import android.os.Build;
@@ -74,6 +77,7 @@ import roboguice.inject.InjectView;
 
 public class CloneLauncherActivity extends RoboSherlockActivity {
     private final static String TAG = "CloneLauncherActivity";
+    private static final long MIN_REQUIRED_SPACE = 128L * 1024L;
 
     public static Intent cloneLauncherIntentFor(String sourceUri) {
         return new GitIntentBuilder("clone.PREPARE").sourceUri(sourceUri).toIntent();
@@ -205,10 +209,27 @@ public class CloneLauncherActivity extends RoboSherlockActivity {
             } else {
                 message = getString(R.string.clone_readiness_folder_already_exists);
             }
+        } else if (f.getPath().length() > 0) {
+            if (Build.VERSION.SDK_INT >= GINGERBREAD) {
+                long usableSpace = existingFileInPartitionContaining(f).getUsableSpace();
+                String spaceText = byteCountToDisplaySize(usableSpace);
+                Log.d(TAG, "usableSpace = " + spaceText);
+                if (usableSpace < MIN_REQUIRED_SPACE) {
+                    enableClone = false;
+                    message = getString(clone_readiness_not_enough_room_on_partition, spaceText);
+                }
+            }
         }
         displayHelp(message);
 
         button.setEnabled(enableClone);
+    }
+
+    private File existingFileInPartitionContaining(File f) {
+        while (!f.exists() && f.getParentFile()!=null) {
+            f = f.getParentFile();
+        }
+        return f;
     }
 
     private void displayHelp(CharSequence message) {

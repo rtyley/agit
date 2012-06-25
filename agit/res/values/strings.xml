@@ -22,6 +22,7 @@
     <string name="clone_readiness_repository_folder_already_exists">Folder already exists locally- view
         #view_existing_repo[existing repo]?
     </string>
+    <string name="clone_readiness_not_enough_room_on_partition">"Not enough room, only %1$s of space available to Agit on this partition."</string>
     <string name="ssh_agent_not_correctly_installed">No SSH-agent available - view #view_ssh_instructions[SSH setup
         guide]?
     </string>
