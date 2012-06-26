@@ -21,12 +21,16 @@ package com.madgag.agit;
 
 import static com.madgag.agit.git.Repos.openRepoFor;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 
 public class GitIntents {
 
@@ -49,7 +53,13 @@ public class GitIntents {
             BARE = "bare",
             EXTRA_TARGET_DIR = "target-dir",
             EXTRA_SOURCE_URI = "source-uri",
-            GITDIR = "gitdir";
+            GITDIR = "gitdir",
+            UNTIL_REVS = "until-revs",
+            BEFORE_REV = "before-rev",
+            AFTER_REV = "after-rev",
+            REVISION = "revision",
+            COMMIT = "commit",
+            PATH = "path";
 
     public static File directoryFrom(Intent intent) {
         String directory = intent.getStringExtra("directory");
@@ -61,11 +71,23 @@ public class GitIntents {
     }
 
     public static File gitDirFrom(Intent intent) {
-        String gitdirString = intent.getStringExtra(GITDIR);
+        return gitDirFrom(intent.getExtras());
+    }
+
+    public static File gitDirFrom(Bundle extras) {
+        String gitdirString = extras.getString(GITDIR);
         Log.i(TAG, "gitdirString = " + gitdirString);
         File gitdir = new File(gitdirString);
-        Log.i(TAG, "gitdir for " + intent + " = " + gitdir.getAbsolutePath());
+        Log.i(TAG, "gitdir for = " + gitdir.getAbsolutePath());
         return gitdir;
+    }
+
+    public static RevCommit commitFrom(Repository repository, Bundle args, String revisionArgName) throws IOException {
+        return new RevWalk(repository).parseCommit(revisionIdFrom(repository, args, revisionArgName));
+    }
+
+    public static ObjectId revisionIdFrom(Repository repo, Bundle args, String revisionArgName) throws IOException {
+        return repo.resolve(args.getString(revisionArgName));
     }
 
     public static String branchNameFrom(Intent intent) {
@@ -89,7 +111,7 @@ public class GitIntents {
     }
 
     public static ObjectId commitIdFrom(Intent intent) {
-        return ObjectId.fromString(intent.getStringExtra("commit"));
+        return ObjectId.fromString(intent.getStringExtra(COMMIT));
     }
 
 

@@ -21,8 +21,10 @@ package com.madgag.agit;
 
 import static com.madgag.agit.GitIntents.EXTRA_SOURCE_URI;
 import static com.madgag.agit.GitIntents.EXTRA_TARGET_DIR;
+import static com.madgag.agit.GitIntents.GITDIR;
 import static com.madgag.agit.GitIntents.actionWithSuffix;
 import android.content.Intent;
+import android.os.Bundle;
 
 import java.io.File;
 
@@ -33,18 +35,32 @@ import org.eclipse.jgit.transport.RemoteConfig;
 
 public class GitIntentBuilder {
 
+
     private final Intent intent;
 
     public GitIntentBuilder(String actionSuffix) {
         intent = new Intent(actionWithSuffix(actionSuffix));
     }
 
+    public GitIntentBuilder(String actionSuffix, Bundle sourceArgs, String... extrasToCopy) {
+        this(actionSuffix);
+//        for (String extraToCopy : extrasToCopy) { ??
+//            intent.replaceExtras()
+//            intent.putExtra(extraToCopy, sourceArgs.getString(extraToCopy));
+//        }
+        intent.putExtras(sourceArgs);
+    }
+
     public GitIntentBuilder gitdir(File gitdir) {
-        return add("gitdir", gitdir.getAbsolutePath());
+        return add(GITDIR, gitdir.getAbsolutePath());
     }
 
     public GitIntentBuilder branch(Ref branch) {
-        return add("branch", branch.getName());
+        return branch(branch.getName());
+    }
+
+    public GitIntentBuilder branch(String branch) {
+        return add("branch", branch);
     }
 
     public GitIntentBuilder remote(RemoteConfig remoteConfig) {
@@ -78,6 +94,14 @@ public class GitIntentBuilder {
 
     public GitIntentBuilder commit(String commitId) {
         return add("commit", commitId);
+    }
+
+    public GitIntentBuilder revision(String revision) {
+        return add(GitIntents.REVISION, revision);
+    }
+
+    public GitIntentBuilder path(String path) {
+        return add("path", path);
     }
 
     public Intent toIntent() {
