@@ -32,23 +32,24 @@ import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.RenameDetector;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
 
 public class CommitDiffer {
 
-    private static final String TAG = "CD";
+    private static final String TAG = "CommitDiffer";
 
-    public List<FileDiff> calculateCommitDiffs(Repository repo, RevCommit parentCommit,
-                                               RevCommit commit) throws IOException {
+    public List<FileDiff> calculateCommitDiffs(Repository repo, RevCommit beforeCommit,
+                                               RevCommit afterCommit) throws IOException {
         Log.d(TAG, "calculateCommitDiffs");
         RevWalk revWalk = new RevWalk(repo);
         final TreeWalk tw = new TreeWalk(revWalk.getObjectReader());
         tw.setRecursive(true);
         tw.reset();
-        tw.addTree(revWalk.parseTree(parentCommit.getTree()));
-        tw.addTree(revWalk.parseTree(commit.getTree()));
+        addTree(tw, revWalk, beforeCommit);
+        addTree(tw, revWalk, afterCommit);
         tw.setFilter(TreeFilter.ANY_DIFF);
         List<DiffEntry> files = detectRenames(repo, DiffEntry.scan(tw));
 
@@ -58,6 +59,12 @@ public class CommitDiffer {
                 return new FileDiff(lineContextDiffer, d);
             }
         }));
+    }
+
+    private void addTree(TreeWalk tw, RevWalk revWalk, RevCommit commit) throws IOException {
+        RevTree tree = commit.getTree();
+        Log.d(TAG, "Adding "+commit+" with tree "+tree);
+        tw.addTree(revWalk.parseTree(tree));
     }
 
 

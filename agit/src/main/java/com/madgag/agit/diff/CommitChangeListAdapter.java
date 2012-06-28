@@ -39,32 +39,32 @@ import org.eclipse.jgit.revwalk.RevCommit;
 public class CommitChangeListAdapter extends BaseExpandableListAdapter implements OnStateUpdateListener,
         DiffStateProvider {
 
-    private static final String TAG = "CCLA";
+    private static final String TAG = "CommitChangeListAdapter";
 
-    // private final ViewCreator groupHeaderCreator;
     private LayoutInflater mInflater;
     private final DiffSliderView diffSlider;
     private final ExpandableListView expandableList;
     private final Context context;
-    private final RevCommit commit, parentCommit;
     private final Repository repository;
+    private final RevCommit afterCommit, beforeCommit;
     private final List<FileDiff> fileDiffs;
 
     private float state = 0.5f;
 
-    public CommitChangeListAdapter(Repository repository, RevCommit commit, RevCommit parentCommit,
+    public CommitChangeListAdapter(Repository repository, RevCommit afterCommit, RevCommit beforeCommit,
                                    DiffSliderView diffSlider, ExpandableListView expandableList, Context context) {
-        // groupHeaderCreator = ViewInflator.viewInflatorFor(context,file_change_header_view);
+        Log.d(TAG, "before : "+ beforeCommit);
+        Log.d(TAG, "after  : "+ afterCommit);
         this.repository = repository;
-        this.commit = commit;
-        this.parentCommit = parentCommit;
+        this.afterCommit = afterCommit;
+        this.beforeCommit = beforeCommit;
         this.diffSlider = diffSlider;
         this.expandableList = expandableList;
         this.context = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         diffSlider.setStateUpdateListener(this);
         try {
-            fileDiffs = new CommitDiffer().calculateCommitDiffs(repository, parentCommit, commit);
+            fileDiffs = new CommitDiffer().calculateCommitDiffs(repository, beforeCommit, afterCommit);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -81,16 +81,7 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
     public View getChildView(int groupPosition, int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
         Hunk hunk = fileDiffs.get(groupPosition).getHunks().get(childPosition);
-        HunkDiffView v;
-        // Disabling view re-use for Children - too unpredictable, can not easily tell when my difftext should be
-        // invalidated!
-//			if (convertView==null || !(convertView instanceof HunkDiffView)) {
-        v = new HunkDiffView(context, hunk, this);
-//			} else {
-//				v=((HunkDiffView)convertView);
-//				v.setHunk(hunk);
-//			}
-        return v;
+        return new HunkDiffView(context, hunk, this);
     }
 
     public int getChildrenCount(int groupPosition) {
@@ -155,11 +146,6 @@ public class CommitChangeListAdapter extends BaseExpandableListAdapter implement
         expandableList.requestLayout();
         Log.d(TAG, "list invalidated state=" + state);
     }
-
-    private long keyFor(int i, int j) {
-        return (((long) i) << 32) + j;
-    }
-
 
     public float getDiffState() {
         return state;

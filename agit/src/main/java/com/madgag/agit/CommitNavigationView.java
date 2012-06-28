@@ -32,8 +32,11 @@ import android.widget.LinearLayout;
 
 import com.madgag.agit.git.model.Relation;
 
+import java.io.IOException;
 import java.util.Map;
 
+import org.eclipse.jgit.errors.IncorrectObjectTypeException;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revplot.PlotCommit;
 import org.eclipse.jgit.revplot.PlotLane;
 
@@ -85,6 +88,7 @@ public class CommitNavigationView extends LinearLayout {
     }
 
     public interface CommitSelectedListener {
+        PlotCommit<PlotLane> plotCommitFor(ObjectId objectId) throws IOException;
         void onCommitSelected(Relation relation, PlotCommit<PlotLane> commit);
     }
 }

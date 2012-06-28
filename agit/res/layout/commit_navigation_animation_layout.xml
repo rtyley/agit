@@ -2,9 +2,12 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="fill_parent"
              android:layout_height="fill_parent"
+             xmlns:agit= "http://schemas.android.com/apk/res/com.madgag.agit"
         >
     <com.madgag.agit.CommitView android:id="@+id/commit_nav_current_commit"
+                                agit:viewPagerId="@+id/viewpager_current_commit"
                                 android:layout_width="fill_parent" android:layout_height="fill_parent"/>
     <com.madgag.agit.CommitView android:id="@+id/commit_nav_next_commit"
+                                agit:viewPagerId="@+id/viewpager_next_commit"
                                 android:layout_width="fill_parent" android:layout_height="fill_parent"/>
 </FrameLayout>

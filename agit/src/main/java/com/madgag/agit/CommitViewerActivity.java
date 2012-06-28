@@ -19,6 +19,7 @@
 
 package com.madgag.agit;
 
+import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static android.view.animation.AnimationUtils.loadAnimation;
@@ -32,15 +33,21 @@ import static com.madgag.agit.R.anim.pull_parent_in;
 import static com.madgag.agit.R.anim.push_child_out;
 import static com.madgag.agit.R.anim.push_parent_out;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
+import static com.madgag.agit.git.Repos.niceNameFor;
 import static com.madgag.agit.git.model.Relation.CHILD;
 import static com.madgag.agit.git.model.Relation.PARENT;
 import static com.madgag.android.ActionBarUtil.fixImageTilingOn;
 import static com.madgag.android.ActionBarUtil.homewardsWith;
+import static com.madgag.android.ActionBarUtil.setPrefixedTitleOn;
+import static org.eclipse.jgit.lib.Repository.shortenRefName;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.style.CharacterStyle;
+import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,7 +72,7 @@ import org.eclipse.jgit.revplot.PlotLane;
 import org.eclipse.jgit.revplot.PlotWalk;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-public class CommitViewerActivity extends RepoScopedActivityBase {
+public class CommitViewerActivity extends RepoScopedActivityBase implements CommitSelectedListener {
     private static final String TAG = "CVA";
 
     public static GitIntentBuilder commitViewIntentFor(Bundle sourceArgs) {
@@ -79,11 +86,25 @@ public class CommitViewerActivity extends RepoScopedActivityBase {
     @Inject
     LogStartProvider logStartProvider;
 
+    private PlotWalk plotWalk;
     private PlotCommit<PlotLane> commit;
 
     CommitView currentCommitView, nextCommitView;
 
+    public static final CharacterStyle MONOSPACE_SPAN = new TypefaceSpan("monospace");
+
     private Map<Relation, RelationAnimations> relationAnimations = newEnumMap(Relation.class);
+
+
+    @Override
+    public void onCommitSelected(Relation relation, PlotCommit<PlotLane> commit) {
+        moveToCommit(commit, relation);
+    }
+
+    @Override
+    public PlotCommit<PlotLane> plotCommitFor(ObjectId objectId) throws IOException {
+        return (PlotCommit<PlotLane>) plotWalk.parseCommit(objectId);
+    }
 
     private class RelationAnimations {
         private final Animation animateOldViewOut, animateNewViewIn;
@@ -112,20 +133,16 @@ public class CommitViewerActivity extends RepoScopedActivityBase {
         currentCommitView = (CommitView) findViewById(R.id.commit_nav_current_commit);
         nextCommitView = (CommitView) findViewById(R.id.commit_nav_next_commit);
 
-        CommitSelectedListener commitSelectedListener = new CommitSelectedListener() {
-            public void onCommitSelected(Relation relation, PlotCommit<PlotLane> commit) {
-                setCommit(commit, relation);
-            }
-        };
         try {
             ObjectId revisionId = GitIntents.commitIdFrom(getIntent());
             Log.d(TAG, revisionId.getName());
-            PlotWalk revWalk = generatePlotWalk();
 
-            commit = (PlotCommit<PlotLane>) revWalk.parseCommit(revisionId);
+            plotWalk = generatePlotWalk();
 
-            setup(currentCommitView, commitSelectedListener, revWalk);
-            setup(nextCommitView, commitSelectedListener, revWalk);
+            setCurrentCommit(plotCommitFor(revisionId));
+
+            setup(currentCommitView, plotWalk);
+            setup(nextCommitView, plotWalk);
 
             currentCommitView.setCommit(commit);
             setCurrentCommitViewVisible();
@@ -134,31 +151,49 @@ public class CommitViewerActivity extends RepoScopedActivityBase {
         }
     }
 
-    private void setup(CommitView commitView,
-                       CommitSelectedListener commitSelectedListener,
-                       PlotWalk revWalk) {
+    private void setup(CommitView commitView, PlotWalk revWalk) {
         commitView.setRepositoryContext(repo(), revWalk);
-        commitView.setCommitSelectedListener(commitSelectedListener);
     }
-
 
     private void setCurrentCommitViewVisible() {
         currentCommitView.setVisibility(VISIBLE);
         nextCommitView.setVisibility(GONE);
     }
 
-    public void setCommit(PlotCommit<PlotLane> newCommit, Relation relation) {
-        this.commit = newCommit;
+    public void moveToCommit(PlotCommit<PlotLane> newCommit, Relation relation) {
+        setCurrentCommit(newCommit);
+
         try {
             nextCommitView.setCommit(newCommit);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         relationAnimations.get(relation).animateViews();
+        swapCommitViewVars();
+        setCurrentCommitViewVisible();
+    }
+
+    private void swapCommitViewVars() {
         CommitView oldCurrent = currentCommitView;
         currentCommitView = nextCommitView;
         nextCommitView = oldCurrent;
-        setCurrentCommitViewVisible();
+    }
+
+    private void setCurrentCommit(PlotCommit<PlotLane> commit) {
+        this.commit = commit;
+        setActionBarTitles();
+    }
+
+    private void setActionBarTitles() {
+        SpannableStringBuilder prefixTitle = new SpannableStringBuilder(commit.name().substring(0, 4));
+        prefixTitle.setSpan(MONOSPACE_SPAN, 0, 4, SPAN_EXCLUSIVE_EXCLUSIVE);
+        String pathPrefix = niceNameFor(repo()) + " • ";
+        String currentRef = logStartProvider.getCurrentRef();
+        if (currentRef != null) {
+            pathPrefix = pathPrefix + shortenRefName(currentRef) + " • ";
+        }
+        prefixTitle.insert(0, pathPrefix);
+        setPrefixedTitleOn(getSupportActionBar(), prefixTitle, commit.getShortMessage());
     }
 
     private PlotWalk generatePlotWalk() throws IOException {

@@ -100,6 +100,7 @@ public class FileListFragment extends ListLoadingFragment<CharSequence> implemen
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.d(TAG, "onViewCreated with "+getArguments().getString(REVISION));
         getListView().setFastScrollEnabled(true);
     }
 
