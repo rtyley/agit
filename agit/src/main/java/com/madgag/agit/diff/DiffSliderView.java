@@ -62,11 +62,10 @@ public class DiffSliderView extends LinearLayout {
         boldTypeFace = create(defaultTypeface, BOLD);
 
         SeekBar seekBar = (SeekBar) findViewById(DiffPlayerSeekBar);
-        DiffSeekBarChangeListener foo = new DiffSeekBarChangeListener((Vibrator) context.getSystemService
-                (VIBRATOR_SERVICE));
-        seekBar.setOnSeekBarChangeListener(foo);
-        seekBar.setProgress(seekBar.getMax() / 2);//This should correctly set the thumb to the middle in the diffview
-        // on open
+        seekBar.setProgress(seekBar.getMax() / 2);
+        // After initial progress is set, initiate the vibration feedback
+        Vibrator vibrator = (Vibrator) context.getSystemService(VIBRATOR_SERVICE);
+        seekBar.setOnSeekBarChangeListener(new DiffSeekBarChangeListener(vibrator));
     }
 
     public void setStateUpdateListener(OnStateUpdateListener stateUpdateListener) {
