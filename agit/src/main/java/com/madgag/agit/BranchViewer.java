@@ -19,8 +19,6 @@
 
 package com.madgag.agit;
 
-import static com.madgag.agit.GitIntents.GITDIR;
-import static com.madgag.agit.GitIntents.UNTIL_REVS;
 import static com.madgag.agit.RDTypeListActivity.listIntent;
 import static com.madgag.agit.git.Repos.niceNameFor;
 import static com.madgag.android.ActionBarUtil.fixImageTilingOn;
@@ -29,13 +27,19 @@ import static com.madgag.android.ActionBarUtil.setPrefixedTitleOn;
 import static java.util.Arrays.asList;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.inject.Inject;
 import com.madgag.agit.operations.GitAsyncTaskFactory;
+import com.viewpagerindicator.TabPageIndicator;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,18 +51,13 @@ import roboguice.inject.InjectExtra;
 
 public class BranchViewer extends RepoScopedActivityBase {
 
-
-    public static GitIntentBuilder commitViewIntentFor(Bundle sourceArgs) {
-        return new GitIntentBuilder("commit.VIEW", sourceArgs, GITDIR, UNTIL_REVS);
-    }
+    private static final String TAG = "BranchViewer";
 
     public static Intent branchViewerIntentFor(File gitdir, String branch) {
         return new GitIntentBuilder("branch.VIEW").gitdir(gitdir).branch(branch).toIntent();
     }
 
     private final static int CHECKOUT_ID = Menu.FIRST;
-
-    private static final String TAG = "BranchViewer";
 
     @Inject
     GitAsyncTaskFactory gitAsyncTaskFactory;
@@ -71,16 +70,54 @@ public class BranchViewer extends RepoScopedActivityBase {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fixImageTilingOn(getSupportActionBar());
+        setContentView(R.layout.branch_view);
 
         ActionBar actionBar = getSupportActionBar();
         setPrefixedTitleOn(actionBar, niceNameFor(repo()), shortenRefName(branch().getName()));
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        if (savedInstanceState == null) {
-            LogFragment f = LogFragment.newInstance(gitdir(), asList(branch().getName()), null);
-            getSupportFragmentManager().beginTransaction().add(android.R.id.content, f).commit();
+        BranchPagerAdapter adapter = new BranchPagerAdapter(getSupportFragmentManager(), getResources(), gitdir(), branch());
+
+        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager.setAdapter(adapter);
+        TabPageIndicator tabPageIndicator = (TabPageIndicator) findViewById(R.id.indicator);
+        tabPageIndicator.setViewPager(pager);
+    }
+
+    public static class BranchPagerAdapter extends FragmentPagerAdapter {
+        private final Resources resources;
+        private final File gitdir;
+        private final Ref branch;
+
+        public BranchPagerAdapter(FragmentManager fm, Resources resources, File gitdir, Ref branch) {
+            super(fm);
+            this.resources = resources;
+            this.gitdir = gitdir;
+            this.branch = branch;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return LogFragment.newInstance(gitdir, asList(branch.getName()), null);
+                case 1:
+                    return FileListFragment.newInstance(gitdir, branch.getName());
+            }
+            throw new RuntimeException("What " + position);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return resources.getString(new int[] { R.string.commits, R.string.files }[position]);
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

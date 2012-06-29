@@ -2,6 +2,10 @@
 <resources>
     <string name="app_name">Agit</string>
     <string name="app_strap">Android Git Client</string>
+
+    <string name="commits">Commits</string>
+    <string name="files">Files</string>
+
     <string name="suggest_repos_button">Suggest repos...</string>
     <string name="about_app_menu_option">About</string>
     <string name="about_activity_title">About...</string>

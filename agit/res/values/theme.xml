@@ -4,6 +4,7 @@
     <style name="Theme.App" parent="@style/Theme.Sherlock.Light.DarkActionBar.ForceOverflow">
         <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
         <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+        <item name="vpiTabPageIndicatorStyle">@style/Widget.TabPageIndicator</item>
     </style>
 
     <style name="Theme.App.SuperTitle" parent="@style/Theme.App">
@@ -21,5 +22,10 @@
         <item name="android:displayOptions">showHome|useLogo|showCustom</item>
         <item name="customNavigationLayout">@layout/actionbar_custom_title</item>
         <item name="android:customNavigationLayout">@layout/actionbar_custom_title</item>
+    </style>
+
+    <style name="TextAppearance.TabPageIndicator" parent="Widget">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/vpi__light_theme</item>
     </style>
 </resources>
