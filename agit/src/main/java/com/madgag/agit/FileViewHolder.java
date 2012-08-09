@@ -29,13 +29,13 @@ import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.TextView;
 
+import com.madgag.agit.filepath.FilePath;
 import com.madgag.agit.filepath.FilePathMatcher;
-import com.madgag.agit.filepath.FilterableFileListAdapter;
 import com.madgag.android.listviews.ViewHolder;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-public class FileViewHolder implements ViewHolder<CharSequence> {
+public class FileViewHolder implements ViewHolder<FilePath> {
 
     private static ForegroundColorSpan highlightStyle = new ForegroundColorSpan(0x880000ff);
 
@@ -47,15 +47,20 @@ public class FileViewHolder implements ViewHolder<CharSequence> {
         detail = (TextView) v.findViewById(commit_subject);
     }
 
-    public void updateViewFor(CharSequence fileName) {
+    public void updateViewFor(FilePath filePath) {
+        CharSequence fileName = filePath.getPath();
         FilePathMatcher currentFPM = filePathMatcher.get();
-        if (currentFPM!=null) {
-            Spannable highlightedFilePath = new SpannableStringBuilder(fileName);
-            for (int index : currentFPM.match(fileName)) {
-                highlightedFilePath.setSpan(wrap(highlightStyle), index, index + 1, SPAN_INCLUSIVE_INCLUSIVE);
-            }
-            fileName = highlightedFilePath;
+        if (currentFPM != null) {
+            fileName = highlightFilePath(filePath, currentFPM);
         }
         detail.setText(fileName);
+    }
+
+    private CharSequence highlightFilePath(FilePath filePath, FilePathMatcher currentFPM) {
+        Spannable highlightedFilePath = new SpannableStringBuilder(filePath.getPath());
+        for (int index : currentFPM.match(filePath.getPath())) {
+            highlightedFilePath.setSpan(wrap(highlightStyle), index, index + 1, SPAN_INCLUSIVE_INCLUSIVE);
+        }
+        return highlightedFilePath;
     }
 }

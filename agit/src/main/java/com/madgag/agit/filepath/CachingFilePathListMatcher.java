@@ -21,31 +21,46 @@ package com.madgag.agit.filepath;
 
 
 import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.madgag.agit.filepath.ScoredPath.scoreFor;
 import android.support.v4.util.LruCache;
+
+import com.google.common.collect.Lists;
 
 import java.util.List;
 
 public class CachingFilePathListMatcher {
 
-    private final LruCache<CharSequence, List<CharSequence>> filePathCache;
+    private static final String TAG = "CachingFilePathListMatcher";
+    private final LruCache<String, List<FilePath>> filteredPathsCache, sortedPathsCache;
 
-    public CachingFilePathListMatcher(final List<CharSequence> filePaths) {
-        filePathCache = new LruCache<CharSequence, List<CharSequence>>(32) {
+    public CachingFilePathListMatcher(final List<FilePath> filePaths) {
+        filteredPathsCache = new LruCache<String, List<FilePath>>(32) {
             @Override
-            protected List<CharSequence> create(CharSequence key) {
-                List<CharSequence> searchSpace;
+            protected List<FilePath> create(String key) {
+                List<FilePath> searchSpace;
                 if (key.length() > 1) {
-                    searchSpace = filePathCache.get(key.subSequence(0, key.length() - 1));
+                    searchSpace = filteredPathsCache.get(key.substring(0, key.length() - 1));
                 } else {
                     searchSpace = filePaths;
                 }
+
                 return newArrayList(filter(searchSpace, new FilePathMatcher(key)));
+            }
+        };
+        sortedPathsCache = new LruCache<String, List<FilePath>>(16) {
+            @Override
+            protected List<FilePath> create(String key) {
+                Iterable<FilePath> filteredPaths = filteredPathsCache.get(key);
+
+                return Lists.transform(ScoredPath.ORDERING.sortedCopy(transform(filteredPaths,
+                        scoreFor(key))), ScoredPath.PATH);
             }
         };
     }
 
-    public List<CharSequence> get(CharSequence constraint) {
-        return filePathCache.get(constraint);
+    public List<FilePath> get(String constraint) {
+        return sortedPathsCache.get(constraint);
     }
 }

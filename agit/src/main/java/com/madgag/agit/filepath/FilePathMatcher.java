@@ -20,6 +20,7 @@
 package com.madgag.agit.filepath;
 
 
+import static java.lang.Math.min;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.quote;
 
@@ -28,30 +29,41 @@ import com.google.common.base.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FilePathMatcher implements Predicate<CharSequence> {
+public class FilePathMatcher implements Predicate<FilePath> {
 
     private final Pattern pattern;
-    private final CharSequence constraint;
+    private final String constraint;
     private final int[] matchingLetters;
+    private final char[] constraintUC, constraintLC;
+    private final int constraintLen;
+    private final boolean userSpecifiedPathSegments;
 
-    public FilePathMatcher(CharSequence constraint) {
+    public FilePathMatcher(String constraint) {
         this.constraint = constraint;
+        userSpecifiedPathSegments = constraint.contains("/");
+        constraintLen = constraint.length();
+
+        // OPTIM : Don't case-fold every filepath - VERY slow! Instead try both lower & upper versions of constraint
+        constraintUC = constraint.toUpperCase().toCharArray();
+        constraintLC = constraint.toLowerCase().toCharArray();
         pattern = patternFor(constraint);
-        matchingLetters = new int[constraint.length()];
+        matchingLetters = new int[constraintLen];
     }
 
     @Override
-    public boolean apply(CharSequence filePath) {
-        String boom = filePath.toString().toLowerCase();
-        int index = -1;
-        for (int i = 0; i < constraint.length(); ++i) {
-            index = boom.indexOf(constraint.charAt(i), index + 1);
-            if (index < 0) {
+    public boolean apply(FilePath filePath) {
+        String p = filePath.getPath();
+        int pathLen = p.length();
+        int index = 0;
+        for (int i = 0; i < constraintLen; ++i) {
+            char uc = constraintUC[i], lc = constraintLC[i];
+            int uci = p.indexOf(uc, index), lci = p.indexOf(lc, index); // OPTIM : indexOf is native and fast
+            index = 1 + min(uci >= 0 ? uci : pathLen, lci >= 0 ? lci : pathLen);
+            if (index > pathLen) {
                 return false;
             }
         }
         return true;
-        //return pattern.matcher(filePath).find();
     }
 
     /**
@@ -78,4 +90,71 @@ public class FilePathMatcher implements Predicate<CharSequence> {
         return Pattern.compile(builder.toString(), CASE_INSENSITIVE);
     }
 
+
+    public double score(FilePath fp) {
+        double pathScore = scoreSegment(fp, 0);
+        return userSpecifiedPathSegments?pathScore:(pathScore + scoreSegment(fp, fp.getPath().lastIndexOf('/') + 1));
+    }
+
+    /**
+     * This method is a tweaked/optimised filepath-specific adaptation of the MIT-licensed string_score algorithm by
+     * Joshaven Potter (https://github.com/joshaven/string_score), adapted from the Java version by
+     * Shingo Omura (https://github.com/everpeace/string-score).
+     */
+    private double scoreSegment(FilePath filePath, int fromIndex) {
+        String path = filePath.getPath();
+
+        // If the path is equal to the abbreviation, perfect match.
+        if (path.substring(fromIndex).equals(constraint)) {
+            return 1.0d;
+        }
+        //if it's not a perfect match and is empty return 0
+        if (constraint.isEmpty()) {
+            return 0d;
+        }
+
+        int fpLen = path.length();
+        double totalCharacterScore = 0d;
+        double abbreviationScore = 0d;
+
+        // Walk through abbreviation and add up scores.
+        int fpPos = fromIndex;
+        for (int i = 0; i < constraint.length(); i++) {
+            double characterScore;
+
+            // OPTIM : indexOf is native and fast - *much* faster than lowercasing the filepath...
+            int uci = path.indexOf(constraintUC[i], fpPos), lci = path.indexOf(constraintLC[i], fpPos);
+            int indexInString = min(uci >= 0 ? uci : fpLen, lci >= 0 ? lci : fpLen);
+
+            //If no value is found
+            if (indexInString == fpLen) {
+                return 0d;
+            } else {
+                characterScore = 0.1d;
+            }
+
+            // Consecutive letter & start-of-path Bonus
+            if (indexInString == fpPos) {
+                // Increase the score when matching first character of the
+                // remainder of the path
+                characterScore += 0.6d;
+            } else {
+                // Acronym Bonus
+                // Weighing Logic: Typing the first character of an acronym is as if you
+                // preceded it with two perfect character matches.
+                if (path.charAt(indexInString - 1) == '/') { // used to be ' '
+                    characterScore += 0.8d;
+                }
+            }
+            fpPos = indexInString + 1;
+            totalCharacterScore += characterScore;
+        }
+
+        double segmentLen = fpLen - fromIndex;
+        double abbreviationLength = constraint.length();
+        abbreviationScore = totalCharacterScore / abbreviationLength;
+
+        // Reduce penalty for longer strings.
+        return ((abbreviationScore * (abbreviationLength / segmentLen)) + abbreviationScore) / 2;
+    }
 }

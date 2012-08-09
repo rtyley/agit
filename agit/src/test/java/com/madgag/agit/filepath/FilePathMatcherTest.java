@@ -23,6 +23,7 @@ package com.madgag.agit.filepath;
 import static java.lang.Character.toUpperCase;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 
 import org.junit.Test;
@@ -30,11 +31,34 @@ import org.junit.Test;
 public class FilePathMatcherTest {
 
     @Test
+    public void shouldScoreOkIfCharMatchesStartOfString() {
+        assertThat(score("abc", "abcde"), greaterThan(0.0));
+    }
+
+    @Test
+    public void shouldMatchEndOfCandidateString() {
+        assertThat(match("xml", "pom.xml"), is(true));
+    }
+
+    @Test
+    public void shouldNotMatchDifferingEndOfCandidateString() {
+        assertThat(match("xml", "pom.xmo"), is(false));
+    }
+
+    @Test
     public void shouldMatch() {
-        assertThat(new FilePathMatcher("attrib").apply("Documentation/.gitattributes"), is(true));
-        assertThat(new FilePathMatcher("att").apply("Documentation/.gitattributes"), is(true));
-        assertThat(new FilePathMatcher("docgit").apply("Documentation/.gitattributes"), is(true));
-        assertThat(new FilePathMatcher("agitt").apply("agitb"), is(false));
+        assertThat(match("attrib", "Documentation/.gitattributes"), is(true));
+        assertThat(match("att", "Documentation/.gitattributes"), is(true));
+        assertThat(match("docgit", "Documentation/.gitattributes"), is(true));
+        assertThat(match("agitt", "agitb"), is(false));
+    }
+
+    private boolean match(String constraint, String path) {
+        return new FilePathMatcher(constraint).apply(new FilePath(path));
+    }
+
+    private double score(String constraint, String path) {
+        return new FilePathMatcher(constraint).score(new FilePath(path));
     }
 
     @Test

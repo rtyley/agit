@@ -23,7 +23,9 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.R.layout.file_list_item;
 import static com.madgag.android.listviews.ReflectiveHolderFactory.reflectiveFactoryFor;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
+import static java.lang.System.currentTimeMillis;
 import android.content.Context;
+import android.os.Debug;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Filter;
@@ -36,7 +38,7 @@ import com.madgag.android.listviews.ViewHoldingListAdapter;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class FilterableFileListAdapter extends ViewHoldingListAdapter<CharSequence> implements Filterable {
+public class FilterableFileListAdapter extends ViewHoldingListAdapter<FilePath> implements Filterable {
 
     private static final String TAG = "FilterableFileListAdapter";
 
@@ -49,38 +51,38 @@ public class FilterableFileListAdapter extends ViewHoldingListAdapter<CharSequen
     private final Object mLock = new Object();
 
     // A copy of the original mObjects array, initialized from and then used instead as soon as
-    // the mFilter ArrayFilter is used. mObjects will then only contain the filtered values.
-    private List<CharSequence> mOriginalValues;
-    private Filter mFilter;
-    private final List<CharSequence> items;
+    // the filter ArrayFilter is used. mObjects will then only contain the filtered values.
+    private List<FilePath> originalValues;
+    private final List<FilePath> items;
     private final AtomicReference<FilePathMatcher> visibleFilePathMatcher;
-    private boolean mSearchMode;
-    CachingFilePathListMatcher cachingFilePathListMatcher;
 
-    public FilterableFileListAdapter(final List<CharSequence> items, Context context,
-                                     AtomicReference<FilePathMatcher> visibleFilePathMatcher) {
+    private CachingFilePathListMatcher cachingFilePathListMatcher;
+    private Filter filter;
+
+    public FilterableFileListAdapter(final List<FilePath> items, Context context, AtomicReference<FilePathMatcher>
+            visibleFilePathMatcher) {
         super(items, viewInflatorFor(context, file_list_item), reflectiveFactoryFor(FileViewHolder.class,
                 visibleFilePathMatcher));
         this.items = items;
         this.visibleFilePathMatcher = visibleFilePathMatcher;
-        cachingFilePathListMatcher = new CachingFilePathListMatcher(items);
+        cachingFilePathListMatcher = new CachingFilePathListMatcher(this.items);
     }
 
     public Filter getFilter() {
-        if (mFilter == null) {
-            mFilter = new Filter() {
+        if (filter == null) {
+            filter = new Filter() {
 
                 @Override
                 protected FilterResults performFiltering(CharSequence constraint) {
-                    if (mOriginalValues == null) {
+                    if (originalValues == null) {
                         synchronized (mLock) {
-                            mOriginalValues = newArrayList(items);
+                            originalValues = newArrayList(items);
                         }
                     }
 
-                    List<CharSequence> originalValuesCopy;
+                    List<FilePath> originalValuesCopy;
                     synchronized (mLock) {
-                        originalValuesCopy = newArrayList(mOriginalValues);
+                        originalValuesCopy = newArrayList(originalValues);
                     }
 
                     FilterResults results = new FilterResults();
@@ -88,10 +90,13 @@ public class FilterableFileListAdapter extends ViewHoldingListAdapter<CharSequen
                         results.values = originalValuesCopy;
                         results.count = originalValuesCopy.size();
                     } else {
+//                        String tn = "FLA." + originalValuesCopy.size() + "." + constraint + "." + currentTimeMillis();
+//                        Debug.startMethodTracing(tn, 64 * 1024 * 1024);
                         Stopwatch stopwatch = new Stopwatch().start();
-                        List<CharSequence> matchingFiles = cachingFilePathListMatcher.get(constraint);
-                        stopwatch.stop();
-                        Log.d(TAG, "filtered " + constraint + " " + stopwatch);
+                        List<FilePath> matchingFiles = cachingFilePathListMatcher.get(constraint.toString());
+                        Log.d(TAG, "Filtered with '" + constraint + "' to " + matchingFiles.size() + " files " +
+                                stopwatch.stop());
+//                        Debug.stopMethodTracing();
 
                         results.values = matchingFiles;
                         results.count = matchingFiles.size();
@@ -102,17 +107,13 @@ public class FilterableFileListAdapter extends ViewHoldingListAdapter<CharSequen
 
                 @Override
                 protected void publishResults(CharSequence constraint, FilterResults results) {
-                    visibleFilePathMatcher.set(TextUtils.isEmpty(constraint) ? null : new FilePathMatcher(constraint));
-                    setList((List<CharSequence>) results.values);
-                    if (results.count > 0) {
-                        notifyDataSetChanged();
-                    } else {
-                        notifyDataSetInvalidated();
-                    }
+                    visibleFilePathMatcher.set(TextUtils.isEmpty(constraint) ? null : new FilePathMatcher(constraint
+                            .toString()));
+                    setList((List<FilePath>) results.values);
                 }
             };
         }
-        return mFilter;
+        return filter;
     }
 
 

@@ -40,6 +40,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.common.base.Stopwatch;
+import com.madgag.agit.filepath.FilePath;
 import com.madgag.agit.filepath.FilePathMatcher;
 import com.madgag.agit.filepath.FilterableFileListAdapter;
 import com.madgag.android.filterable.FilterWidgetSupport;
@@ -59,7 +60,7 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 /**
  * File list is specified by: 1 Repo, 1 Revision
  */
-public class FileListFragment extends ListLoadingFragment<CharSequence> implements Filterable, OnSearchRequestedListener {
+public class FileListFragment extends ListLoadingFragment<FilePath> implements Filterable, OnSearchRequestedListener {
 
     private static final String TAG = "FileListFragment";
 
@@ -106,32 +107,45 @@ public class FileListFragment extends ListLoadingFragment<CharSequence> implemen
     }
 
     @Override
-    protected ViewHoldingListAdapter<CharSequence> adapterFor(List<CharSequence> items) {
+    protected ViewHoldingListAdapter<FilePath> adapterFor(List<FilePath> items) {
         return new FilterableFileListAdapter(items, getActivity(), new AtomicReference<FilePathMatcher>());
     }
 
     @Override
-    public Loader<List<CharSequence>> onCreateLoader(int id, Bundle args) {
-        return new AsyncLoader<List<CharSequence>>(getActivity()) {
-            public List<CharSequence> loadInBackground() {
-                Stopwatch stopwatch = new Stopwatch().start();
-                List<CharSequence> paths = newArrayList();
+    public Loader<List<FilePath>> onCreateLoader(int id, Bundle args) {
+        return new AsyncLoader<List<FilePath>>(getActivity()) {
+            public List<FilePath> loadInBackground() {
+
                 try {
                     Bundle args = getArguments();
                     Repository repo = new FileRepository(args.getString(GITDIR));
                     RevCommit commit = new RevWalk(repo).parseCommit(repo.resolve(args.getString(REVISION)));
 
+                    Stopwatch stopwatch = new Stopwatch().start();
+
+                    final List<FilePath> paths = newArrayList();
                     TreeWalk treeWalk = new TreeWalk(repo);
                     treeWalk.setRecursive(true);
                     treeWalk.addTree(commit.getTree());
+
                     while (treeWalk.next()) {
-                        paths.add(treeWalk.getPathString());
+                        paths.add(new FilePath(treeWalk.getRawPath()));
                     }
+                    Log.d(TAG, "Found " + paths.size() + " files " + stopwatch.stop());
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() { // knocks around 15-30% off time-to-display the list
+                            Stopwatch stopwatch = new Stopwatch().start();
+                            for (FilePath filePath : paths) { filePath.getPath(); }
+                            Log.d(TAG, "Converted " + paths.size() + " path byte buffs to string " + stopwatch.stop());
+                        }
+                    }).start();
+                    return paths;
                 } catch (Exception e) {
                     Log.w(TAG, "Bang", e);
+                    throw new RuntimeException(e);
                 }
-                Log.d(TAG, "Found " + paths.size() + " files " + stopwatch.stop());
-                return paths;
             }
         };
     }
