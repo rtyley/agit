@@ -27,6 +27,7 @@ import static org.eclipse.jgit.lib.Constants.DOT_GIT;
 import static org.eclipse.jgit.lib.Constants.DOT_GIT_EXT;
 import static org.eclipse.jgit.lib.Constants.R_HEADS;
 import static org.eclipse.jgit.lib.Constants.R_REMOTES;
+import static org.eclipse.jgit.lib.Repository.shortenRefName;
 import static org.eclipse.jgit.storage.file.WindowCacheConfig.MB;
 import android.util.Log;
 
@@ -42,6 +43,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import org.eclipse.jgit.lib.AbbreviatedObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.lib.RepositoryCache.FileKey;
@@ -101,6 +103,10 @@ public class Repos {
 
     public static String niceNameFor(Repository repo) {
         return niceNameFromNameDirectory(topDirectoryFor(repo));
+    }
+
+    public static String shortenRevName(String revision) {
+        return AbbreviatedObjectId.isId(revision)?revision.substring(0,4):shortenRefName(revision);
     }
 
     public static File topDirectoryFor(Repository repo) {

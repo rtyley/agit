@@ -19,12 +19,16 @@
 
 package com.madgag.android;
 
-public class ToastUtil {
+/**
+ * Intended for use with android.text.Html.fromHtml()
+ */
+public class HtmlStyleUtil {
 
-    /**
-     * Styling for an 'code'-like bit of text in a toast.
-     */
+    public static String boldCode(String s) {
+        return "<b>" + code(s) + "</b>";
+    }
+
     public static String code(String s) {
-        return "<b><tt>" + s + "</tt></b>";
+        return "<tt>" + s + "</tt>";
     }
 }

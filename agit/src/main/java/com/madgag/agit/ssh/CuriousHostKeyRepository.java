@@ -28,7 +28,7 @@ import static com.madgag.agit.operations.OpPrompt.promptYesOrNo;
 import static com.madgag.agit.util.DigestUtils.encodeHex;
 import static com.madgag.agit.util.DigestUtils.md5;
 import static com.madgag.agit.views.TextUtil.centered;
-import static com.madgag.android.ToastUtil.code;
+import static com.madgag.android.HtmlStyleUtil.boldCode;
 import static java.lang.Boolean.TRUE;
 import android.app.Application;
 
@@ -64,9 +64,9 @@ public class CuriousHostKeyRepository implements HostKeyRepository {
     }
 
     private int userCheckKey(String host, byte[] key) {
-        String keyFingerprint = "<small>" + code(encodeHex(md5(key))) + "</small><br />";
-        String ticker = application.getString(ask_host_key_ok_ticker, code(host));
-        String message = application.getString(ask_host_key_ok, code(host) + "<br />", keyFingerprint);
+        String keyFingerprint = "<small>" + boldCode(encodeHex(md5(key))) + "</small><br />";
+        String ticker = application.getString(ask_host_key_ok_ticker, boldCode(host));
+        String message = application.getString(ask_host_key_ok, boldCode(host) + "<br />", keyFingerprint);
         boolean userConfirmKeyGood = TRUE == blockingPromptService.get().request(promptYesOrNo(alert(fromHtml(ticker)
                 , "SSH", centered(message))));
         if (userConfirmKeyGood) {

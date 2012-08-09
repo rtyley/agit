@@ -27,7 +27,7 @@ import static com.madgag.agit.R.string.open_git_repository;
 import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
 import static com.madgag.agit.sync.AccountAuthenticatorService.addAccount;
 import static com.madgag.android.ActionBarUtil.fixImageTilingOn;
-import static com.madgag.android.ToastUtil.code;
+import static com.madgag.android.HtmlStyleUtil.boldCode;
 import static com.madgag.android.jgit.HarmonyFixInflater.checkHarmoniousRepose;
 import static com.madgag.android.util.store.InstallAppDialogFragment.isIntentAvailable;
 import static org.eclipse.jgit.lib.RepositoryCache.FileKey.resolve;
@@ -118,7 +118,8 @@ public class DashboardActivity extends RoboSherlockFragmentActivity {
             File repoDir = getFile(data.getData());
             File gitdir = resolve(repoDir, FS.detect());
             if (gitdir == null) {
-                Spanned messageHtml = fromHtml(getString(can_not_open_non_git_folder, code(repoDir.getAbsolutePath())));
+                Spanned messageHtml = fromHtml(getString(can_not_open_non_git_folder, boldCode(repoDir
+                        .getAbsolutePath())));
                 Toast.makeText(this, messageHtml, LENGTH_LONG).show();
             } else {
                 startActivity(manageRepoIntent(gitdir));
