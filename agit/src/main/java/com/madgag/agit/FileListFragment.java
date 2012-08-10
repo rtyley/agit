@@ -43,6 +43,7 @@ import com.google.common.base.Stopwatch;
 import com.madgag.agit.filepath.FilePathMatcher;
 import com.madgag.agit.filepath.FilterableFileListAdapter;
 import com.madgag.android.filterable.FilterWidgetSupport;
+import com.madgag.android.filterable.OnSearchRequestedListener;
 import com.madgag.android.listviews.ViewHoldingListAdapter;
 
 import java.io.File;
@@ -58,7 +59,7 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 /**
  * File list is specified by: 1 Repo, 1 Revision
  */
-public class FileListFragment extends ListLoadingFragment<CharSequence> implements Filterable {
+public class FileListFragment extends ListLoadingFragment<CharSequence> implements Filterable, OnSearchRequestedListener {
 
     private static final String TAG = "FileListFragment";
 
@@ -139,5 +140,9 @@ public class FileListFragment extends ListLoadingFragment<CharSequence> implemen
     public Filter getFilter() {
         ListAdapter listAdapter = getListAdapter();
         return listAdapter == null ? null : ((Filterable) listAdapter).getFilter();
+    }
+
+    public void onSearchRequested() {
+        filterWidgetSupport.onSearchRequested();
     }
 }

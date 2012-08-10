@@ -39,20 +39,15 @@ import static com.madgag.agit.git.model.Relation.PARENT;
 import static com.madgag.android.ActionBarUtil.fixImageTilingOn;
 import static com.madgag.android.ActionBarUtil.homewardsWith;
 import static com.madgag.android.ActionBarUtil.setPrefixedTitleOn;
+import static com.madgag.android.ViewPagerUtil.onSearchRequestedForCurrentFragment;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.style.CharacterStyle;
 import android.text.style.TypefaceSpan;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.animation.Animation;
-import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.google.common.base.Stopwatch;
@@ -63,7 +58,6 @@ import com.madgag.agit.git.model.Relation;
 import java.io.IOException;
 import java.util.Map;
 
-import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revplot.PlotCommit;
@@ -219,4 +213,9 @@ public class CommitViewerActivity extends RepoScopedActivityBase implements Comm
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onSearchRequested() { // Search key pressed.
+        onSearchRequestedForCurrentFragment(currentCommitView.pager);
+        return true;
+    }
 }

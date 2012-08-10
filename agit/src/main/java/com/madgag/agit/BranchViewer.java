@@ -24,6 +24,7 @@ import static com.madgag.agit.git.Repos.niceNameFor;
 import static com.madgag.android.ActionBarUtil.fixImageTilingOn;
 import static com.madgag.android.ActionBarUtil.homewardsWith;
 import static com.madgag.android.ActionBarUtil.setPrefixedTitleOn;
+import static com.madgag.android.ViewPagerUtil.onSearchRequestedForCurrentFragment;
 import static java.util.Arrays.asList;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;
 import android.content.Intent;
@@ -48,6 +49,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Ref;
 
 import roboguice.inject.InjectExtra;
+import roboguice.inject.InjectView;
 
 public class BranchViewer extends RepoScopedActivityBase {
 
@@ -65,6 +67,11 @@ public class BranchViewer extends RepoScopedActivityBase {
     @InjectExtra(value = "branch")
     String branchName;
 
+    @InjectView(R.id.pager)
+    ViewPager pager;
+
+    @InjectView(R.id.indicator)
+    TabPageIndicator tabPageIndicator;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,11 +83,7 @@ public class BranchViewer extends RepoScopedActivityBase {
         setPrefixedTitleOn(actionBar, niceNameFor(repo()), shortenRefName(branch().getName()));
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        BranchPagerAdapter adapter = new BranchPagerAdapter(getSupportFragmentManager(), getResources(), gitdir(), branch());
-
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        pager.setAdapter(adapter);
-        TabPageIndicator tabPageIndicator = (TabPageIndicator) findViewById(R.id.indicator);
+        pager.setAdapter(new BranchPagerAdapter(getSupportFragmentManager(), getResources(), gitdir(), branch()));
         tabPageIndicator.setViewPager(pager);
     }
 
@@ -140,6 +143,12 @@ public class BranchViewer extends RepoScopedActivityBase {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onSearchRequested() { // Search key pressed.
+        onSearchRequestedForCurrentFragment(pager);
+        return true;
     }
 
     private Ref branch() {
