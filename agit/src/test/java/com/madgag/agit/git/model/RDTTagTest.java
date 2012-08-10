@@ -17,28 +17,41 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/ .
  */
 
-package com.madgag.agit;
+package com.madgag.agit.git.model;
 
 import static com.google.common.collect.Iterables.find;
 import static com.madgag.agit.OracleJVMTestEnvironment.helper;
+import static com.madgag.agit.git.model.RDTTag.TagSummary.SORT_BY_TIME_AND_NAME;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.notNullValue;
 
 import com.google.common.base.Predicate;
-import com.madgag.agit.git.model.RDTTag;
 import com.madgag.agit.git.model.RDTTag.TagSummary;
 
 import java.util.List;
 
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Test;
 
 public class RDTTagTest {
+
+    @Test
+    public void shouldHaveConsistentComparatorNotBrokenByIntegerOverflow() throws Exception {
+        TagSummary earlyTag = new TagSummary(new StubRef("early"), null, null, 0L);
+        for (int timeShift = 0; timeShift<60;++timeShift) {
+            long laterTime = 1L << timeShift;
+            TagSummary lateTag = new TagSummary(new StubRef("late"), null, null, laterTime);
+            assertThat("timeShift="+timeShift, SORT_BY_TIME_AND_NAME.compare(earlyTag, lateTag), lessThan(0));
+        }
+    }
 
     @Test
     public void shouldHandleTheDatelessAnnotatedTagsThatGitUsedToHave() throws Exception {
@@ -89,4 +102,52 @@ public class RDTTagTest {
         };
     }
 
+    private class StubRef implements Ref {
+
+        private final String name;
+
+        public StubRef(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public boolean isSymbolic() {
+            return false;
+        }
+
+        @Override
+        public Ref getLeaf() {
+            return null;
+        }
+
+        @Override
+        public Ref getTarget() {
+            return null;
+        }
+
+        @Override
+        public ObjectId getObjectId() {
+            return null;
+        }
+
+        @Override
+        public ObjectId getPeeledObjectId() {
+            return null;
+        }
+
+        @Override
+        public boolean isPeeled() {
+            return false;
+        }
+
+        @Override
+        public Storage getStorage() {
+            return null;
+        }
+    }
 }

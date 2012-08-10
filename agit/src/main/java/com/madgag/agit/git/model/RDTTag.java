@@ -27,6 +27,7 @@ import static java.util.Collections.sort;
 import static org.eclipse.jgit.lib.Repository.shortenRefName;
 
 import com.google.common.base.Function;
+import com.google.common.primitives.Longs;
 import com.google.inject.Inject;
 import com.madgag.agit.git.GitObjectFunction;
 import com.madgag.agit.git.model.RDTTag.TagSummary;
@@ -97,9 +98,9 @@ public class RDTTag extends RepoDomainType<TagSummary> {
     public static class TagSummary {
         public final static Comparator<TagSummary> SORT_BY_TIME_AND_NAME = new Comparator<TagSummary>() {
             public int compare(TagSummary t1, TagSummary t2) {
-                long timeDiff = t1.getTime() - t2.getTime();
+                int timeDiff = Longs.compare(t1.getTime(), t2.getTime());
                 if (timeDiff != 0) {
-                    return (int) timeDiff;
+                    return timeDiff;
                 }
                 return t1.name.compareTo(t2.name);
             }
