@@ -49,7 +49,7 @@ public class GitTestHelper {
 
     public File unpackRepoAndGetGitDir(String fileName) throws IOException, ArchiveException {
         InputStream rawZipFileInputStream = environment.streamFor(fileName);
-        assertThat(rawZipFileInputStream, notNullValue());
+        assertThat("Stream for "+fileName, rawZipFileInputStream, notNullValue());
 
         File repoParentFolder = newFolder("unpacked-" + fileName);
         unzip(rawZipFileInputStream, repoParentFolder);
