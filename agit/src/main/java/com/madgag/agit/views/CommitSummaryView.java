@@ -19,7 +19,7 @@
 
 package com.madgag.agit.views;
 
-import static com.madgag.agit.CommitViewerActivity.revCommitViewIntentFor;
+import static com.madgag.agit.CommitViewerActivity.commitViewIntentFor;
 import static com.madgag.agit.R.drawable.commit_icon;
 import android.view.View;
 import android.widget.TextView;
@@ -36,7 +36,7 @@ public class CommitSummaryView extends OSV<RevCommit> {
         ((TextView) view.findViewById(R.id.short_message_text)).setText(commit.getShortMessage());
         view.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                view.getContext().startActivity(revCommitViewIntentFor(repo.getDirectory(), commit.name()));
+                view.getContext().startActivity(commitViewIntentFor(repo, commit));
             }
         });
     }

@@ -24,6 +24,9 @@ import static android.view.View.VISIBLE;
 import static android.view.animation.AnimationUtils.loadAnimation;
 import static com.google.common.collect.Maps.newEnumMap;
 import static com.madgag.agit.BranchViewer.branchViewerIntentFor;
+import static com.madgag.agit.GitIntents.COMMIT;
+import static com.madgag.agit.GitIntents.GITDIR;
+import static com.madgag.agit.GitIntents.UNTIL_REVS;
 import static com.madgag.agit.R.anim.pull_child_in;
 import static com.madgag.agit.R.anim.pull_parent_in;
 import static com.madgag.agit.R.anim.push_child_out;
@@ -33,7 +36,6 @@ import static com.madgag.agit.git.model.Relation.CHILD;
 import static com.madgag.agit.git.model.Relation.PARENT;
 import static com.madgag.android.ActionBarUtil.fixImageTilingOn;
 import static com.madgag.android.ActionBarUtil.homewardsWith;
-import static java.lang.System.currentTimeMillis;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -41,24 +43,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.TextView;
 
-import com.google.common.base.Function;
+import com.actionbarsherlock.view.MenuItem;
+import com.google.common.base.Stopwatch;
 import com.google.inject.Inject;
 import com.madgag.agit.CommitNavigationView.CommitSelectedListener;
 import com.madgag.agit.git.model.Relation;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revplot.PlotCommit;
 import org.eclipse.jgit.revplot.PlotCommitList;
 import org.eclipse.jgit.revplot.PlotLane;
@@ -68,26 +68,12 @@ import org.eclipse.jgit.revwalk.RevCommit;
 public class CommitViewerActivity extends RepoScopedActivityBase {
     private static final String TAG = "CVA";
 
-    private final static int TAG_ID = Menu.FIRST;
-
-    public static Function<RevCommit, Intent> commitViewerIntentCreatorFor(final File gitdir, final Ref branch) {
-        return new Function<RevCommit, Intent>() {
-            public Intent apply(RevCommit commit) {
-                return commitViewerIntentBuilderFor(gitdir).branch(branch).commit(commit).toIntent();
-            }
-        };
+    public static GitIntentBuilder commitViewIntentFor(Bundle sourceArgs) {
+        return new GitIntentBuilder("commit.VIEW", sourceArgs, GITDIR, UNTIL_REVS, COMMIT);
     }
 
-    public static Intent revCommitViewIntentFor(RepoSummary repoSummary, RevCommit commit) {
-        return revCommitViewIntentFor(repoSummary.getRepo().getDirectory(), commit.name());
-    }
-
-    public static Intent revCommitViewIntentFor(File gitdir, String commitId) {
-        return commitViewerIntentBuilderFor(gitdir).commit(commitId).toIntent();
-    }
-
-    private static GitIntentBuilder commitViewerIntentBuilderFor(File gitdir) {
-        return new GitIntentBuilder("commit.VIEW").gitdir(gitdir);
+    public static Intent commitViewIntentFor(Repository repository, RevCommit commit) {
+        return new GitIntentBuilder("commit.VIEW").repository(repository).commit(commit).toIntent();
     }
 
     @Inject
@@ -132,7 +118,7 @@ public class CommitViewerActivity extends RepoScopedActivityBase {
             }
         };
         try {
-            ObjectId revisionId = GitIntents.commitIdFrom(getIntent()); // intent.getStringExtra("commit");
+            ObjectId revisionId = GitIntents.commitIdFrom(getIntent());
             Log.d(TAG, revisionId.getName());
             PlotWalk revWalk = generatePlotWalk();
 
@@ -176,67 +162,26 @@ public class CommitViewerActivity extends RepoScopedActivityBase {
     }
 
     private PlotWalk generatePlotWalk() throws IOException {
-        long start = currentTimeMillis();
+        Stopwatch stopwatch = new Stopwatch().start();
         PlotWalk revWalk = new PlotWalk(repo());
-
-        for (ObjectId startId : logStartProvider.get()) {
-            revWalk.markStart(revWalk.parseCommit(startId));
-        }
+        logStartProvider.markStartsOn(revWalk);
 
         PlotCommitList<PlotLane> plotCommitList = new PlotCommitList<PlotLane>();
         plotCommitList.source(revWalk);
         plotCommitList.fillTo(Integer.MAX_VALUE);
-        long duration = currentTimeMillis() - start;
-        Log.d(TAG, "generatePlotWalk duration" + duration);
+        Log.d(TAG, "generatePlotWalk duration" + stopwatch.stop());
         return revWalk;
-    }
-
-    final int CREATE_TAG_DIALOG = 0;
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        // menu.add(0, TAG_ID, 0, tag_commit_menu_option).setShortcut('0', 't');
-        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Ref ref = logStartProvider.getCurrentRef();
+                String ref = logStartProvider.getCurrentRef();
                 Intent intent = (ref == null) ? manageRepoIntent(gitdir()) : branchViewerIntentFor(gitdir(), ref);
                 return homewardsWith(this, intent);
-            case TAG_ID:
-                showDialog(CREATE_TAG_DIALOG);
-                return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
-            case CREATE_TAG_DIALOG:
-                LayoutInflater factory = LayoutInflater.from(this);
-                final View textEntryView = factory.inflate(R.layout.create_tag_dialog, null);
-                return new AlertDialog.Builder(this)
-//                .setIcon(R.drawable.alert_dialog_icon)
-//                .setTitle(R.string.alert_dialog_text_entry)
-                        .setView(textEntryView)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                String tagName = ((TextView) textEntryView.findViewById(R.id.tag_name_edit)).getText().toString();
-                                try {
-                                    new Git(repo()).tag().setName(tagName).setObjectId(commit).call();
-                                } catch (Exception e) {
-                                    throw new RuntimeException(e);
-                                }
-                            }
-                        })
-                        .create();
-        }
-        return null;
     }
 
 }

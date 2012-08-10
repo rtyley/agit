@@ -42,6 +42,8 @@ public class CommitViewHolder implements ViewHolder<RevCommit> {
     private final ImageView gravatar;
     private final ImageSession avatarSession;
 
+    private RevCommit commit;
+
     @Inject
     public CommitViewHolder(@Assisted View v, ImageSession avatarSession) {
         this.avatarSession = avatarSession;
@@ -51,11 +53,16 @@ public class CommitViewHolder implements ViewHolder<RevCommit> {
     }
 
     public void updateViewFor(RevCommit commit) {
+        this.commit = commit;
         commit_date.setText(Time.timeSinceSeconds(commit.getCommitTime()) + ITALIC_CLIPPING_BUFFER);
 
         Drawable avatarBitmap = avatarSession.get(gravatarIdFor(commit.getAuthorIdent().getEmailAddress()));
         gravatar.setImageDrawable(avatarBitmap);
 
         commit_shortdesc.setText(commit.getShortMessage());
+    }
+
+    public RevCommit getCommit() {
+        return commit;
     }
 }

@@ -19,7 +19,7 @@
 
 package com.madgag.agit.views;
 
-import static com.madgag.agit.CommitViewerActivity.revCommitViewIntentFor;
+import static com.madgag.agit.CommitViewerActivity.commitViewIntentFor;
 import static com.madgag.agit.R.id.latest_commit;
 import static com.madgag.agit.R.layout.latest_commit_view;
 import android.content.Context;
@@ -54,7 +54,7 @@ public class LatestCommitView extends FrameLayout implements EnabledListItem {
 
     public void onItemClick() {
         if (repoSummary.hasCommits()) {
-            getContext().startActivity(revCommitViewIntentFor(repoSummary, repoSummary.getLatestCommit()));
+            getContext().startActivity(commitViewIntentFor(repoSummary.getRepo(), repoSummary.getLatestCommit()));
         }
     }
 

@@ -101,18 +101,16 @@ public class CommitView extends LinearLayout {
         this.revWalk = revWalk;
     }
 
-    public void setCommit(final PlotCommit<PlotLane> c) throws MissingObjectException, IncorrectObjectTypeException,
-            IOException {
-        //this.commit = (PlotCommit<PlotLane>) revWalk.parseCommit(c);
+    public void setCommit(final PlotCommit<PlotLane> c) throws IOException {
         this.commit = c;
         CommitViewerActivity commitViewerActivity = (CommitViewerActivity) getContext();
         Log.d(TAG, "setCommit : " + commit);
         SpannableStringBuilder prefixTitle = new SpannableStringBuilder(commit.name().substring(0, 4));
         prefixTitle.setSpan(MONOSPACE_SPAN, 0, 4, SPAN_EXCLUSIVE_EXCLUSIVE);
         String pathPrefix = niceNameFor(repository) + " • ";
-        Ref currentRef = commitViewerActivity.logStartProvider.getCurrentRef();
+        String currentRef = commitViewerActivity.logStartProvider.getCurrentRef();
         if (currentRef!=null) {
-            pathPrefix = pathPrefix + shortenRefName(currentRef.getName()) + " • ";
+            pathPrefix = pathPrefix + shortenRefName(currentRef) + " • ";
         }
         prefixTitle.insert(0, pathPrefix);
         ActionBar supportActionBar = commitViewerActivity.getSupportActionBar();
