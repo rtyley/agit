@@ -19,11 +19,9 @@
 
 package com.madgag.android.util.store;
 
-import static android.content.pm.PackageManager.MATCH_DEFAULT_ONLY;
 import static com.madgag.agit.R.string.button_cancel;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -77,19 +75,6 @@ public class InstallAppDialogFragment extends DialogFragment {
 
     private static Intent marketDownloadIntentFor(String appPackageId) {
         return new Intent(Intent.ACTION_VIEW, Uri.parse(MARKET_PACKAGE_DETAILS_PREFIX + appPackageId));
-    }
-
-    /**
-     * Indicates whether the specified action can be used as an intent.
-     * <p/>
-     * Adapted from http://android-developers.blogspot.com/2009/01/can-i-use-this-intent.html
-     */
-    public static boolean isIntentAvailable(Context context, String action) {
-        return isIntentAvailable(context, new Intent(action));
-    }
-
-    private static boolean isIntentAvailable(Context context, Intent intent) {
-        return !context.getPackageManager().queryIntentActivities(intent, MATCH_DEFAULT_ONLY).isEmpty();
     }
 
 }

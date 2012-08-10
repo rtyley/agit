@@ -110,4 +110,6 @@
         checkout a branch"
     </string>
 
+    <string name="no_viewer_available_for_file">"No viewer available for '%1$s'"</string>
+
 </resources>

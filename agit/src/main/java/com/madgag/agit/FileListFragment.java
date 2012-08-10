@@ -21,6 +21,7 @@ package com.madgag.agit;
 
 import static android.text.Html.fromHtml;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.madgag.agit.BlobViewerActivity.revisionFileViewIntentFor;
 import static com.madgag.agit.GitIntents.GITDIR;
 import static com.madgag.agit.GitIntents.REVISION;
 import static com.madgag.agit.git.Repos.shortenRevName;
@@ -33,6 +34,7 @@ import android.view.View;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -81,6 +83,14 @@ public class FileListFragment extends ListLoadingFragment<CharSequence> implemen
         filterWidgetSupport = new FilterWidgetSupport(item, this);
         String monospaceRevisionText = code(shortenRevName(getArguments().getString(REVISION)));
         filterWidgetSupport.setQueryHint(fromHtml(getString(R.string.filter_files_on_ref_hint, monospaceRevisionText)));
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        FilePath filePath = (FilePath) getListAdapter().getItem(position);
+
+        startActivity(revisionFileViewIntentFor(new File(getArguments().getString(GITDIR)), getArguments().getString
+                (REVISION), filePath.getPath()));
     }
 
     public void onAttach(Activity activity) {

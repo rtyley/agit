@@ -71,6 +71,13 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="BlobViewerActivity" android:theme="@style/Theme.App.SuperTitle">
+            <intent-filter>
+                <action android:name="org.openintents.git.revision.file.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
         <activity android:name="CloneLauncherActivity">
             <intent-filter>
                 <action android:name="org.openintents.git.clone.PREPARE"/>

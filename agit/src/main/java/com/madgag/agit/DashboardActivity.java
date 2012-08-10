@@ -28,8 +28,8 @@ import static com.madgag.agit.RepositoryViewerActivity.manageRepoIntent;
 import static com.madgag.agit.sync.AccountAuthenticatorService.addAccount;
 import static com.madgag.android.ActionBarUtil.fixImageTilingOn;
 import static com.madgag.android.HtmlStyleUtil.boldCode;
+import static com.madgag.android.IntentUtil.isIntentAvailable;
 import static com.madgag.android.jgit.HarmonyFixInflater.checkHarmoniousRepose;
-import static com.madgag.android.util.store.InstallAppDialogFragment.isIntentAvailable;
 import static org.eclipse.jgit.lib.RepositoryCache.FileKey.resolve;
 import android.content.Intent;
 import android.net.Uri;
@@ -43,6 +43,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
+import com.madgag.android.IntentUtil;
 import com.madgag.android.util.store.InstallAppDialogFragment;
 
 import java.io.File;
