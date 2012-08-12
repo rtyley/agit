@@ -33,8 +33,7 @@ import java.util.Collections;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.TransportConfigCallback;
-import org.eclipse.jgit.api.errors.InvalidRemoteException;
-import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
@@ -68,9 +67,7 @@ public class GitFetchService {
                     .setTransportConfigCallback(transportConfigCallback)
                     .setCredentialsProvider(credentialsProvider)
                     .call();
-        } catch (InvalidRemoteException e) {
-            throw new RuntimeException(e);
-        } catch (JGitInternalException e) {
+        } catch (GitAPIException e) {
             throw exceptionWithFriendlyMessageFor(e);
         }
         Log.d(TAG, "Fetch complete with : " + fetchResult);
