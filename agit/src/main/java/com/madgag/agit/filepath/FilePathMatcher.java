@@ -109,7 +109,7 @@ public class FilePathMatcher implements Predicate<FilePath> {
             return 1.0d;
         }
         //if it's not a perfect match and is empty return 0
-        if (constraint.isEmpty()) {
+        if (constraint.length()==0) {
             return 0d;
         }
 
