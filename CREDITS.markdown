@@ -65,11 +65,15 @@ The distributed Agit binary contains software from the following projects:
 
     License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
+*   [ActionBarSherlock](https://github.com/JakeWharton/ActionBarSherlock)
+
+    License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
 *   [Commons IO](http://commons.apache.org/io)
 
     License: [Apache 2.0](http://commons.apache.org/io/license.html)
 
-*   [Google Collections](http://code.google.com/p/google-collections/)
+*   [Guava Libraries](http://code.google.com/p/guava-libraries/)
 
     License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
@@ -84,7 +88,7 @@ The distributed Agit binary contains software from the following projects:
     Originally by Alex Coles, I made a Maven-Central release version of
     [enr's fork](https://github.com/enr/markdownj).
 
-*   [android-pulltorefresh](https://github.com/johannilsson/android-pulltorefresh)
+*   [Android-PullToRefresh](https://github.com/chrisbanes/Android-PullToRefresh)
 
     License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
