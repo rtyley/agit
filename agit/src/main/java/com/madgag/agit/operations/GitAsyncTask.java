@@ -20,11 +20,13 @@
 package com.madgag.agit.operations;
 
 import static android.R.drawable.stat_notify_error;
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.lang.System.currentTimeMillis;
 import android.app.Application;
 import android.os.Handler;
 import android.util.Log;
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.assistedinject.Assisted;
@@ -33,6 +35,8 @@ import com.madgag.agit.operation.lifecycle.OperationLifecycleSupport;
 import com.madgag.android.blockingprompt.PromptBroker;
 
 import java.util.concurrent.Future;
+
+import org.eclipse.jgit.util.StringUtils;
 
 import roboguice.inject.ContextScope;
 import roboguice.util.RoboAsyncTask;
@@ -99,14 +103,20 @@ public class GitAsyncTask extends RoboAsyncTask<OpNotification> implements Progr
     }
 
     @Override
-    protected void onException(Exception e) throws RuntimeException {
+    protected void onThrowable(Throwable e) throws RuntimeException {
         String opName = operation.getName();
         boolean cancelled = operation.isCancelled();
         Log.e(TAG, "Examining exception " + e + " op " + operation + " cancelled=" + cancelled, e);
+        String message = e.getMessage();
+
+        if (isNullOrEmpty(message)) {
+            message = e.getClass().getName();
+        }
+
         OpNotification notification =
                 cancelled ? new OpNotification(stat_notify_error, opName + " cancelled",
                         operation.getUrl().toString()) :
-                        new OpNotification(stat_notify_error, opName + " failed", e.getMessage());
+                        new OpNotification(stat_notify_error, opName + " failed", message);
         lifecycleSupport.error(notification);
         lifecycleSupport.completed(notification);
     }
