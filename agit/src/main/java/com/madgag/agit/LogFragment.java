@@ -40,6 +40,7 @@ import android.widget.Toast;
 
 import com.google.common.base.Stopwatch;
 import com.google.inject.Inject;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.R;
 import com.handmark.pulltorefresh.library.support.PullToRefreshListLoadingFragment;
@@ -88,7 +89,7 @@ public class LogFragment extends PullToRefreshListLoadingFragment<RevCommit> {
         final PullToRefreshListView pullToRefreshView = getPullToRefreshListView();
         pullToRefreshView.setShowIndicator(false);
         pullToRefreshView.setOnRefreshListener(new OnRefreshListener() {
-            public void onRefresh() {
+            public void onRefresh(PullToRefreshBase refreshView) {
                 try {
                     Fetch fetch = new Fetch(new FileRepository(getArguments().getString(GITDIR)), DEFAULT_REMOTE_NAME);
                     gitAsyncTaskFactory.createTaskFor(fetch, new CasualShortTermLifetime() {
