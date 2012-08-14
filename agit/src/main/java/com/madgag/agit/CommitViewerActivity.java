@@ -59,6 +59,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revplot.PlotCommit;
 import org.eclipse.jgit.revplot.PlotCommitList;
@@ -72,6 +73,11 @@ public class CommitViewerActivity extends RepoScopedActivityBase implements Comm
     public static GitIntentBuilder commitViewIntentFor(Bundle sourceArgs) {
         return new GitIntentBuilder("commit.VIEW", sourceArgs, GITDIR, UNTIL_REVS, COMMIT);
     }
+
+    public static Intent commitViewIntentFor(Repository repository, Ref ref) {
+        return new GitIntentBuilder("commit.VIEW").repository(repository).untilRevs(ref).commit(ref.getObjectId()).toIntent();
+    }
+
 
     public static Intent commitViewIntentFor(Repository repository, RevCommit commit) {
         return new GitIntentBuilder("commit.VIEW").repository(repository).commit(commit).toIntent();
@@ -175,6 +181,7 @@ public class CommitViewerActivity extends RepoScopedActivityBase implements Comm
 
     private void setCurrentCommit(PlotCommit<PlotLane> commit) {
         this.commit = commit;
+        Log.d(TAG, "setCurrentCommit : commit=" + commit);
         setActionBarTitles();
     }
 

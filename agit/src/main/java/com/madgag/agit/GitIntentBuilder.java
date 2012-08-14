@@ -19,6 +19,7 @@
 
 package com.madgag.agit;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.GitIntents.EXTRA_SOURCE_URI;
 import static com.madgag.agit.GitIntents.EXTRA_TARGET_DIR;
 import static com.madgag.agit.GitIntents.GITDIR;
@@ -27,10 +28,11 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import java.io.File;
+import java.util.ArrayList;
 
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.RemoteConfig;
 
 public class GitIntentBuilder {
@@ -79,6 +81,11 @@ public class GitIntentBuilder {
         return add(EXTRA_TARGET_DIR, targetDir);
     }
 
+    public GitIntentBuilder add(String fieldName, ArrayList<String> list) {
+        intent.putStringArrayListExtra(fieldName, list);
+        return this;
+    }
+
     public GitIntentBuilder add(String fieldName, String value) {
         intent.putExtra(fieldName, value);
         return this;
@@ -88,12 +95,16 @@ public class GitIntentBuilder {
         return gitdir(repository.getDirectory());
     }
 
-    public GitIntentBuilder commit(RevCommit revCommit) {
+    public GitIntentBuilder commit(ObjectId revCommit) {
         return commit(revCommit.name());
     }
 
     public GitIntentBuilder commit(String commitId) {
         return add("commit", commitId);
+    }
+
+    public GitIntentBuilder untilRevs(Ref ref) {
+        return add(GitIntents.UNTIL_REVS, newArrayList(ref.getName()));  //To change body of created methods use File | Settings | File Templates.
     }
 
     public GitIntentBuilder revision(String revision) {
@@ -107,4 +118,5 @@ public class GitIntentBuilder {
     public Intent toIntent() {
         return intent;
     }
+
 }

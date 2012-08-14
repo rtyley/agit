@@ -43,6 +43,7 @@ public class LatestCommitView extends FrameLayout implements EnabledListItem {
 
         PrettyCommitSummaryView objectSummaryView = (PrettyCommitSummaryView) findViewById(latest_commit);
         RevCommit latestCommit = repoSummary.getLatestCommit();
+
         if (latestCommit == null) {
             objectSummaryView.setVisibility(GONE);
         } else {
@@ -54,7 +55,7 @@ public class LatestCommitView extends FrameLayout implements EnabledListItem {
 
     public void onItemClick() {
         if (repoSummary.hasCommits()) {
-            getContext().startActivity(commitViewIntentFor(repoSummary.getRepo(), repoSummary.getLatestCommit()));
+            getContext().startActivity(commitViewIntentFor(repoSummary.getRepo(), repoSummary.mostlyRecentlyUpdatedBranch.getRef()));
         }
     }
 

@@ -65,21 +65,21 @@ public class RepoSummary implements HasLatestCommit {
 
     private final Repository repo;
 
-    private final RevCommit latestCommit;
+    public final RDTBranch.BranchSummary mostlyRecentlyUpdatedBranch;
 
     @Inject
     public RepoSummary(Repository repo) {
         this.repo = repo;
         List<RDTBranch.BranchSummary> branchSummaries = new RDTBranch(repo).getAll();
-        latestCommit = branchSummaries.isEmpty() ? null : branchSummaries.get(0).getLatestCommit();
+        mostlyRecentlyUpdatedBranch = branchSummaries.isEmpty() ? null : branchSummaries.get(0);
     }
 
     public boolean hasCommits() {
-        return latestCommit != null;
+        return mostlyRecentlyUpdatedBranch != null;
     }
 
     public RevCommit getLatestCommit() {
-        return latestCommit;
+        return hasCommits()?mostlyRecentlyUpdatedBranch.getLatestCommit():null;
     }
 
     public Repository getRepo() {
