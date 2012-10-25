@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.App" parent="@style/Theme.Sherlock.Light.DarkActionBar.ForceOverflow">
+    <style name="Theme.App" parent="@style/Theme.Sherlock.Light.DarkActionBar">
         <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
         <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
         <item name="vpiTabPageIndicatorStyle">@style/Widget.TabPageIndicator</item>
