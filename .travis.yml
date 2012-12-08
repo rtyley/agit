@@ -1,0 +1,34 @@
+# Copied from https://github.com/leviwilson/android-travis-ci-example
+language: java
+jdk:
+  - openjdk6
+before_install:
+  # download the latest android sdk and unzip
+  - ifconfig
+  - export SDK_TAR=android-sdk_r21-linux.tgz
+  - wget http://dl.google.com/android/$SDK_TAR
+  - tar -zxf $SDK_TAR
+  # setup your ANDROID_HOME and PATH environment variables
+  - export ANDROID_HOME=`pwd`/android-sdk-linux
+  - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
+  # only update the sdk for the platform-tool
+  # and the api level you are building for.
+  # run "android list sdk --extended" to get the full list. 
+  # android-14 = 4.0 or API level 14
+  - android update sdk --filter sysimg-16,platform-tool,android-14,android-16 --obsolete --no-ui --force
+install: echo "Skip install"
+before_script:
+  - echo no | android create avd -n emulator16DE -t android-16 -c 50M --abi x86 --skin WVGA800 --force
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 6 # give xvfb some time to start 
+  - emulator -avd emulator16DE -prop persist.sys.language=en -prop persist.sys.country=US -noaudio -no-boot-anim &
+  - sleep 60
+  - adb kill-server
+  - adb start-server
+  - adb devices
+script:
+  - mvn clean install
+after_script:
+  - adb kill-server
+  - killall -r emulator*
