@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- package name must be unique so suffix with "tests" so package loader doesn't ignore us --><manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="preferExternal" android:versionCode="1" android:versionName="1.32-SNAPSHOT" package="com.madgag.agit.tests">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="preferExternal" android:versionCode="1" android:versionName="1.35-SNAPSHOT" package="com.madgag.agit.tests">
 
     <!-- We add an application tag here just so that we can indicate that
          this package needs to link against the android.test library,
          which is needed when building test cases. -->
-    <application>
+    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="16"/>
+    <application android:allowBackup="true">
         <uses-library android:name="android.test.runner"/>
     </application>
 
@@ -14,5 +15,4 @@
     "adb shell am instrument -w com.example.android.apis.tests/android.test.InstrumentationTestRunner"
     -->
     <instrumentation android:label="Tests for Agit" android:name="android.test.InstrumentationTestRunner" android:targetPackage="com.madgag.agit"/>
-    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="15"/>
 </manifest>
