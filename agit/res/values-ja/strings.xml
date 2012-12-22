@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Agit</string>
+    <string name="app_strap">Android Git クライアント</string>
+
+    <string name="commits">コミット</string>
+    <string name="files">ファイル</string>
+
+    <string name="suggest_repos_button">リポジトリを提案する...</string>
+    <string name="about_app_menu_option">Agitについて</string>
+    <string name="about_activity_title">Agitについて...</string>
+    <string name="welcome_message">"Agitへようこそ.\nリポジトリを#clone[クローン]することから始めてください."</string>
+    <string name="using_ssh_activity_title">SSHインストールガイド</string>
+    <string name="clone_launcher_activity_title">クローン...</string>
+    <string name="clone_menu_option">クローン...</string>
+    <string name="enter_clone_url">Url</string>
+    <string name="clone_target_folder_label">ターゲットフォルダ</string>
+    <string name="clone_url_hint">リポジトリURL</string>
+    <string name="clone_directory_hint">チェックアウトのためのフォルダ</string>
+    <string name="clone_readiness_needs_user_to_enter_a_url">リポジトリの URL を入力してください - もしくいくつかの #suggest_repo[exampleリポジトリ] から選択してください.
+    </string>
+    <string name="clone_readiness_folder_already_exists">フォルダが既に存在します- #specify_target_dir[別の] 場所を選択しますか?
+    </string>
+    <string name="clone_readiness_repository_folder_already_exists">フォルダがローカルに存在します-
+        #view_existing_repo[存在するリポジトリ] を閲覧しますか?
+    </string>
+    <string name="clone_readiness_not_enough_room_on_partition">"部屋が足りません - このパーティションでは %1$s だけのスペースが Agit のために存在します."</string>
+    <string name="ssh_agent_not_correctly_installed">SSHエージェントがありません - #view_ssh_instructions[SSH セットアップガイド] を見ますか?
+    </string>
+
+    <string name="repo_list_title">ローカルリポジトリ</string>
+
+    <string name="use_default_target_directory_checkbox_label">デフォルトの場所を使用</string>
+    <string name="bare_repo_checkbox_label">Bare</string>
+
+
+    <string name="execute_clone_button_label">Clone!</string>
+    <string name="open_menu_option">開く...</string>
+    <string name="find_files_menu_option">ファイルを探す...</string>
+    <string name="filter_files_on_ref_hint">"%1$s でファイルをフィルタ"</string>
+    <string name="delete_menu_option">削除</string>
+    <string name="delete_repo_menu_option">リポジトリ削除</string>
+    <string name="delete_tag_menu_option">タグ削除</string>
+
+    <string name="latest_commit_title">最近のコミット</string>
+    <string name="empty_list">« なし »</string>
+
+    <string name="tag_name_label">名前:</string>
+    <string name="tag_message_label">メッセージ (オプション):</string>
+    <string name="checkout_commit_menu_option">チェックアウト...</string>
+    <string name="tag_commit_menu_option">タグ...</string>
+
+    <string name="clone_menu_option">クローン</string>
+    <string name="clone_launcher_farewell_due_to_clone_launched">クローン開始..!</string>
+    <string name="object_id_copied">クリップボードにコピー!</string>
+
+    <string name="ask_host_key_ok_ticker">"ホスト %1$s の SSH フィンガープリント..."</string>
+    <string name="ask_host_key_ok">"%1$s の鍵フィンガープリントは: %2$s OK?"</string>
+
+    <string name="open_git_repository">"Git リポジトリを開く"</string>
+    <string name="install_file_manager">"デバイスに既に格納されている Git リポジトリを開くには，ファイルブラウズを可能にするために OIファイルマネージャをインストールしてください．"</string>
+    <string name="can_not_open_non_git_folder">"%1$s を開けません - Git リポジトリではないのでは?"</string>
+    <string name="market_button">"Google Play..."</string>
+
+    <string name="diff_seekbar_before">前</string>
+    <string name="diff_seekbar_after">後</string>
+
+    <!-- Button label to answer "Yes" to a yes/no prompt -->
+    <string name="button_yes">"はい"</string>
+    <!-- Button label to answer "No" to a yes/no prompt -->
+    <string name="button_no">"いいえ"</string>
+    <string name="button_cancel">"キャンセル"</string>
+
+    <string name="repo_deletion_dialog_confirmation_title">"リポジトリ削除..."</string>
+    <string name="repo_deletion_dialog_confirmation_message">"本当にこの Git リポジトリを削除しますか?"</string>
+
+    <string name="operation_complete">"%1$s 完了"</string>
+    <string name="operation_cancelled">"%1$s キャンセル"</string>
+    <string name="operation_failed">"%1$s 失敗"</string>
+
+    <string name="clone">"クローン"</string>
+    <string name="cloning">"クローン中"</string>
+    <string name="cloning_repo">"%1$s をクローン中"</string>
+    <string name="cloned_repo">"%1$s をクローン完了"</string>
+
+    <string name="pull">"プル"</string>
+    <string name="pulling">"プル中"</string>
+    <string name="pulling_repo">"%1$s をプル中"</string>
+    <string name="fetch">"フェッチ"</string>
+    <string name="fetching">"フェッチ中"</string>
+    <string name="fetched_from_remote_on_repo">"%2$s の %1$s からフェッチしました"</string>
+    <string name="fetching_from_remote_on_repo">"%2$s の %1$s からフェッチ中"</string>
+    <string name="delete_repo">"リポジトリ削除"</string>
+
+
+    <string name="pulling_from_remote_on_repo">"%2$s の %1$s からプル中"</string>
+    <string name="pulled_from_remote">"%1$s からプルしました"</string>
+    <string name="merge_status">"マージ状況 : %1$s"</string>
+    <string name="pull_cancelled">"プルはキャンセルされました"</string>
+    <string name="ref_not_resolved">"Ref {0} は解決できません"</string>
+
+    <string name="missing_configuration_for_key">"コンフィグレーション中に，セクション '%1$s', サブセクション '%2$s', 名前 '%3$s' の値が見つかりません"
+    </string>
+    <string name="can_not_pull_on_a_repo_with_state">"状態が %1$s なのでリポジトリにプルできません"</string>
+    <string name="can_not_pull_on_a_repo_with_detached_head">"HEAD がデタッチされているリポジトリにはプルできません - まずブランチをチェックアウトしてください"
+    </string>
+
+    <string name="no_viewer_available_for_file">"'%1$s' のためのビューアがありません"</string>
+
+</resources>
