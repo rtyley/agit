@@ -2,38 +2,43 @@
 <resources>
     <string name="app_name">Agit</string>
     <string name="app_strap">Android Git Client</string>
-    <string name="suggest_repos_button">Repository hinzufügen...</string>
+
+    <string name="commits">Commits</string>
+    <string name="files">Dateien</string>
+
+    <string name="suggest_repos_button">Repositorys vorschlagen</string>
     <string name="about_app_menu_option">Über</string>
     <string name="about_activity_title">Über...</string>
-    <string name="using_ssh_activity_title">SSH Installationshilfe</string>
-    <string name="clone_launcher_activity_title">Clone...</string>
-    <string name="clone_menu_option">Clone...</string>
+    <string name="welcome_message">Willkommen bei Agit.\nBeginnen Sie mit dem #clone[Klonen] eines Repositorys!</string>
+    <string name="using_ssh_activity_title">SSH Installations-Anleitung</string>
+    <string name="clone_launcher_activity_title">Klonen</string>
+    <string name="clone_menu_option">Klonen</string>
     <string name="enter_clone_url">URL</string>
     <string name="clone_target_folder_label">Zielordner</string>
-    <string name="clone_url_hint">Repository URL</string>
+    <string name="clone_url_hint">Repository-URL</string>
     <string name="clone_directory_hint">Ordner für den Checkout</string>
-    <string name="clone_readiness_needs_user_to_enter_a_url">Bitte Repository URL eingeben - oder hier auswählen
-        #suggest_repo[Beispiele].
+    <string name="clone_readiness_needs_user_to_enter_a_url">Geben Sie eine Repository-URL ein - oder wählen Sie eines aus den Beispielen.</string>
+    <string name="clone_readiness_folder_already_exists">Ordner existiert bereits - #specify_target_dir[Alternativen Ordner] auswählen?
     </string>
-    <string name="clone_readiness_folder_already_exists">Ordner bereits vorhanden- #specify_target_dir[alternativer]
-        Speicherplatz?
+    <string name="clone_readiness_repository_folder_already_exists">Ordner existiert bereits lokal - #view_existing_repo[Existierendes Repository] ansehen?
     </string>
-    <string name="clone_readiness_repository_folder_already_exists">Ordner existiert bereits lokal- Ansicht
-        #view_existing_repo[existierendes Repository]?
-    </string>
-    <string name="ssh_agent_not_correctly_installed">Kein SSH-Agent verfügbar- view #view_ssh_instructions[SSH
-        Installationshilfe]?
+    <string name="clone_readiness_not_enough_room_on_partition">Nicht genügend Speicherplatz vorhanden - Nur %1$s für Agit auf dieser Partition verfügbar.</string>
+    <string name="ssh_agent_not_correctly_installed">Kein SSH-Client installiert - Möchten Sie die #view_ssh_instructions[SSH-Installationsanleitung] ansehen?
     </string>
 
-    <string name="repo_list_title">Lokale Repositories</string>
+    <string name="repo_list_title">Lokale Repositorys</string>
 
-    <string name="use_default_target_directory_checkbox_label">Benutze Standard-Speicherplatz</string>
-    <string name="bare_repo_checkbox_label">Bare</string>
+    <string name="use_default_target_directory_checkbox_label">Standardordner benutzen</string>
+    <string name="bare_repo_checkbox_label">Bare-Repository?</string>
 
 
-    <string name="execute_clone_button_label">Clone!</string>
-    <string name="delete_repo_menu_option">Lösche Repository</string>
-    <string name="delete_tag_menu_option">Lösche Tag</string>
+    <string name="execute_clone_button_label">Klonen!</string>
+    <string name="open_menu_option">Öffnen...</string>
+    <string name="find_files_menu_option">Dateien finden...</string>
+    <string name="filter_files_on_ref_hint">Dateien filtern - %1$s</string>
+    <string name="delete_menu_option">Löschen</string>
+    <string name="delete_repo_menu_option">Repository löschen</string>
+    <string name="delete_tag_menu_option">Tag löschen</string>
 
     <string name="latest_commit_title">Letzter Commit</string>
     <string name="empty_list">« leer »</string>
@@ -43,15 +48,61 @@
     <string name="checkout_commit_menu_option">Checkout...</string>
     <string name="tag_commit_menu_option">Tag...</string>
 
-    <string name="clone_launcher_farewell_due_to_clone_launched">Clone gestartet!</string>
+    <string name="clone_menu_option">Klonen</string>
+    <string name="clone_launcher_farewell_due_to_clone_launched">Klonvorgang gestartet!</string>
     <string name="object_id_copied">In die Zwischenablage kopiert!</string>
 
-    <string name="ask_host_key_ok_ticker">"SSH Fingerabdruck von Host %1$s..."</string>
-    <string name="ask_host_key_ok">"Fingerabdruck des Schlüssels von %1$s: %2$s OK?"</string>
+    <string name="ask_host_key_ok_ticker">SSH Fingerabdruck von %1$s</string>
+    <string name="ask_host_key_ok">%1$s hat folgenden Fingerabdruck: %2$s - Okay?</string>
 
-    <string name="diff_seekbar_before">VORHER</string>
-    <string name="diff_seekbar_after">NACHHER</string>
+    <string name="open_git_repository">GIT-Repository öffnen</string>
+    <string name="install_file_manager">Um ein lokal gespeichertes GIT-Repository zu öffnen, installieren Sie den 'OI File Manager', welcher die Dateiauswahl bereitstellt.</string>
+    <string name="can_not_open_non_git_folder">Fehler beim Öffnen - %1$s - Kein gültiges GIT-Repoitory</string>
+    <string name="market_button">Google Play...</string>
 
-    <string name="button_yes">"Ja"</string>
-    <string name="button_no">"Nein"</string>
+    <string name="diff_seekbar_before">Vorher</string>
+    <string name="diff_seekbar_after">Nachher</string>
+
+    <!-- Button label to answer "Yes" to a yes/no prompt -->
+    <string name="button_yes">Ja</string>
+    <!-- Button label to answer "No" to a yes/no prompt -->
+    <string name="button_no">Nein</string>
+    <string name="button_cancel">Abbrechen</string>
+
+    <string name="repo_deletion_dialog_confirmation_title">Repository löschen...</string>
+    <string name="repo_deletion_dialog_confirmation_message">Möchten Sie dieses GIT-Repository wirklich löschen?</string>
+
+    <string name="operation_complete">%1$s fertig gestellt!</string>
+    <string name="operation_cancelled">%1$s abgebrochen!</string>
+    <string name="operation_failed">%1$s fehlgeschlagen</string>
+
+    <string name="clone">Klonen</string>
+    <string name="cloning">Klonen</string>
+    <string name="cloning_repo">Klone %1$s</string>
+    <string name="cloned_repo">%1$s geklont!</string>
+
+    <string name="pull">Pull</string>
+    <string name="pulling">Pulling</string>
+    <string name="pulling_repo">Pulling %1$s</string>
+    <string name="fetch">Fetch</string>
+    <string name="fetching">Fetching</string>
+    <string name="fetched_from_remote_on_repo">"'Fetch' von %1$s fertig - %2$s"</string>
+    <string name="fetching_from_remote_on_repo">'Fetch' von %1$s - %2$s"</string>
+    <string name="delete_repo">Repository löschen</string>
+
+
+    <string name="pulling_from_remote_on_repo">'Pulling' von %1$s - %2$s</string>
+    <string name="pulled_from_remote">'Pulled' von %1$s</string>
+    <string name="merge_status">'Merge'-Status : %1$s</string>
+    <string name="pull_cancelled">'Pull' abgebrochen</string>
+    <string name="ref_not_resolved">"Ref {0} kann nicht gelöst werden."</string>
+
+    <string name="missing_configuration_for_key">Kein Wert für Kategorie '%1$s', Unterkategorie '%2$s', Name '%3$s' in der Konfiguration gefunden
+    </string>
+    <string name="can_not_pull_on_a_repo_with_state">'Pull' für das Repository fehlgeschlagen - %1$s</string>
+    <string name="can_not_pull_on_a_repo_with_detached_head">'Pull' in ein Repository mit seperatem 'HEAD' nicht möglich - Checken Sie zuerst einen Branch aus!
+    </string>
+
+    <string name="no_viewer_available_for_file">"Kein Betrachter für die Datei '%1$s' eingerichtet."</string>
+
 </resources>
