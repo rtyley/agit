@@ -56,7 +56,7 @@
     <string name="ask_host_key_ok">%1$s hat folgenden Fingerabdruck: %2$s - Okay?</string>
 
     <string name="open_git_repository">GIT-Repository öffnen</string>
-    <string name="install_file_manager">Um ein lokal gespeichertes GIT-Repository zu öffnen, installieren Sie den 'OI File Manager', welcher die Dateiauswahl bereitstellt.</string>
+    <string name="install_file_manager">Um ein lokal gespeichertes GIT-Repository zu öffnen, installieren Sie den \'OI File Manager\', welcher die Dateiauswahl bereitstellt.</string>
     <string name="can_not_open_non_git_folder">Fehler beim Öffnen - %1$s - Kein gültiges GIT-Repoitory</string>
     <string name="market_button">Google Play...</string>
 
@@ -86,23 +86,23 @@
     <string name="pulling_repo">Pulling %1$s</string>
     <string name="fetch">Fetch</string>
     <string name="fetching">Fetching</string>
-    <string name="fetched_from_remote_on_repo">"'Fetch' von %1$s fertig - %2$s"</string>
-    <string name="fetching_from_remote_on_repo">'Fetch' von %1$s - %2$s"</string>
+    <string name="fetched_from_remote_on_repo">"\'Fetch\' von %1$s fertig - %2$s"</string>
+    <string name="fetching_from_remote_on_repo">\'Fetch\' von %1$s - %2$s"</string>
     <string name="delete_repo">Repository löschen</string>
 
 
-    <string name="pulling_from_remote_on_repo">'Pulling' von %1$s - %2$s</string>
-    <string name="pulled_from_remote">'Pulled' von %1$s</string>
-    <string name="merge_status">'Merge'-Status : %1$s</string>
-    <string name="pull_cancelled">'Pull' abgebrochen</string>
+    <string name="pulling_from_remote_on_repo">\'Pulling\' von %1$s - %2$s</string>
+    <string name="pulled_from_remote">\'Pulled\' von %1$s</string>
+    <string name="merge_status">\'Merge\'-Status : %1$s</string>
+    <string name="pull_cancelled">\'Pull\' abgebrochen</string>
     <string name="ref_not_resolved">"Ref {0} kann nicht gelöst werden."</string>
 
-    <string name="missing_configuration_for_key">Kein Wert für Kategorie '%1$s', Unterkategorie '%2$s', Name '%3$s' in der Konfiguration gefunden
+    <string name="missing_configuration_for_key">Kein Wert für Kategorie \'%1$s\', Unterkategorie \'%2$s\', Name \'%3$s\' in der Konfiguration gefunden
     </string>
-    <string name="can_not_pull_on_a_repo_with_state">'Pull' für das Repository fehlgeschlagen - %1$s</string>
-    <string name="can_not_pull_on_a_repo_with_detached_head">'Pull' in ein Repository mit seperatem 'HEAD' nicht möglich - Checken Sie zuerst einen Branch aus!
+    <string name="can_not_pull_on_a_repo_with_state">\'Pull\' für das Repository fehlgeschlagen - %1$s</string>
+    <string name="can_not_pull_on_a_repo_with_detached_head">\'Pull\' in ein Repository mit seperatem \'HEAD\' nicht möglich - Checken Sie zuerst einen Branch aus!
     </string>
 
-    <string name="no_viewer_available_for_file">"Kein Betrachter für die Datei '%1$s' eingerichtet."</string>
+    <string name="no_viewer_available_for_file">"Kein Betrachter für die Datei \'%1$s\' eingerichtet."</string>
 
 </resources>
