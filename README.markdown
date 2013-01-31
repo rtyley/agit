@@ -1,7 +1,7 @@
 Agit - Android Git Client
 =========================
 
-© 2011 Roberto Tyley
+© 2013 Roberto Tyley
 
 https://market.android.com/details?id=com.madgag.agit
 

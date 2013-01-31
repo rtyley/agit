@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pull_to_refresh_pull_label">'Pull' - zum Aktualisieren...</string>
-    <string name="pull_to_refresh_release_label">'Release' - zum Aktualisieren...</string>
+    <string name="pull_to_refresh_pull_label">\'Pull\' - zum Aktualisieren...</string>
+    <string name="pull_to_refresh_release_label">\'Release\' - zum Aktualisieren...</string>
     <string name="pull_to_refresh_refreshing_label">Lade...</string>
     <string name="pull_to_refresh_tap_label">Berühren Sie, um zu aktualisieren...</string>
 </resources>
