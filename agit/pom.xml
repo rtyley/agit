@@ -263,6 +263,7 @@
                             </sign>
                             <zipalign>
                                 <verbose>true</verbose>
+                                <skip>false</skip>
                                 <outputApk>${project.build.directory}/${project.artifactId}-${project.version}-signed-aligned.apk</outputApk>
                             </zipalign>
                             <manifest>
