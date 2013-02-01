@@ -107,7 +107,7 @@
                 <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>android-maven-plugin</artifactId>
-                    <version>3.4.0</version>
+                    <version>3.5.0</version>
                     <extensions>true</extensions>
                     <configuration>
                         <sdk>
@@ -123,7 +123,6 @@
                         </proguard>
                         <manifest>
                             <versionName />
-                            <debuggable>true</debuggable>
                         </manifest>
                     </configuration>
                     <executions>

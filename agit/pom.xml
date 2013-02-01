@@ -198,17 +198,6 @@
                     <value>!production</value>
                 </property>
             </activation>
-            <properties>
-                <deployment.stage>In Development</deployment.stage>
-                <android.debuggable>true</android.debuggable>
-            </properties>
-        </profile>
-        <profile>
-            <id>production</id>
-            <properties>
-                <deployment.stage>In Production</deployment.stage>
-                <android.debuggable>false</android.debuggable>
-            </properties>
         </profile>
         <profile>
             <id>release</id>
@@ -266,9 +255,6 @@
                                 <skip>false</skip>
                                 <outputApk>${project.build.directory}/${project.artifactId}-${project.version}-signed-aligned.apk</outputApk>
                             </zipalign>
-                            <manifest>
-                                <debuggable>false</debuggable>
-                            </manifest>
                         </configuration>
                         <executions>
                             <execution>
