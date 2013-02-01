@@ -165,6 +165,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
+                <version>2.4.1</version>
                 <executions>
                     <execution>
                         <phase>initialize</phase>
