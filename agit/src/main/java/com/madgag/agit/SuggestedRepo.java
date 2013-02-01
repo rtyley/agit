@@ -52,6 +52,7 @@ public class SuggestedRepo {
             // new SuggestedRepo("Redis", "git://github.com/antirez/redis.git"), // 3.3M - slow due to deltas
             // new SuggestedRepo("GWT ORM", "git://android.git.kernel.org/tools/gwtorm.git"), //2.9M - currently down
             new SuggestedRepo("JGit", "git://git.eclipse.org/gitroot/jgit/jgit.git"), // 5.0M
+            new SuggestedRepo("BFG Repo-Cleaner", "git://github.com/rtyley/bfg-repo-cleaner.git"),
             new SuggestedRepo("git.js", "git://github.com/danlucraft/git.js.git")
     );
 
