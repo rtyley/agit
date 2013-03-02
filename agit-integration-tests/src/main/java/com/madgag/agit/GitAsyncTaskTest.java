@@ -115,7 +115,7 @@ public class GitAsyncTaskTest extends ActivityInstrumentationTestCase2<Dashboard
 
     @MediumTest
     public void testPullUpdatesFromLocalTestServer() throws Exception {
-        Repository repository = helper().unpackRepo("small-test-repo.early.zip");
+        Repository repository = helper().unpackRepo("small-test-repo.early.zap");
         RemoteConfig remoteConfig = remoteConfigFor(repository, DEFAULT_REMOTE_NAME);
         for (URIish urIish : remoteConfig.getURIs()) {
             remoteConfig.removeURI(urIish);

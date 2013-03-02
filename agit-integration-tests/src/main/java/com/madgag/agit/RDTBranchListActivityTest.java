@@ -34,7 +34,7 @@ public class RDTBranchListActivityTest extends RDTTypeListActivityStoryTestBase<
     }
 
     public void testShouldShowBranchListWithoutExplosion() throws Exception {
-        Repository repository = helper(getInstrumentation()).unpackRepo("small-repo.with-branches.zip");
+        Repository repository = helper(getInstrumentation()).unpackRepo("small-repo.with-branches.zap");
         setActivityIntent(listIntent(repository, "branch"));
 
         final RDTBranchListActivity activity = getActivity();

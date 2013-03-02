@@ -34,7 +34,7 @@ public class RepositoryViewerActivityTest extends ActivityInstrumentationTestCas
     }
 
     public void testShouldShowRepoViewerPageWithoutExplosion() throws Exception {
-        Repository repoWithTags = helper(getInstrumentation()).unpackRepo("small-repo.with-tags.zip");
+        Repository repoWithTags = helper(getInstrumentation()).unpackRepo("small-repo.with-tags.zap");
 
         setActivityIntent(manageRepoIntent(repoWithTags.getDirectory()));
 

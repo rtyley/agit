@@ -49,7 +49,7 @@ public class RDTTagListActivityStoryTest extends RDTTypeListActivityStoryTestBas
     public void testShouldShowAllTags() throws Exception {
 
         GitTestHelper helper = AndroidTestEnvironment.helper(getInstrumentation());
-        Repository repoWithTags = helper.unpackRepo("small-repo.with-tags.zip");
+        Repository repoWithTags = helper.unpackRepo("small-repo.with-tags.zap");
 
         setActivityIntent(listIntent(repoWithTags, "tag"));
 

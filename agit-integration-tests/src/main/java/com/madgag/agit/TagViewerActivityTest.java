@@ -40,7 +40,7 @@ public class TagViewerActivityTest extends InstrumentationTestCase  {
     @Override
     public void setUp() throws Exception {
         solo = new Solo(getInstrumentation());
-        gitdir = helper(getInstrumentation()).unpackRepoAndGetGitDir("small-repo.with-tags.zip");
+        gitdir = helper(getInstrumentation()).unpackRepoAndGetGitDir("small-repo.with-tags.zap");
     }
 
     @Override
