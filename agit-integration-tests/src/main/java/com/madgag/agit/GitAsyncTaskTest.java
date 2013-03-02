@@ -32,6 +32,7 @@ import static java.lang.Thread.currentThread;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static roboguice.RoboGuice.newDefaultRoboModule;
@@ -45,6 +46,7 @@ import com.google.inject.Injector;
 import com.madgag.agit.matchers.GitTestHelper;
 import com.madgag.agit.operation.lifecycle.OperationLifecycleSupport;
 import com.madgag.agit.operations.Clone;
+import com.madgag.agit.operations.Fetch;
 import com.madgag.agit.operations.GitAsyncTask;
 import com.madgag.agit.operations.GitAsyncTaskFactory;
 import com.madgag.agit.operations.GitOperation;
@@ -56,6 +58,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.RemoteConfig;
@@ -114,24 +117,53 @@ public class GitAsyncTaskTest extends ActivityInstrumentationTestCase2<Dashboard
     }
 
     @MediumTest
+    public void testFetchUpdatesOnCloneFromLocalTestServer() throws Exception {
+        Clone cloneOp = new Clone(true, integrationGitServerURIFor("small-test-repo.early.git"), helper().newFolder());
+
+        Repository repository = executeAndWaitFor(cloneOp);
+
+        String initialCommitId = "3974996807a9f596cf25ac3a714995c24bb97e2c", commit1 = "ce1e0703402e989bedf03d5df535401340f54b42";
+        assertThat(repository, hasGitObject(initialCommitId));
+        assertThat(repository.resolve("master").name(), equalTo(initialCommitId));
+        assertThat(repository, not(hasGitObject(commit1)));
+
+        setRemoteUrl(repository, integrationGitServerURIFor("small-test-repo.later.git"));
+
+        executeAndWaitFor(new Fetch(repository, DEFAULT_REMOTE_NAME));
+
+        assertThat(repository, hasGitObject(commit1));
+        assertThat(repository.resolve("master").name(), equalTo(commit1));
+    }
+
+    @MediumTest
+    public void testFetchUpdatesFromLocalTestServer() throws Exception {
+        Repository repository = helper().unpackRepo("small-test-repo.early.bare.git.zap");
+        setRemoteUrl(repository, integrationGitServerURIFor("small-test-repo.later.git"));
+
+        String initialCommitId = "3974996807a9f596cf25ac3a714995c24bb97e2c", commit1 = "ce1e0703402e989bedf03d5df535401340f54b42";
+        assertThat(repository, hasGitObject(initialCommitId));
+        assertThat(repository.resolve("master").name(), equalTo(initialCommitId));
+        assertThat(repository, not(hasGitObject(commit1)));
+
+        executeAndWaitFor(new Fetch(repository, DEFAULT_REMOTE_NAME));
+
+        assertThat(repository, hasGitObject(commit1));
+        assertThat(repository.resolve("master").name(), equalTo(commit1));
+    }
+
+    @MediumTest
     public void testPullUpdatesFromLocalTestServer() throws Exception {
         Repository repository = helper().unpackRepo("small-test-repo.early.zap");
-        RemoteConfig remoteConfig = remoteConfigFor(repository, DEFAULT_REMOTE_NAME);
-        for (URIish urIish : remoteConfig.getURIs()) {
-            remoteConfig.removeURI(urIish);
-        }
-        remoteConfig.addURI(integrationGitServerURIFor("small-test-repo.later.git"));
-        remoteConfig.update(repository.getConfig());
-        repository.getConfig().save();
+        setRemoteUrl(repository, integrationGitServerURIFor("small-test-repo.later.git"));
         // Git.wrap(repository).branchCreate().setName("master").setStartPoint("origin/master");
 
         assertThat(repository, hasGitObject("3974996807a9f596cf25ac3a714995c24bb97e2c"));
         String commit1 = "ce1e0703402e989bedf03d5df535401340f54b42";
         assertThat(repository, not(hasGitObject(commit1)));
         assertFileLength(2, repository.getWorkTree(), "EXAMPLE");
-        Pull pullOp = new Pull(repository);
 
-        executeAndWaitFor(pullOp);
+        executeAndWaitFor(new Pull(repository));
+
         assertThat(repository, hasGitObject(commit1));
 
         assertFileLength(4, repository.getWorkTree(), "EXAMPLE");
@@ -237,6 +269,16 @@ public class GitAsyncTaskTest extends ActivityInstrumentationTestCase2<Dashboard
         Log.i(TAG, "Finished waiting - timeout=" + timeout + " duration=" + duration);
         assertThat("Timeout for " + operation, timeout, is(false));
         return new FileRepository(operation.getGitDir());
+    }
+
+    private void setRemoteUrl(Repository repository, URIish uri) throws IOException {
+        RemoteConfig remoteConfig = remoteConfigFor(repository, DEFAULT_REMOTE_NAME);
+        for (URIish urIish : remoteConfig.getURIs()) {
+            remoteConfig.removeURI(urIish);
+        }
+        remoteConfig.addURI(uri);
+        remoteConfig.update(repository.getConfig());
+        repository.getConfig().save();
     }
 
 }
