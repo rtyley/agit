@@ -4,7 +4,7 @@
     <artifactId>agit-test-utils</artifactId>
 
     <parent>
-        <version>1.38</version>
+        <version>1.39-SNAPSHOT</version>
         <groupId>com.madgag</groupId>
         <artifactId>agit-parent</artifactId>
     </parent>
