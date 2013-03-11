@@ -58,9 +58,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
-import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
+import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
 
@@ -122,6 +122,8 @@ public class GitAsyncTaskTest extends ActivityInstrumentationTestCase2<Dashboard
 
         Repository repository = executeAndWaitFor(cloneOp);
 
+        printFetchRefSpecs(repository);
+
         String initialCommitId = "3974996807a9f596cf25ac3a714995c24bb97e2c", commit1 = "ce1e0703402e989bedf03d5df535401340f54b42";
         assertThat(repository, hasGitObject(initialCommitId));
         assertThat(repository.resolve("master").name(), equalTo(initialCommitId));
@@ -133,6 +135,13 @@ public class GitAsyncTaskTest extends ActivityInstrumentationTestCase2<Dashboard
 
         assertThat(repository, hasGitObject(commit1));
         assertThat(repository.resolve("master").name(), equalTo(commit1));
+    }
+
+    private void printFetchRefSpecs(Repository repository) {
+        RemoteConfig remoteConfig = remoteConfigFor(repository, DEFAULT_REMOTE_NAME);
+        for (RefSpec refSpec : remoteConfig.getFetchRefSpecs()) {
+            Log.i(TAG, "refSpec = " + refSpec);
+        }
     }
 
     @MediumTest

@@ -30,10 +30,12 @@ import com.madgag.agit.operations.RepoUpdateBroadcaster;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.TransportConfigCallback;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
@@ -58,6 +60,9 @@ public class GitFetchService {
     public FetchResult fetch(String remote, Collection<RefSpec> toFetch) {
         Log.d(TAG, "About to run fetch : " + remote);
 
+        for (Map.Entry<String,Ref> entry : git.getRepository().getAllRefs().entrySet()) {
+            Log.d(TAG, entry.getKey()+" = "+entry.getValue());
+        }
         FetchResult fetchResult = null;
         try {
             fetchResult = git.fetch()
@@ -70,7 +75,10 @@ public class GitFetchService {
         } catch (GitAPIException e) {
             throw exceptionWithFriendlyMessageFor(e);
         }
-        Log.d(TAG, "Fetch complete with : " + fetchResult);
+        Log.d(TAG, "Fetch complete with : " + fetchResult+" messages="+fetchResult.getMessages());
+        for (Ref ref : fetchResult.getAdvertisedRefs()) {
+            Log.d(TAG, "AdvertisedRef : " + ref.getName()+" objectId="+ref.getObjectId());
+        }
         for (TrackingRefUpdate update : fetchResult.getTrackingRefUpdates()) {
             Log.d(TAG, "TrackingRefUpdate : " + update.getLocalName() + " old=" + update.getOldObjectId() + " new=" + update.getNewObjectId());
         }
