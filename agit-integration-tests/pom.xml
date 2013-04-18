@@ -111,6 +111,9 @@
                                   val ipAddresses = java.net.NetworkInterface.getNetworkInterfaces().filter { !_.isLoopback }.flatMap { _.getInetAddresses }.map { _.getHostAddress }.mkString(",")
                                   AndroidDebugBridge.init(false)
                                   val androidDebugBridge = AndroidDebugBridge.createBridge
+                                  // skipping emulator here,
+                                  // 10.0.2.2 is used for emulator
+                                  // see agit-test-utils/src/main/java/com/madgag/agit/GitTestUtils.java
                                   androidDebugBridge.getDevices.filter { !_.isEmulator } foreach { d =&gt;
                                     val command = "echo gitserver.host.address="+ipAddresses+" &gt; "+d.getMountPoint(IDevice.MNT_EXTERNAL_STORAGE)+"/agit-integration-test.properties"
 

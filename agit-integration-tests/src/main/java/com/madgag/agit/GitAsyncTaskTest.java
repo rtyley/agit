@@ -66,6 +66,19 @@ import org.eclipse.jgit.transport.URIish;
 
 import roboguice.RoboGuice;
 
+class OperationThreadError {
+    private String error;
+    public OperationThreadError() {
+        error = "";
+    }
+    public String get() {
+        return error;
+    }
+    public void set(String newError) {
+        error = newError;
+    }
+}
+
 public class GitAsyncTaskTest extends ActivityInstrumentationTestCase2<DashboardActivity> {
 
     private static final String TAG = "GitAsyncTaskTest";
@@ -239,7 +252,8 @@ public class GitAsyncTaskTest extends ActivityInstrumentationTestCase2<Dashboard
             throws InterruptedException, IOException {
         final CountDownLatch latch = new CountDownLatch(1);
         Log.d(TAG, "About to start " + operation);
-        new Thread() {
+        final OperationThreadError operationThreadError = new OperationThreadError();
+        Thread operationThread = new Thread() {
             public void run() {
                 Looper.prepare();
                 Log.d(TAG, "In run method for " + operation);
@@ -253,7 +267,8 @@ public class GitAsyncTaskTest extends ActivityInstrumentationTestCase2<Dashboard
                             }
 
                             public void error(OpNotification notification) {
-                                Log.i(TAG, "Errored " + operation + " with " + notification);
+                                operationThreadError.set("Errored " + operation + " with " + notification);
+                                Log.i(TAG, operationThreadError.get());
                             }
 
                             public void success(OpNotification completionNotification) {
@@ -268,7 +283,8 @@ public class GitAsyncTaskTest extends ActivityInstrumentationTestCase2<Dashboard
                 Log.d(TAG, "Called execute() on task for " + operation);
                 Looper.loop();
             }
-        }.start();
+        };
+        operationThread.start();
         long startTime = currentTimeMillis();
         Log.i(TAG, "Waiting for " + operation + " to complete - currentThread=" + currentThread());
         // http://stackoverflow.com/questions/5497324/why-arent-java-util-concurrent-timeunit-types-greater-than
@@ -277,6 +293,7 @@ public class GitAsyncTaskTest extends ActivityInstrumentationTestCase2<Dashboard
         long duration = currentTimeMillis() - startTime;
         Log.i(TAG, "Finished waiting - timeout=" + timeout + " duration=" + duration);
         assertThat("Timeout for " + operation, timeout, is(false));
+        assertEquals("", operationThreadError.get());
         return new FileRepository(operation.getGitDir());
     }
 

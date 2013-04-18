@@ -26,16 +26,19 @@ public class OpNotification {
     private final CharSequence tickerText, eventTitle, eventDetail;
     private final boolean successful;
 
-    public OpNotification(int icon, CharSequence tickerText, CharSequence eventDetail) {
+    public OpNotification(int icon, CharSequence tickerText,
+            CharSequence eventDetail) {
         this(icon, tickerText, tickerText, eventDetail, true);
     }
 
-    public OpNotification(int icon, CharSequence tickerText, CharSequence eventTitle, CharSequence eventDetail) {
+    public OpNotification(int icon, CharSequence tickerText,
+            CharSequence eventTitle, CharSequence eventDetail) {
         this(icon, tickerText, eventTitle, eventDetail, true);
     }
 
-    public OpNotification(int icon, CharSequence tickerText, CharSequence eventTitle, CharSequence eventDetail,
-                          boolean successful) {
+    public OpNotification(int icon, CharSequence tickerText,
+            CharSequence eventTitle, CharSequence eventDetail,
+            boolean successful) {
         this.icon = icon;
         this.tickerText = tickerText;
         this.eventTitle = eventTitle;
@@ -59,12 +62,25 @@ public class OpNotification {
         return eventDetail;
     }
 
-    public static OpNotification alert(CharSequence eventTitle, CharSequence eventDetail) {
+    public String toString() {
+        String repr = "";
+        repr += eventTitle;
+        repr += ", ";
+        repr += tickerText;
+        repr += ", ";
+        repr += eventDetail;
+        return repr;
+    }
+
+    public static OpNotification alert(CharSequence eventTitle,
+            CharSequence eventDetail) {
         return alert(eventDetail, eventTitle, eventDetail);
     }
 
-    public static OpNotification alert(CharSequence tickerText, CharSequence eventTitle, CharSequence eventDetail) {
-        return new OpNotification(stat_sys_warning, tickerText, eventTitle, eventDetail);
+    public static OpNotification alert(CharSequence tickerText,
+            CharSequence eventTitle, CharSequence eventDetail) {
+        return new OpNotification(stat_sys_warning, tickerText, eventTitle,
+                eventDetail);
     }
 
 }
