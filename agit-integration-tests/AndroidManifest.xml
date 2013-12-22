@@ -14,5 +14,5 @@
     "adb shell am instrument -w com.example.android.apis.tests/android.test.InstrumentationTestRunner"
     -->
     <instrumentation android:label="Tests for Agit" android:name="android.test.InstrumentationTestRunner" android:targetPackage="com.madgag.agit"/>
-    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="15"/>
+    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="16"/>
 </manifest>
