@@ -36,7 +36,7 @@ import java.util.Properties;
 
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
-import org.eclipse.jgit.storage.file.FileRepository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.util.FS;
 
@@ -74,7 +74,7 @@ public class GitTestUtils {
     public static Repository repoFor(File folder) throws IOException {
         File resolvedGitDir = resolveGitDirFor(folder);
         assertThat("gitdir " + resolvedGitDir + " exists", resolvedGitDir, notNullValue());
-        return new FileRepository(resolvedGitDir);
+        return FileRepositoryBuilder.create(resolvedGitDir);
     }
 
     private static File resolveGitDirFor(File folder) {

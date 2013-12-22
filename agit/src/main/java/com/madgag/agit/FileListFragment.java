@@ -24,6 +24,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.madgag.agit.BlobViewerActivity.revisionFileViewIntentFor;
 import static com.madgag.agit.GitIntents.GITDIR;
 import static com.madgag.agit.GitIntents.REVISION;
+import static com.madgag.agit.GitIntents.gitDirFrom;
 import static com.madgag.agit.git.Repos.shortenRevName;
 import static com.madgag.android.HtmlStyleUtil.code;
 import android.app.Activity;
@@ -54,7 +55,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.storage.file.FileRepository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.treewalk.TreeWalk;
 
 /**
@@ -118,7 +119,7 @@ public class FileListFragment extends ListLoadingFragment<FilePath> implements F
 
                 try {
                     Bundle args = getArguments();
-                    Repository repo = new FileRepository(args.getString(GITDIR));
+                    Repository repo = FileRepositoryBuilder.create(gitDirFrom(args));
                     RevCommit commit = new RevWalk(repo).parseCommit(repo.resolve(args.getString(REVISION)));
 
                     Stopwatch stopwatch = new Stopwatch().start();

@@ -20,9 +20,7 @@
 package com.madgag.agit;
 
 import static com.google.common.collect.Collections2.filter;
-import static com.google.common.collect.Lists.transform;
 import static com.madgag.agit.git.Repos.COMMIT_TIME_ORDERING;
-import static com.madgag.agit.git.Repos.reposInDefaultRepoDir;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -35,14 +33,14 @@ import java.util.List;
 
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.storage.file.FileRepository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 public class RepoSummary implements HasLatestCommit {
 
     public final static Function<File, RepoSummary> REPO_SUMMARY_FOR_GITDIR = new Function<File, RepoSummary>() {
         public RepoSummary apply(File gitdir) {
             try {
-                Repository repo = new FileRepository(gitdir);
+                Repository repo = FileRepositoryBuilder.create(gitdir);
 
                 return new RepoSummary(repo);
             } catch (Exception e) {

@@ -25,6 +25,7 @@ import static android.text.Html.fromHtml;
 import static com.madgag.agit.GitIntents.GITDIR;
 import static com.madgag.agit.GitIntents.PATH;
 import static com.madgag.agit.GitIntents.UNTIL_REVS;
+import static com.madgag.agit.GitIntents.gitDirFrom;
 import static com.madgag.android.HtmlStyleUtil.boldCode;
 import static com.madgag.android.IntentUtil.isIntentAvailable;
 import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
@@ -53,7 +54,7 @@ import org.eclipse.jgit.lib.ObjectStream;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.storage.file.FileRepository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.util.RawParseUtils;
 
@@ -86,7 +87,7 @@ public class BlobViewFragment extends com.madgag.agit.WebViewFragment implements
             public BlobView loadInBackground() {
                 Bundle args = getArguments();
                 try {
-                    Repository repo = new FileRepository(args.getString(GITDIR));
+                    Repository repo = FileRepositoryBuilder.create(gitDirFrom(args));
                     ObjectId revision = repo.resolve(args.getString(UNTIL_REVS));
                     RevWalk revWalk = new RevWalk(repo);
                     RevCommit commit = revWalk.parseCommit(revision);

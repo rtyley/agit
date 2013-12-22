@@ -59,7 +59,7 @@ import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
@@ -277,7 +277,7 @@ public class GitAsyncTaskTest extends ActivityInstrumentationTestCase2<Dashboard
         long duration = currentTimeMillis() - startTime;
         Log.i(TAG, "Finished waiting - timeout=" + timeout + " duration=" + duration);
         assertThat("Timeout for " + operation, timeout, is(false));
-        return new FileRepository(operation.getGitDir());
+        return FileRepositoryBuilder.create(operation.getGitDir());
     }
 
     private void setRemoteUrl(Repository repository, URIish uri) throws IOException {

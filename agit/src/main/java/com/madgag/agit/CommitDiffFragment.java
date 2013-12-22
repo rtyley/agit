@@ -40,7 +40,7 @@ import java.io.IOException;
 
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.storage.file.FileRepository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 /**
  * Commit diff is specified by: 1 Repo, 1 before-rev, 1 after-rev
@@ -64,7 +64,7 @@ public class CommitDiffFragment extends RoboSherlockFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
-            Repository repository = new FileRepository(gitDirFrom(getArguments()));
+            Repository repository = FileRepositoryBuilder.create(gitDirFrom(getArguments()));
             RevCommit before = commitFrom(repository, getArguments(), BEFORE_REV), after = commitFrom(repository, getArguments(), AFTER_REV);
             Log.d(TAG, "onCreateView before = " + before);
             Log.d(TAG, "onCreateView after  = " + after);

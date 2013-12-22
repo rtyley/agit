@@ -28,6 +28,7 @@ import static com.madgag.agit.CommitViewerActivity.commitViewIntentFor;
 import static com.madgag.agit.GitIntents.GITDIR;
 import static com.madgag.agit.GitIntents.PATH;
 import static com.madgag.agit.GitIntents.UNTIL_REVS;
+import static com.madgag.agit.GitIntents.gitDirFrom;
 import static com.madgag.android.listviews.ViewInflator.viewInflatorFor;
 import static java.lang.System.currentTimeMillis;
 import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
@@ -58,7 +59,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.storage.file.FileRepository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 public class LogFragment extends PullToRefreshListLoadingFragment<RevCommit> {
 
@@ -91,7 +92,7 @@ public class LogFragment extends PullToRefreshListLoadingFragment<RevCommit> {
         pullToRefreshView.setOnRefreshListener(new OnRefreshListener() {
             public void onRefresh(PullToRefreshBase refreshView) {
                 try {
-                    Fetch fetch = new Fetch(new FileRepository(getArguments().getString(GITDIR)), DEFAULT_REMOTE_NAME);
+                    Fetch fetch = new Fetch(FileRepositoryBuilder.create(gitDirFrom(getArguments())), DEFAULT_REMOTE_NAME);
                     gitAsyncTaskFactory.createTaskFor(fetch, new CasualShortTermLifetime() {
                         public void error(OpNotification errorNotification) {
                             pullToRefreshView.setLastUpdatedLabel("Last Fetch failed: " + errorNotification.getTickerText());
@@ -119,7 +120,7 @@ public class LogFragment extends PullToRefreshListLoadingFragment<RevCommit> {
                 Stopwatch stopwatch = new Stopwatch().start();
                 Bundle args = getArguments();
                 try {
-                    Repository repo = new FileRepository(args.getString(GITDIR));
+                    Repository repo = FileRepositoryBuilder.create(gitDirFrom(args));
 
                     LogCommand log = new Git(repo).log();
                     List<String> untilRevs = getArguments().getStringArrayList(UNTIL_REVS);

@@ -49,7 +49,6 @@ import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.lib.RepositoryCache.FileKey;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.storage.file.WindowCache;
 import org.eclipse.jgit.storage.file.WindowCacheConfig;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
@@ -66,7 +65,7 @@ public class Repos {
         cfg.setPackedGitLimit(2 * MB);
         cfg.setDeltaBaseCacheLimit(2 * MB);
         cfg.setStreamFileThreshold(1 * MB);
-        WindowCache.reconfigure(cfg);
+        cfg.install();
     }
 
     public static List<File> reposInDefaultRepoDir() {

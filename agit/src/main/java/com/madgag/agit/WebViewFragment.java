@@ -21,31 +21,12 @@ package com.madgag.agit;
 
 
 import android.os.Bundle;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-import org.eclipse.jgit.errors.IncorrectObjectTypeException;
-import org.eclipse.jgit.errors.MissingObjectException;
-import org.eclipse.jgit.lib.AnyObjectId;
-import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.ObjectLoader;
-import org.eclipse.jgit.lib.ObjectReader;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.storage.file.FileRepository;
-import org.eclipse.jgit.treewalk.TreeWalk;
-import org.eclipse.jgit.util.RawParseUtils;
 
 /**
  * A fragment that displays a WebView.

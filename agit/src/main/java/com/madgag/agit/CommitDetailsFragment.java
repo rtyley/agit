@@ -47,8 +47,7 @@ import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revplot.PlotCommit;
 import org.eclipse.jgit.revplot.PlotLane;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.storage.file.FileRepository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 /**
  * Commit details is specified by: 1 Repo, 1 revision
@@ -74,7 +73,7 @@ public class CommitDetailsFragment extends RoboSherlockFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         try {
-            Repository repository = new FileRepository(gitDirFrom(getArguments()));
+            Repository repository = FileRepositoryBuilder.create(gitDirFrom(getArguments()));
             ObjectId commitId = revisionIdFrom(repository, getArguments(), REVISION);
             Log.d(TAG, "onCreateView with "+commitId);
 
