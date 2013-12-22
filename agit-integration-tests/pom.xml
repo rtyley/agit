@@ -73,7 +73,7 @@
         <dependency>
             <groupId>com.jayway.android.robotium</groupId>
             <artifactId>robotium-solo</artifactId>
-            <version>3.6</version>
+            <version>4.3.1</version>
         </dependency>
         <dependency>
             <groupId>com.github.rtyley</groupId>
