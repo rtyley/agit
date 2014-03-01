@@ -43,7 +43,6 @@ import com.google.common.base.Stopwatch;
 import com.google.inject.Inject;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.handmark.pulltorefresh.library.R;
 import com.handmark.pulltorefresh.library.support.PullToRefreshListLoadingFragment;
 import com.madgag.agit.operation.lifecycle.CasualShortTermLifetime;
 import com.madgag.agit.operations.Fetch;
