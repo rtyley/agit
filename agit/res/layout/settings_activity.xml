@@ -6,7 +6,8 @@
     <PreferenceCategory
             android:title="@string/settings_category_sync">
         <ListPreference
-            android:key="setting_sync_frequency"
+            android:id="@+id/setting_sync_frequency_listPref"
+            android:key="@string/setting_sync_frequency_key"
             android:title="@string/setting_title_sync_frequency"
             android:summary="@string/setting_instruction_sync_frequency"
             android:entries="@array/setting_sync_choices"

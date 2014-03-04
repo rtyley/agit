@@ -118,9 +118,17 @@
     <string name="settings_category_sync">Sync Settings</string>
     <string name="setting_title_sync_frequency">Sync Frequency</string>
     <string name="setting_instruction_sync_frequency">Tap to set how often repository synchronization will occur</string>
+    <string name="setting_sync_frequency_key">setting_sync_frequency</string>
+
+    <!-- This is a "magic number" just set so as not to confuse with other potential values -->
+    <string name="setting_sync_frequency_daily">72083</string>
+    <string name="setting_sync_frequency_daily_title">Sync daily at</string>
+    <string name="setting_sync_frequency_daily_hour_key">setting_sync_frequency_daily_hour</string>
+    <string name="setting_sync_frequency_daily_min_key">setting_sync_frequency_daily_min</string>
+
     <string-array name="setting_sync_choices">
         <item>Manually</item>
-        <!-- <item>Schedule daily at&#8230;</item> -->
+        <item>Schedule daily at&#8230;</item>
         <item>Every 15 minutes</item>
         <item>Every hour</item>
         <item>Every 3 hours</item>
@@ -129,7 +137,7 @@
     </string-array>
     <string-array name="setting_sync_choices_values">
         <item>0</item>
-        <!-- <item>1</item> -->
+        <item>@string/setting_sync_frequency_daily</item>
         <item>15</item>
         <item>60</item>
         <item>180</item>
