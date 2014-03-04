@@ -81,6 +81,13 @@ public class AccountAuthenticatorService extends Service {
 
     private static void configureSyncFor(Account account, int syncFreq) {
         Log.d(TAG, "Trying to configure account for sync at rate of " + syncFreq + " minutes");
+
+        if (syncFreq < 1) {
+            setIsSyncable(account, AGIT_PROVIDER_AUTHORITY, 0);
+            ContentResolver.removePeriodicSync(account, AGIT_PROVIDER_AUTHORITY, new Bundle());
+            return;
+        }
+
         setIsSyncable(account, AGIT_PROVIDER_AUTHORITY, 1);
         setSyncAutomatically(account, AGIT_PROVIDER_AUTHORITY, true);
         ContentResolver.addPeriodicSync(account, AGIT_PROVIDER_AUTHORITY, new Bundle(), (long) (syncFreq * 60));

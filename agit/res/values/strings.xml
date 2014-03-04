@@ -116,6 +116,26 @@
     <!-- Settings Strings -->
     <string name="settings">Settings</string>
     <string name="settings_category_sync">Sync Settings</string>
-    <string name="setting_title_sync_frequency">Sync Frequency (Minutes)</string>
+    <string name="setting_title_sync_frequency">Sync Frequency</string>
     <string name="setting_instruction_sync_frequency">Tap to set how often repository synchronization will occur</string>
+    <string-array name="setting_sync_choices">
+        <item>Manually</item>
+        <!-- <item>Schedule daily at&#8230;</item> -->
+        <item>Every 15 minutes</item>
+        <item>Every hour</item>
+        <item>Every 3 hours</item>
+        <item>Every 6 hours</item>
+        <item>Every 12 hours</item>
+    </string-array>
+    <string-array name="setting_sync_choices_values">
+        <item>0</item>
+        <!-- <item>1</item> -->
+        <item>15</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>720</item>
+        <!-- <item>Every week on&#8230;</item> -->
+        <!-- <item>Every month on&#8230;</item> -->
+    </string-array>
 </resources>
