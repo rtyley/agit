@@ -148,6 +148,12 @@
 			</intent-filter>
 		</activity>
 
+        <receiver android:name=".sync.SyncRepoManager" android:exported="true">
+            <intent-filter>
+                <action android:name="com.madgag.agit.sync.SET_DAILY_SYNC" />
+            </intent-filter>
+        </receiver>
+
         <service android:name="GitOperationsService">
             <intent-filter>
                 <action android:name="org.openintents.git.repo.SYNC"/>
@@ -190,4 +196,5 @@
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.READ_SYNC_STATS"/>
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 </manifest>

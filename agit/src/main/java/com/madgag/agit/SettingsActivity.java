@@ -30,6 +30,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.TimePicker;
 
+import com.madgag.agit.sync.SyncRepoManager;
+
 public class SettingsActivity extends PreferenceActivity {
     public void onCreate(Bundle aSavedInstanceState) {
         super.onCreate(aSavedInstanceState);
@@ -58,6 +60,9 @@ public class SettingsActivity extends PreferenceActivity {
                             edtr.putInt(getString(R.string.setting_sync_frequency_daily_hour_key), hourOfDay);
                             edtr.putInt(getString(R.string.setting_sync_frequency_daily_min_key), minOfHour);
                             edtr.commit();
+
+                            SyncRepoManager manager = new SyncRepoManager();
+                            manager.setDailySync(SettingsActivity.this, hourOfDay, minOfHour);
                         }
                     };
 
@@ -65,6 +70,9 @@ public class SettingsActivity extends PreferenceActivity {
                     TimePickerDialog timePicker = new TimePickerDialog(SettingsActivity.this, timeListener, hourDefault, minDefault, false);
                     timePicker.setTitle(getString(R.string.setting_sync_frequency_daily_title));
                     timePicker.show();
+                } else {
+                    SyncRepoManager manager = new SyncRepoManager();
+                    manager.cancelDailySync(SettingsActivity.this);
                 }
 
                 return true;
