@@ -9,7 +9,7 @@
         <artifactId>agit-parent</artifactId>
     </parent>
     <properties>
-        <abs.version>4.3.0</abs.version>
+        <abs.version>4.4.0</abs.version>
     </properties>
 
     <packaging>apk</packaging>
