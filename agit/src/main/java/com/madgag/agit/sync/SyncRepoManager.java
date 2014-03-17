@@ -86,7 +86,6 @@ public class SyncRepoManager extends BroadcastReceiver {
     @Override
     public void onReceive(Context aContext, Intent aIntent) {
         Calendar rightNow = Calendar.getInstance();
-        long timeInMs = rightNow.getTimeInMillis();
         long offset = rightNow.get(Calendar.ZONE_OFFSET) +
                 rightNow.get(Calendar.DST_OFFSET);
         long sinceMidnight = (rightNow.getTimeInMillis() + offset) %
@@ -95,8 +94,6 @@ public class SyncRepoManager extends BroadcastReceiver {
         boolean isPM = hoursSinceMidnight > 12;
         int clockHour = hoursSinceMidnight % 12;
         int minutesSinceMidnight = (int)((sinceMidnight % (hoursSinceMidnight * (60 * 60 * 1000))) / (60*1000));
-
-        long msAtMidnight = (rightNow.getTimeInMillis() + offset) - sinceMidnight;
 
         Log.d(TAG, "onReceive called at " + clockHour + ":" + minutesSinceMidnight + " " + (isPM ? "pm" : "am"));
         doSyncNow();

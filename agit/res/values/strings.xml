@@ -124,25 +124,35 @@
     <string name="setting_sync_frequency_daily_title">Sync daily at</string>
     <string name="setting_sync_frequency_daily_hour_key">setting_sync_frequency_daily_hour</string>
     <string name="setting_sync_frequency_daily_min_key">setting_sync_frequency_daily_min</string>
+    <string name="setting_sync_frequency_subtitle_key">setting_sync_frequency_subtitle</string>
 
+    <!--
+         These next two arrays need to be in sync (no pun intended). In other words, if you change
+         setting_sync_choices to have another value, you need to put a corresponding integer value
+         into the setting_sync_choices_values
+      -->
     <string-array name="setting_sync_choices">
         <item>Manually</item>
         <item>Schedule daily at&#8230;</item>
+        <item>Every minute</item>
+        <item>Every 5 minutes</item>
         <item>Every 15 minutes</item>
         <item>Every hour</item>
-        <item>Every 3 hours</item>
-        <item>Every 6 hours</item>
-        <item>Every 12 hours</item>
+        <item>Every 4 hours</item>
+        <item>Every day</item>
+        <item>Every week</item>
     </string-array>
+
+    <!-- These next values are in MINUTES (except for the special values for "Manually" and "Sync Daily" -->
     <string-array name="setting_sync_choices_values">
         <item>-1</item>
         <item>@string/setting_sync_frequency_daily</item>
+        <item>1</item>
+        <item>5</item>
         <item>15</item>
         <item>60</item>
-        <item>180</item>
-        <item>360</item>
-        <item>720</item>
-        <!-- <item>Every week on&#8230;</item> -->
-        <!-- <item>Every month on&#8230;</item> -->
+        <item>240</item>
+        <item>1440</item>
+        <item>10080</item>
     </string-array>
 </resources>
