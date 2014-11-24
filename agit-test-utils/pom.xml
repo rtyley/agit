@@ -23,7 +23,7 @@
         <dependency>
             <groupId>com.madgag</groupId>
             <artifactId>madgag-hamcrest-matchers</artifactId>
-            <version>0.5</version>
+            <version>0.6</version>
         </dependency>
     </dependencies>
 </project>
