@@ -22,13 +22,12 @@ package com.madgag.agit.git.model;
 import static com.google.common.collect.Iterables.find;
 import static com.madgag.agit.OracleJVMTestEnvironment.helper;
 import static com.madgag.agit.git.model.RDTTag.TagSummary.SORT_BY_TIME_AND_NAME;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.lessThan;
-import static org.hamcrest.Matchers.notNullValue;
 
 import com.google.common.base.Predicate;
 import com.madgag.agit.git.model.RDTTag.TagSummary;
@@ -49,7 +48,7 @@ public class RDTTagTest {
         for (int timeShift = 0; timeShift<60;++timeShift) {
             long laterTime = 1L << timeShift;
             TagSummary lateTag = new TagSummary(new StubRef("late"), null, null, laterTime);
-            assertThat("timeShift="+timeShift, SORT_BY_TIME_AND_NAME.compare(earlyTag, lateTag), lessThan(0));
+            assertThat("timeShift="+timeShift, SORT_BY_TIME_AND_NAME.compare(earlyTag, lateTag), is(-1));
         }
     }
 
@@ -58,7 +57,7 @@ public class RDTTagTest {
         Repository repository = helper().unpackRepo("git-repo-has-dateless-tag.depth2.zip");
         RDTTag rdtTag = new RDTTag(repository);
         List<TagSummary> listOfTagsInRepo = rdtTag.getAll();
-        assertThat(listOfTagsInRepo, hasSize(1));
+        assertThat(listOfTagsInRepo.size(), is(1));
         TagSummary tagSummary = listOfTagsInRepo.get(0);
 
         assertThat(tagSummary.getTime(), equalTo(1121037394L));
@@ -70,7 +69,7 @@ public class RDTTagTest {
     public void shouldNotThrowNPEDueToUnparsedObjectDataEspeciallyForRepoWithJustOneAnnotatedTag() throws Exception {
         RDTTag rdtTag = new RDTTag(helper().unpackRepo("repo-with-just-an-annotated-tag-of-a-commit.zip"));
         List<TagSummary> listOfTagsInRepo = rdtTag.getAll();
-        assertThat(listOfTagsInRepo, hasSize(1));
+        assertThat(listOfTagsInRepo.size(), is(1));
         TagSummary loneTag = listOfTagsInRepo.get(0);
         assertThat(rdtTag.shortDescriptionOf(loneTag).toString(), notNullValue());
     }

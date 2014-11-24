@@ -21,7 +21,7 @@ package com.madgag.agit.weblaunchers;
 
 import static com.madgag.agit.GitIntents.sourceUriFrom;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import android.net.Uri;
 
 import com.google.inject.Inject;

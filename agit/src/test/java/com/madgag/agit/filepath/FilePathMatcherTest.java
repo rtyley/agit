@@ -22,18 +22,11 @@ package com.madgag.agit.filepath;
 
 import static java.lang.Character.toUpperCase;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
 public class FilePathMatcherTest {
-
-    @Test
-    public void shouldScoreOkIfCharMatchesStartOfString() {
-        assertThat(score("abc", "abcde"), greaterThan(0.0));
-    }
 
     @Test
     public void shouldMatchEndOfCandidateString() {

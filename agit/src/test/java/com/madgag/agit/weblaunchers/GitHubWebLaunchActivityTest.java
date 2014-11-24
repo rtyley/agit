@@ -22,7 +22,7 @@ package com.madgag.agit.weblaunchers;
 import static android.net.Uri.parse;
 import static com.madgag.agit.GitIntents.sourceUriFrom;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.CoreMatchers.is;
 import android.content.Intent;
 
 import com.google.inject.Inject;

@@ -25,7 +25,7 @@ import static com.google.common.collect.Lists.transform;
 import static com.madgag.agit.filepath.ScoredPath.scoreFor;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
