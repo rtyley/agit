@@ -43,6 +43,8 @@ the alternative [Git logo](http://henrik.nyh.se/2007/06/alternative-git-logo-and
 
 *   Bernd Hirschler - [German Translation](https://github.com/rtyley/agit/pull/35)
 
+*   Scott Johnson - [Sync Frequency UI](https://github.com/rtyley/agit/pull/103)
+
 *   Eddie Ringle - [Tweak GitHub url parsing](https://github.com/rtyley/agit/pull/29)
 
 *   Leonardo Taglialegne - [Italian Translation](https://github.com/rtyley/agit/pull/46)

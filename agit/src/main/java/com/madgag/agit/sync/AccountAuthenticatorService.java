@@ -34,8 +34,10 @@ import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 /**
@@ -71,15 +73,28 @@ public class AccountAuthenticatorService extends Service {
             result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
             result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
         }
-        configureSyncFor(account);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        int syncFreq = Integer.parseInt(prefs.getString("setting_sync_frequency", "-1"));
+        configureSyncFor(account, syncFreq);
+
         return result;
     }
 
-    private static void configureSyncFor(Account account) {
-        Log.d(TAG, "Trying to configure account for sync...");
-        setIsSyncable(account, AGIT_PROVIDER_AUTHORITY, 1);
-        setSyncAutomatically(account, AGIT_PROVIDER_AUTHORITY, true);
-        ContentResolver.addPeriodicSync(account, AGIT_PROVIDER_AUTHORITY, new Bundle(), (long) (15 * 60));
+    private static void configureSyncFor(Account aAccount, int aSyncFreq) {
+        // There are three possible sync settings we could have:
+        //  <  0: Indicates sync is disabled
+        //  == 0: Indicates sync is enabled, but it's handled by an alarm because it's a time-of-day sync
+        //  >  0: Indicates sync should be enabled for aSyncFreq minutes
+        if (aSyncFreq < 0) {
+            Log.d(TAG, "Disabling sync settings");
+            setIsSyncable(aAccount, AGIT_PROVIDER_AUTHORITY, 0);
+            ContentResolver.removePeriodicSync(aAccount, AGIT_PROVIDER_AUTHORITY, new Bundle());
+        } else {
+            Log.d(TAG, "Trying to configure account for sync at rate of " + aSyncFreq + " minutes");
+            setIsSyncable(aAccount, AGIT_PROVIDER_AUTHORITY, 1);
+            setSyncAutomatically(aAccount, AGIT_PROVIDER_AUTHORITY, true);
+            ContentResolver.addPeriodicSync(aAccount, AGIT_PROVIDER_AUTHORITY, new Bundle(), (long) (aSyncFreq * 60));
+        }
     }
 
     private static class AccountAuthenticatorImpl extends AbstractAccountAuthenticator {

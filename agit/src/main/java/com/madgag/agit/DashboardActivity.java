@@ -43,7 +43,6 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
-import com.madgag.android.IntentUtil;
 import com.madgag.android.util.store.InstallAppDialogFragment;
 
 import java.io.File;
@@ -80,6 +79,9 @@ public class DashboardActivity extends RoboSherlockFragmentActivity {
         switch (item.getItemId()) {
             case R.id.clone:
                 startActivity(new Intent(this, CloneLauncherActivity.class));
+                return true;
+            case R.id.settings:
+                startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             case R.id.open_repo:
                 if (isIntentAvailable(this, PICK_DIRECTORY_INTENT)) {

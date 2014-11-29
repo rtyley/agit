@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:title="@string/settings">
+
+    <PreferenceCategory
+            android:title="@string/settings_category_sync">
+        <ListPreference
+            android:id="@+id/setting_sync_frequency_listPref"
+            android:key="@string/setting_sync_frequency_key"
+            android:title="@string/setting_title_sync_frequency"
+            android:summary="@string/setting_instruction_sync_frequency"
+            android:entries="@array/setting_sync_choices"
+            android:entryValues="@array/setting_sync_choices_values"
+            android:dialogTitle="@string/setting_title_sync_frequency">
+         </ListPreference>
+    </PreferenceCategory>
+</PreferenceScreen>
