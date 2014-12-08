@@ -47,7 +47,7 @@ import java.util.List;
  * adapters (e.g., SectionedAdapter) that might have an
  * arbitrary number of rows, so it all appears seamless.
  */
-public class SackOfViewsAdapter extends BaseAdapter {
+public abstract class SackOfViewsAdapter extends BaseAdapter {
     private List<View> views = null;
 
     /**
@@ -81,7 +81,7 @@ public class SackOfViewsAdapter extends BaseAdapter {
      *
      * @param position Position of the item whose data we want
      */
-    public Object getItem(int position) {
+    public View getItem(int position) {
         return (views.get(position));
     }
 
@@ -169,7 +169,5 @@ public class SackOfViewsAdapter extends BaseAdapter {
      * @param position Position of the item whose data we want
      * @param parent   ViewGroup containing the returned View
      */
-    protected View newView(int position, ViewGroup parent) {
-        throw new RuntimeException("You must override newView()!");
-    }
+    protected abstract View newView(int position, ViewGroup parent) ;
 }
